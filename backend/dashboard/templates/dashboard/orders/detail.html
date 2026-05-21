@@ -1,0 +1,226 @@
+{% extends 'dashboard/base.html' %}
+{% load dashboard_tags %}
+
+{% block title %}Order #{{ order.order_number }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-white border-0 rounded-10 mb-4">
+            <div class="card-body p-4">
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-4 mb-4">
+                    <div>
+                        <h4 class="fw-semibold fs-18 mb-2">Order #{{ order.order_number }}</h4>
+                        <small class="text-muted">{{ order.ordered_at|date:"F d, Y H:i" }}</small>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'dashboard:order_edit' order.pk %}" class="btn btn-sm btn-outline-primary">
+                            <i class="material-symbols-outlined align-middle">edit</i> Edit
+                        </a>
+                        <a href="{% url 'dashboard:order_list' %}" class="btn btn-sm btn-outline-secondary">
+                            <i class="material-symbols-outlined align-middle">arrow_back</i> Back
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Order Status Row -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <small class="text-muted d-block mb-1">Order Status</small>
+                            <span class="badge badge-status 
+                                {% if order.status == 'PENDING' %}badge-pending
+                                {% elif order.status == 'PROCESSING' %}badge-processing
+                                {% elif order.status == 'SHIPPED' %}badge-shipped
+                                {% elif order.status == 'DELIVERED' %}badge-delivered
+                                {% elif order.status == 'CANCELLED' %}badge-cancelled
+                                {% endif %}"
+                                style="font-size: 0.875rem; padding: 0.5rem 0.875rem;">
+                                {{ order.get_status_display }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <small class="text-muted d-block mb-1">Payment Status</small>
+                            <span class="badge badge-status 
+                                {% if order.payment_status == 'PAID' %}badge-paid
+                                {% elif order.payment_status == 'PENDING' %}badge-pending
+                                {% elif order.payment_status == 'FAILED' %}badge-failed
+                                {% endif %}"
+                                style="font-size: 0.875rem; padding: 0.5rem 0.875rem;">
+                                {{ order.get_payment_status_display }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Customer Information -->
+                <div class="mb-4">
+                    <h6 class="fw-semibold mb-3">Customer Information</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <small class="text-muted">Name</small>
+                                <p class="mb-0">{{ order.customer_name }}</p>
+                            </div>
+                            <div class="mb-3">
+                                <small class="text-muted">Email</small>
+                                <p class="mb-0"><a href="mailto:{{ order.customer_email }}">{{ order.customer_email }}</a></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <small class="text-muted">Phone</small>
+                                <p class="mb-0"><a href="tel:{{ order.customer_phone }}">{{ order.customer_phone }}</a></p>
+                            </div>
+                            {% if order.user %}
+                            <div class="mb-3">
+                                <small class="text-muted">Account User</small>
+                                <p class="mb-0">{{ order.user.get_full_name|default:order.user.username }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Order Items -->
+                <div class="mb-4">
+                    <h6 class="fw-semibold mb-3">Order Items</h6>
+                    {% if order_items %}
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Color</th>
+                                        <th>Size</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Price</th>
+                                        <th class="text-end">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in order_items %}
+                                    <tr>
+                                        <td>{{ item.product.name }}</td>
+                                        <td>{{ item.color.name|default:"—" }}</td>
+                                        <td>{{ item.size.name|default:"—" }}</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td>{{ item.unit_price }} BDT</td>
+                                        <td class="text-end fw-semibold">{{ item.quantity|mul:item.unit_price }} BDT</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No items in this order</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Shipping Information -->
+                {% if order.shipping_address or order.shipping_method %}
+                <div class="mb-4">
+                    <h6 class="fw-semibold mb-3">Shipping Information</h6>
+                    <div class="row">
+                        {% if order.shipping_address %}
+                        <div class="col-md-6">
+                            <small class="text-muted">Shipping Address</small>
+                            <p class="mb-0">{{ order.shipping_address }}</p>
+                        </div>
+                        {% endif %}
+                        {% if order.shipping_method %}
+                        <div class="col-md-6">
+                            <small class="text-muted">Shipping Method</small>
+                            <p class="mb-0">{{ order.shipping_method.name }}</p>
+                        </div>
+                        {% endif %}
+                        {% if order.tracking_number %}
+                        <div class="col-md-6">
+                            <small class="text-muted">Tracking Number</small>
+                            <p class="mb-0">{{ order.tracking_number }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Pricing Summary -->
+                <div class="mb-0 border-top pt-4">
+                    <h6 class="fw-semibold mb-3">Order Summary</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Subtotal:</span>
+                                <span class="fw-semibold">{{ order.cart_subtotal|default:0 }} BDT</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="text-muted">Shipping:</span>
+                                <span class="fw-semibold">
+                                    {% if order.total_amount and order.cart_subtotal %}
+                                        {{ order.total_amount|add:"-"|add:order.cart_subtotal }} BDT
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="d-flex justify-content-between border-top pt-2">
+                                <span class="fw-semibold">Total Amount:</span>
+                                <span class="fw-bold fs-6" style="color: #10b981;">{{ order.total_amount|default:0 }} BDT</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .badge-status {
+        font-size: 0.75rem;
+        padding: 0.375rem 0.75rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+    
+    .badge-pending {
+        background-color: #fca5a5;
+        color: #7f1d1d;
+    }
+    
+    .badge-processing {
+        background-color: #bfdbfe;
+        color: #1e3a8a;
+    }
+    
+    .badge-shipped {
+        background-color: #dbeafe;
+        color: #0c4a6e;
+    }
+    
+    .badge-delivered {
+        background-color: #dcfce7;
+        color: #166534;
+    }
+    
+    .badge-cancelled {
+        background-color: #f3f4f6;
+        color: #4b5563;
+    }
+    
+    .badge-paid {
+        background-color: #dcfce7;
+        color: #166534;
+    }
+    
+    .badge-failed {
+        background-color: #fca5a5;
+        color: #7f1d1d;
+    }
+</style>
+{% endblock %}

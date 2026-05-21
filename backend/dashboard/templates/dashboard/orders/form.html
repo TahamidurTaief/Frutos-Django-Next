@@ -1,0 +1,188 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}{% if action == 'create' %}Add Order{% else %}Edit Order{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 offset-lg-2">
+        <div class="card bg-white border-0 rounded-10 mb-4">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-4 mb-4">
+                    <h4 class="fw-semibold fs-18">{% if action == 'create' %}Add New Order{% else %}Edit Order{% endif %}</h4>
+                    <a href="{% url 'dashboard:order_list' %}" class="btn btn-sm btn-outline-secondary">
+                        <i class="material-symbols-outlined align-middle">arrow_back</i> Back
+                    </a>
+                </div>
+                
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{ form.non_field_errors.0 }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Customer Information -->
+                    <div class="mb-5">
+                        <h6 class="fw-semibold mb-4 pb-2 border-bottom">Customer Information</h6>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.customer_name.id_for_label }}" class="form-label fw-semibold">{{ form.customer_name.label }}</label>
+                            {{ form.customer_name }}
+                            {% if form.customer_name.errors %}
+                                <div class="text-danger small mt-1">{{ form.customer_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.customer_email.id_for_label }}" class="form-label fw-semibold">{{ form.customer_email.label }}</label>
+                            {{ form.customer_email }}
+                            {% if form.customer_email.errors %}
+                                <div class="text-danger small mt-1">{{ form.customer_email.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.customer_phone.id_for_label }}" class="form-label fw-semibold">{{ form.customer_phone.label }}</label>
+                            {{ form.customer_phone }}
+                            {% if form.customer_phone.errors %}
+                                <div class="text-danger small mt-1">{{ form.customer_phone.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Order Information -->
+                    <div class="mb-5">
+                        <h6 class="fw-semibold mb-4 pb-2 border-bottom">Order Information</h6>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.user.id_for_label }}" class="form-label fw-semibold">{{ form.user.label }} <span class="text-muted">(Optional)</span></label>
+                                    {{ form.user }}
+                                    {% if form.user.errors %}
+                                        <div class="text-danger small mt-1">{{ form.user.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.status.id_for_label }}" class="form-label fw-semibold">{{ form.status.label }}</label>
+                                    {{ form.status }}
+                                    {% if form.status.errors %}
+                                        <div class="text-danger small mt-1">{{ form.status.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.payment_status.id_for_label }}" class="form-label fw-semibold">{{ form.payment_status.label }}</label>
+                            {{ form.payment_status }}
+                            {% if form.payment_status.errors %}
+                                <div class="text-danger small mt-1">{{ form.payment_status.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Pricing Information -->
+                    <div class="mb-5">
+                        <h6 class="fw-semibold mb-4 pb-2 border-bottom">Pricing</h6>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.cart_subtotal.id_for_label }}" class="form-label fw-semibold">{{ form.cart_subtotal.label }}</label>
+                                    {{ form.cart_subtotal }}
+                                    {% if form.cart_subtotal.errors %}
+                                        <div class="text-danger small mt-1">{{ form.cart_subtotal.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.total_amount.id_for_label }}" class="form-label fw-semibold">{{ form.total_amount.label }}</label>
+                                    {{ form.total_amount }}
+                                    {% if form.total_amount.errors %}
+                                        <div class="text-danger small mt-1">{{ form.total_amount.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Shipping Information -->
+                    <div class="mb-5">
+                        <h6 class="fw-semibold mb-4 pb-2 border-bottom">Shipping <span class="text-muted">(Optional)</span></h6>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.shipping_address.id_for_label }}" class="form-label fw-semibold">{{ form.shipping_address.label }}</label>
+                            {{ form.shipping_address }}
+                            {% if form.shipping_address.errors %}
+                                <div class="text-danger small mt-1">{{ form.shipping_address.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.shipping_method.id_for_label }}" class="form-label fw-semibold">{{ form.shipping_method.label }}</label>
+                                    {{ form.shipping_method }}
+                                    {% if form.shipping_method.errors %}
+                                        <div class="text-danger small mt-1">{{ form.shipping_method.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.tracking_number.id_for_label }}" class="form-label fw-semibold">{{ form.tracking_number.label }}</label>
+                                    {{ form.tracking_number }}
+                                    {% if form.tracking_number.errors %}
+                                        <div class="text-danger small mt-1">{{ form.tracking_number.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div class="d-flex gap-3 pt-4 border-top">
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="material-symbols-outlined align-middle">save</i>
+                            {% if action == 'create' %}Create Order{% else %}Update Order{% endif %}
+                        </button>
+                        <a href="{% url 'dashboard:order_list' %}" class="btn btn-outline-secondary px-4">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Form styling */
+    .form-control, .form-select {
+        border: 1px solid #d1d5db;
+        padding: 0.625rem 0.875rem;
+        border-radius: 0.375rem;
+        font-size: 0.9375rem;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        outline: none;
+    }
+    
+    .form-label {
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+</style>
+{% endblock %}

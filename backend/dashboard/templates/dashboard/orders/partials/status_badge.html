@@ -1,0 +1,9 @@
+<span class="badge badge-status 
+    {% if order.status == 'PENDING' %}badge-pending
+    {% elif order.status == 'PROCESSING' %}badge-processing
+    {% elif order.status == 'SHIPPED' %}badge-shipped
+    {% elif order.status == 'DELIVERED' %}badge-delivered
+    {% elif order.status == 'CANCELLED' %}badge-cancelled
+    {% endif %}">
+    {{ order.get_status_display }}
+</span>

@@ -1,0 +1,329 @@
+
+
+// 'use client'
+// import { useState, useEffect } from 'react'
+// import { useRouter, useSearchParams } from 'next/navigation'
+// import { useAuth } from '@/app/context/AuthContext'
+
+// import ProfileTab       from './tabs/ProfileTab'
+// import AddressesTab     from './tabs/AddressesTab'
+// import OrdersTab        from './tabs/OrdersTab'
+// import NotificationsTab from './tabs/NotificationsTab'
+// // 1. SavedItemsTab import koro
+// import SavedItemsTab    from './tabs/SavedItemsTab' 
+
+// const TABS = [
+//   { id: 'profile',       label: 'My Profile',       icon: 'person'        },
+//   { id: 'saved',         label: 'Saved Items',      icon: 'favorite'      }, // 2. Notun tab add koro
+//   { id: 'addresses',     label: 'Saved Addresses',  icon: 'location_on'   },
+//   { id: 'orders',        label: 'Order History',    icon: 'receipt_long'  },
+//   { id: 'notifications', label: 'Notifications',    icon: 'notifications' },
+// ]
+
+// export default function ProfileClient({
+//   initialProfile       = null,
+//   initialAddresses     = null,
+//   initialOrders        = null,
+//   initialNotifications = null,
+//   initialWishlist      = null, // 3. initialWishlist prop-ti add koro
+// }) {
+//   const { user, loading, isAuthenticated, authFetch, logout, uploadAvatar } = useAuth()
+//   const searchParams = useSearchParams()
+//   const router       = useRouter()
+
+//   const [activeTab, setActiveTab] = useState(() => {
+//     const tab = searchParams?.get('tab')
+//     return tab && TABS.find(t => t.id === tab) ? tab : 'profile'
+//   })
+
+//   const [localUser, setLocalUser] = useState(initialProfile || null)
+
+//   useEffect(() => {
+//     if (!loading && !isAuthenticated) router.replace('/')
+//   }, [loading, isAuthenticated, router])
+
+//   useEffect(() => {
+//     if (user && !localUser) setLocalUser(user)
+//   }, [user])
+
+//   useEffect(() => {
+//     const tab = searchParams?.get('tab')
+//     if (tab && TABS.find(t => t.id === tab)) setActiveTab(tab)
+//   }, [searchParams])
+
+//   if ((loading && !localUser)) {
+//     return (
+//       <div className="min-h-screen flex items-center justify-center" style={{ background: '#f5f9f5' }}>
+//         <div className="flex flex-col items-center gap-3">
+//           <svg style={{ animation: 'spin 1s linear infinite', width: '32px', height: '32px' }} fill="none" viewBox="0 0 24 24">
+//             <circle cx="12" cy="12" r="10" stroke="#00694C" strokeWidth="3" strokeOpacity=".2"/>
+//             <path d="M12 2a10 10 0 0 1 10 10" stroke="#00694C" strokeWidth="3" strokeLinecap="round"/>
+//           </svg>
+//           <p className="text-sm" style={{ color: '#6d7a73' }}>Loading profile…</p>
+//         </div>
+//         <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+//       </div>
+//     )
+//   }
+
+//   const displayUser = localUser || user
+
+//   return (
+//     <div style={{ background: '#f5f9f5', minHeight: '100vh' }}>
+//       <div className="max-w-5xl mx-auto px-4 md:px-6 py-8 md:py-12">
+//         {/* Header */}
+//         <div className="flex items-center justify-between mb-8">
+//           <div>
+//             <h1 className="text-3xl md:text-4xl italic font-light"
+//               style={{ fontFamily: '"Newsreader",Georgia,serif', color: '#151e13' }}>
+//               My Account
+//             </h1>
+//             <p className="text-sm mt-1" style={{ color: '#6d7a73' }}>
+//               Welcome back, <span className="font-medium" style={{ color: '#151e13' }}>{displayUser?.firstName || displayUser?.email}</span>
+//             </p>
+//           </div>
+//           <button onClick={logout} className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border border-[#eaeaea] bg-white text-[#6d7a73]">
+//             <span className="material-symbols-outlined text-base">logout</span>
+//             <span className="hidden sm:inline">Sign Out</span>
+//           </button>
+//         </div>
+
+//         <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6">
+//           {/* Sidebar */}
+//           <nav className="flex  lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0">
+//             {TABS.map(tab => {
+//               const isActive = activeTab === tab.id
+//               return (
+//                 <button
+//                   key={tab.id}
+//                   onClick={() => setActiveTab(tab.id)}
+//                   className="cursor-pointer flex items-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium flex-shrink-0 w-auto lg:w-full text-left"
+//                   style={{
+//                     background: isActive ? '#00694C' : '#fff',
+//                     color: isActive ? '#fff' : '#3d4943',
+//                     border: isActive ? 'none' : '1px solid #eaeaea',
+//                   }}
+//                 >
+//                   <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}>
+//                     {tab.icon}
+//                   </span>
+//                   <span className="whitespace-nowrap">{tab.label}</span>
+//                 </button>
+//               )
+//             })}
+//           </nav>
+
+//           {/* Main Content */}
+//           <main>
+//             {activeTab === 'profile' && displayUser && (
+//               <ProfileTab user={displayUser} authFetch={authFetch} uploadAvatar={uploadAvatar} onUserUpdate={setLocalUser} />
+//             )}
+            
+//             {/* 4. Saved Items Tab Rendering */}
+//             {activeTab === 'saved' && (
+//               <SavedItemsTab 
+//                 authFetch={authFetch} 
+//                 initialWishlist={initialWishlist} 
+//               />
+//             )}
+
+//             {activeTab === 'addresses' && <AddressesTab authFetch={authFetch} initialAddresses={initialAddresses} />}
+//             {activeTab === 'orders' && <OrdersTab authFetch={authFetch} initialOrders={initialOrders} />}
+//             {activeTab === 'notifications' && <NotificationsTab authFetch={authFetch} initialNotifications={initialNotifications} />}
+//           </main>
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
+
+'use client'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useAuth } from '@/app/context/AuthContext'
+
+import ProfileTab       from './tabs/ProfileTab'
+import AddressesTab     from './tabs/AddressesTab'
+import OrdersTab        from './tabs/OrdersTab'
+import NotificationsTab from './tabs/NotificationsTab'
+import SavedItemsTab    from './tabs/SavedItemsTab'
+import TrackingTab      from './tabs/TrackingTab'   // ← NEW
+
+const TABS = [
+  { id: 'profile',       label: 'My Profile',       icon: 'person'          },
+  { id: 'tracking',      label: 'Track Order',      icon: 'local_shipping'  }, // ← NEW
+  { id: 'saved',         label: 'Saved Items',      icon: 'favorite'        },
+  { id: 'addresses',     label: 'Saved Addresses',  icon: 'location_on'     },
+  { id: 'orders',        label: 'Order History',    icon: 'receipt_long'    },
+  { id: 'notifications', label: 'Notifications',    icon: 'notifications'   },
+]
+
+export default function ProfileClient({
+  initialProfile       = null,
+  initialAddresses     = null,
+  initialOrders        = null,
+  initialNotifications = null,
+  initialWishlist      = null,
+}) {
+  const { user, loading, isAuthenticated, authFetch, logout, uploadAvatar } = useAuth()
+  const searchParams = useSearchParams()
+  const router       = useRouter()
+
+  const [activeTab, setActiveTab] = useState(() => {
+    const tab = searchParams?.get('tab')
+    return tab && TABS.find(t => t.id === tab) ? tab : 'profile'
+  })
+
+  const [localUser, setLocalUser] = useState(initialProfile || null)
+
+  useEffect(() => {
+    if (!loading && !isAuthenticated) router.replace('/')
+  }, [loading, isAuthenticated, router])
+
+  useEffect(() => {
+    if (user && !localUser) setLocalUser(user)
+  }, [user])
+
+  useEffect(() => {
+    const tab = searchParams?.get('tab')
+    if (tab && TABS.find(t => t.id === tab)) setActiveTab(tab)
+  }, [searchParams])
+
+  if (loading && !localUser) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#f5f9f5' }}>
+        <div className="flex flex-col items-center gap-3">
+          <svg style={{ animation: 'spin 1s linear infinite', width: '32px', height: '32px' }} fill="none" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke="#00694C" strokeWidth="3" strokeOpacity=".2"/>
+            <path d="M12 2a10 10 0 0 1 10 10" stroke="#00694C" strokeWidth="3" strokeLinecap="round"/>
+          </svg>
+          <p className="text-sm" style={{ color: '#6d7a73' }}>Loading profile…</p>
+        </div>
+        <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+      </div>
+    )
+  }
+
+  const displayUser = localUser || user
+
+  return (
+    <div style={{ background: '#f5f9f5', minHeight: '100vh' }}>
+      <div className="max-w-5xl mx-auto px-4 md:px-6 py-8 md:py-12">
+
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1
+              className="text-3xl md:text-4xl italic font-light"
+              style={{ fontFamily: '"Newsreader",Georgia,serif', color: '#151e13' }}
+            >
+              My Account
+            </h1>
+            <p className="text-sm mt-1" style={{ color: '#6d7a73' }}>
+              Welcome back,{' '}
+              <span className="font-medium" style={{ color: '#151e13' }}>
+                {displayUser?.firstName || displayUser?.email}
+              </span>
+            </p>
+          </div>
+          <button
+            onClick={logout}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border border-[#eaeaea] bg-white text-[#6d7a73]"
+          >
+            <span className="material-symbols-outlined text-base">logout</span>
+            <span className="hidden sm:inline">Sign Out</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6">
+
+          {/* Sidebar */}
+          <nav className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0">
+            {TABS.map(tab => {
+              const isActive = activeTab === tab.id
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className="cursor-pointer flex items-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium flex-shrink-0 w-auto lg:w-full text-left"
+                  style={{
+                    background: isActive ? '#00694C' : '#fff',
+                    color:      isActive ? '#fff'    : '#3d4943',
+                    border:     isActive ? 'none'    : '1px solid #eaeaea',
+                    position:   'relative',
+                  }}
+                >
+                  <span
+                    className="material-symbols-outlined text-base"
+                    style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}
+                  >
+                    {tab.icon}
+                  </span>
+                  <span className="whitespace-nowrap">{tab.label}</span>
+
+                  {/* Subtle "live" dot on tracking tab when not active */}
+                  {tab.id === 'tracking' && !isActive && (
+                    <span
+                      style={{
+                        width: '7px',
+                        height: '7px',
+                        borderRadius: '50%',
+                        background: '#00694C',
+                        marginLeft: 'auto',
+                        animation: 'liveDot 2s ease-in-out infinite',
+                        flexShrink: 0,
+                      }}
+                    />
+                  )}
+                </button>
+              )
+            })}
+
+            <style>{`
+              @keyframes liveDot {
+                0%,100% { opacity: 1 }
+                50%      { opacity: 0.3 }
+              }
+            `}</style>
+          </nav>
+
+          {/* Main content */}
+          <main>
+            {activeTab === 'profile' && displayUser && (
+              <ProfileTab
+                user={displayUser}
+                authFetch={authFetch}
+                uploadAvatar={uploadAvatar}
+                onUserUpdate={setLocalUser}
+              />
+            )}
+
+            {/* ── Track Order ── */}
+            {activeTab === 'tracking' && (
+              <TrackingTab
+                authFetch={authFetch}
+                initialOrders={initialOrders}
+              />
+            )}
+
+            {activeTab === 'saved' && (
+              <SavedItemsTab authFetch={authFetch} initialWishlist={initialWishlist} />
+            )}
+
+            {activeTab === 'addresses' && (
+              <AddressesTab authFetch={authFetch} initialAddresses={initialAddresses} />
+            )}
+
+            {activeTab === 'orders' && (
+              <OrdersTab authFetch={authFetch} initialOrders={initialOrders} />
+            )}
+
+            {activeTab === 'notifications' && (
+              <NotificationsTab authFetch={authFetch} initialNotifications={initialNotifications} />
+            )}
+          </main>
+        </div>
+      </div>
+    </div>
+  )
+}

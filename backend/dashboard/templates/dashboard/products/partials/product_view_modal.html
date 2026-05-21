@@ -1,0 +1,192 @@
+<!-- Product Quick View Modal -->
+<div class="modal fade show d-block" id="productViewModal" tabindex="-1" role="dialog" style="background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title">
+                    <i class="material-symbols-outlined align-middle me-2" style="font-size: 24px;">inventory_2</i>
+                    <strong>Product Details</strong>
+                </h5>
+                <button type="button" class="btn-close" onclick="closeModal()"></button>
+            </div>
+            
+            <div class="modal-body">
+                <!-- Product Header -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        {% if product.thumbnail %}
+                            <img src="{{ product.thumbnail.url }}" class="img-fluid rounded shadow-sm" alt="{{ product.name }}">
+                        {% else %}
+                            <div class="d-flex align-items-center justify-content-center bg-light rounded" style="height: 200px;">
+                                <i class="material-symbols-outlined text-muted" style="font-size: 64px;">image</i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8">
+                        <h4 class="fw-bold mb-3">{{ product.name }}</h4>
+                        <div class="mb-3">
+                            {% if product.is_active %}
+                                <span class="badge bg-success"><i class="material-symbols-outlined align-middle" style="font-size: 14px;">check_circle</i> Active</span>
+                            {% else %}
+                                <span class="badge bg-secondary"><i class="material-symbols-outlined align-middle" style="font-size: 14px;">cancel</i> Inactive</span>
+                            {% endif %}
+                            {% if product.featured %}
+                                <span class="badge bg-warning text-dark"><i class="material-symbols-outlined align-middle" style="font-size: 14px;">star</i> Featured</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <small class="text-muted d-block">Price</small>
+                                <h5 class="mb-0 text-primary fw-bold">${{ product.price }}</h5>
+                                {% if product.discount_price %}
+                                    <small class="text-success">Discounted: ${{ product.discount_price }}</small>
+                                {% endif %}
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">Stock</small>
+                                {% if product.stock > 0 %}
+                                    <h5 class="mb-0 text-success fw-bold">{{ product.stock }}</h5>
+                                {% else %}
+                                    <h5 class="mb-0 text-danger fw-bold">Out of Stock</h5>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- Product Information -->
+                <h6 class="fw-semibold mb-3">Product Information</h6>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <small class="text-muted d-block mb-1"><i class="material-symbols-outlined align-middle" style="font-size: 16px;">store</i> Shop</small>
+                        <span class="d-block fw-medium">{{ product.shop.name }}</span>
+                    </div>
+                    <div class="col-md-6">
+                        <small class="text-muted d-block mb-1"><i class="material-symbols-outlined align-middle" style="font-size: 16px;">category</i> Category</small>
+                        <span class="d-block fw-medium">{{ product.sub_category.category.name }} > {{ product.sub_category.name }}</span>
+                    </div>
+                    {% if product.brand %}
+                    <div class="col-md-6">
+                        <small class="text-muted d-block mb-1"><i class="material-symbols-outlined align-middle" style="font-size: 16px;">local_offer</i> Brand</small>
+                        <span class="d-block fw-medium">{{ product.brand.name }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="col-md-6">
+                        <small class="text-muted d-block mb-1"><i class="material-symbols-outlined align-middle" style="font-size: 16px;">link</i> Slug</small>
+                        <code class="bg-light p-1 rounded">{{ product.slug }}</code>
+                    </div>
+                </div>
+
+                {% if product.description %}
+                <hr>
+                <h6 class="fw-semibold mb-3"><i class="material-symbols-outlined align-middle" style="font-size: 20px;">description</i> Product Description</h6>
+                <div class="mb-4 product-description-content">
+                    <div class="p-3 bg-light rounded" style="border-left: 4px solid #3b82f6;">
+                        {{ product.description|safe }}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if product.colors.all or product.sizes.all %}
+                <hr>
+                <h6 class="fw-semibold mb-3">Variants</h6>
+                <div class="row g-3 mb-4">
+                    {% if product.colors.all %}
+                    <div class="col-md-6">
+                        <small class="text-muted d-block mb-2"><i class="material-symbols-outlined align-middle" style="font-size: 16px;">palette</i> Available Colors</small>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for color in product.colors.all %}
+                                <span class="badge bg-light text-dark border" style="padding: 6px 12px;">
+                                    <span class="d-inline-block rounded-circle me-1" style="width: 12px; height: 12px; background-color: {{ color.hex_code }};"></span>
+                                    {{ color.name }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if product.sizes.all %}
+                    <div class="col-md-6">
+                        <small class="text-muted d-block mb-2"><i class="material-symbols-outlined align-middle" style="font-size: 16px;">straighten</i> Available Sizes</small>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for size in product.sizes.all %}
+                                <span class="badge bg-light text-dark border" style="padding: 6px 12px;">{{ size.name }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <hr>
+                <div class="row g-3 text-muted small">
+                    <div class="col-md-6">
+                        <i class="material-symbols-outlined align-middle" style="font-size: 16px;">calendar_today</i> Created: {{ product.created_at|date:"M d, Y H:i" }}
+                    </div>
+                    <div class="col-md-6">
+                        <i class="material-symbols-outlined align-middle" style="font-size: 16px;">update</i> Updated: {{ product.updated_at|date:"M d, Y H:i" }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">
+                    <i class="material-symbols-outlined align-middle text-white" style="font-size: 18px;">close</i>
+                    <span class="text-white">Close</span>
+                </button>
+                <a href="{% url 'dashboard:product_print' product.id %}" 
+                   target="_blank" 
+                   class="btn btn-info">
+                    <i class="material-symbols-outlined align-middle text-white" style="font-size: 18px;">print</i>
+                    <span class="text-white">Print</span>
+                </a>
+                <button type="button" 
+                        class="btn btn-success" 
+                        onclick="downloadProductPDF('{{ product.id }}')">
+                    <i class="material-symbols-outlined align-middle text-white" style="font-size: 18px;">download</i>
+                    <span class="text-white">Download</span>
+                </button>
+                <button type="button" 
+                        class="btn btn-primary" 
+                        hx-get="{% url 'dashboard:product_edit' product.id %}" 
+                        hx-target="#modal-container" 
+                        hx-swap="innerHTML">
+                    <i class="material-symbols-outlined align-middle text-white" style="font-size: 18px;">edit</i>
+                    <span class="text-white">Edit</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Show modal
+    document.getElementById('productViewModal').classList.add('show');
+    document.body.classList.add('modal-open');
+    
+    function closeModal() {
+        document.getElementById('productViewModal').classList.remove('show');
+        document.getElementById('productViewModal').remove();
+        document.body.classList.remove('modal-open');
+        // Remove backdrop
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) backdrop.remove();
+    }
+    
+    function downloadProductPDF(productId) {
+        // Open print view in new window and trigger print dialog
+        const printWindow = window.open('/dashboard/products/' + productId + '/print/', '_blank');
+        if (printWindow) {
+            printWindow.onload = function() {
+                printWindow.print();
+            };
+        }
+    }
+    
+    // Close on backdrop click
+    document.getElementById('productViewModal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+</script>

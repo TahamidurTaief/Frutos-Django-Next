@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice #{{ order.order_number }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1a1a2e; background: #fff; }
+        .invoice-wrapper { max-width: 800px; margin: 0 auto; padding: 40px; }
+        
+        /* Header */
+        .invoice-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 3px solid #0f3460; }
+        .brand { }
+        .brand h1 { font-size: 28px; color: #0f3460; font-weight: 800; letter-spacing: -0.5px; }
+        .brand p { color: #666; font-size: 13px; margin-top: 4px; }
+        .invoice-title { text-align: right; }
+        .invoice-title h2 { font-size: 32px; color: #0f3460; font-weight: 300; text-transform: uppercase; letter-spacing: 4px; }
+        .invoice-title .invoice-number { font-size: 14px; color: #e94560; font-weight: 600; margin-top: 4px; }
+        .invoice-title .invoice-date { font-size: 13px; color: #666; margin-top: 2px; }
+        
+        /* Info Row */
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 30px; }
+        .info-block { width: 48%; }
+        .info-block h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #0f3460; margin-bottom: 8px; font-weight: 700; }
+        .info-block p { font-size: 13px; color: #444; line-height: 1.6; }
+        .info-block .name { font-weight: 600; color: #1a1a2e; font-size: 14px; }
+        
+        /* Status Badge */
+        .status-row { display: flex; gap: 12px; margin-bottom: 25px; }
+        .badge { display: inline-block; padding: 5px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge-pending { background: #fff3cd; color: #856404; }
+        .badge-processing { background: #cce5ff; color: #004085; }
+        .badge-shipped { background: #d4edda; color: #155724; }
+        .badge-delivered { background: #d1e7dd; color: #0f5132; }
+        .badge-cancelled { background: #f8d7da; color: #721c24; }
+        .badge-paid { background: #d1e7dd; color: #0f5132; }
+        .badge-failed { background: #f8d7da; color: #721c24; }
+        
+        /* Table */
+        .items-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; }
+        .items-table thead th { background: #0f3460; color: #fff; padding: 12px 15px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; text-align: left; }
+        .items-table thead th:last-child, .items-table thead th:nth-child(3), .items-table thead th:nth-child(4) { text-align: right; }
+        .items-table tbody td { padding: 12px 15px; border-bottom: 1px solid #eee; font-size: 13px; color: #444; }
+        .items-table tbody td:last-child, .items-table tbody td:nth-child(3), .items-table tbody td:nth-child(4) { text-align: right; }
+        .items-table tbody tr:hover { background: #f8f9fa; }
+        .item-name { font-weight: 600; color: #1a1a2e; }
+        .item-variant { font-size: 11px; color: #888; display: block; margin-top: 2px; }
+        
+        /* Summary */
+        .summary { display: flex; justify-content: flex-end; margin-bottom: 30px; }
+        .summary-table { width: 280px; }
+        .summary-table tr td { padding: 6px 0; font-size: 13px; color: #444; }
+        .summary-table tr td:last-child { text-align: right; font-weight: 500; }
+        .summary-table .total-row td { padding-top: 12px; border-top: 2px solid #0f3460; font-size: 16px; font-weight: 700; color: #0f3460; }
+        
+        /* Payment Info */
+        .payment-info { background: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 30px; }
+        .payment-info h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #0f3460; margin-bottom: 10px; font-weight: 700; }
+        .payment-grid { display: flex; gap: 30px; }
+        .payment-grid .item { font-size: 13px; }
+        .payment-grid .item .label { color: #888; font-size: 11px; text-transform: uppercase; }
+        .payment-grid .item .value { color: #1a1a2e; font-weight: 600; margin-top: 2px; }
+        
+        /* Footer */
+        .invoice-footer { text-align: center; padding-top: 20px; border-top: 1px solid #eee; }
+        .invoice-footer p { font-size: 12px; color: #888; line-height: 1.8; }
+        .invoice-footer .thanks { font-size: 16px; color: #0f3460; font-weight: 600; margin-bottom: 8px; }
+        
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .invoice-wrapper { padding: 20px; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-wrapper">
+        <!-- Header -->
+        <div class="invoice-header">
+            <div class="brand">
+                <h1>{{ site_name|default:"iCommerce" }}</h1>
+                <p>{{ site_tagline|default:"Your Trusted Online Marketplace" }}</p>
+            </div>
+            <div class="invoice-title">
+                <h2>Invoice</h2>
+                <div class="invoice-number">#{{ order.order_number }}</div>
+                <div class="invoice-date">{{ order.ordered_at|date:"F d, Y" }}</div>
+            </div>
+        </div>
+        
+        <!-- Bill To / Ship To -->
+        <div class="info-row">
+            <div class="info-block">
+                <h3>Bill To</h3>
+                <p class="name">{{ order.customer_name }}</p>
+                <p>{{ order.customer_email }}</p>
+                <p>{{ order.customer_phone }}</p>
+            </div>
+            <div class="info-block">
+                <h3>Ship To</h3>
+                {% if order.shipping_address %}
+                <p class="name">{{ order.shipping_address.full_name|default:order.customer_name }}</p>
+                <p>{{ order.shipping_address.address_line1 }}{% if order.shipping_address.address_line2 %}, {{ order.shipping_address.address_line2 }}{% endif %}</p>
+                <p>{{ order.shipping_address.city }}{% if order.shipping_address.state %}, {{ order.shipping_address.state }}{% endif %} {{ order.shipping_address.postal_code }}</p>
+                <p>{{ order.shipping_address.phone|default:order.customer_phone }}</p>
+                {% else %}
+                <p>{{ order.customer_name }}</p>
+                <p>{{ order.customer_phone }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Status -->
+        <div class="status-row">
+            <span class="badge badge-{{ order.status|lower }}">{{ order.get_status_display }}</span>
+            <span class="badge badge-{{ order.payment_status|lower }}">Payment: {{ order.get_payment_status_display }}</span>
+            {% if order.shipping_method %}
+            <span class="badge" style="background:#e8e8e8;color:#333;">{{ order.shipping_method.name }}</span>
+            {% endif %}
+        </div>
+        
+        <!-- Items Table -->
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th style="width:50%">Item</th>
+                    <th>Qty</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>
+                        <span class="item-name">{{ item.product.name }}</span>
+                        {% if item.color or item.size %}
+                        <span class="item-variant">
+                            {% if item.color %}Color: {{ item.color.name }}{% endif %}
+                            {% if item.color and item.size %} | {% endif %}
+                            {% if item.size %}Size: {{ item.size.name }}{% endif %}
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td>{{ item.quantity }}</td>
+                    <td>৳{{ item.unit_price|floatformat:2 }}</td>
+                    <td>৳{{ item.line_total|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <!-- Summary -->
+        <div class="summary">
+            <table class="summary-table">
+                <tr>
+                    <td>Subtotal</td>
+                    <td>৳{{ subtotal|floatformat:2 }}</td>
+                </tr>
+                {% if shipping_cost %}
+                <tr>
+                    <td>Shipping</td>
+                    <td>৳{{ shipping_cost|floatformat:2 }}</td>
+                </tr>
+                {% endif %}
+                {% if discount %}
+                <tr>
+                    <td>Discount</td>
+                    <td style="color:#e94560;">-৳{{ discount|floatformat:2 }}</td>
+                </tr>
+                {% endif %}
+                <tr class="total-row">
+                    <td>Total</td>
+                    <td>৳{{ order.total_amount|floatformat:2 }}</td>
+                </tr>
+            </table>
+        </div>
+        
+        <!-- Payment Details -->
+        {% if payment %}
+        <div class="payment-info">
+            <h3>Payment Details</h3>
+            <div class="payment-grid">
+                <div class="item">
+                    <div class="label">Method</div>
+                    <div class="value">{{ payment.get_payment_method_display }}</div>
+                </div>
+                <div class="item">
+                    <div class="label">Transaction ID</div>
+                    <div class="value">{{ payment.transaction_id }}</div>
+                </div>
+                <div class="item">
+                    <div class="label">Sender</div>
+                    <div class="value">{{ payment.sender_number }}</div>
+                </div>
+                <div class="item">
+                    <div class="label">Date</div>
+                    <div class="value">{{ payment.created_at|date:"M d, Y H:i" }}</div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Tracking -->
+        {% if order.tracking_number %}
+        <div class="payment-info">
+            <h3>Tracking Information</h3>
+            <div class="payment-grid">
+                <div class="item">
+                    <div class="label">Tracking Number</div>
+                    <div class="value">{{ order.tracking_number }}</div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Footer -->
+        <div class="invoice-footer">
+            <p class="thanks">Thank you for your purchase!</p>
+            <p>If you have any questions about this invoice, please contact us.<br>
+            {{ site_email|default:"support@icommerce.com" }} | {{ site_phone|default:"+880-XXXX-XXXXXX" }}</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,882 @@
+<!-- Modal structure for Create/Update -->
+<div class="modal-content">
+    <div class="modal-header bg-light">
+        <h5 class="modal-title fw-semibold">
+            {% if action == 'create' %}
+            <i class="bi bi-plus-circle text-primary"></i> Add {{ model_name_verbose }}
+            {% else %}
+            <i class="bi bi-pencil-square text-warning"></i> Edit {{ model_name_verbose }}
+            {% endif %}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    
+    <!-- CKEditor 5 CDN (Modern UI) -->
+    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/41.1.0/ckeditor5.css" />
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
+    
+    <form method="post" enctype="multipart/form-data" id="productForm"
+          {% if action == 'create' %}
+          action="{% url 'dashboard:model_create' app_label model_name %}"
+          data-action-url="{% url 'dashboard:model_create' app_label model_name %}"
+          {% else %}
+          action="{% url 'dashboard:model_update' app_label model_name object.pk %}"
+          data-action-url="{% url 'dashboard:model_update' app_label model_name object.pk %}"
+          {% endif %}>
+        
+        {% csrf_token %}
+        
+        <div class="modal-body">
+            <!-- Non-field Errors -->
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                {{ form.non_field_errors }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endif %}
+            
+            <!-- Field Count Info -->
+            <div class="alert alert-info alert-dismissible fade show py-2 mb-3" role="alert">
+                <i class="bi bi-info-circle me-2"></i>
+                <small>
+                    <strong>{{ form|length }}</strong> field{{ form|length|pluralize }} to complete
+                    {% if form.fields|length > 0 %}
+                    (<span class="text-danger">*</span> = required)
+                    {% endif %}
+                </small>
+                <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert"></button>
+            </div>
+            
+            <!-- Form Fields Grid -->
+            <div class="row g-3">
+                {% for field in form %}
+                
+                {# Special handling for Description/Content fields - CKEditor #}
+                {% if field.name == 'description' or field.name == 'content' or field.name == 'body' %}
+                <div class="col-12 mb-3">
+                    <label for="{{ field.id_for_label }}" class="form-label fw-medium">
+                        {{ field.label }}
+                        {% if field.field.required %}
+                        <span class="text-danger" title="Required">*</span>
+                        {% endif %}
+                    </label>
+                    {{ field }}
+                    {% if field.help_text %}
+                    <small class="form-text text-muted d-block mt-1">
+                        <i class="bi bi-info-circle"></i> {{ field.help_text }}
+                    </small>
+                    {% endif %}
+                    {% if field.errors %}
+                    <div class="invalid-feedback d-block mt-1">
+                        <i class="bi bi-exclamation-circle"></i> {{ field.errors }}
+                    </div>
+                    {% endif %}
+                    <script>
+                        (function() {
+                            const editorId = '{{ field.id_for_label }}';
+                            const element = document.getElementById(editorId);
+                            if (element && typeof ClassicEditor !== 'undefined') {
+                                ClassicEditor
+                                    .create(element, {
+                                        toolbar: {
+                                            items: [
+                                                'heading',
+                                                '|',
+                                                'bold', 'italic', 'underline',
+                                                '|',
+                                                'link', 'bulletedList', 'numberedList',
+                                                '|',
+                                                'blockQuote', 'insertTable',
+                                                '|',
+                                                'undo', 'redo'
+                                            ]
+                                        },
+                                        language: 'en',
+                                        table: {
+                                            contentToolbar: [
+                                                'tableColumn',
+                                                'tableRow',
+                                                'mergeTableCells'
+                                            ]
+                                        }
+                                    })
+                                    .then(editor => {
+                                        window['editor_' + editorId] = editor;
+                                        // Update hidden textarea on form submit
+                                        const form = element.closest('form');
+                                        if (form) {
+                                            form.addEventListener('submit', function(e) {
+                                                element.value = editor.getData();
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('CKEditor error:', error);
+                                    });
+                            }
+                        })();
+                    </script>
+                </div>
+                
+                {# Special handling for Colors field - Checkbox style #}
+                {% elif field.name == 'colors' or field.name == 'color' %}
+                <div class="col-12 mb-3">
+                    <label class="form-label fw-medium d-block">
+                        {{ field.label }}
+                        {% if field.field.required %}
+                        <span class="text-danger" title="Required">*</span>
+                        {% endif %}
+                    </label>
+                    
+                    <!-- Existing Colors Selection -->
+                    <div class="mb-2">
+                        <small class="text-muted d-block mb-2"><i class="bi bi-palette"></i> Select from existing colors:</small>
+                        <div id="colors-checkbox-container" class="d-flex flex-wrap align-items-center gap-2">
+                            <!-- Original select field (hidden, will be used for form submission) -->
+                            {{ field }}
+                        </div>
+                    </div>
+                    
+                    <!-- Add New Color -->
+                    <div x-data="{ newColor: '', newHexCode: '#000000', showInput: false, adding: false }" class="mt-3">
+                        <button type="button" class="btn btn-sm btn-success" @click="showInput = !showInput">
+                            <i class="bi bi-plus-circle"></i> Add New Color
+                        </button>
+                        <div x-show="showInput" class="mt-2 p-3 border rounded bg-light" style="display: none;">
+                            <small class="text-muted d-block mb-2">Create a new color to add to the database:</small>
+                            <div class="row g-2">
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control form-control-sm" placeholder="Color name (e.g., Ocean Blue)" x-model="newColor">
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="color" class="form-control form-control-sm form-control-color w-100" x-model="newHexCode" title="Choose color">
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-sm btn-success w-100" @click="addNewColor()" :disabled="adding">
+                                        <i class="bi bi-check"></i> Create & Select
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-secondary mt-2" @click="showInput = false">
+                                <i class="bi bi-x"></i> Cancel
+                            </button>
+                        </div>
+                    </div>
+                    
+                    {% if field.help_text %}
+                    <small class="form-text text-muted d-block mt-1">
+                        <i class="bi bi-info-circle"></i> {{ field.help_text }}
+                    </small>
+                    {% endif %}
+                    {% if field.errors %}
+                    <div class="invalid-feedback d-block mt-1">
+                        <i class="bi bi-exclamation-circle"></i> {{ field.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                {# Special handling for Sizes field - Checkbox style #}
+                {% elif field.name == 'sizes' or field.name == 'size' %}
+                <div class="col-12 mb-3">
+                    <label class="form-label fw-medium d-block">
+                        {{ field.label }}
+                        {% if field.field.required %}
+                        <span class="text-danger" title="Required">*</span>
+                        {% endif %}
+                    </label>
+                    
+                    <!-- Existing Sizes Selection -->
+                    <div class="mb-2">
+                        <small class="text-muted d-block mb-2"><i class="bi bi-rulers"></i> Select from existing sizes:</small>
+                        <div id="sizes-checkbox-container" class="d-flex flex-wrap align-items-center gap-2">
+                            <!-- Original select field (hidden, will be used for form submission) -->
+                            {{ field }}
+                        </div>
+                    </div>
+                    
+                    <!-- Add New Size -->
+                    <div x-data="{ newSize: '', showInput: false, adding: false }" class="mt-3">
+                        <button type="button" class="btn btn-sm btn-success" @click="showInput = !showInput">
+                            <i class="bi bi-plus-circle"></i> Add New Size
+                        </button>
+                        <div x-show="showInput" class="mt-2 p-3 border rounded bg-light" style="display: none;">
+                            <small class="text-muted d-block mb-2">Create a new size to add to the database:</small>
+                            <div class="input-group">
+                                <input type="text" class="form-control form-control-sm" placeholder="Size (e.g., M, XL, 42)" x-model="newSize">
+                                <button type="button" class="btn btn-sm btn-success" @click="addNewSize()" :disabled="adding">
+                                    <i class="bi bi-check"></i> Create & Select
+                                </button>
+                                <button type="button" class="btn btn-sm btn-secondary" @click="showInput = false">
+                                    <i class="bi bi-x"></i> Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if field.help_text %}
+                    <small class="form-text text-muted d-block mt-1">
+                        <i class="bi bi-info-circle"></i> {{ field.help_text }}
+                    </small>
+                    {% endif %}
+                    {% if field.errors %}
+                    <div class="invalid-feedback d-block mt-1">
+                        <i class="bi bi-exclamation-circle"></i> {{ field.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                {# Standard field handling #}
+                {% else %}
+                <div class="col-12 mb-3 {% if field.field.widget.input_type != 'textarea' and field.field.widget.input_type != 'checkbox' and field.name != 'address' and field.name != 'notes' and field.name != 'bio' %}col-md-6{% endif %}">
+                    
+                    {% if field.field.widget.input_type == 'checkbox' %}
+                        <!-- Checkbox/Boolean Field -->
+                        <div class="form-check form-switch">
+                            {{ field }}
+                            <label class="form-check-label fw-medium" for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                            </label>
+                            {% if field.help_text %}
+                            <small class="form-text text-muted d-block ms-5">
+                                <i class="bi bi-info-circle"></i> {{ field.help_text }}
+                            </small>
+                            {% endif %}
+                            {% if field.errors %}
+                            <div class="invalid-feedback d-block ms-5">
+                                <i class="bi bi-exclamation-circle"></i> {{ field.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <!-- Standard Fields -->
+                        <label for="{{ field.id_for_label }}" class="form-label fw-medium">
+                            {{ field.label }}
+                            {% if field.field.required %}
+                            <span class="text-danger" title="Required">*</span>
+                            {% endif %}
+                        </label>
+                        {{ field }}
+                        {% if field.help_text %}
+                        <small class="form-text text-muted d-block mt-1">
+                            <i class="bi bi-info-circle"></i> {{ field.help_text }}
+                        </small>
+                        {% endif %}
+                        {% if field.errors %}
+                        <div class="invalid-feedback d-block mt-1">
+                            <i class="bi bi-exclamation-circle"></i> {{ field.errors }}
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                    
+                </div>
+                {% endif %}
+                {% endfor %}
+                
+                <!-- Product Additional Images Section (for products) -->
+                {% if 'product' in model_name|lower %}
+                <div class="col-12 mb-3">
+                    <label class="form-label fw-medium">
+                        <i class="bi bi-images"></i> Product Additional Images
+                    </label>
+                    <div class="border rounded-3 p-4 text-center" 
+                         style="border-style: dashed !important; background-color: #f8f9fa;"
+                         id="dropZone"
+                         ondrop="handleDrop(event)" 
+                         ondragover="handleDragOver(event)"
+                         ondragleave="handleDragLeave(event)">
+                        <i class="bi bi-cloud-upload fs-1 text-primary d-block mb-2"></i>
+                        <p class="mb-2">Drag & drop images here or click to browse</p>
+                        <input type="file" 
+                               id="additionalImages" 
+                               name="additional_images" 
+                               accept="image/*" 
+                               multiple 
+                               class="d-none"
+                               onchange="handleFileSelect(event)">
+                        <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('additionalImages').click()">
+                            <i class="bi bi-folder-open"></i> Browse Files
+                        </button>
+                        <small class="d-block text-muted mt-2">Supports: JPG, PNG, GIF (Max 5MB each)</small>
+                    </div>
+                    
+                    <!-- Preview Container -->
+                    <div id="imagePreview" class="row g-2 mt-2"></div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="modal-footer bg-light">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <i class="bi bi-x-circle"></i> Cancel
+            </button>
+            <button type="submit" class="btn btn-primary" id="submitBtn">
+                <i class="bi bi-check-circle"></i>
+                {% if action == 'create' %}
+                Create
+                {% else %}
+                Save Changes
+                {% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+// Global form submission handler for CKEditor - runs immediately (HTMX compatible)
+(function() {
+    const form = document.querySelector('form[method="post"]');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // Sync all CKEditor instances before submission
+            for (let key in window) {
+                if (key.startsWith('editor_')) {
+                    const editorId = key.replace('editor_', '');
+                    const element = document.getElementById(editorId);
+                    const editor = window[key];
+                    if (element && editor && typeof editor.getData === 'function') {
+                        element.value = editor.getData();
+                    }
+                }
+            }
+        });
+    }
+})();
+</script>
+
+<style>
+    /* CKEditor 5 Modern Styling */
+    .ck-editor__editable {
+        min-height: 250px;
+        border-radius: 8px;
+    }
+    
+    .ck.ck-editor__main>.ck-editor__editable {
+        background-color: #ffffff;
+    }
+    
+    .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
+        border-color: #dee2e6;
+    }
+    
+    .ck.ck-toolbar {
+        border-radius: 8px 8px 0 0;
+        background: #f8f9fa;
+        border-color: #dee2e6;
+    }
+    
+    /* Color and Size Options - Professional Button Style */
+    select[name="colors"], select[name="color"], select[name="sizes"], select[name="size"] {
+        display: none !important;
+    }
+    
+    .color-option, .size-option {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .color-option .btn-check,
+    .size-option .btn-check {
+        position: absolute;
+        clip: rect(0, 0, 0, 0);
+        pointer-events: none;
+    }
+    
+    .color-option .btn,
+    .size-option .btn {
+        padding: 8px 20px;
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+        border: 2px solid #dee2e6;
+    }
+    
+    .color-option .btn-check:checked + .btn,
+    .size-option .btn-check:checked + .btn {
+        background-color: #0d6efd !important;
+        color: white !important;
+        border-color: #0d6efd !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+    }
+    
+    .color-option .btn:hover,
+    .size-option .btn:hover {
+        border-color: #0d6efd;
+        transform: translateY(-2px);
+        box-shadow: 0 2px 8px rgba(13, 110, 253, 0.2);
+    }
+    
+    /* Drag and drop styling */
+    #dropZone.drag-over {
+        background-color: #e7f3ff !important;
+        border-color: #0d6efd !important;
+    }
+    
+    .image-preview-item {
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 2px solid #dee2e6;
+    }
+    
+    .image-preview-item img {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+    }
+    
+    .image-preview-item .remove-btn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: rgba(220, 53, 69, 0.9);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+    }
+    
+    .image-preview-item .remove-btn:hover {
+        background: #dc3545;
+        transform: scale(1.1);
+    }
+</style>
+
+<script>
+// Global variables
+let selectedFiles = [];
+let allEditors = {};
+
+// Drag and Drop handlers
+function handleDragOver(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const dropZone = document.getElementById('dropZone');
+    if (dropZone) dropZone.classList.add('drag-over');
+}
+
+function handleDragLeave(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const dropZone = document.getElementById('dropZone');
+    if (dropZone) dropZone.classList.remove('drag-over');
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const dropZone = document.getElementById('dropZone');
+    if (dropZone) dropZone.classList.remove('drag-over');
+    
+    const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
+    addFiles(files);
+}
+
+function handleFileSelect(e) {
+    const files = Array.from(e.target.files);
+    addFiles(files);
+}
+
+function addFiles(files) {
+    files.forEach(file => {
+        if (file.size > 5 * 1024 * 1024) {
+            alert(`${file.name} is too large. Max size is 5MB.`);
+            return;
+        }
+        selectedFiles.push(file);
+    });
+    displayPreviews();
+}
+
+function displayPreviews() {
+    const previewContainer = document.getElementById('imagePreview');
+    if (!previewContainer) return;
+    
+    previewContainer.innerHTML = '';
+    
+    selectedFiles.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const col = document.createElement('div');
+            col.className = 'col-6 col-md-3';
+            col.innerHTML = `
+                <div class="image-preview-item">
+                    <img src="${e.target.result}" alt="Preview">
+                    <button type="button" class="remove-btn" onclick="removeImage(${index})">
+                        <i class="bi bi-x"></i>
+                    </button>
+                </div>
+            `;
+            previewContainer.appendChild(col);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function removeImage(index) {
+    selectedFiles.splice(index, 1);
+    displayPreviews();
+}
+
+// Convert select fields to checkboxes for colors and sizes - runs immediately (HTMX compatible)
+(function() {
+    convertToCheckboxes('colors', 'color', 'colors-checkbox-container');
+    convertToCheckboxes('sizes', 'size', 'sizes-checkbox-container');
+})();
+
+function convertToCheckboxes(fieldName, singularName, containerId) {
+    const selects = document.querySelectorAll(`select[name="${fieldName}"], select[name="${singularName}"]`);
+    
+    selects.forEach(select => {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        // Hide the original select
+        select.style.display = 'none';
+        
+        // Get selected values
+        const selectedValues = Array.from(select.selectedOptions).map(opt => opt.value);
+        
+        // Create checkboxes for each option
+        Array.from(select.options).forEach(option => {
+            if (option.value) {
+                const wrapper = document.createElement('div');
+                wrapper.className = fieldName === 'colors' || fieldName === 'color' ? 'color-option' : 'size-option';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'btn-check';
+                checkbox.value = option.value;
+                checkbox.id = `${select.name}_${option.value}`;
+                checkbox.checked = selectedValues.includes(option.value);
+                checkbox.autocomplete = 'off';
+                
+                // Update hidden select when checkbox changes
+                checkbox.addEventListener('change', function() {
+                    updateSelectField(select, fieldName, singularName);
+                });
+                
+                const label = document.createElement('label');
+                label.className = 'btn btn-outline-primary';
+                label.htmlFor = checkbox.id;
+                label.textContent = option.text;
+                
+                wrapper.appendChild(checkbox);
+                wrapper.appendChild(label);
+                container.insertBefore(wrapper, container.firstChild);
+            }
+        });
+    });
+}
+
+function updateSelectField(select, fieldName, singularName) {
+    const checkboxes = document.querySelectorAll(`input[type="checkbox"][id^="${select.name}_"]`);
+    
+    // Deselect all options
+    Array.from(select.options).forEach(opt => opt.selected = false);
+    
+    // Select checked options
+    checkboxes.forEach(cb => {
+        if (cb.checked) {
+            const option = Array.from(select.options).find(opt => opt.value === cb.value);
+            if (option) option.selected = true;
+        }
+    });
+}
+
+// Add new color via AJAX
+window.addNewColor = async function() {
+    const colorInput = document.querySelector('[x-model="newColor"]');
+    const hexInput = document.querySelector('[x-model="newHexCode"]');
+    
+    const newColor = colorInput?.value.trim();
+    let newHexCode = hexInput?.value.trim();
+    
+    if (!newColor || !newHexCode) {
+        alert('Please enter both color name and hex code');
+        return;
+    }
+    
+    // Ensure hex code starts with #
+    if (!newHexCode.startsWith('#')) {
+        newHexCode = '#' + newHexCode;
+    }
+    
+    // Validate hex code (supports both #RGB and #RRGGBB formats)
+    if (!/^#([0-9A-F]{3}|[0-9A-F]{6})$/i.test(newHexCode)) {
+        alert('Invalid hex code format. Use format like #FF0000 or #F00');
+        return;
+    }
+    
+    // Convert 3-digit to 6-digit format
+    if (newHexCode.length === 4) {
+        newHexCode = '#' + newHexCode[1] + newHexCode[1] + newHexCode[2] + newHexCode[2] + newHexCode[3] + newHexCode[3];
+    }
+    
+    try {
+        const response = await fetch('/dashboard/api/add-color/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({ name: newColor, hex_code: newHexCode.toUpperCase() })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Add to select field
+            const select = document.querySelector('select[name="colors"]');
+            if (select) {
+                const option = document.createElement('option');
+                option.value = data.color.id;
+                option.text = data.color.name;
+                option.selected = true;
+                select.add(option);
+                
+                // Add checkbox
+                const container = document.getElementById('colors-checkbox-container');
+                if (container) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'color-option';
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.className = 'btn-check';
+                    checkbox.value = data.color.id;
+                    checkbox.id = `colors_${data.color.id}`;
+                    checkbox.checked = true;
+                    checkbox.autocomplete = 'off';
+                    checkbox.addEventListener('change', function() {
+                        updateSelectField(select, 'colors', 'color');
+                    });
+                    
+                    const label = document.createElement('label');
+                    label.className = 'btn btn-outline-primary';
+                    label.htmlFor = checkbox.id;
+                    label.textContent = data.color.name;
+                    
+                    wrapper.appendChild(checkbox);
+                    wrapper.appendChild(label);
+                    container.insertBefore(wrapper, container.firstChild);
+                }
+            }
+            
+            // Reset inputs and hide form
+            colorInput.value = '';
+            hexInput.value = '#000000';
+            
+            // Close the add form
+            const addButton = colorInput.closest('[x-data]');
+            if (addButton) {
+                // Trigger Alpine.js to hide the form
+                setTimeout(() => {
+                    const cancelBtn = addButton.querySelector('button[\\@click*="showInput = false"]');
+                    if (cancelBtn) cancelBtn.click();
+                }, 100);
+            }
+            
+            alert(`Color "${data.color.name}" added and selected!`);
+        } else {
+            alert(data.error || 'Failed to add color');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to add color. Please try again.');
+    }
+};
+
+// Add new size via AJAX
+window.addNewSize = async function() {
+    const newSize = document.querySelector('[x-model="newSize"]')?.value.trim();
+    
+    if (!newSize) {
+        alert('Please enter a size name');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/dashboard/api/add-size/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({ name: newSize })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Add to select field
+            const select = document.querySelector('select[name="sizes"]');
+            if (select) {
+                const option = document.createElement('option');
+                option.value = data.size.id;
+                option.text = data.size.name;
+                option.selected = true;
+                select.add(option);
+                
+                // Add checkbox
+                const container = document.getElementById('sizes-checkbox-container');
+                if (container) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'size-option';
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.className = 'btn-check';
+                    checkbox.value = data.size.id;
+                    checkbox.id = `sizes_${data.size.id}`;
+                    checkbox.checked = true;
+                    checkbox.autocomplete = 'off';
+                    checkbox.addEventListener('change', function() {
+                        updateSelectField(select, 'sizes', 'size');
+                    });
+                    
+                    const label = document.createElement('label');
+                    label.className = 'btn btn-outline-primary';
+                    label.htmlFor = checkbox.id;
+                    label.textContent = data.size.name;
+                    
+                    wrapper.appendChild(checkbox);
+                    wrapper.appendChild(label);
+                    container.insertBefore(wrapper, container.firstChild);
+                }
+            }
+            
+            // Reset input and hide form
+            const sizeInput = document.querySelector('[x-model="newSize"]');
+            sizeInput.value = '';
+            
+            // Close the add form
+            const addButton = sizeInput.closest('[x-data]');
+            if (addButton) {
+                setTimeout(() => {
+                    const cancelBtn = addButton.querySelector('button[\\@click*="showInput = false"]');
+                    if (cancelBtn) cancelBtn.click();
+                }, 100);
+            }
+            
+            alert(`Size "${data.size.name}" added and selected!`);
+        } else {
+            alert(data.error || 'Failed to add size');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to add size. Please try again.');
+    }
+};
+
+// Form submission handler - runs immediately (HTMX compatible)
+(function() {
+    const form = document.getElementById('productForm');
+    if (!form) return;
+    
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Sync all CKEditor instances
+        for (let key in window) {
+            if (key.startsWith('editor_')) {
+                const editorId = key.replace('editor_', '');
+                const element = document.getElementById(editorId);
+                const editor = window[key];
+                if (element && editor && typeof editor.getData === 'function') {
+                    element.value = editor.getData();
+                }
+            }
+        }
+        
+        // Create FormData
+        const formData = new FormData(form);
+        
+        // Add additional images
+        selectedFiles.forEach((file, index) => {
+            formData.append('additional_images', file);
+        });
+        
+        // Submit via fetch with proper headers
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        
+        try {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
+            
+            const response = await fetch(form.dataset.actionUrl, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            
+            const contentType = response.headers.get('content-type');
+            
+            // Check if response is JSON (success response)
+            if (contentType && contentType.includes('application/json')) {
+                const data = await response.json();
+                if (data.success && data.redirect) {
+                    // Close modal first
+                    const modalElement = document.getElementById('dashboard-modal');
+                    if (modalElement) {
+                        const modal = bootstrap.Modal.getInstance(modalElement);
+                        if (modal) modal.hide();
+                    }
+                    // Redirect to the list page
+                    window.location.href = data.redirect;
+                    return;
+                } else if (data.error) {
+                    alert(data.error);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                    return;
+                }
+            }
+            
+            // If response is HTML (form with validation errors)
+            if (contentType && contentType.includes('text/html')) {
+                const html = await response.text();
+                // Replace modal content with form that has errors
+                document.getElementById('dashboard-modal-body').innerHTML = html;
+                // Re-initialize any scripts in the new content
+                return;
+            }
+            
+            // Fallback: if response is OK but we don't know the type
+            if (response.ok) {
+                const modalElement = document.getElementById('dashboard-modal');
+                if (modalElement) {
+                    const modal = bootstrap.Modal.getInstance(modalElement);
+                    if (modal) modal.hide();
+                }
+                window.location.reload();
+            } else {
+                // Error response
+                const html = await response.text();
+                document.getElementById('dashboard-modal-body').innerHTML = html;
+            }
+            
+        } catch (error) {
+            console.error('Form submission error:', error);
+            alert('Failed to submit form. Please check your connection and try again.');
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        }
+    });
+})();
+</script>

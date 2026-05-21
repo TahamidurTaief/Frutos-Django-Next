@@ -1,0 +1,140 @@
+<table class="table align-middle table-hover">
+    <thead class="table-light">
+        <tr>
+            <th class="ps-4">Order #</th>
+            <th>Customer</th>
+            <th>Email</th>
+            <th class="text-end">Amount</th>
+            <th>Status</th>
+            <th>Payment</th>
+            <th class="text-center">Date</th>
+            <th class="text-end pe-4">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if orders %}
+            {% for order in orders %}
+                <tr>
+                    <td class="ps-4">
+                        <button type="button"
+                                class="btn btn-link p-0 text-primary fw-semibold text-decoration-none"
+                                title="View order details"
+                                hx-get="{% url 'dashboard:order_detail' order.pk %}"
+                                hx-target="#modal-container"
+                                hx-swap="innerHTML">
+                            {{ order.order_number }}
+                        </button>
+                    </td>
+                    <td>
+                        <span title="{{ order.customer_name }}">{{ order.customer_name|truncatewords:3 }}</span>
+                    </td>
+                    <td>
+                        <small class="text-muted">{{ order.customer_email|truncatechars:20 }}</small>
+                    </td>
+                    <td class="text-end">
+                        <span class="fw-semibold">
+                            {% if order.total_amount %}
+                                {{ order.total_amount|floatformat:0 }} BDT
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        <!-- Inline Status Dropdown with HTMX -->
+                        <select name="status" 
+                                class="form-select form-select-sm status-dropdown" 
+                                style="width: auto; min-width: 130px; background-color: white;"
+                                hx-post="{% url 'dashboard:order_update_status' order.pk %}"
+                                hx-trigger="change"
+                                hx-target="#order-table-container"
+                                hx-swap="innerHTML"
+                                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+                            {% for value, label in order_statuses %}
+                                <option value="{{ value }}" {% if order.status == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <span class="badge badge-status 
+                            {% if order.payment_status == 'PAID' %}badge-paid
+                            {% elif order.payment_status == 'PENDING' %}badge-pending
+                            {% elif order.payment_status == 'FAILED' %}badge-failed
+                            {% endif %}">
+                            {{ order.get_payment_status_display }}
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <small class="text-muted d-block">{{ order.ordered_at|date:"M d" }}</small>
+                        <small class="text-muted">{{ order.ordered_at|date:"H:i" }}</small>
+                    </td>
+                    <td class="text-end pe-4">
+                        <div class="d-flex justify-content-end align-items-center" style="gap: 8px;">
+                            <!-- Quick View Button -->
+                            <button type="button" 
+                                    class="btn btn-sm btn-light border-0 d-flex align-items-center justify-content-center" 
+                                    style="width: 32px; height: 32px; border-radius: 6px;"
+                                    title="View Details"
+                                    data-bs-toggle="tooltip"
+                                    hx-get="{% url 'dashboard:order_detail' order.pk %}"
+                                    hx-target="#modal-container"
+                                    hx-swap="innerHTML">
+                                <i class="material-symbols-outlined" style="font-size: 18px; color: #3b82f6;">visibility</i>
+                            </button>
+                            
+                            <!-- Print Button -->
+                            <a href="{% url 'dashboard:order_print' order.pk %}" 
+                               target="_blank"
+                               class="btn btn-sm btn-light border-0 d-flex align-items-center justify-content-center" 
+                               style="width: 32px; height: 32px; border-radius: 6px;"
+                               title="Print"
+                               data-bs-toggle="tooltip">
+                                <i class="material-symbols-outlined" style="font-size: 18px; color: #8b5cf6;">print</i>
+                            </a>
+                            
+                            <!-- Edit Button -->
+                            <button type="button" 
+                                    class="btn btn-sm btn-light border-0 d-flex align-items-center justify-content-center" 
+                                    style="width: 32px; height: 32px; border-radius: 6px;"
+                                    title="Edit"
+                                    data-bs-toggle="tooltip"
+                                    hx-get="{% url 'dashboard:order_edit' order.pk %}" 
+                                    hx-target="#modal-container" 
+                                    hx-swap="innerHTML">
+                                <i class="material-symbols-outlined" style="font-size: 18px; color: #10b981;">edit</i>
+                            </button>
+                            
+                            <!-- Delete Button -->
+                            <button type="button" 
+                                    class="btn btn-sm btn-light border-0 d-flex align-items-center justify-content-center" 
+                                    style="width: 32px; height: 32px; border-radius: 6px;"
+                                    title="Delete"
+                                    data-bs-toggle="tooltip"
+                                    hx-get="{% url 'dashboard:order_delete' order.pk %}" 
+                                    hx-target="#modal-container"
+                                    hx-swap="innerHTML">
+                                <i class="material-symbols-outlined" style="font-size: 18px; color: #ef4444;">delete</i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="8" class="text-center py-4">
+                    <div class="text-muted">
+                        <span class="material-symbols-outlined" style="font-size: 2.5rem; opacity: 0.3;">folder_open</span>
+                        <p class="mb-0 mt-2">No orders found</p>
+                    </div>
+                </td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+
+<script>
+    // Initialize tooltips
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+        new bootstrap.Tooltip(el);
+    });
+</script>

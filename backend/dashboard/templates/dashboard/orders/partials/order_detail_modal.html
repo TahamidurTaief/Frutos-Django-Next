@@ -1,0 +1,226 @@
+<div class="modal fade" id="orderDetailModal" tabindex="-1" role="dialog" aria-labelledby="orderDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title" id="orderDetailModalLabel">
+                    <strong>Order #{{ order.order_number }}</strong>
+                    <small class="text-muted ms-2">{{ order.ordered_at|date:"F d, Y H:i" }}</small>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <div class="modal-body">
+                <!-- Status Badges -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <small class="text-muted d-block me-2">Order Status:</small>
+                            <span class="badge badge-status 
+                                {% if order.status == 'PENDING' %}badge-pending
+                                {% elif order.status == 'PROCESSING' %}badge-processing
+                                {% elif order.status == 'SHIPPED' %}badge-shipped
+                                {% elif order.status == 'DELIVERED' %}badge-delivered
+                                {% elif order.status == 'CANCELLED' %}badge-cancelled
+                                {% endif %}">
+                                {{ order.get_status_display }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <small class="text-muted d-block me-2">Payment Status:</small>
+                            <span class="badge badge-status 
+                                {% if order.payment_status == 'PAID' %}badge-paid
+                                {% elif order.payment_status == 'PENDING' %}badge-pending
+                                {% elif order.payment_status == 'FAILED' %}badge-failed
+                                {% endif %}">
+                                {{ order.get_payment_status_display }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- Customer Information -->
+                <div class="mb-4">
+                    <h6 class="fw-semibold mb-3">Customer Information</h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <small class="text-muted d-block mb-1">Name</small>
+                            <span class="d-block">{{ order.customer_name }}</span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <small class="text-muted d-block mb-1">Email</small>
+                            <span class="d-block">{{ order.customer_email }}</span>
+                        </div>
+                        <div class="col-md-6">
+                            <small class="text-muted d-block mb-1">Phone</small>
+                            <span class="d-block">{{ order.customer_phone }}</span>
+                        </div>
+                        <div class="col-md-6">
+                            <small class="text-muted d-block mb-1">User Account</small>
+                            <span class="d-block">
+                                {% if order.user %}
+                                    {{ order.user.get_full_name|default:order.user.email }}
+                                {% else %}
+                                    <em class="text-muted">Guest Order</em>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- Order Items -->
+                <div class="mb-4">
+                    <h6 class="fw-semibold mb-3">Order Items</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Product</th>
+                                    <th class="text-end">Qty</th>
+                                    <th class="text-end">Price</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in order_items %}
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <strong>{{ item.product.name }}</strong>
+                                                {% if item.color %}
+                                                    <small class="text-muted d-block">Color: {{ item.color.name }}</small>
+                                                {% endif %}
+                                                {% if item.size %}
+                                                    <small class="text-muted d-block">Size: {{ item.size.name }}</small>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                        <td class="text-end">{{ item.quantity }}</td>
+                                        <td class="text-end">{{ item.price|floatformat:2 }} BDT</td>
+                                        <td class="text-end fw-semibold">{{ item.get_total|floatformat:2 }} BDT</td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted py-3">No items in this order</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- Pricing Summary -->
+                <div class="mb-4">
+                    <h6 class="fw-semibold mb-3">Pricing Summary</h6>
+                    <div class="row">
+                        <div class="col-md-6 ms-auto">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Subtotal:</span>
+                                <span>{{ order.cart_subtotal|floatformat:2 }} BDT</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Total:</span>
+                                <span class="fw-semibold fs-16">{{ order.total_amount|floatformat:2 }} BDT</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- Shipping Information -->
+                <div class="mb-4">
+                    <h6 class="fw-semibold mb-3">Shipping Information</h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <small class="text-muted d-block mb-1">Shipping Method</small>
+                            <span class="d-block">
+                                {% if order.shipping_method %}
+                                    {{ order.shipping_method.name }}
+                                {% else %}
+                                    <em class="text-muted">Not set</em>
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <small class="text-muted d-block mb-1">Tracking Number</small>
+                            <span class="d-block">
+                                {% if order.tracking_number %}
+                                    <code class="bg-light p-2 rounded">{{ order.tracking_number }}</code>
+                                {% else %}
+                                    <em class="text-muted">Not available</em>
+                                {% endif %}
+                            </span>
+                        </div>
+                        {% if order.shipping_address %}
+                            <div class="col-12">
+                                <small class="text-muted d-block mb-1">Shipping Address</small>
+                                <span class="d-block">
+                                    {{ order.shipping_address.address_line1 }}<br>
+                                    {% if order.shipping_address.address_line2 %}
+                                        {{ order.shipping_address.address_line2 }}<br>
+                                    {% endif %}
+                                    {{ order.shipping_address.city }}, {{ order.shipping_address.state }} {{ order.shipping_address.postal_code }}<br>
+                                    {{ order.shipping_address.country }}
+                                </span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="material-symbols-outlined align-middle" style="font-size: 18px;">close</i> Close
+                </button>
+                <a href="{% url 'dashboard:order_print' order.pk %}" 
+                   target="_blank" 
+                   class="btn btn-info">
+                    <i class="material-symbols-outlined align-middle" style="font-size: 18px;">print</i> Print
+                </a>
+                <button type="button" 
+                        class="btn btn-success" 
+                        onclick="downloadOrderPDF({{ order.pk }})">
+                    <i class="material-symbols-outlined align-middle" style="font-size: 18px;">download</i> Download PDF
+                </button>
+                <button type="button" 
+                        class="btn btn-primary" 
+                        hx-get="{% url 'dashboard:order_edit' order.pk %}" 
+                        hx-target="#modal-container" 
+                        hx-swap="innerHTML">
+                    <i class="material-symbols-outlined align-middle" style="font-size: 18px;">edit</i> Edit
+                </button>
+                <button type="button" 
+                        class="btn btn-danger" 
+                        hx-get="{% url 'dashboard:order_delete' order.pk %}" 
+                        hx-target="#modal-container"
+                        hx-swap="innerHTML">
+                    <i class="material-symbols-outlined align-middle" style="font-size: 18px;">delete</i> Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function downloadOrderPDF(orderId) {
+        // Open print view in new window and trigger print dialog
+        const printWindow = window.open('{% url "dashboard:order_print" order.pk %}', '_blank');
+        printWindow.onload = function() {
+            printWindow.print();
+        };
+    }
+</script>
+
+<script>
+    // Show modal
+    const detailModal = new bootstrap.Modal(document.getElementById('orderDetailModal'));
+    detailModal.show();
+</script>

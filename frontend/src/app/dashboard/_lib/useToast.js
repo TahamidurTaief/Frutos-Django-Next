@@ -1,0 +1,27 @@
+/**
+ * useToast — minimal toast notification hook for dashboard.
+ */
+
+"use client";
+
+import { useState, useCallback } from "react";
+
+export function useToast() {
+  const [toasts, setToasts] = useState([]);
+
+  const addToast = useCallback((message, type = "success", duration = 4000) => {
+    const id = Date.now() + Math.random();
+    setToasts((prev) => [...prev, { id, message, type }]);
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, duration);
+  }, []);
+
+  const success = useCallback((msg) => addToast(msg, "success"), [addToast]);
+  const error = useCallback((msg) => addToast(typeof msg === "string" ? msg : msg?.message || "An error occurred", "error"), [addToast]);
+  const info = useCallback((msg) => addToast(msg, "info"), [addToast]);
+
+  return { toasts, success, error, info };
+}
+
+export default useToast;

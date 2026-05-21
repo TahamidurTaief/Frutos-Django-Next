@@ -1,0 +1,100 @@
+<div class="card bg-white p-20 rounded-10 border border-white">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-20">
+        <h3>Order Summary</h3>
+
+        <div class="dropdown select-dropdown without-border">
+            <button class="dropdown-toggle bg-transparent text-secondary fs-15" data-bs-toggle="dropdown" aria-expanded="false">
+                This Week
+            </button>
+        
+            <ul class="dropdown-menu dropdown-menu-end bg-white border-0 box-shadow rounded-10" data-simplebar>
+                <li>
+                    <button class="dropdown-item text-secondary">This Day</button>
+                </li>
+                <li>
+                    <button class="dropdown-item text-secondary">This Week</button>
+                </li>
+                <li>
+                    <button class="dropdown-item text-secondary">This Month</button>
+                </li>
+                <li>
+                    <button class="dropdown-item text-secondary">This Year</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="d-flex justify-content-between align-items-center mb-20">
+        <span class="fs-15 text-secondary">
+            Completed {{ completed_count }}
+            {% if total_orders > 0 %}
+                ({{ completed_percent|floatformat:0 }}%)
+            {% endif %}
+        </span>
+        <span class="fs-15 text-secondary">
+            Pending {{ pending_count }}
+            {% if total_orders > 0 %}
+                ({{ pending_percent|floatformat:0 }}%)
+            {% endif %}
+        </span>
+        <span class="fs-15 text-secondary">
+            Cancelled {{ cancelled_count }}
+            {% if total_orders > 0 %}
+                ({{ cancelled_percent|floatformat:0 }}%)
+            {% endif %}
+        </span>
+    </div>
+
+    <div id="order_summary_chart"></div>
+</div>
+
+<script>
+    // Initialize Order Summary Chart when this partial is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        initOrderSummaryChart();
+    });
+    
+    // Also try immediately
+    if (typeof ApexCharts !== 'undefined' && document.getElementById('order_summary_chart')) {
+        initOrderSummaryChart();
+    }
+    
+    function initOrderSummaryChart() {
+        if (document.getElementById('order_summary_chart') && typeof ApexCharts !== 'undefined') {
+            var orderSummaryOptions = {
+                series: [{{ completed_count }}, {{ pending_count }}, {{ cancelled_count }}],
+                chart: {
+                    type: 'donut',
+                    height: 300
+                },
+                labels: ['Completed', 'Pending', 'Cancelled'],
+                colors: ['#3b82f6', '#f59e0b', '#ef4444'],
+                legend: {
+                    show: false
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function(val) {
+                        return val.toFixed(0) + '%';
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '70%'
+                        }
+                    }
+                }
+            };
+            
+            // Destroy existing chart if it exists
+            var existingChart = document.querySelector('#order_summary_chart')?._apexcharts;
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            
+            var orderSummaryChart = new ApexCharts(document.querySelector("#order_summary_chart"), orderSummaryOptions);
+            orderSummaryChart.render();
+        }
+    }
+</script>

@@ -1,0 +1,40 @@
+/* Custom Admin CSS - UX refinements
+   - Rotates parent chevron icon when sidebar menus are expanded
+   - Ensures smooth transition and consistent icon color for dark sidebar
+*/
+
+/* Smooth rotation and consistent origin */
+.nav-sidebar .nav-link .fas.fa-chevron-right,
+.nav-sidebar .nav-link .fas.fa-angle-left,
+.nav-sidebar .nav-link .right-icon,
+.nav-sidebar .nav-link .nav-icon .fas.fa-chevron-right {
+  transition: transform 180ms ease-in-out, color 180ms ease-in-out;
+  transform-origin: center;
+}
+
+/* Rotate when the parent has the .menu-open state (AdminLTE/Jazzmin behavior) */
+.nav-sidebar .nav-item.menu-open > .nav-link .fas.fa-chevron-right,
+.nav-sidebar .nav-item.menu-open > .nav-link .fas.fa-angle-left,
+.nav-sidebar .nav-item.menu-open > .nav-link .right-icon {
+  transform: rotate(90deg);
+}
+
+/* Also rotate when the link is marked expanded via ARIA */
+.nav-sidebar .nav-link[aria-expanded="true"] .fas.fa-chevron-right,
+.nav-sidebar .nav-link[aria-expanded="true"] .fas.fa-angle-left,
+.nav-sidebar .nav-link[aria-expanded="true"] .right-icon {
+  transform: rotate(90deg);
+}
+
+/* Dark sidebar: ensure icons are high-contrast */
+.sidebar-dark-gray .nav-link .fas,
+.sidebar-dark-gray .nav-link .far,
+.sidebar-dark-gray .nav-link .fal {
+  color: #e5e7eb !important; /* Tailwind gray-200 */
+}
+
+/* Subtle hover affordance */
+.sidebar-dark-gray .nav-link:hover .fas,
+.sidebar-dark-gray .nav-link:focus .fas {
+  color: #ffffff !important;
+}

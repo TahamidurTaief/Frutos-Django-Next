@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product: {{ product.name }} - Print</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f8f9fa;
+            padding: 20px;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+        
+        .print-container {
+            max-width: 210mm; /* A4 width */
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            min-height: 297mm; /* A4 height */
+        }
+        
+        /* Modern Icons */
+        .icon {
+            font-family: 'Material Symbols Outlined';
+            font-size: 20px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #3b82f6;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            color: #6b7280;
+            font-size: 1rem;
+        }
+        
+        .product-image {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .product-image img {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .info-section h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 8px;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .info-label {
+            font-weight: 500;
+            color: #6b7280;
+        }
+        
+        .info-value {
+            font-weight: 500;
+            color: #1f2937;
+            text-align: right;
+        }
+        
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+        
+        .status-active { background: #d1fae5; color: #065f46; }
+        .status-inactive { background: #f3f4f6; color: #6b7280; }
+        
+        .description-box {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+            margin: 30px 0;
+        }
+        
+        .description-box h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .variants-section {
+            margin: 30px 0;
+        }
+        
+        .variant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .variant-item {
+            background: white;
+            border: 2px solid #e5e7eb;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .color-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+            border: 1px solid #d1d5db;
+        }
+        
+        .footer {
+            margin-top: 60px;
+            text-align: center;
+            padding-top: 24px;
+            border-top: 2px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        .print-actions {
+            text-align: center;
+            margin-bottom: 40px;
+            gap: 16px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .print-container {
+                box-shadow: none;
+                padding: 20px;
+                margin: 0;
+            }
+            
+            .print-actions {
+                display: none !important;
+            }
+            
+            @page {
+                size: A4;
+                margin: 15mm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="print-container">
+        <div class="print-actions">
+            <button onclick="window.print()" class="btn btn-primary">
+                <i class="material-symbols-outlined" style="font-size: 20px;">print</i> Print Product
+            </button>
+            <button onclick="window.close()" class="btn btn-secondary">
+                <i class="material-symbols-outlined" style="font-size: 20px;">close</i> Close
+            </button>
+        </div>
+        
+        <div class="header">
+            <h1>PRODUCT DETAILS</h1>
+            <p>{{ product.name }}</p>
+        </div>
+        
+        {% if product.thumbnail %}
+        <div class="product-image">
+            <img src="{{ product.thumbnail.url }}" alt="{{ product.name }}">
+        </div>
+        {% endif %}
+        
+        <div class="info-grid">
+            <div class="info-section">
+                <h3>
+                    <i class="material-symbols-outlined">info</i> Basic Information
+                </h3>
+                <div class="info-row">
+                    <span class="info-label">Product Name:</span>
+                    <span class="info-value">{{ product.name }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">SKU/Slug:</span>
+                    <span class="info-value">{{ product.slug }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Status:</span>
+                    <span class="info-value">
+                        <span class="status-badge status-{% if product.is_active %}active{% else %}inactive{% endif %}">
+                            {% if product.is_active %}Active{% else %}Inactive{% endif %}
+                        </span>
+                    </span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Shop:</span>
+                    <span class="info-value">{{ product.shop.name }}</span>
+                </div>
+                {% if product.brand %}
+                <div class="info-row">
+                    <span class="info-label">Brand:</span>
+                    <span class="info-value">{{ product.brand.name }}</span>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="info-section">
+                <h3>
+                    <i class="material-symbols-outlined">payments</i> Pricing & Stock
+                </h3>
+                <div class="info-row">
+                    <span class="info-label">Price:</span>
+                    <span class="info-value">${{ product.price }}</span>
+                </div>
+                {% if product.discount_price %}
+                <div class="info-row">
+                    <span class="info-label">Discount Price:</span>
+                    <span class="info-value" style="color: #059669;">${{ product.discount_price }}</span>
+                </div>
+                {% endif %}
+                {% if product.wholesale_price %}
+                <div class="info-row">
+                    <span class="info-label">Wholesale Price:</span>
+                    <span class="info-value">${{ product.wholesale_price }}</span>
+                </div>
+                {% endif %}
+                <div class="info-row">
+                    <span class="info-label">Stock:</span>
+                    <span class="info-value">{{ product.stock }} units</span>
+                </div>
+                {% if product.minimum_purchase %}
+                <div class="info-row">
+                    <span class="info-label">Min. Purchase:</span>
+                    <span class="info-value">{{ product.minimum_purchase }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="info-grid">
+            <div class="info-section">
+                <h3>
+                    <i class="material-symbols-outlined">category</i> Category
+                </h3>
+                <div class="info-row">
+                    <span class="info-label">Main Category:</span>
+                    <span class="info-value">{{ product.sub_category.category.name }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Sub Category:</span>
+                    <span class="info-value">{{ product.sub_category.name }}</span>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h3>
+                    <i class="material-symbols-outlined">straighten</i> Dimensions
+                </h3>
+                {% if product.weight %}
+                <div class="info-row">
+                    <span class="info-label">Weight:</span>
+                    <span class="info-value">{{ product.weight }} kg</span>
+                </div>
+                {% endif %}
+                {% if product.length or product.width or product.height %}
+                <div class="info-row">
+                    <span class="info-label">Dimensions (L×W×H):</span>
+                    <span class="info-value">
+                        {% if product.length %}{{ product.length }}{% endif %}
+                        {% if product.width %} × {{ product.width }}{% endif %}
+                        {% if product.height %} × {{ product.height }}{% endif %} cm
+                    </span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        {% if product.description %}
+        <div class="description-box">
+            <h3>
+                <i class="material-symbols-outlined">description</i> Product Description
+            </h3>
+            <div>
+                {{ product.description|safe }}
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if product.colors.all or product.sizes.all %}
+        <div class="variants-section">
+            <div class="info-section">
+                <h3>
+                    <i class="material-symbols-outlined">palette</i> Available Variants
+                </h3>
+            </div>
+            
+            {% if product.colors.all %}
+            <div style="margin-bottom: 20px;">
+                <h4 style="font-size: 0.9rem; color: #6b7280; margin-bottom: 10px;">Colors:</h4>
+                <div class="variant-grid">
+                    {% for color in product.colors.all %}
+                        <div class="variant-item">
+                            <span class="color-dot" style="background-color: {{ color.hex_code }};"></span>
+                            {{ color.name }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if product.sizes.all %}
+            <div>
+                <h4 style="font-size: 0.9rem; color: #6b7280; margin-bottom: 10px;">Sizes:</h4>
+                <div class="variant-grid">
+                    {% for size in product.sizes.all %}
+                        <div class="variant-item">
+                            {{ size.name }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <div class="footer">
+            <p><strong>Product Information Sheet</strong></p>
+            <p style="margin-top: 8px;">Generated on {{ "now"|date:"F d, Y H:i" }}</p>
+            <p style="margin-top: 4px;">Created: {{ product.created_at|date:"M d, Y" }} • Last Updated: {{ product.updated_at|date:"M d, Y" }}</p>
+        </div>
+    </div>
+</body>
+</html>

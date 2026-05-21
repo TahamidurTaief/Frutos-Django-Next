@@ -1,0 +1,371 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Links Of CSS File -->
+    <link rel="stylesheet" href="{% static 'assets/css/sidebar-menu.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/simplebar.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/prism.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/quill.snow.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/remixicon.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/swiper-bundle.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/jsvectormap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{% static 'assets/images/favicon.png' %}"
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.5/dist/cdn.min.js"></script>
+    
+    <!-- Additional Styling for Dashboard -->
+    <style>
+        /* Ensure proper scrolling and overflow handling */
+        body {
+            overflow-x: hidden;
+        }
+        
+        /* Modal improvements */
+        .modal-dialog {
+            max-height: 90vh;
+        }
+        
+        .modal-body {
+            max-height: calc(90vh - 120px);
+            overflow-y: auto;
+        }
+        
+        /* Form Controls - Consistent Heights and Styling */
+        .form-control, 
+        .form-select {
+            height: 2.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            padding: 0.625rem 0.875rem;
+            font-size: 0.938rem;
+            background-color: white;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        
+        .form-control:focus, 
+        .form-select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+        
+        .form-control.is-invalid,
+        .form-select.is-invalid {
+            border-color: #dc3545;
+        }
+        
+        .form-control.is-invalid:focus,
+        .form-select.is-invalid:focus {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+        }
+        
+        /* Textarea specific */
+        textarea.form-control {
+            height: auto;
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        /* Form Check (Switches & Checkboxes) */
+        .form-check-input {
+            width: 3em;
+            height: 1.5em;
+            cursor: pointer;
+        }
+        
+        .form-check-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .form-check-label {
+            cursor: pointer;
+            padding-left: 0.5rem;
+        }
+        
+        /* File Input */
+        .form-control[type="file"] {
+            padding: 0.5rem 0.875rem;
+        }
+        
+        /* Form Labels */
+        .form-label {
+            margin-bottom: 0.375rem;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        /* Help Text */
+        .form-text {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        /* Invalid Feedback */
+        .invalid-feedback {
+            font-size: 0.875rem;
+            color: #dc3545;
+            margin-top: 0.25rem;
+        }
+        
+        .invalid-feedback i {
+            margin-right: 0.25rem;
+        }
+        
+        .form-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px 12px;
+            padding-right: 2.5rem;
+            appearance: none;
+        }
+        
+        /* Form Select Small - for inline editing */
+        .form-select-sm {
+            height: 2rem;
+            padding: 0.375rem 0.625rem;
+            font-size: 0.875rem;
+            padding-right: 2rem;
+        }
+        
+        /* Ensure buttons have proper spacing */
+        .btn {
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        
+        .btn-primary {
+            background-color: #3b82f6;
+            border-color: #3b82f6;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2563eb;
+            border-color: #2563eb;
+        }
+        
+        .btn-secondary {
+            background-color: #6b7280;
+            border-color: #6b7280;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #4b5563;
+            border-color: #4b5563;
+        }
+        
+        /* Modal Content Styling */
+        .modal-header {
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .modal-footer {
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .modal-content {
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Material Icons - Consistent Sizing */
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Sidebar collapse on mobile */
+        @media (max-width: 768px) {
+            .sidebar-area {
+                position: fixed;
+                left: -100%;
+                top: 0;
+                height: 100%;
+                width: 250px;
+                background: white;
+                z-index: 999;
+                transition: left 0.3s ease;
+            }
+            
+            .sidebar-area.show {
+                left: 0;
+            }
+        }
+        
+        /* Ensure main content is responsive */
+        .main-content {
+            transition: margin-left 0.3s ease;
+        }
+        
+        /* Card improvements */
+        .card {
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+        }
+        
+        /* Table improvements */
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table thead th {
+            background-color: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+            font-weight: 600;
+            color: #4b5563;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .table tbody td {
+            border-bottom: 1px solid #f0f1f3;
+            vertical-align: middle;
+        }
+        
+        .table tbody tr:hover {
+            background-color: #fafbfc;
+        }
+        
+        /* Badge Improvements */
+        .badge {
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Text utilities */
+        .text-muted {
+            color: #6b7280 !important;
+        }
+        
+        .text-danger {
+            color: #dc2626 !important;
+        }
+        
+        .text-success {
+            color: #10b981 !important;
+        }
+        
+        .text-warning {
+            color: #f59e0b !important;
+        }
+        
+        .text-info {
+            color: #0ea5e9 !important;
+        }
+        
+        /* Hover effects */
+        .hover-shadow {
+            transition: all 0.3s ease;
+        }
+        
+        .hover-shadow:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+            transform: translateY(-2px);
+        }
+    </style>
+    
+    <title>{% block title %}Admin Dashboard{% endblock %} - iCommerce</title>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-body-bg">
+    
+    {% include 'dashboard/partials/sidebar.html' %}
+    
+    <!-- Start Main Content Area -->
+    <div class="main-content d-flex flex-column">
+        
+        {% include 'dashboard/partials/navbar.html' %}
+        
+        <!-- Dynamic Content Area for HTMX -->
+        <div id="dashboard-content" class="main-content-container overflow-hidden">
+            
+            {% if messages %}
+                <div id="messages-container" class="mb-4">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            {% block content %}{% endblock %}
+            
+        </div>
+        
+        {% include 'dashboard/partials/footer.html' %}
+        
+    </div>
+    <!-- End Main Content Area -->
+    
+    <!-- Global HTMX Modal Container -->
+    <div id="dashboard-modal" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div id="dashboard-modal-body" class="modal-dialog modal-lg modal-dialog-scrollable">
+            <!-- Modal content loaded via HTMX -->
+        </div>
+    </div>
+
+    <!-- Link Of JS File -->
+    <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/js/sidebar-menu.js' %}"></script>
+    <script src="{% static 'assets/js/quill.min.js' %}"></script>
+    <script src="{% static 'assets/js/data-table.js' %}"></script>
+    <script src="{% static 'assets/js/prism.js' %}"></script>
+    <script src="{% static 'assets/js/clipboard.min.js' %}"></script>
+    <script src="{% static 'assets/js/simplebar.min.js' %}"></script>
+    <script src="{% static 'assets/js/apexcharts.min.js' %}"></script>
+    <script src="{% static 'assets/js/echarts.min.js' %}"></script>
+    <script src="{% static 'assets/js/jsvectormap.min.js' %}"></script>
+    <script src="{% static 'assets/js/world-merc.js' %}"></script>
+    <script src="{% static 'assets/js/custom/custom.js' %}"></script>
+    
+    <!-- HTMX Modal Management Script -->
+    <script>
+        // Auto-show modal when content is loaded via HTMX
+        document.body.addEventListener('htmx:afterSwap', function(event) {
+            if (event.detail.target.id === 'dashboard-modal-body') {
+                const modal = document.getElementById('dashboard-modal');
+                const bsModal = new bootstrap.Modal(modal);
+                bsModal.show();
+            }
+        });
+        
+        // Handle closeModal trigger from server
+        document.body.addEventListener('htmx:beforeSwap', function(event) {
+            if (event.detail.xhr.getResponseHeader('HX-Trigger') === 'closeModal') {
+                const modal = document.getElementById('dashboard-modal');
+                const bsModal = bootstrap.Modal.getInstance(modal);
+                if (bsModal) {
+                    bsModal.hide();
+                }
+            }
+        });
+        
+        // Add hx-select to all sidebar navigation links to extract only content
+        document.querySelectorAll('.sidebar-area .menu-link[hx-get]').forEach(link => {
+            if (!link.hasAttribute('hx-select') && link.getAttribute('hx-target') === '#dashboard-content') {
+                link.setAttribute('hx-select', '#dashboard-content');
+            }
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

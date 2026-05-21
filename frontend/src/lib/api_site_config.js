@@ -1,0 +1,52 @@
+const API_BASE = (process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api').replace(/\/$/, '')
+
+const FALLBACK_CONFIG = {
+    brand_name: 'El Árbol',
+    brand_tagline: 'Rooted in quality, growing for the future. We provide the bridge between local farmers and your dinner table.',
+    navbar_logo_url: '/el-erbol-logo.png',
+    footer_logo_url: '/el-erbol-logo.png',
+    favicon_url: '/favicon.ico',
+    contact_email: 'hello@elarbol.com',
+    contact_phone: '+34 900 123 456',
+    contact_address: 'Calle de la Huertas 12, 28014 Madrid, Spain',
+    nav_links: [
+        { label: 'Shop all', href: '/shop' },
+        { label: 'Stores', href: '/stores' },
+        { label: 'About', href: '/about' },
+        { label: 'Wholesale', href: '/wholesale' },
+    ],
+    social_links: [],
+    store_locations: [],
+    payment_methods: [],
+}
+
+export async function getSiteConfig() {
+    const candidates = [
+        `${API_BASE}/site-config/`,
+        `${API_BASE}/site-config/footer/`,
+        `${API_BASE}/website/site-config/`,
+    ]
+
+    for (const url of candidates) {
+        try {
+            const res = await fetch(url, { cache: 'no-store' })
+            if (!res.ok) {
+                // don't spam console.error for expected 404s — try next candidate
+                console.debug(`[getSiteConfig] ${res.status} from ${url}`)
+                continue
+            }
+
+            const data = await res.json()
+            console.log('[getSiteConfig] Loaded from API ✓', url)
+            return data
+
+        } catch (err) {
+            // Network errors are unexpected; log and continue to try other endpoints
+            console.warn(`[getSiteConfig] Fetch failed from ${url}:`, err && err.message ? err.message : err)
+            continue
+        }
+    }
+
+    // No endpoint succeeded — return fallback silently
+    return FALLBACK_CONFIG
+}

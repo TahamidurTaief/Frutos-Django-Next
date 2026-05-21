@@ -1,0 +1,47 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "asgiref==3.9.1",
+    "async-timeout==5.0.1",
+    "certifi>=2024.0.0",
+    "charset-normalizer==3.4.2",
+    "colorama==0.4.6",
+    "diff-match-patch==20241021",
+    "django==5.1.8",
+    "django-ckeditor==6.7.3",
+    "django-cors-headers==4.7.0",
+    "django-extensions==4.1",
+    "django-filter==25.1",
+    "django-import-export==4.3.8",
+    "django-js-asset==3.1.2",
+    "django-otp==1.6.1",
+    "django-redis==6.0.0",
+    "django-seed==0.3.1",
+    "django-jazzmin==3.0.1",
+    "djangorestframework==3.16.0",
+    "djangorestframework-simplejwt>=5.4.0",
+    "drf-spectacular==0.28.0",
+    "faker==37.5.3",
+    "idna==3.10",
+    "pillow>=10.0.0",
+    "psycopg2-binary==2.9.10",
+    "pyjwt==2.10.1",
+    "python-decouple==3.8",
+    "qrcode==8.2",
+    "redis==6.2.0",
+    "requests==2.32.4",
+    "setuptools>=70.0.0",
+    "sqlparse==0.5.3",
+    "tablib==3.8.0",
+    "toposort==1.10",
+    "typing-extensions==4.14.1",
+    "tzdata==2025.2",
+    "urllib3==2.5.0",
+    "django-ckeditor-5==0.2.15",
+    "openpyxl==3.1.5",
+    "python-dotenv>=1.2.2",
+]

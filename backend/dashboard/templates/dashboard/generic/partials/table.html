@@ -1,0 +1,106 @@
+{% load dashboard_tags %}
+
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th style="width: 50px;">
+                    <input type="checkbox" class="form-check-input" id="select-all">
+                </th>
+                {% for field_name in list_fields %}
+                    <th>
+                        <a href="?sort={{ field_name }}{% if query %}&q={{ query }}{% endif %}" 
+                           class="text-decoration-none text-dark">
+                            {% field_verbose_name model field_name as header_name %}
+                            {{ header_name|default:field_name|title }}
+                            {% if sort_by == field_name %}
+                                <i class="ri-arrow-down-line"></i>
+                            {% elif sort_by == field_name|add:"-" %}
+                                <i class="ri-arrow-up-line"></i>
+                            {% endif %}
+                        </a>
+                    </th>
+                {% endfor %}
+                <th class="text-end" style="width: 180px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for obj in objects %}
+                <tr>
+                    <td>
+                        <input type="checkbox" class="form-check-input row-checkbox" value="{{ obj.pk }}">
+                    </td>
+                    {% for field_name in list_fields %}
+                        <td>
+                            {% get_field_display obj field_name %}
+                        </td>
+                    {% endfor %}
+                    <td class="text-end">
+                        <div class="btn-group btn-group-sm" role="group">
+                            {% if actions.view %}
+                                <button 
+                                    hx-get="{% url 'dashboard:generic_model_detail' app_label model_name obj.pk %}" 
+                                    hx-target="#modal-container" 
+                                    hx-swap="innerHTML"
+                                    class="btn btn-outline-primary"
+                                    title="View">
+                                    <i class="ri-eye-line"></i>
+                                </button>
+                            {% endif %}
+                            
+                            {% if actions.change %}
+                                <button 
+                                    hx-get="{% url 'dashboard:generic_model_update' app_label model_name obj.pk %}" 
+                                    hx-target="#modal-container" 
+                                    hx-swap="innerHTML"
+                                    class="btn btn-outline-warning"
+                                    title="Edit">
+                                    <i class="ri-edit-line"></i>
+                                </button>
+                            {% endif %}
+                            
+                            {% if actions.view %}
+                                <a 
+                                    href="{% url 'dashboard:generic_model_print' app_label model_name obj.pk %}" 
+                                    target="_blank"
+                                    class="btn btn-outline-secondary"
+                                    title="Print">
+                                    <i class="ri-printer-line"></i>
+                                </a>
+                            {% endif %}
+                            
+                            {% if actions.delete %}
+                                <button 
+                                    hx-delete="{% url 'dashboard:generic_model_delete' app_label model_name obj.pk %}" 
+                                    hx-confirm="Are you sure you want to delete this {{ meta.verbose_name }}?"
+                                    hx-target="#table-container"
+                                    class="btn btn-outline-danger"
+                                    title="Delete">
+                                    <i class="ri-delete-bin-line"></i>
+                                </button>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="{{ list_fields|length|add:2 }}" class="text-center py-5 text-muted">
+                        <i class="ri-inbox-line" style="font-size: 3rem;"></i>
+                        <p class="mb-0 mt-2">No {{ meta.verbose_name_plural|lower }} found</p>
+                        {% if query %}
+                            <small>Try adjusting your search or filters</small>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Checkbox select all
+    document.getElementById('select-all')?.addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('.row-checkbox');
+        checkboxes.forEach(cb => cb.checked = this.checked);
+    });
+</script>

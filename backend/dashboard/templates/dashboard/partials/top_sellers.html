@@ -1,0 +1,83 @@
+<div class="card bg-white p-20 rounded-10 border border-white mb-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-20">
+        <h3>Top Sellers</h3>
+
+        <div class="dropdown select-dropdown without-border">
+            <button class="dropdown-toggle bg-transparent text-secondary fs-15" data-bs-toggle="dropdown" aria-expanded="false">
+                This Week
+            </button>
+        
+            <ul class="dropdown-menu dropdown-menu-end bg-white border-0 box-shadow rounded-10" data-simplebar>
+                <li>
+                    <button class="dropdown-item text-secondary">This Day</button>
+                </li>
+                <li>
+                    <button class="dropdown-item text-secondary">This Week</button>
+                </li>
+                <li>
+                    <button class="dropdown-item text-secondary">This Month</button>
+                </li>
+                <li>
+                    <button class="dropdown-item text-secondary">This Year</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="default-table-area without-header table-top-sellers">
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <tbody>
+                    {% if top_sellers %}
+                        {% for seller in top_sellers %}
+                            <tr>
+                                <td class="text-body fw-medium">{{ forloop.counter|stringformat:"02d" }}.</td>
+                                <td class="ps-0">
+                                    <div class="d-flex align-items-center text-decoration-none">
+                                        {% if seller.profile_photo %}
+                                            <div class="flex-shrink-0">
+                                                <img src="{{ seller.profile_photo.url }}" class="rounded-circle" style="width: 50px; height: 50px;" alt="{{ seller.name }}">
+                                            </div>
+                                        {% endif %}
+                                        <div class="flex-grow-1 {% if seller.profile_photo %}ms-12{% else %}ms-0{% endif %}">
+                                            <h3 class="fw-normal">{{ seller.name }}</h3>
+                                            <span class="fs-14 text-body fw-normal">Customer ID #{{ seller.id }}</span>
+                                        </div>
+                                    </div>
+                                </td> 
+                                <td>
+                                    <ul class="p-0 mb-0 list-unstyled d-flex align-items-center justify-content-end" style="gap: 2px;">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= seller.rating|floatformat:0 %}
+                                                <li>
+                                                    <i class="ri-star-fill text-warning fs-16"></i>
+                                                </li>
+                                            {% elif forloop.counter == seller.rating|add:"0.5"|floatformat:0 %}
+                                                <li>
+                                                    <i class="ri-star-half-fill text-warning fs-16"></i>
+                                                </li>
+                                            {% else %}
+                                                <li>
+                                                    <i class="ri-star-line text-warning fs-16"></i>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <li>
+                                            <span class="fs-14 text-body fw-normal">({{ seller.rating|floatformat:1 }})</span>
+                                        </li>
+                                    </ul>
+                                </td> 
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center text-muted py-4">
+                                No sellers data available
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

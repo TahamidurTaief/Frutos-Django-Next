@@ -1,0 +1,128 @@
+<div class="table-responsive">
+    <table class="table align-middle mb-0">
+        <thead>
+            <tr>
+                <th scope="col" class="text-body">ID</th>
+                <th scope="col" class="text-body">Product</th>
+                <th scope="col" class="text-body">Category</th>
+                <th scope="col" class="text-body">Price</th>
+                <th scope="col" class="text-body">Stock</th>
+                <th scope="col" class="text-body">Status</th>
+                <th scope="col" class="text-body text-end" style="width: 110px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr id="product-row-{{ product.id }}">
+                    <td class="text-body">
+                        <small class="text-muted">{{ product.id|truncatechars:8 }}</small>
+                    </td>
+                    <td class="text-body">
+                        <div class="d-flex align-items-center">
+                            {% if product.thumbnail %}
+                            <a href="#" class="flex-shrink-0">
+                                <img src="{{ product.thumbnail.url }}" style="width: 50px; height: 50px;" class="rounded-circle" alt="{{ product.name }}">
+                            </a>
+                            {% else %}
+                            <div class="flex-shrink-0">
+                                <div style="width: 50px; height: 50px;" class="rounded-circle bg-light d-flex align-items-center justify-content-center">
+                                    <i class="material-symbols-outlined text-muted">image</i>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div class="flex-grow-1 ms-3">
+                                <span class="fs-15 text-secondary fw-medium">{{ product.name }}</span>
+                                <br>
+                                <small class="text-muted">{{ product.slug }}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-body">
+                        <span class="badge bg-primary-div text-primary">{{ product.sub_category.category.name }}</span>
+                        <br>
+                        <small class="text-muted">{{ product.sub_category.name }}</small>
+                    </td>
+                    <td class="text-body">
+                        <strong>${{ product.price }}</strong>
+                        {% if product.discount_price %}
+                        <br>
+                        <small class="text-success">${{ product.discount_price }}</small>
+                        {% endif %}
+                    </td>
+                    <td class="text-body">
+                        {% if product.stock > 0 %}
+                            <span class="badge bg-success">{{ product.stock }}</span>
+                        {% else %}
+                            <span class="badge bg-danger">Out of Stock</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-body">
+                        {% if product.is_active %}
+                            <span class="badge bg-success">Active</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-body product-action-cell">
+                        <div class="d-flex justify-content-end align-items-center" style="gap: 4px;">
+                            <!-- View Button -->
+                            <button type="button"
+                                    class="btn btn-sm p-0 border-0 d-flex align-items-center justify-content-center" 
+                                    style="width: 28px; height: 28px;"
+                                    hx-get="{% url 'dashboard:product_view' product.id %}" 
+                                    hx-target="#modal-container" 
+                                    hx-swap="innerHTML"
+                                    data-bs-toggle="tooltip" 
+                                    data-bs-placement="top" 
+                                    title="Quick View">
+                                <i class="material-symbols-outlined" style="font-size: 18px; color: #3b82f6;">visibility</i>
+                            </button>
+                            <!-- Edit Button -->
+                            <button type="button"
+                                    class="btn btn-sm p-0 border-0 d-flex align-items-center justify-content-center" 
+                                    style="width: 28px; height: 28px;"
+                                    hx-get="{% url 'dashboard:product_edit' product.id %}" 
+                                    hx-target="#modal-container" 
+                                    hx-swap="innerHTML"
+                                    data-bs-toggle="tooltip" 
+                                    data-bs-placement="top" 
+                                    title="Edit Product">
+                                <i class="material-symbols-outlined" style="font-size: 18px; color: #10b981;">edit</i>
+                            </button>
+                            <!-- Delete Button -->
+                            <button type="button"
+                                    class="btn btn-sm p-0 border-0 d-flex align-items-center justify-content-center" 
+                                    style="width: 28px; height: 28px;"
+                                    hx-get="{% url 'dashboard:product_delete' product.id %}" 
+                                    hx-target="#modal-container"
+                                    hx-swap="innerHTML"
+                                    data-bs-toggle="tooltip" 
+                                    data-bs-placement="top" 
+                                    title="Delete">
+                                <i class="material-symbols-outlined" style="font-size: 18px; color: #ef4444;">delete</i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-5">
+                        <i class="material-symbols-outlined fs-48 text-muted">inventory_2</i>
+                        <p class="mt-3 text-muted">No products found</p>
+                        <button type="button" 
+                                class="btn btn-primary" 
+                                hx-get="{% url 'dashboard:product_create' %}" 
+                                hx-target="#modal-container" 
+                                hx-swap="innerHTML">
+                            <i class="material-symbols-outlined align-middle">add</i> Add Your First Product
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="mt-4">
+    <p class="text-muted">Total: {{ products|length }} product{{ products|length|pluralize }}</p>
+</div>

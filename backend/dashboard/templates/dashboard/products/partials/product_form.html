@@ -1,0 +1,319 @@
+<!-- Product Modal -->
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productModalLabel">
+                    {% if action == 'create' %}
+                        <i class="material-symbols-outlined align-middle" style="font-size: 24px;">add_circle</i>
+                        Add New Product
+                    {% else %}
+                        <i class="material-symbols-outlined align-middle" style="font-size: 24px;">edit</i>
+                        Edit Product: {{ product.name }}
+                    {% endif %}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <form {% if action == 'create' %}
+                    hx-post="{% url 'dashboard:product_create' %}" 
+                  {% else %}
+                    hx-post="{% url 'dashboard:product_edit' product.id %}"
+                  {% endif %}
+                  hx-target="#product-table-container"
+                  hx-encoding="multipart/form-data"
+                  hx-indicator="#submit-spinner">
+                
+                {% csrf_token %}
+                
+                <div class="modal-body">
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="row g-3">
+                        <!-- Basic Information -->
+                        <div class="col-12">
+                            <h6 class="fw-semibold border-bottom pb-2 mb-3">Basic Information</h6>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="id_name" class="form-label">Product Name <span class="text-danger">*</span></label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <div class="text-danger small mt-1">{{ form.name.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <label for="id_shop" class="form-label">Shop <span class="text-danger">*</span></label>
+                            {{ form.shop }}
+                            {% if form.shop.errors %}
+                                <div class="text-danger small mt-1">{{ form.shop.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <label for="id_brand" class="form-label">Brand</label>
+                            {{ form.brand }}
+                            {% if form.brand.errors %}
+                                <div class="text-danger small mt-1">{{ form.brand.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="id_sub_category" class="form-label">Sub Category <span class="text-danger">*</span></label>
+                            {{ form.sub_category }}
+                            {% if form.sub_category.errors %}
+                                <div class="text-danger small mt-1">{{ form.sub_category.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="id_shipping_category" class="form-label">Shipping Category</label>
+                            {{ form.shipping_category }}
+                            {% if form.shipping_category.errors %}
+                                <div class="text-danger small mt-1">{{ form.shipping_category.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-12">
+                            <label for="id_description" class="form-label fw-semibold">
+                                <i class="material-symbols-outlined align-middle" style="font-size: 18px;">description</i>
+                                Product Description <span class="text-danger">*</span>
+                            </label>
+                            <div class="position-relative ckeditor5-wrapper">
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger small mt-2">
+                                        <i class="material-symbols-outlined" style="font-size: 1rem; vertical-align: middle;">error</i> 
+                                        {{ form.description.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <small class="text-muted d-block mt-2">
+                                <i class="material-symbols-outlined" style="font-size: 1rem; vertical-align: middle;">info</i>
+                                Use the rich text editor to format your product description with headings, lists, bold text, and more.
+                            </small>
+                        </div>
+
+                        <!-- Pricing -->
+                        <div class="col-12 mt-4">
+                            <h6 class="fw-semibold border-bottom pb-2 mb-3">Pricing & Stock</h6>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <label for="id_price" class="form-label">Price <span class="text-danger">*</span></label>
+                            {{ form.price }}
+                            {% if form.price.errors %}
+                                <div class="text-danger small mt-1">{{ form.price.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <label for="id_discount_price" class="form-label">Discount Price</label>
+                            {{ form.discount_price }}
+                            {% if form.discount_price.errors %}
+                                <div class="text-danger small mt-1">{{ form.discount_price.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <label for="id_wholesale_price" class="form-label">Wholesale Price</label>
+                            {{ form.wholesale_price }}
+                            {% if form.wholesale_price.errors %}
+                                <div class="text-danger small mt-1">{{ form.wholesale_price.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <label for="id_stock" class="form-label">Stock <span class="text-danger">*</span></label>
+                            {{ form.stock }}
+                            {% if form.stock.errors %}
+                                <div class="text-danger small mt-1">{{ form.stock.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="id_minimum_purchase" class="form-label">Minimum Purchase</label>
+                            {{ form.minimum_purchase }}
+                            {% if form.minimum_purchase.errors %}
+                                <div class="text-danger small mt-1">{{ form.minimum_purchase.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="id_affiliate_commission_rate" class="form-label">Affiliate Commission Rate (%)</label>
+                            {{ form.affiliate_commission_rate }}
+                            {% if form.affiliate_commission_rate.errors %}
+                                <div class="text-danger small mt-1">{{ form.affiliate_commission_rate.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Physical Properties -->
+                        <div class="col-12 mt-4">
+                            <h6 class="fw-semibold border-bottom pb-2 mb-3">Physical Properties (for shipping)</h6>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="id_weight" class="form-label">Weight (kg)</label>
+                            {{ form.weight }}
+                            {% if form.weight.errors %}
+                                <div class="text-danger small mt-1">{{ form.weight.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="id_length" class="form-label">Length (cm)</label>
+                            {{ form.length }}
+                            {% if form.length.errors %}
+                                <div class="text-danger small mt-1">{{ form.length.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="id_width" class="form-label">Width (cm)</label>
+                            {{ form.width }}
+                            {% if form.width.errors %}
+                                <div class="text-danger small mt-1">{{ form.width.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="id_height" class="form-label">Height (cm)</label>
+                            {{ form.height }}
+                            {% if form.height.errors %}
+                                <div class="text-danger small mt-1">{{ form.height.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Image & Variants -->
+                        <div class="col-12 mt-4">
+                            <h6 class="fw-semibold border-bottom pb-2 mb-3">Image & Variants</h6>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="id_thumbnail" class="form-label">Thumbnail Image</label>
+                            {{ form.thumbnail }}
+                            {% if form.thumbnail.errors %}
+                                <div class="text-danger small mt-1">{{ form.thumbnail.errors }}</div>
+                            {% endif %}
+                            {% if product.thumbnail %}
+                                <div class="mt-2">
+                                    <img src="{{ product.thumbnail.url }}" alt="Current thumbnail" style="max-width: 100px; max-height: 100px;" class="rounded">
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Colors</label>
+                            <small class="text-muted d-block mb-2">Select existing colors or add new ones below</small>
+                            <div class="border rounded p-3 mb-3" style="max-height: 200px; overflow-y: auto;">
+                                <div class="d-flex flex-column gap-2">
+                                    {% for checkbox in form.colors %}
+                                        <div class="form-check">
+                                            {{ checkbox.tag }}
+                                            <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                                {{ checkbox.choice_label }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <label for="id_new_colors" class="form-label">Add New Colors</label>
+                            {{ form.new_colors }}
+                            <small class="text-muted d-block mt-1">Enter color names separated by commas (e.g., Red, Blue, Green)</small>
+                            {% if form.colors.errors %}
+                                <div class="text-danger small mt-1">{{ form.colors.errors }}</div>
+                            {% endif %}
+                            {% if form.new_colors.errors %}
+                                <div class="text-danger small mt-1">{{ form.new_colors.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Sizes</label>
+                            <small class="text-muted d-block mb-2">Select existing sizes or add new ones below</small>
+                            <div class="border rounded p-3 mb-3" style="max-height: 200px; overflow-y: auto;">
+                                <div class="d-flex flex-column gap-2">
+                                    {% for checkbox in form.sizes %}
+                                        <div class="form-check">
+                                            {{ checkbox.tag }}
+                                            <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                                {{ checkbox.choice_label }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <label for="id_new_sizes" class="form-label">Add New Sizes</label>
+                            {{ form.new_sizes }}
+                            <small class="text-muted d-block mt-1">Enter size names separated by commas (e.g., S, M, L, XL)</small>
+                            {% if form.sizes.errors %}
+                                <div class="text-danger small mt-1">{{ form.sizes.errors }}</div>
+                            {% endif %}
+                            {% if form.new_sizes.errors %}
+                                <div class="text-danger small mt-1">{{ form.new_sizes.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <div class="form-check">
+                                {{ form.is_active }}
+                                <label class="form-check-label" for="id_is_active">
+                                    Active Product
+                                </label>
+                            </div>
+                            {% if form.is_active.errors %}
+                                <div class="text-danger small mt-1">{{ form.is_active.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="material-symbols-outlined align-middle" style="font-size: 18px;">close</i>
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <span id="submit-spinner" class="htmx-indicator spinner-border spinner-border-sm me-2" role="status"></span>
+                        <i class="material-symbols-outlined align-middle" style="font-size: 18px;">
+                            {% if action == 'create' %}add_circle{% else %}save{% endif %}
+                        </i>
+                        {% if action == 'create' %}
+                            Create Product
+                        {% else %}
+                            Update Product
+                        {% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Initialize Bootstrap Modal and handle cleanup
+    (function() {
+        var modalElement = document.getElementById('productModal');
+        if (modalElement) {
+            // Show modal automatically
+            var modal = new bootstrap.Modal(modalElement);
+            modal.show();
+            
+            // Listen for HTMX closeModal trigger
+            document.body.addEventListener('closeModal', function() {
+                modal.hide();
+            });
+            
+            // Cleanup when modal is hidden
+            modalElement.addEventListener('hidden.bs.modal', function() {
+                // Remove modal from DOM
+                modalElement.remove();
+            });
+        }
+    })();
+</script>

@@ -1,0 +1,84 @@
+<!-- Modal structure for viewing object details -->
+<div class="modal-content">
+    <div class="modal-header bg-info bg-opacity-10 border-bottom border-info">
+        <h5 class="modal-title fw-semibold text-info">
+            <i class="bi bi-eye-fill"></i> View {{ model_name_verbose }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    
+    <div class="modal-body">
+        <!-- Main Details Table -->
+        <div class="table-responsive">
+            <table class="table table-hover table-sm align-middle mb-0">
+                <tbody>
+                    {% for field in detail_fields %}
+                    <tr>
+                        <th class="bg-light text-muted fw-semibold" width="35%" style="white-space: nowrap;">
+                            {{ field.verbose_name }}
+                        </th>
+                        <td class="text-break">
+                            {% load dashboard_extras %}
+                            <span class="text-dark">{{ object|format_field_value:field.name|default:"—" }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Related Data Section -->
+        {% if related_data %}
+        <hr class="my-4">
+        <h6 class="fw-semibold text-secondary mb-3">
+            <i class="bi bi-link-45deg"></i> Related Information
+        </h6>
+        
+        <div class="row g-3">
+            {% for rel_name, rel_objects in related_data.items %}
+            <div class="col-12 col-md-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-light border-bottom py-2">
+                        <strong class="text-dark">{{ rel_name }}</strong>
+                        <span class="badge bg-secondary rounded-pill float-end">{{ rel_objects|length }}</span>
+                    </div>
+                    <div class="card-body p-3">
+                        {% if rel_objects %}
+                        <ul class="list-unstyled mb-0 small">
+                            {% for rel_obj in rel_objects|slice:":5" %}
+                            <li class="mb-1">
+                                <i class="bi bi-dot text-primary"></i> {{ rel_obj }}
+                            </li>
+                            {% endfor %}
+                            {% if rel_objects|length > 5 %}
+                            <li class="text-muted fst-italic">
+                                <i class="bi bi-three-dots"></i> and {{ rel_objects|length|add:"-5" }} more
+                            </li>
+                            {% endif %}
+                        </ul>
+                        {% else %}
+                        <span class="text-muted fst-italic">No related items</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="modal-footer bg-light">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle"></i> Close
+        </button>
+        {% if can_change %}
+        <button type="button"
+           class="btn btn-primary"
+           hx-get="{% url 'dashboard:model_update' app_label model_name object.pk %}"
+           hx-target="#dashboard-modal-body"
+           hx-swap="innerHTML">
+            <i class="bi bi-pencil-square"></i> Edit
+        </button>
+        {% endif %}
+    </div>
+</div>

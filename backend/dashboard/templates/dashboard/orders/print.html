@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order #{{ order.order_number }} - Invoice</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f8f9fa;
+            padding: 20px;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+        
+        .print-container {
+            max-width: 210mm; /* A4 width */
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            min-height: 297mm; /* A4 height */
+        }
+        
+        /* Modern Icons */
+        .icon {
+            font-family: 'Material Symbols Outlined';
+            font-size: 20px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #3b82f6;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            color: #6b7280;
+            font-size: 1rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .info-section h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 8px;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .info-label {
+            font-weight: 500;
+            color: #6b7280;
+        }
+        
+        .info-value {
+            font-weight: 500;
+            color: #1f2937;
+            text-align: right;
+        }
+        
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+        
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-processing { background: #dbeafe; color: #1e40af; }
+        .status-shipped { background: #ddd6fe; color: #5b21b6; }
+        .status-delivered { background: #d1fae5; color: #065f46; }
+        .status-cancelled { background: #fee2e2; color: #991b1b; }
+        .status-paid { background: #d1fae5; color: #065f46; }
+        .status-failed { background: #fee2e2; color: #991b1b; }
+        
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 40px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .items-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .items-table th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .items-table td {
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .items-table tbody tr:hover {
+            background: #f9fafb;
+        }
+        
+        .items-table .text-right {
+            text-align: right;
+        }
+        
+        .items-table .text-center {
+            text-align: center;
+        }
+        
+        .product-name {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .product-variants {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-top: 4px;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .variant-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .total-section {
+            margin-top: 40px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .total-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 24px;
+            border-radius: 12px;
+            min-width: 350px;
+            color: white;
+            box-shadow: 0 10px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding: 8px 0;
+            font-size: 1rem;
+        }
+        
+        .total-row.final {
+            border-top: 2px solid rgba(255,255,255,0.3);
+            margin-top: 16px;
+            padding-top: 16px;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .address-box {
+            background: #f9fafb;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+            margin-top: 40px;
+        }
+        
+        .address-box h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .footer {
+            margin-top: 60px;
+            text-align: center;
+            padding-top: 24px;
+            border-top: 2px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        .print-actions {
+            text-align: center;
+            margin-bottom: 40px;
+            gap: 16px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .print-container {
+                box-shadow: none;
+                padding: 20px;
+                margin: 0;
+            }
+            
+            .print-actions {
+                display: none !important;
+            }
+            
+            @page {
+                size: A4;
+                margin: 15mm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="print-container">
+        <div class="print-actions">
+            <button onclick="window.print()" class="btn btn-primary">
+                <i class="material-symbols-outlined" style="font-size: 20px;">print</i> Print Invoice
+            </button>
+            <button onclick="window.close()" class="btn btn-secondary">
+                <i class="material-symbols-outlined" style="font-size: 20px;">close</i> Close
+            </button>
+        </div>
+        
+        <div class="header">
+            <h1>ORDER INVOICE</h1>
+            <p>Order #{{ order.order_number }} • {{ order.ordered_at|date:"F d, Y H:i" }}</p>
+        </div>
+        
+        <div class="info-grid">
+            <div class="info-section">
+                <h3>
+                    <i class="material-symbols-outlined">person</i> Customer Information
+                </h3>
+                <div class="info-row">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">{{ order.customer_name }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Email:</span>
+                    <span class="info-value">{{ order.customer_email }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Phone:</span>
+                    <span class="info-value">{{ order.customer_phone }}</span>
+                </div>
+                {% if order.user %}
+                <div class="info-row">
+                    <span class="info-label">Account:</span>
+                    <span class="info-value">{{ order.user.get_full_name|default:order.user.email }}</span>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="info-section">
+                <h3>
+                    <i class="material-symbols-outlined">inventory_2</i> Order Status
+                </h3>
+                <div class="info-row">
+                    <span class="info-label">Order Status:</span>
+                    <span class="info-value">
+                        <span class="status-badge status-{{ order.status|lower }}">{{ order.get_status_display }}</span>
+                    </span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Payment:</span>
+                    <span class="info-value">
+                        <span class="status-badge status-{{ order.payment_status|lower }}">{{ order.get_payment_status_display }}</span>
+                    </span>
+                </div>
+                {% if order.shipping_method %}
+                <div class="info-row">
+                    <span class="info-label">Shipping:</span>
+                    <span class="info-value">{{ order.shipping_method.name }}</span>
+                </div>
+                {% endif %}
+                {% if order.tracking_number %}
+                <div class="info-row">
+                    <span class="info-label">Tracking:</span>
+                    <span class="info-value">{{ order.tracking_number }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        {% if order.shipping_address %}
+        <div class="address-box">
+            <h3>
+                <i class="material-symbols-outlined">local_shipping</i> Shipping Address
+            </h3>
+            <div>
+                {{ order.shipping_address.address_line1 }}<br>
+                {% if order.shipping_address.address_line2 %}
+                    {{ order.shipping_address.address_line2 }}<br>
+                {% endif %}
+                {{ order.shipping_address.city }}, {{ order.shipping_address.state }} {{ order.shipping_address.postal_code }}<br>
+                {{ order.shipping_address.country }}
+            </div>
+        </div>
+        {% endif %}
+        
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th>Product Details</th>
+                    <th class="text-center">Quantity</th>
+                    <th class="text-right">Unit Price</th>
+                    <th class="text-right">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order_items %}
+                <tr>
+                    <td>
+                        <div class="product-name">{{ item.product.name }}</div>
+                        {% if item.color or item.size %}
+                        <div class="product-variants">
+                            {% if item.color %}
+                                <span class="variant-item">
+                                    <i class="material-symbols-outlined" style="font-size: 16px; margin-right: 4px;">palette</i>
+                                    {{ item.color.name }}
+                                </span>
+                            {% endif %}
+                            {% if item.size %}
+                                <span class="variant-item">
+                                    <i class="material-symbols-outlined" style="font-size: 16px; margin-right: 4px;">straighten</i>
+                                    {{ item.size.name }}
+                                </span>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">{{ item.quantity }}</td>
+                    <td class="text-right">{{ item.price|floatformat:2 }} BDT</td>
+                    <td class="text-right"><strong>{{ item.get_total|floatformat:2 }} BDT</strong></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center" style="padding: 32px;">
+                        <i class="material-symbols-outlined" style="font-size: 48px; color: #d1d5db;">inventory_2</i>
+                        <p style="color: #9ca3af; margin-top: 8px;">No items in this order</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <div class="total-section">
+            <div class="total-box">
+                <div class="total-row">
+                    <span>Subtotal:</span>
+                    <span>{{ order.cart_subtotal|floatformat:2 }} BDT</span>
+                </div>
+                {% if order.discount_amount %}
+                <div class="total-row">
+                    <span>Discount:</span>
+                    <span>-{{ order.discount_amount|floatformat:2 }} BDT</span>
+                </div>
+                {% endif %}
+                <div class="total-row final">
+                    <span>Total Amount:</span>
+                    <span>{{ order.total_amount|floatformat:2 }} BDT</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Thank you for your business!</strong></p>
+            <p style="margin-top: 8px;">Generated on {{ "now"|date:"F d, Y H:i" }}</p>
+        </div>
+    </div>
+</body>
+</html>
+        
+        .items-table thead {
+            background: #f8f9fa;
+        }
+        
+        .items-table th,
+        .items-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .items-table th {
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .items-table .text-right {
+            text-align: right;
+        }
+        
+        .items-table .text-center {
+            text-align: center;
+        }
+        
+        .items-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .product-details {
+            font-weight: 600;
+        }
+        
+        .product-variants {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 3px;
+        }
+        
+        .total-section {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .total-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            min-width: 300px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 5px 0;
+        }
+        
+        .total-row.final {
+            border-top: 2px solid #007bff;
+            margin-top: 15px;
+            padding-top: 15px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #007bff;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media print {
+            .print-actions {
+                display: none;
+            }
+            
+            body {
+                padding: 0;
+            }
+            
+            .print-container {
+                border: none;
+                box-shadow: none;
+                padding: 20px;
+            }
+        }
+        
+        .print-actions {
+            text-align: center;
+            margin-bottom: 30px;
+            gap: 15px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+    <div class="print-container">
+        <div class="print-actions">
+            <button onclick="window.print()" class="btn btn-primary">🖨️ Print Order</button>
+            <button onclick="window.close()" class="btn btn-secondary">❌ Close</button>
+        </div>
+        
+        <div class="header">
+            <h1>ORDER INVOICE</h1>
+            <p>Order #{{ order.order_number }} • {{ order.ordered_at|date:"F d, Y H:i" }}</p>
+        </div>
+        
+        <div class="order-info">
+            <div class="info-section">
+                <h3>👤 Customer Information</h3>
+                <div class="info-row">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">{{ order.customer_name }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Email:</span>
+                    <span class="info-value">{{ order.customer_email }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Phone:</span>
+                    <span class="info-value">{{ order.customer_phone }}</span>
+                </div>
+                {% if order.user %}
+                <div class="info-row">
+                    <span class="info-label">Account:</span>
+                    <span class="info-value">{{ order.user.get_full_name|default:order.user.email }}</span>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="info-section">
+                <h3>📦 Order Status</h3>
+                <div class="info-row">
+                    <span class="info-label">Order Status:</span>
+                    <span class="info-value">
+                        <span class="status-badge status-{{ order.status|lower }}">{{ order.get_status_display }}</span>
+                    </span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Payment:</span>
+                    <span class="info-value">
+                        <span class="status-badge status-{{ order.payment_status|lower }}">{{ order.get_payment_status_display }}</span>
+                    </span>
+                </div>
+                {% if order.tracking_number %}
+                <div class="info-row">
+                    <span class="info-label">Tracking:</span>
+                    <span class="info-value">{{ order.tracking_number }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        {% if order.shipping_address %}
+        <div class="info-section">
+            <h3>🚚 Shipping Address</h3>
+            <div class="info-row">
+                <span class="info-value" style="width: 100%;">
+                    {{ order.shipping_address.address_line1 }}<br>
+                    {% if order.shipping_address.address_line2 %}
+                        {{ order.shipping_address.address_line2 }}<br>
+                    {% endif %}
+                    {{ order.shipping_address.city }}, {{ order.shipping_address.state }} {{ order.shipping_address.postal_code }}<br>
+                    {{ order.shipping_address.country }}
+                </span>
+            </div>
+        </div>
+        {% endif %}
+        
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th class="text-center">Qty</th>
+                    <th class="text-right">Unit Price</th>
+                    <th class="text-right">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order_items %}
+                <tr>
+                    <td>
+                        <div class="product-details">{{ item.product.name }}</div>
+                        {% if item.color or item.size %}
+                        <div class="product-variants">
+                            {% if item.color %}Color: {{ item.color.name }}{% endif %}
+                            {% if item.color and item.size %} • {% endif %}
+                            {% if item.size %}Size: {{ item.size.name }}{% endif %}
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">{{ item.quantity }}</td>
+                    <td class="text-right">{{ item.price|floatformat:2 }} BDT</td>
+                    <td class="text-right">{{ item.get_total|floatformat:2 }} BDT</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">No items in this order</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <div class="total-section">
+            <div class="total-box">
+                <div class="total-row">
+                    <span>Subtotal:</span>
+                    <span>{{ order.cart_subtotal|floatformat:2 }} BDT</span>
+                </div>
+                <div class="total-row final">
+                    <span>Total Amount:</span>
+                    <span>{{ order.total_amount|floatformat:2 }} BDT</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Thank you for your business! • Generated on {{ "now"|date:"F d, Y H:i" }}</p>
+        </div>
+    </div>
+    
+    <script>
+        // Auto print dialog when opened
+        window.onload = function() {
+            setTimeout(() => {
+                // window.print();
+            }, 500);
+        };
+    </script>
+</body>
+</html>

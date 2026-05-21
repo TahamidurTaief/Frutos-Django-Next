@@ -1,0 +1,139 @@
+<div class="card bg-white rounded-10 border border-white mb-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 p-20"
+         x-data="recentOrdersFilter()"
+         @htmx:afterRequest="initializeTooltips()">
+        <h3>Recent Orders</h3>
+
+        <div class="d-flex align-items-center">
+            <div class="dropdown select-dropdown without-border">
+                <button class="dropdown-toggle bg-transparent text-secondary fs-15" 
+                        data-bs-toggle="dropdown" 
+                        aria-expanded="false"
+                        @click="toggleStatusFilter()">
+                    <span x-text="selectedStatusLabel">Show All</span>
+                </button>
+            
+                <ul class="dropdown-menu dropdown-menu-end bg-white border-0 box-shadow rounded-10" data-simplebar>
+                    <li>
+                        <button class="dropdown-item text-secondary" 
+                                @click="filterByStatus('all', 'Show All')"
+                                :class="{'active': selectedStatus === 'all'}">
+                            Show All
+                        </button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item text-secondary" 
+                                @click="filterByStatus('Shipped', 'Shipped')"
+                                :class="{'active': selectedStatus === 'Shipped'}">
+                            Shipped
+                        </button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item text-secondary" 
+                                @click="filterByStatus('Confirmed', 'Confirmed')"
+                                :class="{'active': selectedStatus === 'Confirmed'}">
+                            Confirmed
+                        </button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item text-secondary" 
+                                @click="filterByStatus('Pending', 'Pending')"
+                                :class="{'active': selectedStatus === 'Pending'}">
+                            Pending
+                        </button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item text-secondary" 
+                                @click="filterByStatus('Rejected', 'Rejected')"
+                                :class="{'active': selectedStatus === 'Rejected'}">
+                            Rejected
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <form class="table-src-form position-relative" 
+                  @submit.prevent="searchOrders()">
+                <input type="text" 
+                       class="form-control" 
+                       placeholder="Search here..."
+                       x-model="searchQuery"
+                       @keyup.debounce-500ms="searchOrders()">
+                <div class="src-btn position-absolute top-50 start-0 translate-middle-y bg-transparent p-0 border-0">
+                    <span class="material-symbols-outlined">search</span>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="recent-orders-table"
+         hx-get="{% url 'dashboard:partial_recent_orders' %}" 
+         hx-trigger="load"
+         hx-swap="outerHTML">
+        <div class="default-table-area mx-minus-1 table-recent-orders">
+            <div class="table-responsive">
+                <div class="text-muted py-3 text-center">Loading recent orders...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function recentOrdersFilter() {
+    return {
+        selectedStatus: 'all',
+        selectedStatusLabel: 'Show All',
+        searchQuery: '',
+        
+        filterByStatus(status, label) {
+            this.selectedStatus = status;
+            this.selectedStatusLabel = label;
+            this.loadOrders();
+        },
+        
+        searchOrders() {
+            this.loadOrders();
+        },
+        
+        loadOrders() {
+            const url = new URL('{% url "dashboard:partial_recent_orders" %}', window.location);
+            if (this.selectedStatus !== 'all') {
+                url.searchParams.append('status', this.selectedStatus);
+            }
+            if (this.searchQuery) {
+                url.searchParams.append('search', this.searchQuery);
+            }
+            
+            htmx.ajax('GET', url.toString(), '#recent-orders-table');
+        },
+        
+        toggleStatusFilter() {
+            // Alpine.js will handle the Bootstrap dropdown toggle
+        },
+        
+        initializeTooltips() {
+            // Re-initialize tooltips after HTMX load
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
+    }
+}
+
+// Initialize tooltips on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+
+// Re-initialize tooltips after HTMX requests
+htmx.on('htmx:afterSwap', function() {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+</script>

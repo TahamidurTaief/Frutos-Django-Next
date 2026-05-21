@@ -1,0 +1,690 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Analytics Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stats-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+    .trend-up {
+        color: #22c55e;
+    }
+    .trend-down {
+        color: #ef4444;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <h3 class="mb-0">Analytics Dashboard</h3>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb align-items-center mb-0 lh-1">
+            <li class="breadcrumb-item">
+                <a href="{% url 'dashboard:home' %}" class="d-flex align-items-center text-decoration-none">
+                    <i class="ri-home-8-line fs-15 text-primary me-1"></i>
+                    <span class="text-body fs-14 hover">Dashboard</span>
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                <span class="text-secondary">Analytics</span>
+            </li>
+        </ol>
+    </nav>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<!-- 1. KPI CARDS SECTION -->
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+
+<div class="row">
+    <!-- Total Products Card -->
+    <div class="col-xxl-3 col-lg-6 col-sm-6">
+        <div class="card bg-white p-20 rounded-10 border border-white mb-4 stats-card">
+            <div class="d-flex">
+                <div class="flex-grow-1">
+                    <h3 class="mb-10">Total Products</h3>
+                    <h2 class="fs-26 fw-medium mb-0 lh-1">{{ total_products|default:"0" }}</h2>
+                </div>
+                <div class="flex-shrink-0 ms-3">
+                    <div class="bg-primary text-white text-center rounded-circle d-block" style="width: 75px; height: 75px; line-height: 105px;">
+                        <i class="material-symbols-outlined fs-40">shopping_bag</i>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center" style="margin-top: 21px;">
+                <p class="mb-0 fs-14">Active: {{ active_products|default:"0" }}</p>
+                <span class="badge bg-success-10 text-success">Active</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Orders Card -->
+    <div class="col-xxl-3 col-lg-6 col-sm-6">
+        <div class="card bg-white p-20 rounded-10 border border-white mb-4 stats-card">
+            <div class="d-flex">
+                <div class="flex-grow-1">
+                    <h3 class="mb-10">Total Orders</h3>
+                    <h2 class="fs-26 fw-medium mb-0 lh-1">{{ total_orders|default:"0" }}</h2>
+                </div>
+                <div class="flex-shrink-0 ms-3">
+                    <div class="bg-info text-white text-center rounded-circle d-block" style="width: 75px; height: 75px; line-height: 105px;">
+                        <i class="material-symbols-outlined fs-40">shopping_cart</i>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center" style="margin-top: 21px;">
+                <p class="mb-0 fs-14">Last 30 days: {{ recent_orders|default:"0" }}</p>
+                {% if orders_change_percentage > 0 %}
+                    <span class="d-flex align-content-center gap-1 bg-success bg-opacity-10 border border-success" style="padding: 3px 5px;">
+                        <i class="material-symbols-outlined fs-14 text-success">trending_up</i>
+                        <span class="lh-1 fs-14 text-success">{{ orders_change_percentage }}%</span>
+                    </span>
+                {% elif orders_change_percentage < 0 %}
+                    <span class="d-flex align-content-center gap-1 bg-danger bg-opacity-10 border border-danger" style="padding: 3px 5px;">
+                        <i class="material-symbols-outlined fs-14 text-danger">trending_down</i>
+                        <span class="lh-1 fs-14 text-danger">{{ orders_change_percentage|floatformat:2 }}%</span>
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Revenue Card -->
+    <div class="col-xxl-3 col-lg-6 col-sm-6">
+        <div class="card bg-white p-20 rounded-10 border border-white mb-4 stats-card">
+            <div class="d-flex">
+                <div class="flex-grow-1">
+                    <h3 class="mb-10">Total Revenue</h3>
+                    <h2 class="fs-26 fw-medium mb-0 lh-1">৳{{ total_revenue|floatformat:2 }}</h2>
+                </div>
+                <div class="flex-shrink-0 ms-3">
+                    <div class="bg-warning text-white text-center rounded-circle d-block" style="width: 75px; height: 75px; line-height: 116px;">
+                        <i class="material-symbols-outlined fs-50">attach_money</i>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center" style="margin-top: 23px;">
+                <p class="mb-0 fs-14">Avg Order: ৳{{ avg_order_value|floatformat:2 }}</p>
+                <span class="badge bg-warning-10 text-warning">Revenue</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Orders Card -->
+    <div class="col-xxl-3 col-lg-6 col-sm-6">
+        <div class="card bg-white p-20 rounded-10 border border-white mb-4 stats-card">
+            <div class="d-flex">
+                <div class="flex-grow-1">
+                    <h3 class="mb-10">Pending Orders</h3>
+                    <h2 class="fs-26 fw-medium mb-0 lh-1">{{ pending_orders|default:"0" }}</h2>
+                </div>
+                <div class="flex-shrink-0 ms-3">
+                    <div class="text-white text-center rounded-circle d-block" style="width: 75px; height: 75px; line-height: 105px; background-color: #f97316;">
+                        <i class="material-symbols-outlined fs-40">schedule</i>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center" style="margin-top: 21px;">
+                <p class="mb-0 fs-14">Processing: {{ processing_orders|default:"0" }}</p>
+                <span class="badge" style="background-color: #fed7aa; color: #f97316;">Pending</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Users Card -->
+    <div class="col-xxl-3 col-lg-6 col-sm-6">
+        <div class="card bg-white p-20 rounded-10 border border-white mb-4 stats-card">
+            <div class="d-flex">
+                <div class="flex-grow-1">
+                    <h3 class="mb-10">Total Users</h3>
+                    <h2 class="fs-26 fw-medium mb-0 lh-1">{{ total_users|default:"0" }}</h2>
+                </div>
+                <div class="flex-shrink-0 ms-3">
+                    <div class="bg-success text-white text-center rounded-circle d-block" style="width: 75px; height: 75px; line-height: 105px;">
+                        <i class="material-symbols-outlined fs-40">group</i>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center" style="margin-top: 21px;">
+                <p class="mb-0 fs-14">Customers: {{ total_customers|default:"0" }}</p>
+                <span class="badge bg-success-10 text-success">Users</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Out of Stock Card -->
+    <div class="col-xxl-3 col-lg-6 col-sm-6">
+        <div class="card bg-white p-20 rounded-10 border border-white mb-4 stats-card">
+            <div class="d-flex">
+                <div class="flex-grow-1">
+                    <h3 class="mb-10">Out of Stock</h3>
+                    <h2 class="fs-26 fw-medium mb-0 lh-1">{{ out_of_stock_products|default:"0" }}</h2>
+                </div>
+                <div class="flex-shrink-0 ms-3">
+                    <div class="text-white text-center rounded-circle d-block" style="width: 75px; height: 75px; line-height: 105px; background-color: #ef4444;">
+                        <i class="material-symbols-outlined fs-40">inventory_2</i>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center" style="margin-top: 21px;">
+                <p class="mb-0 fs-14">Needs restocking</p>
+                <span class="badge" style="background-color: #fecaca; color: #ef4444;">Stock Alert</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completed Orders Card -->
+    <div class="col-xxl-3 col-lg-6 col-sm-6">
+        <div class="card bg-white p-20 rounded-10 border border-white mb-4 stats-card">
+            <div class="d-flex">
+                <div class="flex-grow-1">
+                    <h3 class="mb-10">Completed Orders</h3>
+                    <h2 class="fs-26 fw-medium mb-0 lh-1">{{ completed_orders|default:"0" }}</h2>
+                </div>
+                <div class="flex-shrink-0 ms-3">
+                    <div class="text-white text-center rounded-circle d-block" style="width: 75px; height: 75px; line-height: 105px; background-color: #10b981;">
+                        <i class="material-symbols-outlined fs-40">check_circle</i>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center" style="margin-top: 21px;">
+                <p class="mb-0 fs-14">Successfully delivered</p>
+                <span class="badge" style="background-color: #d1fae5; color: #10b981;">Delivered</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Shops Card -->
+    <div class="col-xxl-3 col-lg-6 col-sm-6">
+        <div class="card bg-white p-20 rounded-10 border border-white mb-4 stats-card">
+            <div class="d-flex">
+                <div class="flex-grow-1">
+                    <h3 class="mb-10">Total Shops</h3>
+                    <h2 class="fs-26 fw-medium mb-0 lh-1">{{ total_shops|default:"0" }}</h2>
+                </div>
+                <div class="flex-shrink-0 ms-3">
+                    <div class="text-white text-center rounded-circle d-block" style="width: 75px; height: 75px; line-height: 105px; background-color: #8b5cf6;">
+                        <i class="material-symbols-outlined fs-40">storefront</i>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center" style="margin-top: 21px;">
+                <p class="mb-0 fs-14">Active: {{ active_shops|default:"0" }}</p>
+                <span class="badge" style="background-color: #ede9fe; color: #8b5cf6;">Shops</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<!-- 2. PIE CHARTS SECTION -->
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+
+<div class="row">
+    <!-- Order Status Distribution -->
+    <div class="col-lg-4 col-md-6">
+        <div class="card bg-white rounded-10 border border-white p-20 mb-4">
+            <h3 class="mb-20">Order Status Distribution</h3>
+            <div id="order_status_chart"></div>
+        </div>
+    </div>
+
+    <!-- Product Category Distribution -->
+    <div class="col-lg-4 col-md-6">
+        <div class="card bg-white rounded-10 border border-white p-20 mb-4">
+            <h3 class="mb-20">Products by Category</h3>
+            <div id="category_distribution_chart"></div>
+        </div>
+    </div>
+
+    <!-- Payment Methods -->
+    <div class="col-lg-4 col-md-6">
+        <div class="card bg-white rounded-10 border border-white p-20 mb-4">
+            <h3 class="mb-20">Payment Methods</h3>
+            <div id="payment_methods_chart"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<!-- 3. BAR CHARTS SECTION -->
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+
+<div class="row">
+    <!-- Orders Last 7 Days -->
+    <div class="col-lg-6">
+        <div class="card bg-white rounded-10 border border-white p-20 mb-4">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-20">
+                <h3>Orders (Last 7 Days)</h3>
+            </div>
+            <div id="orders_daily_chart"></div>
+        </div>
+    </div>
+
+    <!-- Revenue Last 6 Months -->
+    <div class="col-lg-6">
+        <div class="card bg-white rounded-10 border border-white p-20 mb-4">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-20">
+                <h3>Revenue (Last 6 Months)</h3>
+            </div>
+            <div id="revenue_monthly_chart"></div>
+        </div>
+    </div>
+
+    <!-- Top 5 Selling Products -->
+    <div class="col-lg-6">
+        <div class="card bg-white rounded-10 border border-white p-20 mb-4">
+            <h3 class="mb-20">Top 5 Selling Products</h3>
+            <div id="top_products_chart"></div>
+        </div>
+    </div>
+
+    <!-- Top 5 Brands -->
+    <div class="col-lg-6">
+        <div class="card bg-white rounded-10 border border-white p-20 mb-4">
+            <h3 class="mb-20">Top 5 Brands</h3>
+            <div id="top_brands_chart"></div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'fila/assets/js/apexcharts.min.js' %}"></script>
+<script>
+(function() {
+    "use strict";
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // PIE CHARTS
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    // Order Status Distribution Pie Chart
+    const orderStatusChart = document.getElementById('order_status_chart');
+    if (orderStatusChart) {
+        var options = {
+            series: {{ order_status_series|safe }},
+            chart: {
+                type: "pie",
+                height: 300
+            },
+            labels: {{ order_status_labels|safe }},
+            colors: ["#796df6", "#00cae3", "#22c55e", "#f97316", "#ef4444", "#8b5cf6"],
+            legend: {
+                position: "bottom",
+                fontSize: "14px",
+                fontFamily: 'Outfit',
+                labels: {
+                    colors: '#919aa3'
+                },
+                itemMargin: {
+                    horizontal: 0,
+                    vertical: 5
+                }
+            },
+            stroke: {
+                width: 0
+            },
+            dataLabels: {
+                enabled: true,
+                style: {
+                    fontSize: '14px',
+                    fontFamily: 'Outfit',
+                }
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 250
+                    },
+                    legend: {
+                        position: "bottom"
+                    }
+                }
+            }]
+        };
+        const chart = new ApexCharts(orderStatusChart, options);
+        chart.render();
+    }
+
+    // Category Distribution Donut Chart
+    const categoryChart = document.getElementById('category_distribution_chart');
+    if (categoryChart) {
+        var options = {
+            series: {{ category_series|safe }},
+            chart: {
+                type: "donut",
+                height: 300
+            },
+            labels: {{ category_labels|safe }},
+            colors: ["#0f79f3", "#796df6", "#00cae3", "#22c55e", "#f97316", "#ef4444"],
+            legend: {
+                position: "bottom",
+                fontSize: "14px",
+                fontFamily: 'Outfit',
+                labels: {
+                    colors: '#919aa3'
+                },
+                itemMargin: {
+                    horizontal: 0,
+                    vertical: 5
+                }
+            },
+            stroke: {
+                width: 0
+            },
+            dataLabels: {
+                enabled: true,
+                style: {
+                    fontSize: '14px',
+                    fontFamily: 'Outfit',
+                }
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 250
+                    },
+                    legend: {
+                        position: "bottom"
+                    }
+                }
+            }]
+        };
+        const chart = new ApexCharts(categoryChart, options);
+        chart.render();
+    }
+
+    // Payment Methods Pie Chart
+    const paymentChart = document.getElementById('payment_methods_chart');
+    if (paymentChart) {
+        var options = {
+            series: {{ payment_method_series|safe }},
+            chart: {
+                type: "pie",
+                height: 300
+            },
+            labels: {{ payment_method_labels|safe }},
+            colors: ["#22c55e", "#0f79f3", "#f97316", "#796df6", "#00cae3"],
+            legend: {
+                position: "bottom",
+                fontSize: "14px",
+                fontFamily: 'Outfit',
+                labels: {
+                    colors: '#919aa3'
+                },
+                itemMargin: {
+                    horizontal: 0,
+                    vertical: 5
+                }
+            },
+            stroke: {
+                width: 0
+            },
+            dataLabels: {
+                enabled: true,
+                style: {
+                    fontSize: '14px',
+                    fontFamily: 'Outfit',
+                }
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 250
+                    },
+                    legend: {
+                        position: "bottom"
+                    }
+                }
+            }]
+        };
+        const chart = new ApexCharts(paymentChart, options);
+        chart.render();
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // BAR CHARTS
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    // Orders Per Day (Last 7 Days) Bar Chart
+    const ordersDailyChart = document.getElementById('orders_daily_chart');
+    if (ordersDailyChart) {
+        var options = {
+            series: [{
+                name: "Orders",
+                data: {{ orders_daily_series|safe }}
+            }],
+            chart: {
+                height: 300,
+                type: "bar",
+                toolbar: {
+                    show: false
+                }
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    columnWidth: '45%',
+                }
+            },
+            colors: ["#796df6"],
+            dataLabels: {
+                enabled: false
+            },
+            xaxis: {
+                categories: {{ orders_daily_labels|safe }},
+                labels: {
+                    style: {
+                        colors: "#919aa3",
+                        fontSize: "14px",
+                        fontFamily: 'Outfit',
+                    }
+                },
+                axisBorder: {
+                    show: false
+                },
+                axisTicks: {
+                    show: false
+                }
+            },
+            yaxis: {
+                labels: {
+                    style: {
+                        colors: "#919aa3",
+                        fontSize: "14px",
+                        fontFamily: 'Outfit',
+                    }
+                }
+            },
+            grid: {
+                strokeDashArray: 5,
+                borderColor: "#e0e0e0"
+            }
+        };
+        const chart = new ApexCharts(ordersDailyChart, options);
+        chart.render();
+    }
+
+    // Revenue Per Month Bar Chart
+    const revenueMonthlyChart = document.getElementById('revenue_monthly_chart');
+    if (revenueMonthlyChart) {
+        var options = {
+            series: [{
+                name: "Revenue (৳)",
+                data: {{ revenue_monthly_series|safe }}
+            }],
+            chart: {
+                height: 300,
+                type: "bar",
+                toolbar: {
+                    show: false
+                }
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    columnWidth: '45%',
+                }
+            },
+            colors: ["#00cae3"],
+            dataLabels: {
+                enabled: false
+            },
+            xaxis: {
+                categories: {{ revenue_monthly_labels|safe }},
+                labels: {
+                    style: {
+                        colors: "#919aa3",
+                        fontSize: "14px",
+                        fontFamily: 'Outfit',
+                    }
+                },
+                axisBorder: {
+                    show: false
+                },
+                axisTicks: {
+                    show: false
+                }
+            },
+            yaxis: {
+                labels: {
+                    style: {
+                        colors: "#919aa3",
+                        fontSize: "14px",
+                        fontFamily: 'Outfit',
+                    },
+                    formatter: function (value) {
+                        return "৳" + value.toFixed(0);
+                    }
+                }
+            },
+            grid: {
+                strokeDashArray: 5,
+                borderColor: "#e0e0e0"
+            }
+        };
+        const chart = new ApexCharts(revenueMonthlyChart, options);
+        chart.render();
+    }
+
+    // Top Products Bar Chart
+    const topProductsChart = document.getElementById('top_products_chart');
+    if (topProductsChart) {
+        var options = {
+            series: [{
+                name: "Quantity Sold",
+                data: {{ top_products_series|safe }}
+            }],
+            chart: {
+                height: 300,
+                type: "bar",
+                toolbar: {
+                    show: false
+                }
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    horizontal: true,
+                }
+            },
+            colors: ["#22c55e"],
+            dataLabels: {
+                enabled: false
+            },
+            xaxis: {
+                categories: {{ top_products_labels|safe }},
+                labels: {
+                    style: {
+                        colors: "#919aa3",
+                        fontSize: "12px",
+                        fontFamily: 'Outfit',
+                    }
+                }
+            },
+            yaxis: {
+                labels: {
+                    style: {
+                        colors: "#919aa3",
+                        fontSize: "12px",
+                        fontFamily: 'Outfit',
+                    }
+                }
+            },
+            grid: {
+                strokeDashArray: 5,
+                borderColor: "#e0e0e0"
+            }
+        };
+        const chart = new ApexCharts(topProductsChart, options);
+        chart.render();
+    }
+
+    // Top Brands Bar Chart
+    const topBrandsChart = document.getElementById('top_brands_chart');
+    if (topBrandsChart) {
+        var options = {
+            series: [{
+                name: "Products Count",
+                data: {{ top_brands_series|safe }}
+            }],
+            chart: {
+                height: 300,
+                type: "bar",
+                toolbar: {
+                    show: false
+                }
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    horizontal: true,
+                }
+            },
+            colors: ["#f97316"],
+            dataLabels: {
+                enabled: false
+            },
+            xaxis: {
+                categories: {{ top_brands_labels|safe }},
+                labels: {
+                    style: {
+                        colors: "#919aa3",
+                        fontSize: "12px",
+                        fontFamily: 'Outfit',
+                    }
+                }
+            },
+            yaxis: {
+                labels: {
+                    style: {
+                        colors: "#919aa3",
+                        fontSize: "12px",
+                        fontFamily: 'Outfit',
+                    }
+                }
+            },
+            grid: {
+                strokeDashArray: 5,
+                borderColor: "#e0e0e0"
+            }
+        };
+        const chart = new ApexCharts(topBrandsChart, options);
+        chart.render();
+    }
+
+})();
+</script>
+{% endblock %}

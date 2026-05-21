@@ -1,0 +1,30 @@
+<div class="bg-primary-50 p-20 border rounded-10 border-primary-50 mb-4" id="sales-overview">
+    <h3 class="text-white mb-12">Sales Overview</h3>
+
+    <div class="d-flex flex-wrap gap-2 justify-content-between mb-14">
+        <div>
+            <span class="fs-14 text-white mb-1 d-block">Total Sales</span>
+            <h2 class="fs-20 fw-medium lh-1 text-white mb-0">{{ total_sales|floatformat:0 }}</h2>
+        </div>
+        <div>
+            <span class="fs-14 text-white mb-1 d-block">Monthly Sales</span>
+            <h2 class="fs-20 fw-medium lh-1 text-white mb-0">{{ monthly_sales|floatformat:0 }}</h2>
+        </div>
+        <div>
+            <span class="fs-14 text-white mb-1 d-block">Today’s Sales</span>
+            <h2 class="fs-20 fw-medium lh-1 text-white mb-0">{{ today_sales|floatformat:0 }}</h2>
+        </div>
+    </div>
+
+    <div class="progress rounded-0 mb-6" role="progressbar" aria-label="Basic example" aria-valuenow="{{ sales_growth_percent_abs }}" aria-valuemin="0" aria-valuemax="100" style="height: 3px; background-color: #6258cc;">
+        <div class="progress-bar rounded-0 {% if sales_growth_positive %}bg-white{% else %}bg-danger{% endif %}" style="width: {{ sales_growth_percent_abs }}%; height: 3px;"></div>
+    </div>
+
+    {% if sales_growth_percent == 0 %}
+        <span class="fs-14 text-white d-block" style="margin-bottom: -6px;">No change this month</span>
+    {% elif sales_growth_positive %}
+        <span class="fs-14 text-white d-block" style="margin-bottom: -6px;">{{ sales_growth_percent_abs }}% Increase in last month</span>
+    {% else %}
+        <span class="fs-14 text-white d-block" style="margin-bottom: -6px;">{{ sales_growth_percent_abs }}% Decrease in last month</span>
+    {% endif %}
+</div>

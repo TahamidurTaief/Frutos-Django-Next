@@ -1,0 +1,396 @@
+<!-- Admin Dashboard Sidebar - Organized Navigation -->
+<div class="sidebar-area" id="sidebar-area">
+    <div class="logo position-relative d-flex align-items-center justify-content-between">
+        <a href="{% url 'dashboard:home' %}" class="d-block text-decoration-none position-relative">
+            <img src="/static/assets/images/logo-icon.png" alt="logo-icon">
+            <span class="logo-text text-secondary fw-semibold">iCommerce</span>
+        </a> 
+        <button class="sidebar-burger-menu-close bg-transparent py-3 border-0 opacity-0 z-n1 position-absolute top-50 end-0 translate-middle-y" id="sidebar-burger-menu-close">
+            <span class="border-1 d-block for-dark-burger" style="border-bottom: 1px solid #475569; height: 1px; width: 25px; transform: rotate(45deg);"></span>
+            <span class="border-1 d-block for-dark-burger" style="border-bottom: 1px solid #475569; height: 1px; width: 25px; transform: rotate(-45deg);"></span>
+        </button>
+        <button class="sidebar-burger-menu bg-transparent p-0 border-0" id="sidebar-burger-menu">
+            <span class="border-1 d-block for-dark-burger" style="border-bottom: 1px solid #475569; height: 1px; width: 25px;"></span>
+            <span class="border-1 d-block for-dark-burger" style="border-bottom: 1px solid #475569; height: 1px; width: 25px; margin: 6px 0;"></span>
+            <span class="border-1 d-block for-dark-burger" style="border-bottom: 1px solid #475569; height: 1px; width: 25px;"></span>
+        </button>
+    </div>
+
+    <aside id="layout-menu" class="layout-menu menu-vertical menu active" data-simplebar>
+        <ul class="menu-inner">
+            <!-- Dashboard Home -->
+            <li class="menu-title small text-uppercase">
+                <span class="menu-title-text">MAIN</span>
+            </li>
+            
+            <li class="menu-item {% if request.resolver_match.url_name == 'home' %}open{% endif %}">
+                <a href="{% url 'dashboard:home' %}" 
+                   class="menu-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+                   hx-get="{% url 'dashboard:home' %}"
+                   hx-target="#dashboard-content"
+                   hx-swap="innerHTML"
+                   hx-push-url="true">
+                    <span class="material-symbols-outlined menu-icon">dashboard</span>
+                    <span class="title">Dashboard</span>
+                </a>
+            </li>
+            
+            <li class="menu-item {% if request.resolver_match.url_name == 'analytics' %}open{% endif %}">
+                <a href="{% url 'dashboard:analytics' %}" 
+                   class="menu-link {% if request.resolver_match.url_name == 'analytics' %}active{% endif %}"
+                   hx-get="{% url 'dashboard:analytics' %}"
+                   hx-target="#dashboard-content"
+                   hx-swap="innerHTML"
+                   hx-push-url="true">
+                    <span class="material-symbols-outlined menu-icon">analytics</span>
+                    <span class="title">Analytics</span>
+                </a>
+            </li>
+
+            <!-- PRODUCTS SECTION -->
+            <li class="menu-title small text-uppercase mt-3">
+                <span class="menu-title-text">CATALOG</span>
+            </li>
+            
+            <li class="menu-item">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <span class="material-symbols-outlined menu-icon">inventory_2</span>
+                    <span class="title">Products</span>
+                </a>
+                <ul class="menu-sub">
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='products' model_name='Product' %}\" 
+                           class="menu-link"
+                           hx-get="{% url 'dashboard:model_list' app_label='products' model_name='Product' %}"
+                           hx-target="#dashboard-content"
+                           hx-swap="innerHTML"
+                           hx-push-url="true">
+                            All Products
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='products' model_name='Category' %}" 
+                           class="menu-link"
+                           hx-get="{% url 'dashboard:model_list' app_label='products' model_name='Category' %}"
+                           hx-target="#dashboard-content"
+                           hx-swap="innerHTML"
+                           hx-push-url="true">
+                            Categories
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='products' model_name='SubCategory' %}" 
+                           class="menu-link"
+                           hx-get="{% url 'dashboard:model_list' app_label='products' model_name='SubCategory' %}"
+                           hx-target="#dashboard-content"
+                           hx-swap="innerHTML"
+                           hx-push-url="true">
+                            Subcategories
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='products' model_name='Brand' %}" 
+                           class="menu-link"
+                           hx-get="{% url 'dashboard:model_list' app_label='products' model_name='Brand' %}"
+                           hx-target="#dashboard-content"
+                           hx-swap="innerHTML"
+                           hx-push-url="true">
+                            Brands
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='products' model_name='Color' %}" 
+                           class="menu-link"
+                           hx-get="{% url 'dashboard:model_list' app_label='products' model_name='Color' %}"
+                           hx-target="#dashboard-content"
+                           hx-swap="innerHTML"
+                           hx-push-url="true">
+                            Colors
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='products' model_name='Size' %}" 
+                           class="menu-link"
+                           hx-get="{% url 'dashboard:model_list' app_label='products' model_name='Size' %}"
+                           hx-target="#dashboard-content"
+                           hx-swap="innerHTML"
+                           hx-push-url="true">
+                            Sizes
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='products' model_name='ProductAdditionalImage' %}" 
+                           class="menu-link"
+                           hx-get="{% url 'dashboard:model_list' app_label='products' model_name='ProductAdditionalImage' %}"
+                           hx-target="#dashboard-content"
+                           hx-swap="innerHTML"
+                           hx-push-url="true">
+                            Product Images
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='products' model_name='ProductAdditionalDescription' %}" 
+                           class="menu-link"
+                           hx-get="{% url 'dashboard:model_list' app_label='products' model_name='ProductAdditionalDescription' %}"
+                           hx-target="#dashboard-content"
+                           hx-swap="innerHTML"
+                           hx-push-url="true">
+                            Product Descriptions
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='products' model_name='ProductSpecification' %}" 
+                           class="menu-link"
+                           hx-get="{% url 'dashboard:model_list' app_label='products' model_name='ProductSpecification' %}"
+                           hx-target="#dashboard-content"
+                           hx-swap="innerHTML"
+                           hx-push-url="true">
+                            Product Specs
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='products' model_name='Review' %}" 
+                           class="menu-link"
+                           hx-get="{% url 'dashboard:model_list' app_label='products' model_name='Review' %}"
+                           hx-target="#dashboard-content"
+                           hx-swap="innerHTML"
+                           hx-push-url="true">
+                            Reviews
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='products' model_name='CategoryMinimumOrderQuantity' %}" 
+                           class="menu-link"
+                           hx-get="{% url 'dashboard:model_list' app_label='products' model_name='CategoryMinimumOrderQuantity' %}"
+                           hx-target="#dashboard-content"
+                           hx-swap="innerHTML"
+                           hx-push-url="true">
+                            Min Order Quantities
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- ORDERS SECTION -->
+            <li class="menu-title small text-uppercase mt-3">
+                <span class="menu-title-text">SALES</span>
+            </li>
+            
+            <li class="menu-item">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <span class="material-symbols-outlined menu-icon">shopping_cart</span>
+                    <span class="title">Orders</span>
+                </a>
+                <ul class="menu-sub">
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='orders' model_name='Order' %}" class="menu-link">
+                            All Orders
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='orders' model_name='OrderItem' %}" class="menu-link">
+                            Order Items
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='orders' model_name='OrderUpdate' %}" class="menu-link">
+                            Order Updates
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='orders' model_name='OrderPayment' %}" class="menu-link">
+                            Payments
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='orders' model_name='Coupon' %}" class="menu-link">
+                            Coupons
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- SHIPPING SECTION -->
+            <li class="menu-item">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <span class="material-symbols-outlined menu-icon">local_shipping</span>
+                    <span class="title">Shipping</span>
+                </a>
+                <ul class="menu-sub">
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='products' model_name='ShippingCategory' %}" class="menu-link">
+                            Shipping Categories
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='orders' model_name='ShippingMethod' %}" class="menu-link">
+                            Shipping Methods
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='orders' model_name='ShippingTier' %}" class="menu-link">
+                            Shipping Tiers
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='orders' model_name='FreeShippingRule' %}" class="menu-link">
+                            Free Shipping Rules
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- USERS SECTION -->
+            <li class="menu-title small text-uppercase mt-3">
+                <span class="menu-title-text">CUSTOMER MANAGEMENT</span>
+            </li>
+            
+            <li class="menu-item">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <span class="material-symbols-outlined menu-icon">people</span>
+                    <span class="title">Users</span>
+                </a>
+                <ul class="menu-sub">
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='users' model_name='User' %}" class="menu-link">
+                            All Users
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='users' model_name='Address' %}" class="menu-link">
+                            Addresses
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='users' model_name='WholesalerProfile' %}" class="menu-link">
+                            Wholesalers
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='users' model_name='AffiliateProfile' %}" class="menu-link">
+                            Affiliates
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- SHOPS SECTION -->
+            <li class="menu-item">
+                <a href="{% url 'dashboard:model_list' app_label='shops' model_name='Shop' %}" class="menu-link">
+                    <span class="material-symbols-outlined menu-icon">store</span>
+                    <span class="title">Shops</span>
+                </a>
+            </li>
+
+            <!-- WEBSITE CONTENT SECTION -->
+            <li class="menu-title small text-uppercase mt-3">
+                <span class="menu-title-text">WEBSITE</span>
+            </li>
+            
+            <li class="menu-item">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <span class="material-symbols-outlined menu-icon">web</span>
+                    <span class="title">Website Content</span>
+                </a>
+                <ul class="menu-sub">
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='website' model_name='NavbarSettings' %}" class="menu-link">
+                            Navbar Settings
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='website' model_name='OfferCategory' %}" class="menu-link">
+                            Offer Categories
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='website' model_name='HeroBanner' %}" class="menu-link">
+                            Hero Banners
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='website' model_name='OfferBanner' %}" class="menu-link">
+                            Offer Banners
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='website' model_name='HorizontalPromoBanner' %}" class="menu-link">
+                            Promo Banners
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='website' model_name='BlogPost' %}" class="menu-link">
+                            Blog Posts
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='website' model_name='FooterSection' %}" class="menu-link">
+                            Footer Sections
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='website' model_name='FooterLink' %}" class="menu-link">
+                            Footer Links
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='website' model_name='SocialMediaLink' %}" class="menu-link">
+                            Social Links
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='website' model_name='SiteSettings' %}" class="menu-link">
+                            Site Settings
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- SECTIONS -->
+            <li class="menu-item">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <span class="material-symbols-outlined menu-icon">view_module</span>
+                    <span class="title">Page Sections</span>
+                </a>
+                <ul class="menu-sub">
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='sections' model_name='Section' %}" class="menu-link">
+                            Sections
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='sections' model_name='SectionItem' %}" class="menu-link">
+                            Section Items
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{% url 'dashboard:model_list' app_label='sections' model_name='PageSection' %}" class="menu-link">
+                            Page Sections
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+<!-- SETTINGS & TOOLS -->
+            <li class="menu-title small text-uppercase mt-3">
+                <span class="menu-title-text">SYSTEM</span>
+            </li>
+
+            <li class="menu-item">
+                <a href="/issl-admin/" class="menu-link">
+                    <span class="material-symbols-outlined menu-icon">admin_panel_settings</span>
+                    <span class="title">Django Admin</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="{% url 'admin:logout' %}" class="menu-link">
+                    <span class="material-symbols-outlined menu-icon">logout</span>
+                    <span class="title">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+</div>
+<!-- End Sidebar Area -->
+

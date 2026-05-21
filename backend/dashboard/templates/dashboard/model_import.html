@@ -1,0 +1,74 @@
+<!-- Modal for importing data -->
+<div class="modal fade show" style="display: block; background: rgba(0,0,0,0.5);" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-upload text-primary"></i> Import {{ model_verbose_name_plural }}
+                </h5>
+                <button type="button" class="btn-close" onclick="this.closest('.modal').remove()"></button>
+            </div>
+            
+            <form method="post" enctype="multipart/form-data" 
+                  hx-post="{% url 'dashboard:model_import' app_label model_name %}"
+                  hx-target="#import-results"
+                  hx-swap="innerHTML">
+                {% csrf_token %}
+                
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Import Instructions:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Upload a CSV or Excel (.xlsx) file</li>
+                            <li>Column headers must match field names</li>
+                            <li>Download the template below for correct format</li>
+                            <li>Foreign keys should use the ID or unique identifier</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- File Upload -->
+                    <div class="mb-3">
+                        <label class="form-label">Select File</label>
+                        <input type="file" name="import_file" class="form-control" accept=".csv,.xlsx" required>
+                        <small class="text-muted">Accepted formats: CSV, Excel (.xlsx)</small>
+                    </div>
+                    
+                    <!-- Options -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="update_existing" id="update_existing" checked>
+                                <label class="form-check-label" for="update_existing">
+                                    Update existing records (by ID)
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="skip_errors" id="skip_errors" checked>
+                                <label class="form-check-label" for="skip_errors">
+                                    Skip rows with errors
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Results Container -->
+                    <div id="import-results"></div>
+                </div>
+                
+                <div class="modal-footer">
+                    <a href="{% url 'dashboard:model_export_template' app_label model_name %}" 
+                       class="btn btn-outline-secondary me-auto">
+                        <i class="bi bi-download"></i> Download Template
+                    </a>
+                    <button type="button" class="btn btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-upload"></i> Upload & Import
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
