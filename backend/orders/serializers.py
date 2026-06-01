@@ -9,7 +9,7 @@ from .models import (
     Order, OrderItem, OrderUpdate, ShippingMethod, OrderPayment,
     Coupon, ShippingTier, FreeShippingRule
 )
-from products.models import Product, Color, Size, CategoryMinimumOrderQuantity, ShippingCategory
+from products.models import Product, Color, Size, CategoryMinimumOrderQuantity, Category
 from products.serializers import ColorSerializer, SizeSerializer
 from users.models import Address
 
@@ -357,7 +357,7 @@ class ShippingMethodSerializer(serializers.ModelSerializer):
 
     def get_shipping_categories(self, obj):
         return [
-            {'id': c.id, 'name': c.name, 'description': c.description}
+            {'id': c.id, 'name': c.name}
             for c in obj.shipping_categories.all()
         ]
 
@@ -378,8 +378,8 @@ class ShippingCategorySerializer(serializers.ModelSerializer):
     allowed_shipping_methods = ShippingMethodSerializer(many=True, read_only=True)
 
     class Meta:
-        model  = ShippingCategory
-        fields = ['id', 'name', 'description', 'allowed_shipping_methods']
+        model  = Category
+        fields = ['id', 'name', 'allowed_shipping_methods']
 
 
 class FreeShippingRuleSerializer(serializers.ModelSerializer):
@@ -395,7 +395,7 @@ class FreeShippingRuleSerializer(serializers.ModelSerializer):
 
 class FreeShippingRuleWriteSerializer(serializers.ModelSerializer):
     applicable_categories = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=ShippingCategory.objects.all(), required=False
+        many=True, queryset=Category.objects.all(), required=False
     )
     applicable_products = serializers.PrimaryKeyRelatedField(
         many=True, queryset=Product.objects.all(), required=False
@@ -500,12 +500,12 @@ class ShippingCategoryWriteSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model  = ShippingCategory
-        fields = ['id', 'name', 'description', 'allowed_shipping_methods']
+        model  = Category
+        fields = ['id', 'name', 'allowed_shipping_methods']
 
     def create(self, validated_data):
         methods = validated_data.pop('allowed_shipping_methods', [])
-        obj     = ShippingCategory.objects.create(**validated_data)
+        obj     = Category.objects.create(**validated_data)
         obj.allowed_shipping_methods.set(methods)
         return obj
 

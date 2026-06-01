@@ -1,7 +1,7 @@
 'use client'
 // src/app/shop/ProductListingClient.jsx
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import ProductCard from '@/app/components/ProductCard'
 import Link from 'next/link'
 
@@ -68,6 +68,25 @@ function Toggle({ checked, onChange }) {
 //   categories      — ['All', 'Fruits', 'Vegetables', ...] from the API
 export default function ProductListingClient({ initialProducts = [], categories = [] }) {
 
+  const [products, setProducts] = useState(initialProducts)
+  const [cats, setCats] = useState(categories)
+
+  const fetchFresh = useCallback(async () => {
+    try {
+      const res = await fetch('/api/products-fresh')
+      if (!res.ok) return
+      const data = await res.json()
+      setProducts(data.products)
+      setCats(data.categories)
+    } catch (e) {
+    }
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(fetchFresh, 10_000) // 10 সেকেন্ড
+    return () => clearInterval(interval)
+  }, [fetchFresh])
+
   // Build CATEGORY_PILLS from API categories (same logic as before)
   const CATEGORY_PILLS = ['All Produce', ...categories.filter(c => c !== 'All' && c !== 'On Sale')]
 
@@ -75,9 +94,9 @@ export default function ProductListingClient({ initialProducts = [], categories 
   const [sortBy, setSortBy]                   = useState('Promotional first')
   const [inStockOnly, setInStockOnly]         = useState(false)
   const maxProductPrice = useMemo(
-    () => Math.ceil(Math.max(...initialProducts.map(p => p.price), 50)),
-    [initialProducts]
-  )
+    () => Math.ceil(Math.max(...products.map(p => p.price), 50)),  
+    [products]
+)
   const [priceMax, setPriceMax] = useState(maxProductPrice)
   const [showMobileFilter, setShowMobileFilter] = useState(false)
   const [visibleCount, setVisibleCount]       = useState(6)
@@ -88,7 +107,7 @@ export default function ProductListingClient({ initialProducts = [], categories 
   const dataCat = activeCategory === 'All Produce' ? 'All' : activeCategory
 
   const filtered = useMemo(() => {
-    let list = [...initialProducts]
+    let list = [...products]
 
     if (dataCat !== 'All')      list = list.filter(p => p.category === dataCat)
     if (dataCat === 'On Sale')  list = list.filter(p => p.onSale)
@@ -104,7 +123,7 @@ export default function ProductListingClient({ initialProducts = [], categories 
     if (sortBy === 'Promotional first')  list.sort((a, b) => (b.onSale ? 1 : 0) - (a.onSale ? 1 : 0))
 
     return list
-  }, [initialProducts, dataCat, inStockOnly, priceMax, sortBy, searchQuery])
+  },  [products, dataCat, inStockOnly, priceMax, sortBy, searchQuery])
 
   const visibleProducts = filtered.slice(0, visibleCount)
 
@@ -117,10 +136,9 @@ export default function ProductListingClient({ initialProducts = [], categories 
   }
 
   function catCount(cat) {
-    if (cat === 'All Produce') return initialProducts.length
-    return initialProducts.filter(p => p.category === cat).length
-  }
-
+    if (cat === 'All Produce') return products.length 
+    return products.filter(p => p.category === cat).length 
+}
   // ── Sidebar ───────────────────────────────────────────────────────────────
   const Sidebar = () => (
     <aside className="space-y-8">

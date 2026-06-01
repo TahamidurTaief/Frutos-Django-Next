@@ -30,9 +30,10 @@ class SizeSerializer(serializers.ModelSerializer):
 
 class SubCategorySerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
+    category_name = serializers.CharField(source='category.name', read_only=True)
     class Meta:
         model = SubCategory
-        fields = ['id','name','slug','image','image_url','category']
+        fields = ['id','name','slug','image','image_url','category', 'category_name']
 
     def get_image_url(self, obj):
         request = self.context.get('request')
@@ -67,11 +68,6 @@ class CategorySerializer(serializers.ModelSerializer):
             return obj.image.url
         return None
 
-class ShippingCategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ShippingCategory
-        fields = ['id', 'name', 'description']
-
 class ProductSpecificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductSpecification
@@ -97,8 +93,9 @@ class ReviewSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     shop = ShopSerializer(read_only=True)
     brand = BrandSerializer(read_only=True)
+    category = CategorySerializer(read_only=True)
     sub_category = SubCategorySerializer(read_only=True)
-    shipping_category = ShippingCategorySerializer(read_only=True)
+    shipping_category = CategorySerializer(read_only=True)
     specifications = ProductSpecificationSerializer(many=True, read_only=True)
     additional_images = ProductAdditionalImageSerializer(many=True, read_only=True)
     reviews = ReviewSerializer(many=True, read_only=True)
@@ -111,7 +108,7 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = [
-            'id', 'shop', 'brand', 'name', 'slug', 'description', 'sub_category', 'shipping_category',
+            'id', 'shop', 'brand', 'name', 'slug', 'description', 'category', 'sub_category', 'shipping_category',
             'price', 'discount_price', 'wholesale_price', 'minimum_purchase', 'affiliate_commission_rate', 'stock', 'is_active',
             'weight', 'length', 'width', 'height',  # Added physical properties for shipping
             'thumbnail_url', 'specifications', 'additional_images',
@@ -203,7 +200,7 @@ class ProductWriteSerializer(serializers.ModelSerializer):
         model = Product
         fields = [
             'shop', 'brand', 'name', 'slug', 'description',
-            'sub_category', 'shipping_category',
+            'category', 'sub_category', 'shipping_category',
             'price', 'discount_price', 'wholesale_price',
             'minimum_purchase', 'affiliate_commission_rate',
             'origin', 'unit', 'wholesale_unit', 'badge', 'badge_color',
@@ -214,7 +211,8 @@ class ProductWriteSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'shop':                    {'required': False},
             'brand':                   {'allow_null': True, 'required': False},
-            'sub_category':            {'required': False},
+            'category':                {'allow_null': True, 'required': False},
+            'sub_category':            {'allow_null': True, 'required': False},
             'shipping_category':       {'allow_null': True, 'required': False},
             'thumbnail':               {'allow_null': True, 'required': False},
             'discount_price':          {'allow_null': True, 'required': False},

@@ -159,18 +159,7 @@ class SubCategory(models.Model):
                 print(f"Error optimizing subcategory image: {e}")
         super().save(*args, **kwargs)
 
-class ShippingCategory(models.Model):
-    """Categories for products that determine available shipping methods"""
-    name = models.CharField(max_length=255, unique=True, help_text="e.g., Electronics, Fragile Items, Heavy Items")
-    description = models.TextField(blank=True, help_text="Description of what types of products belong to this category")
 
-    class Meta:
-        verbose_name = "Shipping Category"
-        verbose_name_plural = "Shipping Categories"
-        ordering = ['name']
-
-    def __str__(self):
-        return self.name
 
 class Product(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -179,11 +168,12 @@ class Product(models.Model):
     name = models.CharField(max_length=255, db_index=True)
     slug = models.SlugField(unique=True, max_length=255, db_index=True)
     description = CKEditor5Field('Description', config_name='default')
-    sub_category = models.ForeignKey(SubCategory, on_delete=models.PROTECT, related_name='products', db_index=True)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='products', null=True, blank=True, db_index=True)
+    sub_category = models.ForeignKey(SubCategory, on_delete=models.PROTECT, related_name='products', null=True, blank=True, db_index=True)
     shipping_category = models.ForeignKey(
-        'ShippingCategory',
+        'Category',
         on_delete=models.PROTECT, 
-        related_name='products',
+        related_name='shipping_category_products',
         blank=True,
         null=True,
         help_text="Determines which shipping methods are available for this product",
@@ -259,6 +249,7 @@ class Product(models.Model):
         indexes = [
             models.Index(fields=['-created_at'], name='product_created_idx'),
             models.Index(fields=['is_active', '-created_at'], name='product_active_created_idx'),
+            models.Index(fields=['category', 'is_active'], name='product_cat_active_idx'),
             models.Index(fields=['sub_category', 'is_active'], name='product_subcat_active_idx'),
         ]
 

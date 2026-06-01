@@ -14,7 +14,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.template.loader import render_to_string
 from django.http import HttpResponse
-from products.models import Product, ShippingCategory
+from products.models import Product, Category
 from .models import (
     Order, ShippingMethod, OrderPayment, Coupon, OrderItem, OrderUpdate,
     FreeShippingRule, ShippingTier
@@ -175,7 +175,7 @@ def analyze_cart_shipping(request):
             available_methods = ShippingMethod.objects.filter(is_active=True)
         elif len(shipping_categories) == 1:
             # Single shipping category - use its allowed methods
-            category = ShippingCategory.objects.prefetch_related(
+            category = Category.objects.prefetch_related(
                 'allowed_shipping_methods__shipping_tiers'
             ).get(id=list(shipping_categories)[0])
             available_methods = category.allowed_shipping_methods.filter(is_active=True)
@@ -184,7 +184,7 @@ def analyze_cart_shipping(request):
             # have no explicitly configured allowed methods. In such a case we treat those categories
             # as "wildcards" (i.e., they don't constrain the available set) instead of eliminating
             # all options.
-            category_objects = ShippingCategory.objects.prefetch_related('allowed_shipping_methods').filter(id__in=shipping_categories)
+            category_objects = Category.objects.prefetch_related('allowed_shipping_methods').filter(id__in=shipping_categories)
 
             all_active_method_ids = set(ShippingMethod.objects.filter(is_active=True).values_list('id', flat=True))
             method_sets = []
@@ -1041,7 +1041,7 @@ class ShippingMethodViewSet(viewsets.ModelViewSet):
         # Get applicable methods
         if category_ids:
             # Similar resilient intersection logic as in analyze_cart_shipping
-            categories = ShippingCategory.objects.prefetch_related('allowed_shipping_methods').filter(id__in=category_ids)
+            categories = Category.objects.prefetch_related('allowed_shipping_methods').filter(id__in=category_ids)
             all_active_ids = set(ShippingMethod.objects.filter(is_active=True).values_list('id', flat=True))
             method_sets = []
             wildcard_present = False
@@ -1293,9 +1293,9 @@ class PaymentAccountsAPIView(generics.RetrieveAPIView):
 
 class ShippingCategoryViewSet(viewsets.ModelViewSet):
     """
-    API endpoint for shipping categories — read-only for public, full CRUD for admin.
+    API endpoint for managing shipping categories (now mapped to Category model).
     """
-    queryset = ShippingCategory.objects.all().prefetch_related('allowed_shipping_methods')
+    queryset = Category.objects.all().prefetch_related('allowed_shipping_methods')
     permission_classes = [ReadOnlyOrIsAdmin]
     pagination_class = StandardResultsSetPagination
     filter_backends = [DjangoFilterBackend, SearchFilter]
@@ -1345,8 +1345,8 @@ class FreeShippingRuleViewSet(viewsets.ModelViewSet):
         shipping_category = None
         if category_id:
             try:
-                shipping_category = ShippingCategory.objects.get(id=category_id)
-            except ShippingCategory.DoesNotExist:
+                shipping_category = Category.objects.get(id=category_id)
+            except Category.DoesNotExist:
                 return Response({
                     'error': 'Shipping category not found'
                 }, status=status.HTTP_404_NOT_FOUND)

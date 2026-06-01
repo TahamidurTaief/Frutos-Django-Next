@@ -70,7 +70,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """Admin users see all products, public sees only active."""
         qs = Product.objects.select_related(
-            'shop', 'brand', 'sub_category', 'sub_category__category', 'shipping_category'
+            'shop', 'brand', 'category', 'sub_category', 'sub_category__category', 'shipping_category'
         ).prefetch_related(
             'colors', 'sizes', 'reviews__user', 'specifications',
             'additional_images', 'shipping_category__allowed_shipping_methods',

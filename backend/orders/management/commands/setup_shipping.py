@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from orders.models import ShippingMethod, ShippingTier, FreeShippingRule
-from products.models import ShippingCategory
+from products.models import Product, Category
 
 class Command(BaseCommand):
     help = 'Create default shipping methods and categories'
@@ -9,15 +9,15 @@ class Command(BaseCommand):
         self.stdout.write('Creating default shipping data...')
         
         # Create shipping categories
-        general_category, created = ShippingCategory.objects.get_or_create(
-            name='General',
-            defaults={'description': 'General merchandise'}
+        general_category, created = Category.objects.get_or_create(
+            name="General Merchandise",
+            defaults={'slug': 'general-merchandise'}
         )
         self.stdout.write(f'{"Created" if created else "Found"} category: {general_category.name}')
         
-        electronics_category, created = ShippingCategory.objects.get_or_create(
-            name='Electronics',
-            defaults={'description': 'Electronic devices and accessories'}
+        electronics_category, created = Category.objects.get_or_create(
+            name="Electronics",
+            defaults={'slug': 'electronics-shipping'}
         )
         self.stdout.write(f'{"Created" if created else "Found"} category: {electronics_category.name}')
         
@@ -86,7 +86,7 @@ class Command(BaseCommand):
             self.style.SUCCESS(
                 f'\nShipping setup complete!\n'
                 f'Methods: {ShippingMethod.objects.count()}\n'
-                f'Categories: {ShippingCategory.objects.count()}\n'
+                f'Categories: {Category.objects.count()}\n'
                 f'Tiers: {ShippingTier.objects.count()}\n'
                 f'Free Rules: {FreeShippingRule.objects.count()}'
             )

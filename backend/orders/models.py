@@ -40,7 +40,7 @@ class ShippingMethod(models.Model):
     )
     
     shipping_categories = models.ManyToManyField(
-        'products.ShippingCategory',
+        'products.Category',
         related_name='allowed_shipping_methods',
         blank=True,
         help_text="Shipping categories this method is available for"
@@ -410,7 +410,7 @@ class FreeShippingRule(models.Model):
         help_text="Minimum order amount required for free shipping"
     )
     applicable_categories = models.ManyToManyField(
-        'products.ShippingCategory',
+        'products.Category',
         blank=True,
         help_text="Shipping categories this rule applies to. Leave blank for all categories."
     )

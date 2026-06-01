@@ -162,91 +162,63 @@ function buildImageUrl(raw) {
 }
 
 // ─── Normalizer ───────────────────────────────────────────────────────────────
-
 function normalizeProduct(p) {
-    // ✅ FIX: Django 'thumbnail' field সহ সব possible field check করা হচ্ছে
     const rawImage = p.thumbnail || p.thumbnail_url || p.image_url || p.image || null
     const image = buildImageUrl(rawImage) || PLACEHOLDER
 
-    // ✅ FIX: Django-এ price=300 (original), discount_price=23 (sale price)
-    // Frontend-এ price=effective price, oldPrice=crossed-out price
     const originalPrice = Number(p.price || 0)
     const discountedPrice = p.discount_price ? Number(p.discount_price) : null
-
-    const effectivePrice = discountedPrice || originalPrice;
+    const effectivePrice = discountedPrice || originalPrice
     const oldPrice = discountedPrice ? originalPrice : null
 
-    // Additional images থেকে gallery array বানাও
     const additionalImages = (p.additional_images || [])
         .map(img => buildImageUrl(img.image || img))
         .filter(Boolean)
 
     const images = [image, ...additionalImages]
 
+    // ✅ category সবসময় string হবে, কখনো object না
+    const categoryName =
+        (typeof p.category === 'string' ? p.category : p.category ? .name) ||
+        p.sub_category ? .category ? .name ||
+        p.sub_category ? .category_name ||
+        p.sub_category_name ||
+        null
+
     return {
-        // Identity
+        ...p, // ✅ আগে spread করো
+
+        // ✅ এরপর explicit fields — এগুলো ...p কে override করবে
         id: String(p.id),
         slug: p.slug || '',
         name: p.name || '',
-
-        // Category (sub_category → category chain)
-        category: p.category ||
-            p.sub_category ? .category ? .name ||
-            p.sub_category_name ||
-            null,
-
-        // Pricing ─ correctly mapped from Django fields
+        category: categoryName, // ✅ এখন সবসময় string
         price: effectivePrice,
-        oldPrice: oldPrice,
-
-        // Wholesale
+        oldPrice,
         wholesalePrice: p.wholesale_price ? Number(p.wholesale_price) : null,
         minWholesaleQty: p.minimum_purchase ? Number(p.minimum_purchase) : 1,
         wholesaleUnit: p.wholesale_unit || p.unit || '',
-
-        // Status flags
-        inStock: p.stock > 0,
+        inStock: Number(p.stock || 0) > 0,
         stock: Number(p.stock || 0),
         onSale: discountedPrice !== null && discountedPrice < originalPrice,
         isActive: p.is_active !== undefined ? p.is_active : true,
-
-        // Display
         image,
         images,
         thumbnail: image,
-
-        // Labels
         badge: p.badge || null,
         badgeColor: p.badge_color || p.badgeColor || '',
         unit: p.unit || '',
         origin: p.origin || '',
-
-        // Ratings (serializer থেকে annotated হলে আসবে)
         rating: Number(p.rating || p.average_rating || 0),
         reviews: Number(p.reviews || p.review_count || 0),
-
-        // Rich content (ProductDetailClient-এর জন্য)
         description: p.description || '',
         shortDesc: p.short_description || p.shortDesc || '',
         keyFeatures: p.key_features || p.keyFeatures || '',
         bestUsedFor: p.best_used_for || p.bestUsedFor || '',
         notes: p.notes || '',
         texture: p.texture || '',
-
-        // Physical
         weight: p.weight ? Number(p.weight) : null,
-
-        // Unit options (যদি থাকে)
         unitOptions: p.unit_options || p.unitOptions || [],
-
-        // Pass through everything else
-        ...p,
-
-        // Override fields above (যাতে ...p দিয়ে overwrite না হয়)
-        price: effectivePrice,
-        oldPrice: oldPrice,
-        image,
-        images,
     }
 }
 

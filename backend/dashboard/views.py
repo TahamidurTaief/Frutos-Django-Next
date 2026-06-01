@@ -252,94 +252,219 @@ def dashboard_home(request):
     return render(request, 'dashboard/home.html', context)
 
 
+# @login_required
+# @user_passes_test(staff_required)
+# def product_list(request):
+#     """List all products with search and filter"""
+#     from products.models import Category
+    
+#     query = request.GET.get('q', '')
+#     category_filter = request.GET.get('category', '')
+#     status_filter = request.GET.get('status', '')
+    
+#     products = Product.objects.select_related('shop', 'brand', 'sub_category').order_by('-created_at')
+    
+#     if query:
+#         products = products.filter(
+#             Q(name__icontains=query) |
+#             Q(slug__icontains=query) |
+#             Q(shop__name__icontains=query)
+#         )
+    
+#     if category_filter:
+#         products = products.filter(sub_category__category_id=category_filter)
+    
+#     if status_filter == 'active':
+#         products = products.filter(is_active=True)
+#     elif status_filter == 'inactive':
+#         products = products.filter(is_active=False)
+    
+#     # Get all categories for filter dropdown
+#     categories = Category.objects.all().order_by('name')
+    
+#     # If HTMX request, return only the table body
+#     if request.headers.get('HX-Request'):
+#         return render(request, 'dashboard/products/partials/product_table.html', {'products': products})
+    
+#     return render(request, 'dashboard/products/list.html', {
+#         'products': products, 
+#         'query': query,
+#         'categories': categories,
+#         'category_filter': category_filter,
+#         'status_filter': status_filter,
+#     })
 @login_required
 @user_passes_test(staff_required)
 def product_list(request):
     """List all products with search and filter"""
-    from products.models import Category
-    
-    query = request.GET.get('q', '')
+    from products.models import Category, SubCategory
+ 
+    query           = request.GET.get('q', '')
     category_filter = request.GET.get('category', '')
-    status_filter = request.GET.get('status', '')
-    
-    products = Product.objects.select_related('shop', 'brand', 'sub_category').order_by('-created_at')
-    
+    sub_filter      = request.GET.get('sub_category', '')
+    status_filter   = request.GET.get('status', '')
+ 
+    products = Product.objects.select_related(
+        'shop', 'brand', 'sub_category', 'sub_category__category'
+    ).order_by('-created_at')
+ 
     if query:
         products = products.filter(
             Q(name__icontains=query) |
             Q(slug__icontains=query) |
             Q(shop__name__icontains=query)
         )
-    
+ 
     if category_filter:
         products = products.filter(sub_category__category_id=category_filter)
-    
+ 
+    if sub_filter:
+        products = products.filter(sub_category_id=sub_filter)
+ 
     if status_filter == 'active':
         products = products.filter(is_active=True)
     elif status_filter == 'inactive':
         products = products.filter(is_active=False)
-    
-    # Get all categories for filter dropdown
-    categories = Category.objects.all().order_by('name')
-    
-    # If HTMX request, return only the table body
+ 
+    categories    = Category.objects.all().order_by('name')
+    subcategories = SubCategory.objects.select_related('category').order_by('category__name', 'name')
+ 
+    # ✅ FIX: HTMX request এও categories pass করো
     if request.headers.get('HX-Request'):
-        return render(request, 'dashboard/products/partials/product_table.html', {'products': products})
-    
+        return render(request, 'dashboard/products/partials/product_table.html', {
+            'products': products,
+            'categories': categories,
+            'subcategories': subcategories,
+            'category_filter': category_filter,
+            'sub_filter': sub_filter,
+            'status_filter': status_filter,
+            'query': query,
+        })
+ 
     return render(request, 'dashboard/products/list.html', {
-        'products': products, 
+        'products': products,
         'query': query,
         'categories': categories,
+        'subcategories': subcategories,
         'category_filter': category_filter,
+        'sub_filter': sub_filter,
         'status_filter': status_filter,
     })
+    
 
+# @login_required
+# @user_passes_test(staff_required)
+# def product_create(request):
+#     """Create a new product"""
+#     if request.method == 'POST':
+#         form = ProductForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             try:
+#                 product = form.save(commit=False)
+#                 # Auto-generate slug if not provided
+#                 if not product.slug:
+#                     product.slug = slugify(product.name)
+#                 product.save()
+#                 # Form's save method handles M2M and new colors/sizes
+#                 form.save_m2m()
+                
+#                 messages.success(request, f'Product "{product.name}" created successfully!')
+                
+#                 # If HTMX request, return the updated table
+#                 if request.headers.get('HX-Request'):
+#                     products = Product.objects.select_related('shop', 'brand', 'sub_category').order_by('-created_at')
+#                     response = render(request, 'dashboard/products/partials/product_table.html', {'products': products})
+#                     # Add trigger to close modal
+#                     response['HX-Trigger'] = 'closeModal'
+#                     return response
+                
+#                 return redirect('dashboard:product_list')
+#             except Exception as e:
+#                 messages.error(request, f'Error creating product: {str(e)}')
+#                 # Re-render form with errors
+#                 if request.headers.get('HX-Request'):
+#                     return render(request, 'dashboard/products/partials/product_form.html', {'form': form, 'action': 'create'})
+#         else:
+#             # Form validation failed - return form with errors
+#             if request.headers.get('HX-Request'):
+#                 return render(request, 'dashboard/products/partials/product_form.html', {'form': form, 'action': 'create'})
+#     else:
+#         form = ProductForm()
+    
+#     # Return modal content for HTMX
+#     if request.headers.get('HX-Request'):
+#         return render(request, 'dashboard/products/partials/product_form.html', {'form': form, 'action': 'create'})
+    
+#     return render(request, 'dashboard/products/form.html', {'form': form, 'action': 'create'})
 
 @login_required
 @user_passes_test(staff_required)
 def product_create(request):
     """Create a new product"""
+    from products.models import Category, SubCategory
+ 
+    all_categories    = Category.objects.all().order_by('name')
+    all_subcategories = SubCategory.objects.select_related('category').order_by('category__name', 'name')
+ 
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             try:
                 product = form.save(commit=False)
-                # Auto-generate slug if not provided
                 if not product.slug:
                     product.slug = slugify(product.name)
                 product.save()
-                # Form's save method handles M2M and new colors/sizes
                 form.save_m2m()
-                
+ 
                 messages.success(request, f'Product "{product.name}" created successfully!')
-                
-                # If HTMX request, return the updated table
+ 
                 if request.headers.get('HX-Request'):
-                    products = Product.objects.select_related('shop', 'brand', 'sub_category').order_by('-created_at')
-                    response = render(request, 'dashboard/products/partials/product_table.html', {'products': products})
-                    # Add trigger to close modal
+                    products = Product.objects.select_related(
+                        'shop', 'brand', 'sub_category', 'sub_category__category'
+                    ).order_by('-created_at')
+                    response = render(request, 'dashboard/products/partials/product_table.html', {
+                        'products': products,
+                    })
                     response['HX-Trigger'] = 'closeModal'
                     return response
-                
+ 
                 return redirect('dashboard:product_list')
+ 
             except Exception as e:
                 messages.error(request, f'Error creating product: {str(e)}')
-                # Re-render form with errors
                 if request.headers.get('HX-Request'):
-                    return render(request, 'dashboard/products/partials/product_form.html', {'form': form, 'action': 'create'})
+                    return render(request, 'dashboard/products/partials/product_form.html', {
+                        'form': form,
+                        'action': 'create',
+                        'all_categories': all_categories,
+                        'all_subcategories': all_subcategories,
+                    })
         else:
-            # Form validation failed - return form with errors
             if request.headers.get('HX-Request'):
-                return render(request, 'dashboard/products/partials/product_form.html', {'form': form, 'action': 'create'})
+                return render(request, 'dashboard/products/partials/product_form.html', {
+                    'form': form,
+                    'action': 'create',
+                    'all_categories': all_categories,
+                    'all_subcategories': all_subcategories,
+                })
     else:
         form = ProductForm()
-    
-    # Return modal content for HTMX
+ 
     if request.headers.get('HX-Request'):
-        return render(request, 'dashboard/products/partials/product_form.html', {'form': form, 'action': 'create'})
-    
-    return render(request, 'dashboard/products/form.html', {'form': form, 'action': 'create'})
-
+        return render(request, 'dashboard/products/partials/product_form.html', {
+            'form': form,
+            'action': 'create',
+            'all_categories': all_categories,
+            'all_subcategories': all_subcategories,
+        })
+ 
+    return render(request, 'dashboard/products/form.html', {
+        'form': form,
+        'action': 'create',
+        'all_categories': all_categories,
+        'all_subcategories': all_subcategories,
+    })
+ 
 
 @login_required
 @user_passes_test(staff_required)
@@ -372,69 +497,143 @@ def product_print(request, pk):
     return render(request, 'dashboard/products/print.html', context)
 
 
+# @login_required
+# @user_passes_test(staff_required)
+# def product_edit(request, pk):
+#     """Edit an existing product"""
+#     product = get_object_or_404(Product, pk=pk)
+    
+#     if request.method == 'POST':
+#         form = ProductForm(request.POST, request.FILES, instance=product)
+#         if form.is_valid():
+#             try:
+#                 product = form.save(commit=False)
+#                 # Auto-generate slug if changed
+#                 if not product.slug:
+#                     product.slug = slugify(product.name)
+#                 product.save()
+#                 # Form's save method handles M2M and new colors/sizes
+#                 form.save_m2m()
+                
+#                 messages.success(request, f'Product "{product.name}" updated successfully!')
+                
+#                 # If HTMX request, return updated table
+#                 if request.headers.get('HX-Request'):
+#                     products = Product.objects.select_related('shop', 'brand', 'sub_category').order_by('-created_at')
+#                     response = render(request, 'dashboard/products/partials/product_table.html', {'products': products})
+#                     # Add trigger to close modal
+#                     response['HX-Trigger'] = 'closeModal'
+#                     return response
+                
+#                 return redirect('dashboard:product_list')
+#             except Exception as e:
+#                 messages.error(request, f'Error updating product: {str(e)}')
+#                 # Re-render form with errors
+#                 if request.headers.get('HX-Request'):
+#                     return render(request, 'dashboard/products/partials/product_form.html', {
+#                         'form': form, 
+#                         'action': 'edit', 
+#                         'product': product
+#                     })
+#         else:
+#             # Form validation failed - return form with errors
+#             if request.headers.get('HX-Request'):
+#                 return render(request, 'dashboard/products/partials/product_form.html', {
+#                     'form': form, 
+#                     'action': 'edit', 
+#                     'product': product
+#                 })
+#     else:
+#         form = ProductForm(instance=product)
+    
+#     # Return modal content for HTMX
+#     if request.headers.get('HX-Request'):
+#         return render(request, 'dashboard/products/partials/product_form.html', {
+#             'form': form, 
+#             'action': 'edit', 
+#             'product': product
+#         })
+    
+#     return render(request, 'dashboard/products/form.html', {
+#         'form': form, 
+#         'action': 'edit', 
+#         'product': product
+#     })
+
+ 
 @login_required
 @user_passes_test(staff_required)
 def product_edit(request, pk):
     """Edit an existing product"""
-    product = get_object_or_404(Product, pk=pk)
-    
+    from products.models import Category, SubCategory
+ 
+    product           = get_object_or_404(Product, pk=pk)
+    all_categories    = Category.objects.all().order_by('name')
+    all_subcategories = SubCategory.objects.select_related('category').order_by('category__name', 'name')
+ 
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
             try:
                 product = form.save(commit=False)
-                # Auto-generate slug if changed
                 if not product.slug:
                     product.slug = slugify(product.name)
                 product.save()
-                # Form's save method handles M2M and new colors/sizes
                 form.save_m2m()
-                
+ 
                 messages.success(request, f'Product "{product.name}" updated successfully!')
-                
-                # If HTMX request, return updated table
+ 
                 if request.headers.get('HX-Request'):
-                    products = Product.objects.select_related('shop', 'brand', 'sub_category').order_by('-created_at')
-                    response = render(request, 'dashboard/products/partials/product_table.html', {'products': products})
-                    # Add trigger to close modal
+                    products = Product.objects.select_related(
+                        'shop', 'brand', 'sub_category', 'sub_category__category'
+                    ).order_by('-created_at')
+                    response = render(request, 'dashboard/products/partials/product_table.html', {
+                        'products': products,
+                    })
                     response['HX-Trigger'] = 'closeModal'
                     return response
-                
+ 
                 return redirect('dashboard:product_list')
+ 
             except Exception as e:
                 messages.error(request, f'Error updating product: {str(e)}')
-                # Re-render form with errors
                 if request.headers.get('HX-Request'):
                     return render(request, 'dashboard/products/partials/product_form.html', {
-                        'form': form, 
-                        'action': 'edit', 
-                        'product': product
+                        'form': form,
+                        'action': 'edit',
+                        'product': product,
+                        'all_categories': all_categories,
+                        'all_subcategories': all_subcategories,
                     })
         else:
-            # Form validation failed - return form with errors
             if request.headers.get('HX-Request'):
                 return render(request, 'dashboard/products/partials/product_form.html', {
-                    'form': form, 
-                    'action': 'edit', 
-                    'product': product
+                    'form': form,
+                    'action': 'edit',
+                    'product': product,
+                    'all_categories': all_categories,
+                    'all_subcategories': all_subcategories,
                 })
     else:
         form = ProductForm(instance=product)
-    
-    # Return modal content for HTMX
+ 
     if request.headers.get('HX-Request'):
         return render(request, 'dashboard/products/partials/product_form.html', {
-            'form': form, 
-            'action': 'edit', 
-            'product': product
+            'form': form,
+            'action': 'edit',
+            'product': product,
+            'all_categories': all_categories,
+            'all_subcategories': all_subcategories,
         })
-    
+ 
     return render(request, 'dashboard/products/form.html', {
-        'form': form, 
-        'action': 'edit', 
-        'product': product
+        'form': form,
+        'action': 'edit',
+        'product': product,
+        'all_categories': all_categories,
+        'all_subcategories': all_subcategories,
     })
-
+ 
 
 @login_required
 @user_passes_test(staff_required)

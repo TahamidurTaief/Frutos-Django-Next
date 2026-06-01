@@ -255,15 +255,6 @@ class SubCategoryAdmin(ImportExportModelAdmin):
     category_display.admin_order_field = 'category__name'
 
 
-@admin.register(ShippingCategory)
-class ShippingCategoryAdmin(ImportExportModelAdmin):
-    list_display = ('name', 'description', 'allowed_methods_count')
-    search_fields = ('name', 'description')
-
-    def allowed_methods_count(self, obj):
-        return obj.allowed_shipping_methods.count()
-    allowed_methods_count.short_description = 'Allowed Methods'
-
 
 # Inline classes
 class ProductSpecificationInline(admin.TabularInline):

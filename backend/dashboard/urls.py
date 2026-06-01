@@ -37,6 +37,7 @@ urlpatterns = [
     # ========================================================================
     path('api/add-color/', api_views.add_color, name='api_add_color'),
     path('api/add-size/', api_views.add_size, name='api_add_size'),
+    path('api/subcategories/', api_views.get_subcategories, name='api_subcategories'),
     
     # ========================================================================
     # GENERIC MODEL CRUD ROUTES (Works for ALL 38 models automatically)
@@ -122,5 +123,6 @@ urlpatterns = [
     path('products/<uuid:pk>/edit/', crud_views.model_update, {'app_label': 'products', 'model_name': 'Product'}, name='product_edit'),
     path('products/<uuid:pk>/delete/', crud_views.model_delete, {'app_label': 'products', 'model_name': 'Product'}, name='product_delete'),
     path('products/export/csv/', crud_views.model_export_csv, {'app_label': 'products', 'model_name': 'Product'}, name='product_export_csv'),
+     path('products/<uuid:pk>/view/', crud_views.model_detail, {'app_label': 'products', 'model_name': 'Product'}, name='product_view'),
 ]
 

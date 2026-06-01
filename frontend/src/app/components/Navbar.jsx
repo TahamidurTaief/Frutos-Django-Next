@@ -85,7 +85,7 @@ function ProfileMenu({ user, logout, isMobile = false }) {
           flexShrink: 0,
         }}>
           {avatarUrl
-            ? <Image src={avatarUrl} alt={displayName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            ? <Image src={avatarUrl} alt={displayName} width={40} height={40} style={{ objectFit: 'cover' }} />
             : <span style={{ fontSize: '11px', fontWeight: 700, color: 'white', lineHeight: 1 }}>{initials}</span>
           }
         </div>

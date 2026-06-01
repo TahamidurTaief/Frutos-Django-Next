@@ -6,6 +6,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://elarbol.icommerce.c
 const WHOLESALE_BASE = API_BASE + '/wholesale'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+    trustHost: true,
     providers: [
         Credentials({
             id: 'wholesale',

@@ -8,7 +8,7 @@ import Modal from "@/app/dashboard/_components/Modal";
 import ConfirmDialog from "@/app/dashboard/_components/ConfirmDialog";
 import { useModel } from "@/app/dashboard/_lib/useModel";
 import SearchableSelect from "@/app/dashboard/_components/SearchableSelect";
-import { productsService, brandsService, colorsService, sizesService, subcategoriesService, categoriesService, shippingCategoriesService, shopsService } from "@/app/dashboard/_lib/services";
+import { productsService, brandsService, colorsService, sizesService, subcategoriesService, categoriesService, shopsService } from "@/app/dashboard/_lib/services";
 import { useToastContext } from "@/app/dashboard/_components/Toaster";
 import useSWR from "swr";
 import api from "@/app/dashboard/_lib/api";
@@ -26,24 +26,24 @@ const columns = [
   { key: "discount_price", label: "Sale Price", render: (v) => v ? `৳${Number(v).toLocaleString()}` : "—" },
   { key: "stock", label: "Stock" },
   { key: "shop", label: "Shop", render: (v) => v?.name || "—" },
-  { key: "sub_category", label: "Category", render: (v) => v?.name || "—" },
+  { key: "category", label: "Category", render: (v) => v?.name || "—" },
   { key: "is_active", label: "Status", render: (v) => v ? "active" : "inactive", type: "status" },
 ];
 
 // ── Product Form Component ──────────────────────────────────────
-function ProductForm({ initialValues, onSubmit, submitLabel = "Save", brands, colors: propColors, sizes: propSizes, subcategories, shippingCategories, shops }) {
+function ProductForm({ initialValues, onSubmit, submitLabel = "Save", categories, brands, colors: propColors, sizes: propSizes, subcategories, shops }) {
   const [form, setForm] = useState({
     name: "", slug: "", description: "",
     price: "", discount_price: "", wholesale_price: "", minimum_purchase: "", affiliate_commission_rate: "",
     stock: "", is_active: "true",
     weight: "", length: "", width: "", height: "",
-    shop: "", brand: "", sub_category: "", shipping_category: "",
+    shop: "", brand: "", category: "", shipping_category: "",
     colors: [], sizes: [],
     ...initialValues,
     // Normalize nested objects to IDs
     shop: initialValues?.shop?.id || initialValues?.shop || "",
     brand: initialValues?.brand?.id || initialValues?.brand || "",
-    sub_category: initialValues?.sub_category?.id || initialValues?.sub_category || "",
+    category: initialValues?.category?.id || initialValues?.category || initialValues?.sub_category?.category || "",
     shipping_category: initialValues?.shipping_category?.id || initialValues?.shipping_category || "",
     colors: initialValues?.colors?.map(c => c.id || c) || [],
     sizes: initialValues?.sizes?.map(s => s.id || s) || [],
@@ -167,7 +167,7 @@ function ProductForm({ initialValues, onSubmit, submitLabel = "Save", brands, co
         height: form.height || null,
         shop: form.shop || null,
         brand: form.brand || null,
-        sub_category: form.sub_category || null,
+        category: form.category || null,
         shipping_category: form.shipping_category || null,
         colors: form.colors,
         sizes: form.sizes,
@@ -306,12 +306,12 @@ function ProductForm({ initialValues, onSubmit, submitLabel = "Save", brands, co
             />
           </div>
           <div>
-            <label className={labelCls}>Sub Category</label>
+            <label className={labelCls}>Category</label>
             <SearchableSelect
-              value={form.sub_category}
-              onChange={v => handleChange("sub_category", v)}
+              value={form.category}
+              onChange={v => handleChange("category", v)}
               placeholder="Select category..."
-              options={subcategories.map(s => ({ value: s.id, label: s.name }))}
+              options={categories.map(c => ({ value: c.id, label: c.name }))}
             />
           </div>
           <div>
@@ -319,8 +319,8 @@ function ProductForm({ initialValues, onSubmit, submitLabel = "Save", brands, co
             <SearchableSelect
               value={form.shipping_category}
               onChange={v => handleChange("shipping_category", v)}
-              placeholder="Select shipping..."
-              options={shippingCategories.map(s => ({ value: s.id, label: s.name }))}
+              placeholder="Select shipping category..."
+              options={categories.map(c => ({ value: c.id, label: c.name }))}
             />
           </div>
           <div>
@@ -555,7 +555,7 @@ function ProductView({ item }) {
         <Row label="Status" value={item.is_active ? "Active" : "Inactive"} />
         <Row label="Shop" value={item.shop?.name} />
         <Row label="Brand" value={item.brand?.name} />
-        <Row label="Category" value={item.sub_category?.name} />
+        <Row label="Category" value={item.category?.name || item.sub_category?.name} />
         <Row label="Shipping Category" value={item.shipping_category?.name} />
       </div>
 
@@ -651,15 +651,13 @@ export default function ProductsPage() {
   const { data: brandsRaw } = useSWR("ref-brands", () => brandsService.list({ page_size: 200 }), { revalidateOnFocus: false });
   const { data: colorsRaw } = useSWR("ref-colors", () => colorsService.list({ page_size: 200 }), { revalidateOnFocus: false });
   const { data: sizesRaw } = useSWR("ref-sizes", () => sizesService.list({ page_size: 200 }), { revalidateOnFocus: false });
-  const { data: subcatsRaw } = useSWR("ref-subcategories", () => subcategoriesService.list({ page_size: 200 }), { revalidateOnFocus: false });
-  const { data: shipCatsRaw } = useSWR("ref-shipping-categories", () => shippingCategoriesService.list({ page_size: 200 }), { revalidateOnFocus: false });
+  const { data: categoriesRaw } = useSWR("ref-categories", () => categoriesService.list({ page_size: 200 }), { revalidateOnFocus: false });
   const { data: shopsRaw } = useSWR("ref-shops", () => shopsService.list({ page_size: 200 }), { revalidateOnFocus: false });
 
   const brands = brandsRaw?.results || (Array.isArray(brandsRaw) ? brandsRaw : []);
   const colors = colorsRaw?.results || (Array.isArray(colorsRaw) ? colorsRaw : []);
   const sizes = sizesRaw?.results || (Array.isArray(sizesRaw) ? sizesRaw : []);
-  const subcategories = subcatsRaw?.results || (Array.isArray(subcatsRaw) ? subcatsRaw : []);
-  const shippingCategories = shipCatsRaw?.results || (Array.isArray(shipCatsRaw) ? shipCatsRaw : []);
+  const categories = categoriesRaw?.results || (Array.isArray(categoriesRaw) ? categoriesRaw : []);
   const shops = shopsRaw?.results || (Array.isArray(shopsRaw) ? shopsRaw : []);
 
   const [createOpen, setCreateOpen] = useState(false);
@@ -682,7 +680,7 @@ export default function ProductsPage() {
     setDeleteItem(null);
   };
 
-  const formProps = { brands, colors, sizes, subcategories, shippingCategories, shops };
+  const formProps = { categories, brands, colors, sizes, shops };
 
   return (
     <Container

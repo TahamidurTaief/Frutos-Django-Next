@@ -3,7 +3,7 @@ import { getProducts, getCategories } from '@/lib/api_product'
 import ProductListingClient from './ProductListingClient'
 
 export const dynamic = 'force-dynamic'
-
+export const revalidate = 0  // always fresh on every request
 
 export const metadata = {
   title: 'Market — El Árbol',
@@ -11,7 +11,6 @@ export const metadata = {
 }
 
 export default async function MarketPage() {
-  // Fetch in parallel — both resolve before the page renders
   const [products, categories] = await Promise.all([
     getProducts(),
     getCategories(),

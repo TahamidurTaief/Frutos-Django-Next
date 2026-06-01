@@ -38,7 +38,9 @@ class ProductFilter(filters.FilterSet):
             return queryset
         return queryset.filter(
             Q(sub_category__category__slug__iexact=value) |
-            Q(sub_category__category__name__iexact=value)
+            Q(sub_category__category__name__iexact=value) |
+            Q(category__slug__iexact=value) |
+            Q(category__name__iexact=value)
         ).distinct()
 
     def filter_subcategory(self, queryset, name, value):

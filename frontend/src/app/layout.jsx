@@ -4,14 +4,16 @@ import './globals.css'
 import { AuthProvider }     from '@/app/context/AuthContext'
 import { CartProvider }     from '@/app/context/CartContext'
 import { WishlistProvider } from '@/app/context/WishlistContext'
-import Navbar               from '@/app/components/Navbar'
-import Footer               from '@/app/components/Footer'
+// import Navbar               from '@/app/components/Navbar'
+// import Footer               from '@/app/components/Footer'
+import NavbarWrapper from '@/app/components/NavbarWrapper'
+import FooterWrapper from '@/app/components/FooterWrapper'
 import CartSidebar          from '@/app/components/CartSidebar'
 import Providers            from '@/app/providers'
 import SessionGuard         from '@/app/components/SessionGuard'
 import { getSiteConfig }    from '@/lib/api_site_config'
 
-// ✅ force-dynamic সরিয়ে দাও — tag revalidation-এর সাথে conflict করে
+//  force-dynamic সরিয়ে দাও — tag revalidation-এর সাথে conflict করে
 // export const dynamic = 'force-dynamic'   ← এটা DELETE করো
 
 const newsreader = Newsreader({
@@ -69,7 +71,7 @@ export default async function RootLayout({ children }) {
             <WishlistProvider>
               <CartProvider>
                 <SessionGuard />
-                <Navbar
+                <NavbarWrapper
                   navbarLogoUrl={siteConfig?.navbar_logo_url || ''}
                   brandName={siteConfig?.brand_name || 'El Árbol'}
                 />
@@ -78,7 +80,7 @@ export default async function RootLayout({ children }) {
                 </main>
                 <CartSidebar />
               </CartProvider>
-              <Footer config={siteConfig} />
+              <FooterWrapper config={siteConfig} />
             </WishlistProvider>
           </AuthProvider>
         </Providers>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 // import { products, categories } from '@/app/data/products'
 
 import { getProducts, getCategories } from '@/lib/api_product'
@@ -8,17 +8,20 @@ import { getProducts, getCategories } from '@/lib/api_product'
 import ProductCard from '@/app/components/ProductCard'
 import Link from 'next/link'
 
-export const dynamic = 'force-dynamic'
 
 
 export default function ProductGrid({ initialProducts = [], categories = [] }) {
+  const [products, setProducts] = useState(initialProducts)
   const [active, setActive] = useState('All')
   const [notified, setNotified] = useState({})
 
+  // Props change হলে sync করো
+  useEffect(() => { setProducts(initialProducts) }, [initialProducts])
+
   const filtered =
-   active === 'All' ? initialProducts
-    : active === 'On Sale' ? initialProducts.filter(p => p.onSale)
-    : initialProducts.filter(p => p.category === active)
+    active === 'All'      ? products
+    : active === 'On Sale'  ? products.filter(p => p.onSale)
+    : products.filter(p => p.category === active) 
 
   return (
     <section className="bg-[var(--section-color)] pb-12 md:pb-20">
