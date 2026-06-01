@@ -13495,3 +13495,889 @@ INFO 2026-06-01 16:35:23,955 basehttp 14044 380 "GET /api/auth/notifications/unr
 WARNING 2026-06-01 16:35:25,292 basehttp 14044 380 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
 INFO 2026-06-01 16:35:30,278 basehttp 14044 380 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
 INFO 2026-06-01 16:35:40,275 basehttp 14044 380 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 16:41:42,349 autoreload 17136 18980 Watching for file changes with StatReloader
+WARNING 2026-06-01 16:42:04,732 basehttp 17136 11204 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 16:42:04,795 basehttp 17136 4308 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:42:04,829 basehttp 17136 11204 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 16:42:07,032 basehttp 17136 18672 "GET /api/delivery-charge/ HTTP/1.1" 404 4808
+INFO 2026-06-01 16:42:07,036 basehttp 17136 10468 "OPTIONS /api/orders/?ordering=-ordered_at HTTP/1.1" 200 0
+INFO 2026-06-01 16:42:07,038 basehttp 17136 18672 "OPTIONS /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 200 0
+WARNING 2026-06-01 16:42:07,110 basehttp 17136 10468 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 16:42:07,112 basehttp 17136 3732 "OPTIONS /api/auth/notifications/unread-count/ HTTP/1.1" 200 0
+INFO 2026-06-01 16:42:07,125 basehttp 17136 9764 "OPTIONS /api/orders/?ordering=-ordered_at HTTP/1.1" 200 0
+INFO 2026-06-01 16:42:07,141 basehttp 17136 15164 "OPTIONS /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 200 0
+WARNING 2026-06-01 16:42:07,168 basehttp 17136 15164 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 16:42:07,598 views 17136 18672 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-01 16:42:07,603 views 17136 18672 User authenticated: True
+INFO 2026-06-01 16:42:07,605 views 17136 18672 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+INFO 2026-06-01 16:42:07,643 views 17136 18672 Orders queryset count: 2
+INFO 2026-06-01 16:42:07,644 basehttp 17136 9500 "GET /api/auth/profile/ HTTP/1.1" 200 345
+INFO 2026-06-01 16:42:07,664 basehttp 17136 3732 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 16:42:07,986 views 17136 18672 Serialized orders count: 2
+INFO 2026-06-01 16:42:08,006 basehttp 17136 18672 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 1916
+INFO 2026-06-01 16:42:08,041 views 17136 18672 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-01 16:42:08,042 views 17136 18672 User authenticated: True
+INFO 2026-06-01 16:42:08,043 views 17136 18672 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+INFO 2026-06-01 16:42:08,045 views 17136 18672 Orders queryset count: 2
+INFO 2026-06-01 16:42:08,093 views 17136 18672 Serialized orders count: 2
+INFO 2026-06-01 16:42:08,094 basehttp 17136 18672 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 1916
+WARNING 2026-06-01 16:42:13,867 basehttp 17136 14848 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 16:42:13,968 basehttp 17136 18920 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:42:14,016 basehttp 17136 14848 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 16:42:17,586 basehttp 17136 18920 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 16:42:18,647 basehttp 17136 1280 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 16:42:18,647 basehttp 17136 13808 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:42:18,719 basehttp 17136 18920 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:42:19,186 basehttp 17136 13808 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 16:42:19,210 basehttp 17136 12700 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+INFO 2026-06-01 16:42:21,294 views 17136 3732 ProductViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-01 16:42:21,297 basehttp 17136 18672 "GET /api/delivery-charge/ HTTP/1.1" 404 4808
+INFO 2026-06-01 16:42:21,308 basehttp 17136 9500 "GET /api/auth/profile/ HTTP/1.1" 200 345
+INFO 2026-06-01 16:42:21,459 views 17136 3732 Successfully paginated 1 products
+INFO 2026-06-01 16:42:21,508 basehttp 17136 3732 "GET /api/products/products/ HTTP/1.1" 200 2137
+INFO 2026-06-01 16:42:21,545 basehttp 17136 3732 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:42:21,670 basehttp 17136 18920 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 16:42:21,809 basehttp 17136 1280 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:42:21,851 basehttp 17136 18920 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 16:42:21,942 basehttp 17136 1280 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 16:42:22,213 basehttp 17136 1792 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:42:22,348 basehttp 17136 1280 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 16:42:22,839 basehttp 17136 1792 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 16:42:22,977 basehttp 17136 12872 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:42:23,018 basehttp 17136 1792 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 16:42:23,333 basehttp 17136 12872 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 16:42:23,413 basehttp 17136 12828 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:42:23,465 basehttp 17136 12872 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+INFO 2026-06-01 16:42:31,554 basehttp 17136 3732 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:42:37,304 basehttp 17136 3732 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 16:42:40,818 basehttp 17136 20252 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 16:42:40,880 basehttp 17136 1332 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:42:40,932 basehttp 17136 20252 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+INFO 2026-06-01 16:42:43,257 views 17136 9500 ProductViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-01 16:42:43,258 basehttp 17136 3732 "GET /api/delivery-charge/ HTTP/1.1" 404 4808
+INFO 2026-06-01 16:42:43,274 basehttp 17136 18672 "GET /api/auth/profile/ HTTP/1.1" 200 345
+INFO 2026-06-01 16:42:43,326 views 17136 9500 Successfully paginated 1 products
+INFO 2026-06-01 16:42:43,361 basehttp 17136 9500 "GET /api/products/products/ HTTP/1.1" 200 2137
+WARNING 2026-06-01 16:42:43,499 basehttp 17136 1332 "GET /api/site-config/ HTTP/1.1" 404 4796
+INFO 2026-06-01 16:42:43,565 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:42:43,710 basehttp 17136 12524 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:42:43,850 basehttp 17136 1332 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 16:42:44,062 basehttp 17136 10752 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 16:42:44,095 basehttp 17136 14000 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:42:44,197 basehttp 17136 1332 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 16:42:44,728 basehttp 17136 12524 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 16:42:44,803 basehttp 17136 14000 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:42:44,827 basehttp 17136 12524 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 16:42:45,277 basehttp 17136 14000 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 16:42:45,369 basehttp 17136 6484 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:42:45,410 basehttp 17136 14000 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+INFO 2026-06-01 16:42:54,279 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 16:43:04,292 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:43:07,274 basehttp 17136 9500 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 16:43:14,284 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 16:43:24,442 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 16:43:34,289 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:43:37,270 basehttp 17136 9500 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 16:43:44,289 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:44:07,269 basehttp 17136 9500 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 16:44:14,311 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:44:37,318 basehttp 17136 9500 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 16:45:07,295 basehttp 17136 9500 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 16:45:14,301 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 16:45:59,826 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:46:01,797 basehttp 17136 11880 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 16:46:01,841 basehttp 17136 15384 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:46:01,893 basehttp 17136 11880 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 16:46:03,009 basehttp 17136 9500 "GET /api/delivery-charge/ HTTP/1.1" 404 4808
+INFO 2026-06-01 16:46:03,059 basehttp 17136 18672 "GET /api/auth/profile/ HTTP/1.1" 200 345
+INFO 2026-06-01 16:46:03,068 views 17136 9500 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-01 16:46:03,135 views 17136 9500 Successfully paginated 1 products
+INFO 2026-06-01 16:46:03,172 basehttp 17136 9500 "GET /api/products/products/ HTTP/1.1" 200 2137
+WARNING 2026-06-01 16:46:03,240 basehttp 17136 15384 "GET /api/site-config/ HTTP/1.1" 404 4796
+INFO 2026-06-01 16:46:03,293 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:46:03,407 basehttp 17136 18560 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:46:03,458 basehttp 17136 15384 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 16:46:03,617 basehttp 17136 18560 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 16:46:03,745 basehttp 17136 7708 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:46:03,799 basehttp 17136 18560 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 16:46:04,165 basehttp 17136 7708 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 16:46:04,310 basehttp 17136 11368 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:46:04,360 basehttp 17136 7708 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 16:46:04,611 basehttp 17136 11368 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 16:46:04,690 basehttp 17136 11896 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:46:04,728 basehttp 17136 11368 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+INFO 2026-06-01 16:46:13,369 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:46:14,292 basehttp 17136 9500 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 16:46:24,282 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 16:46:34,298 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 16:46:44,267 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 16:46:54,281 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 16:47:04,275 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:47:14,318 basehttp 17136 18672 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 16:47:14,322 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:48:14,290 basehttp 17136 18672 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 16:48:14,295 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 16:49:14,307 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:49:14,307 basehttp 17136 18672 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 16:49:33,124 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:49:34,723 basehttp 17136 8636 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 16:49:34,893 basehttp 17136 2864 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:49:35,014 basehttp 17136 8636 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 16:49:36,653 basehttp 17136 9500 "GET /api/delivery-charge/ HTTP/1.1" 404 4808
+INFO 2026-06-01 16:49:36,671 basehttp 17136 18672 "GET /api/auth/profile/ HTTP/1.1" 200 345
+INFO 2026-06-01 16:49:36,677 views 17136 9500 ProductViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-01 16:49:36,803 basehttp 17136 2864 "GET /api/site-config/ HTTP/1.1" 404 4796
+INFO 2026-06-01 16:49:36,854 basehttp 17136 18672 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 16:49:36,860 views 17136 9500 Successfully paginated 1 products
+INFO 2026-06-01 16:49:36,924 basehttp 17136 9500 "GET /api/products/products/ HTTP/1.1" 200 2137
+WARNING 2026-06-01 16:49:37,076 basehttp 17136 12300 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:49:37,140 basehttp 17136 2864 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 16:49:37,206 basehttp 17136 12300 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 16:49:37,361 basehttp 17136 10404 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:49:37,475 basehttp 17136 12300 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 16:49:37,861 basehttp 17136 10404 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 16:49:37,941 basehttp 17136 16788 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:49:37,977 basehttp 17136 10404 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 16:49:38,160 basehttp 17136 16788 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 16:49:38,255 basehttp 17136 5332 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 16:49:38,290 basehttp 17136 16788 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+INFO 2026-06-01 16:49:46,858 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 16:49:57,306 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 16:50:07,295 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:50:14,304 basehttp 17136 9500 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 16:50:17,270 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 16:50:22,261 basehttp 17136 9500 "OPTIONS /api/auth/token/refresh/ HTTP/1.1" 200 0
+INFO 2026-06-01 16:50:22,262 basehttp 17136 18672 "OPTIONS /api/auth/token/refresh/ HTTP/1.1" 200 0
+INFO 2026-06-01 16:50:22,330 basehttp 17136 18672 "POST /api/auth/token/refresh/ HTTP/1.1" 200 835
+INFO 2026-06-01 16:50:22,363 basehttp 17136 9500 "POST /api/auth/token/refresh/ HTTP/1.1" 200 835
+INFO 2026-06-01 16:50:27,271 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 16:50:37,286 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 16:50:47,277 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:51:14,314 basehttp 17136 9500 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 16:51:14,317 basehttp 17136 18672 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:52:14,294 basehttp 17136 18672 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 16:52:14,298 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:53:14,318 basehttp 17136 18672 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 16:53:14,320 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:54:14,314 basehttp 17136 9500 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 16:54:14,317 basehttp 17136 18672 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 16:55:14,280 basehttp 17136 18672 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:55:14,298 basehttp 17136 9500 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 16:56:14,687 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:56:15,845 basehttp 17136 9500 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 16:56:54,239 basehttp 17136 9500 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 16:57:07,291 basehttp 17136 9500 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 16:57:14,327 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:57:37,319 basehttp 17136 9500 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 16:58:14,310 basehttp 17136 9500 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 16:58:14,316 basehttp 17136 18672 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 16:59:14,300 basehttp 17136 9500 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 16:59:14,304 basehttp 17136 18672 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:00:14,312 basehttp 17136 18672 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:00:14,316 basehttp 17136 9500 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:01:14,302 basehttp 17136 9500 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:01:14,305 basehttp 17136 18672 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:02:14,359 basehttp 17136 9500 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:02:14,372 basehttp 17136 18672 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:03:14,402 basehttp 17136 9500 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:03:14,405 basehttp 17136 18672 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:04:14,307 basehttp 17136 18672 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 17:05:14,303 basehttp 17136 18672 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 17:06:14,278 basehttp 17136 18672 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 17:07:14,313 basehttp 17136 18672 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 17:08:14,272 basehttp 17136 18672 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 17:09:14,299 basehttp 17136 18672 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 17:10:14,281 basehttp 17136 18672 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 17:11:14,308 basehttp 17136 18680 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 17:12:14,285 basehttp 17136 18680 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 17:13:42,744 basehttp 17136 9288 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 17:13:42,809 basehttp 17136 7448 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 17:13:42,907 basehttp 17136 9288 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 17:13:44,285 basehttp 17136 18680 "GET /api/delivery-charge/ HTTP/1.1" 404 4808
+INFO 2026-06-01 17:13:44,475 basehttp 17136 5256 "GET /api/auth/profile/ HTTP/1.1" 200 345
+WARNING 2026-06-01 17:13:44,495 basehttp 17136 7448 "GET /api/site-config/ HTTP/1.1" 404 4796
+INFO 2026-06-01 17:13:44,562 views 17136 5256 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-01 17:13:44,566 views 17136 5256 User authenticated: True
+INFO 2026-06-01 17:13:44,567 basehttp 17136 18680 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:13:44,567 views 17136 5256 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+INFO 2026-06-01 17:13:44,575 views 17136 5256 Orders queryset count: 2
+INFO 2026-06-01 17:13:44,792 views 17136 5256 Serialized orders count: 2
+WARNING 2026-06-01 17:13:44,798 basehttp 17136 18680 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:13:44,819 basehttp 17136 5256 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 1916
+WARNING 2026-06-01 17:13:44,869 basehttp 17136 18680 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 17:13:44,870 basehttp 17136 12304 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+INFO 2026-06-01 17:13:44,888 views 17136 5256 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-01 17:13:44,888 views 17136 5256 User authenticated: True
+INFO 2026-06-01 17:13:44,890 views 17136 5256 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+WARNING 2026-06-01 17:13:44,926 basehttp 17136 7448 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+INFO 2026-06-01 17:13:44,936 views 17136 5256 Orders queryset count: 2
+INFO 2026-06-01 17:13:45,019 views 17136 5256 Serialized orders count: 2
+INFO 2026-06-01 17:13:45,024 basehttp 17136 5256 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 1916
+WARNING 2026-06-01 17:13:45,582 basehttp 17136 12304 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 17:13:45,687 basehttp 17136 15268 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 17:13:45,747 basehttp 17136 12304 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 17:13:46,033 basehttp 17136 15268 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 17:13:46,122 basehttp 17136 9136 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 17:13:46,167 basehttp 17136 15268 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 17:13:46,805 basehttp 17136 5256 "GET /api/delivery-charge/ HTTP/1.1" 404 4808
+INFO 2026-06-01 17:13:46,988 views 17136 20160 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-01 17:13:46,988 basehttp 17136 18680 "GET /api/auth/profile/ HTTP/1.1" 200 345
+WARNING 2026-06-01 17:13:46,989 basehttp 17136 5256 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:13:47,051 views 17136 20160 User authenticated: True
+WARNING 2026-06-01 17:13:47,136 basehttp 17136 12664 "GET /api/auth/admin/users/?page=1&page_size=20 HTTP/1.1" 404 9174
+WARNING 2026-06-01 17:13:47,145 basehttp 17136 9136 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 17:13:47,157 basehttp 17136 18680 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:13:47,283 basehttp 17136 9776 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:13:47,284 views 17136 20160 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+WARNING 2026-06-01 17:13:47,552 basehttp 17136 13852 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+INFO 2026-06-01 17:13:47,553 views 17136 20160 Orders queryset count: 2
+WARNING 2026-06-01 17:13:47,613 basehttp 17136 9136 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+INFO 2026-06-01 17:13:47,771 views 17136 20160 Serialized orders count: 2
+INFO 2026-06-01 17:13:47,839 basehttp 17136 20160 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 1916
+WARNING 2026-06-01 17:13:48,214 basehttp 17136 13852 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 17:13:48,339 basehttp 17136 15208 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 17:13:48,371 basehttp 17136 13852 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 17:13:58,497 basehttp 17136 20160 "GET /api/auth/admin/users/?page=1&page_size=20 HTTP/1.1" 404 9174
+INFO 2026-06-01 17:14:03,979 views 17136 12344 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-01 17:14:04,080 views 17136 14132 CategoryViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-01 17:14:04,090 basehttp 17136 4144 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 17:14:04,155 basehttp 17136 12692 "GET /api/homepage/ HTTP/1.1" 404 4787
+INFO 2026-06-01 17:14:04,186 views 17136 14132 Successfully returned 4 categories
+INFO 2026-06-01 17:14:04,323 basehttp 17136 14132 "GET /api/products/categories/ HTTP/1.1" 200 537
+INFO 2026-06-01 17:14:04,267 views 17136 12344 Successfully paginated 1 products
+WARNING 2026-06-01 17:14:04,320 basehttp 17136 4144 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 17:14:04,249 basehttp 17136 9952 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+INFO 2026-06-01 17:14:04,437 basehttp 17136 12344 "GET /api/products/products/ HTTP/1.1" 200 2137
+WARNING 2026-06-01 17:14:06,599 basehttp 17136 20160 "GET /api/delivery-charge/ HTTP/1.1" 404 4808
+INFO 2026-06-01 17:14:06,658 basehttp 17136 18680 "GET /api/auth/profile/ HTTP/1.1" 200 345
+INFO 2026-06-01 17:14:06,663 views 17136 20160 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-01 17:14:06,785 basehttp 17136 18680 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:14:06,808 views 17136 20160 Successfully paginated 1 products
+WARNING 2026-06-01 17:14:06,833 basehttp 17136 12344 "GET /api/site-config/ HTTP/1.1" 404 4796
+INFO 2026-06-01 17:14:06,884 basehttp 17136 20160 "GET /api/products/products/ HTTP/1.1" 200 2137
+WARNING 2026-06-01 17:14:06,944 basehttp 17136 14132 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 17:14:06,981 basehttp 17136 12344 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 17:14:07,047 basehttp 17136 14132 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 17:14:07,141 basehttp 17136 12692 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 17:14:07,200 basehttp 17136 14132 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 17:14:07,861 basehttp 17136 12692 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 17:14:08,171 basehttp 17136 9952 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 17:14:08,208 basehttp 17136 12692 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 17:14:08,475 basehttp 17136 9952 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 17:14:08,546 basehttp 17136 12360 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 17:14:08,587 basehttp 17136 9952 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 17:14:11,127 basehttp 17136 12360 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 17:14:11,315 basehttp 17136 10580 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 17:14:11,365 basehttp 17136 12360 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+ERROR 2026-06-01 17:14:13,321 log 17136 20160 Internal Server Error: /api/auth/orders/
+Traceback (most recent call last):
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\generics.py", line 203, in get
+    return self.list(request, *args, **kwargs)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Munna\Munna\icommerce\icommerce\backend\accounts\views.py", line 169, in list
+    .order_by('-created_at')
+     ~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1701, in order_by
+    obj.query.add_ordering(*field_names)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 2249, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1768, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'created_at' into field. Choices are: cart_subtotal, city, customer_email, customer_name, customer_phone, delivery_date, delivery_slot, delivery_slot_id, delivery_slot_label, fulfillment, id, items, order_number, ordered_at, original_subtotal, payment, payment_method, payment_status, postcode, promo_discount, shipping_address, shipping_address_id, shipping_method, shipping_method_id, status, street_address, total_amount, tracking_number, updates, user, user_id, wholesale_user, wholesale_user_id
+ERROR 2026-06-01 17:14:13,430 basehttp 17136 20160 "GET /api/auth/orders/ HTTP/1.1" 500 145984
+ERROR 2026-06-01 17:14:13,575 log 17136 18680 Internal Server Error: /api/auth/orders/
+Traceback (most recent call last):
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\generics.py", line 203, in get
+    return self.list(request, *args, **kwargs)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Munna\Munna\icommerce\icommerce\backend\accounts\views.py", line 169, in list
+    .order_by('-created_at')
+     ~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1701, in order_by
+    obj.query.add_ordering(*field_names)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 2249, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1768, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'created_at' into field. Choices are: cart_subtotal, city, customer_email, customer_name, customer_phone, delivery_date, delivery_slot, delivery_slot_id, delivery_slot_label, fulfillment, id, items, order_number, ordered_at, original_subtotal, payment, payment_method, payment_status, postcode, promo_discount, shipping_address, shipping_address_id, shipping_method, shipping_method_id, status, street_address, total_amount, tracking_number, updates, user, user_id, wholesale_user, wholesale_user_id
+ERROR 2026-06-01 17:14:13,581 basehttp 17136 18680 "GET /api/auth/orders/ HTTP/1.1" 500 145984
+WARNING 2026-06-01 17:14:13,981 basehttp 17136 18680 "GET /api/auth/wishlist/ HTTP/1.1" 404 9141
+WARNING 2026-06-01 17:14:14,014 basehttp 17136 18680 "GET /api/auth/wishlist/ HTTP/1.1" 404 9141
+INFO 2026-06-01 17:14:14,639 basehttp 17136 18680 "GET /api/auth/addresses/ HTTP/1.1" 200 52
+INFO 2026-06-01 17:14:14,656 basehttp 17136 18680 "GET /api/auth/addresses/ HTTP/1.1" 200 52
+INFO 2026-06-01 17:14:16,804 basehttp 17136 18680 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:14:21,347 basehttp 17136 18680 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:14:27,346 basehttp 17136 18680 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:14:37,289 basehttp 17136 18680 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:14:42,619 basehttp 17136 18680 "GET /api/auth/admin/users/?page=1&page_size=20 HTTP/1.1" 404 9174
+INFO 2026-06-01 17:14:46,779 basehttp 17136 18680 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:14:57,377 basehttp 17136 18680 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:15:07,269 basehttp 17136 18680 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:15:09,177 basehttp 17136 20160 "GET /api/auth/admin/users/?page=1&page_size=20 HTTP/1.1" 404 9174
+WARNING 2026-06-01 17:15:09,177 basehttp 17136 18680 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 17:15:17,281 basehttp 17136 18680 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:15:17,285 basehttp 17136 20160 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:15:27,285 basehttp 17136 20160 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:15:37,276 basehttp 17136 20160 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:15:47,326 basehttp 17136 20160 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:15:57,294 basehttp 17136 20160 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:16:07,283 basehttp 17136 20160 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:17:14,278 basehttp 17136 20160 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:18:14,279 basehttp 17136 20160 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:19:14,283 basehttp 17136 20160 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:20:14,308 basehttp 17136 20160 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:21:14,273 basehttp 17136 20160 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:22:07,343 basehttp 17136 20160 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 17:22:07,382 basehttp 17136 6564 "GET /api/auth/admin/users/?page=1&page_size=20 HTTP/1.1" 404 9174
+INFO 2026-06-01 17:22:09,430 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:22:17,628 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:22:25,456 basehttp 17136 6564 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:22:26,971 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:22:36,807 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:22:47,006 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:22:57,255 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:23:06,766 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:23:16,794 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:23:27,294 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:23:38,388 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:23:47,272 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:23:57,296 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:24:07,274 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:24:17,290 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:24:27,826 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:24:40,896 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:24:47,286 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:24:57,274 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:25:07,284 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:25:17,304 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:25:27,267 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:25:37,306 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:26:14,368 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:27:14,304 basehttp 17136 6564 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:27:53,158 basehttp 17136 12344 - Broken pipe from ('127.0.0.1', 1420)
+INFO 2026-06-01 17:27:53,162 basehttp 17136 11204 - Broken pipe from ('127.0.0.1', 14507)
+INFO 2026-06-01 17:27:53,165 basehttp 17136 9288 - Broken pipe from ('127.0.0.1', 1390)
+INFO 2026-06-01 17:27:53,170 basehttp 17136 18920 - Broken pipe from ('127.0.0.1', 14528)
+INFO 2026-06-01 17:27:53,826 basehttp 17136 12304 - Broken pipe from ('127.0.0.1', 1399)
+INFO 2026-06-01 17:27:53,826 basehttp 17136 7448 - Broken pipe from ('127.0.0.1', 1391)
+INFO 2026-06-01 17:27:53,827 basehttp 17136 15268 - Broken pipe from ('127.0.0.1', 1401)
+INFO 2026-06-01 17:27:53,839 basehttp 17136 10404 - Broken pipe from ('127.0.0.1', 14714)
+INFO 2026-06-01 17:27:53,847 basehttp 17136 15384 - Broken pipe from ('127.0.0.1', 14631)
+INFO 2026-06-01 17:27:53,847 basehttp 17136 7708 - Broken pipe from ('127.0.0.1', 14645)
+INFO 2026-06-01 17:27:53,867 basehttp 17136 16788 - Broken pipe from ('127.0.0.1', 14715)
+INFO 2026-06-01 17:27:53,901 basehttp 17136 13852 - Broken pipe from ('127.0.0.1', 1406)
+INFO 2026-06-01 17:27:53,901 basehttp 17136 18560 - Broken pipe from ('127.0.0.1', 14644)
+INFO 2026-06-01 17:27:53,901 basehttp 17136 9136 - Broken pipe from ('127.0.0.1', 1402)
+INFO 2026-06-01 17:27:53,912 basehttp 17136 9952 - Broken pipe from ('127.0.0.1', 1423)
+INFO 2026-06-01 17:27:53,920 basehttp 17136 12700 - Broken pipe from ('127.0.0.1', 14534)
+INFO 2026-06-01 17:27:53,921 basehttp 17136 1280 - Broken pipe from ('127.0.0.1', 14533)
+INFO 2026-06-01 17:27:53,921 basehttp 17136 1332 - Broken pipe from ('127.0.0.1', 14557)
+INFO 2026-06-01 17:27:53,921 basehttp 17136 13808 - Broken pipe from ('127.0.0.1', 14532)
+INFO 2026-06-01 17:27:53,925 basehttp 17136 14848 - Broken pipe from ('127.0.0.1', 14527)
+INFO 2026-06-01 17:27:53,932 basehttp 17136 14132 - Broken pipe from ('127.0.0.1', 1421)
+INFO 2026-06-01 17:27:53,946 basehttp 17136 12360 - Broken pipe from ('127.0.0.1', 1429)
+INFO 2026-06-01 17:27:53,946 basehttp 17136 2864 - Broken pipe from ('127.0.0.1', 14706)
+INFO 2026-06-01 17:27:53,948 basehttp 17136 12872 - Broken pipe from ('127.0.0.1', 14544)
+INFO 2026-06-01 17:27:53,955 basehttp 17136 1792 - Broken pipe from ('127.0.0.1', 14540)
+INFO 2026-06-01 17:27:53,956 basehttp 17136 20252 - Broken pipe from ('127.0.0.1', 14556)
+INFO 2026-06-01 17:27:53,956 basehttp 17136 11880 - Broken pipe from ('127.0.0.1', 14630)
+INFO 2026-06-01 17:27:53,962 basehttp 17136 12692 - Broken pipe from ('127.0.0.1', 1422)
+INFO 2026-06-01 17:27:53,979 basehttp 17136 10752 - Broken pipe from ('127.0.0.1', 14564)
+INFO 2026-06-01 17:27:53,987 basehttp 17136 8636 - Broken pipe from ('127.0.0.1', 14705)
+INFO 2026-06-01 17:27:53,988 basehttp 17136 12524 - Broken pipe from ('127.0.0.1', 14563)
+INFO 2026-06-01 17:27:53,989 basehttp 17136 4144 - Broken pipe from ('127.0.0.1', 1419)
+INFO 2026-06-01 17:27:53,989 basehttp 17136 14000 - Broken pipe from ('127.0.0.1', 14565)
+INFO 2026-06-01 17:27:53,989 basehttp 17136 12300 - Broken pipe from ('127.0.0.1', 14713)
+INFO 2026-06-01 17:27:53,989 basehttp 17136 11368 - Broken pipe from ('127.0.0.1', 14646)
+INFO 2026-06-01 17:29:00,411 autoreload 4908 8744 Watching for file changes with StatReloader
+WARNING 2026-06-01 17:39:21,939 basehttp 4908 17808 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 17:39:22,129 basehttp 4908 6108 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 17:39:22,213 basehttp 4908 17808 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+INFO 2026-06-01 17:40:18,724 views 4908 19392 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-01 17:40:18,724 views 4908 15568 ProductViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-01 17:40:18,832 basehttp 4908 14140 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 17:40:18,832 basehttp 4908 20036 "GET /api/homepage/ HTTP/1.1" 404 4787
+WARNING 2026-06-01 17:40:18,874 basehttp 4908 15016 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 17:40:18,929 basehttp 4908 14140 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+INFO 2026-06-01 17:40:18,964 views 4908 19392 Successfully returned 4 categories
+INFO 2026-06-01 17:40:18,980 basehttp 4908 19392 "GET /api/products/categories/ HTTP/1.1" 200 537
+INFO 2026-06-01 17:40:18,989 views 4908 15568 Successfully paginated 1 products
+INFO 2026-06-01 17:40:19,090 basehttp 4908 15568 "GET /api/products/products/ HTTP/1.1" 200 2137
+INFO 2026-06-01 17:42:51,687 views 4908 8444 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-01 17:42:51,688 views 4908 19880 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-01 17:42:51,789 views 4908 8444 Successfully paginated 1 products
+WARNING 2026-06-01 17:42:51,798 basehttp 4908 8428 "GET /api/homepage/ HTTP/1.1" 404 4787
+WARNING 2026-06-01 17:42:51,804 basehttp 4908 13532 "GET /api/site-config/ HTTP/1.1" 404 4796
+INFO 2026-06-01 17:42:51,822 views 4908 19880 Successfully returned 4 categories
+WARNING 2026-06-01 17:42:51,865 basehttp 4908 9296 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+INFO 2026-06-01 17:42:51,892 basehttp 4908 8444 "GET /api/products/products/ HTTP/1.1" 200 2137
+WARNING 2026-06-01 17:42:51,915 basehttp 4908 18572 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+INFO 2026-06-01 17:42:52,254 basehttp 4908 19880 "GET /api/products/categories/ HTTP/1.1" 200 537
+WARNING 2026-06-01 17:42:57,745 basehttp 4908 18260 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 17:42:57,883 basehttp 4908 10232 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 17:42:58,078 basehttp 4908 18260 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 17:43:00,090 basehttp 4908 7692 "GET /api/delivery-charge/ HTTP/1.1" 404 4808
+INFO 2026-06-01 17:43:00,451 views 4908 3108 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-01 17:43:00,965 views 4908 3108 Successfully paginated 1 products
+INFO 2026-06-01 17:43:01,248 basehttp 4908 3108 "GET /api/products/products/ HTTP/1.1" 200 2137
+INFO 2026-06-01 17:43:01,911 basehttp 4908 2104 "GET /api/auth/profile/ HTTP/1.1" 200 345
+INFO 2026-06-01 17:43:02,016 basehttp 4908 2104 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:43:03,215 basehttp 4908 13560 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 17:43:03,303 basehttp 4908 17696 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 17:43:03,341 basehttp 4908 13560 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 17:43:04,922 basehttp 4908 2104 "GET /api/delivery-charge/ HTTP/1.1" 404 4808
+INFO 2026-06-01 17:43:04,936 basehttp 4908 3108 "GET /api/auth/profile/ HTTP/1.1" 200 345
+WARNING 2026-06-01 17:43:05,409 basehttp 4908 3108 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 401 172
+WARNING 2026-06-01 17:43:05,426 basehttp 4908 2104 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 401 172
+WARNING 2026-06-01 17:43:05,427 basehttp 4908 7692 "GET /api/auth/admin/users/?page=1&page_size=20 HTTP/1.1" 404 9174
+WARNING 2026-06-01 17:43:05,457 basehttp 4908 6812 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 17:43:05,591 basehttp 4908 6812 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:43:06,391 basehttp 4908 6812 "POST /api/auth/token/refresh/ HTTP/1.1" 200 777
+INFO 2026-06-01 17:43:06,426 views 4908 6812 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-01 17:43:06,434 basehttp 4908 7692 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:43:06,436 views 4908 6812 User authenticated: True
+INFO 2026-06-01 17:43:06,451 views 4908 6812 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+INFO 2026-06-01 17:43:06,459 views 4908 6812 Orders queryset count: 2
+INFO 2026-06-01 17:43:06,584 views 4908 6812 Serialized orders count: 2
+INFO 2026-06-01 17:43:06,587 basehttp 4908 6812 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 1916
+INFO 2026-06-01 17:43:11,983 basehttp 4908 6812 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:43:14,966 basehttp 4908 6492 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 17:43:15,171 basehttp 4908 12328 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 17:43:15,229 basehttp 4908 6492 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 17:43:16,328 basehttp 4908 7692 "GET /api/auth/admin/users/?page=1&page_size=20 HTTP/1.1" 404 9174
+ERROR 2026-06-01 17:43:16,779 log 4908 6812 Internal Server Error: /api/auth/orders/
+Traceback (most recent call last):
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\generics.py", line 203, in get
+    return self.list(request, *args, **kwargs)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Munna\Munna\icommerce\icommerce\backend\accounts\views.py", line 169, in list
+    .order_by('-created_at')
+     ~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1701, in order_by
+    obj.query.add_ordering(*field_names)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 2249, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1768, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'created_at' into field. Choices are: cart_subtotal, city, customer_email, customer_name, customer_phone, delivery_date, delivery_slot, delivery_slot_id, delivery_slot_label, fulfillment, id, items, order_number, ordered_at, original_subtotal, payment, payment_method, payment_status, postcode, promo_discount, shipping_address, shipping_address_id, shipping_method, shipping_method_id, status, street_address, total_amount, tracking_number, updates, user, user_id, wholesale_user, wholesale_user_id
+ERROR 2026-06-01 17:43:16,929 basehttp 4908 6812 "GET /api/auth/orders/ HTTP/1.1" 500 145984
+ERROR 2026-06-01 17:43:17,111 log 4908 7692 Internal Server Error: /api/auth/orders/
+Traceback (most recent call last):
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\generics.py", line 203, in get
+    return self.list(request, *args, **kwargs)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Munna\Munna\icommerce\icommerce\backend\accounts\views.py", line 169, in list
+    .order_by('-created_at')
+     ~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1701, in order_by
+    obj.query.add_ordering(*field_names)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 2249, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1768, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'created_at' into field. Choices are: cart_subtotal, city, customer_email, customer_name, customer_phone, delivery_date, delivery_slot, delivery_slot_id, delivery_slot_label, fulfillment, id, items, order_number, ordered_at, original_subtotal, payment, payment_method, payment_status, postcode, promo_discount, shipping_address, shipping_address_id, shipping_method, shipping_method_id, status, street_address, total_amount, tracking_number, updates, user, user_id, wholesale_user, wholesale_user_id
+ERROR 2026-06-01 17:43:17,133 basehttp 4908 7692 "GET /api/auth/orders/ HTTP/1.1" 500 145984
+WARNING 2026-06-01 17:43:17,459 basehttp 4908 7692 "GET /api/auth/wishlist/ HTTP/1.1" 404 9141
+WARNING 2026-06-01 17:43:17,497 basehttp 4908 7692 "GET /api/auth/wishlist/ HTTP/1.1" 404 9141
+INFO 2026-06-01 17:43:18,110 basehttp 4908 7692 "GET /api/auth/addresses/ HTTP/1.1" 200 52
+INFO 2026-06-01 17:43:18,181 basehttp 4908 7692 "GET /api/auth/addresses/ HTTP/1.1" 200 52
+ERROR 2026-06-01 17:43:18,967 log 4908 7692 Internal Server Error: /api/auth/orders/
+Traceback (most recent call last):
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\generics.py", line 203, in get
+    return self.list(request, *args, **kwargs)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Munna\Munna\icommerce\icommerce\backend\accounts\views.py", line 169, in list
+    .order_by('-created_at')
+     ~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1701, in order_by
+    obj.query.add_ordering(*field_names)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 2249, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1768, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'created_at' into field. Choices are: cart_subtotal, city, customer_email, customer_name, customer_phone, delivery_date, delivery_slot, delivery_slot_id, delivery_slot_label, fulfillment, id, items, order_number, ordered_at, original_subtotal, payment, payment_method, payment_status, postcode, promo_discount, shipping_address, shipping_address_id, shipping_method, shipping_method_id, status, street_address, total_amount, tracking_number, updates, user, user_id, wholesale_user, wholesale_user_id
+ERROR 2026-06-01 17:43:18,981 basehttp 4908 7692 "GET /api/auth/orders/ HTTP/1.1" 500 145984
+ERROR 2026-06-01 17:43:19,207 log 4908 6812 Internal Server Error: /api/auth/orders/
+Traceback (most recent call last):
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\generics.py", line 203, in get
+    return self.list(request, *args, **kwargs)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Munna\Munna\icommerce\icommerce\backend\accounts\views.py", line 169, in list
+    .order_by('-created_at')
+     ~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1701, in order_by
+    obj.query.add_ordering(*field_names)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 2249, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1768, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'created_at' into field. Choices are: cart_subtotal, city, customer_email, customer_name, customer_phone, delivery_date, delivery_slot, delivery_slot_id, delivery_slot_label, fulfillment, id, items, order_number, ordered_at, original_subtotal, payment, payment_method, payment_status, postcode, promo_discount, shipping_address, shipping_address_id, shipping_method, shipping_method_id, status, street_address, total_amount, tracking_number, updates, user, user_id, wholesale_user, wholesale_user_id
+ERROR 2026-06-01 17:43:19,215 basehttp 4908 6812 "GET /api/auth/orders/ HTTP/1.1" 500 145984
+INFO 2026-06-01 17:43:21,993 basehttp 4908 6812 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:43:26,105 views 4908 5140 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-01 17:43:26,141 views 4908 5140 Successfully paginated 1 products
+INFO 2026-06-01 17:43:26,184 basehttp 4908 5140 "GET /api/products/products/ HTTP/1.1" 200 2137
+INFO 2026-06-01 17:43:26,224 views 4908 16288 CategoryViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-01 17:43:26,259 basehttp 4908 4040 "GET /api/homepage/ HTTP/1.1" 404 4787
+INFO 2026-06-01 17:43:26,283 views 4908 16288 Successfully returned 4 categories
+INFO 2026-06-01 17:43:26,291 basehttp 4908 16288 "GET /api/products/categories/ HTTP/1.1" 200 537
+WARNING 2026-06-01 17:43:27,276 basehttp 4908 6812 "GET /api/auth/admin/users/?page=1&page_size=20 HTTP/1.1" 404 9174
+INFO 2026-06-01 17:43:32,013 basehttp 4908 6812 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:43:36,287 basehttp 4908 6812 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:43:41,975 basehttp 4908 6812 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:43:45,962 basehttp 4908 3848 "GET /api/about/ HTTP/1.1" 404 4778
+INFO 2026-06-01 17:43:52,293 basehttp 4908 6812 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:44:02,320 basehttp 4908 6812 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:44:05,405 basehttp 4908 6812 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 17:44:07,351 basehttp 4908 6812 "GET /api/auth/admin/users/?page=1&page_size=20 HTTP/1.1" 404 9174
+INFO 2026-06-01 17:44:12,264 basehttp 4908 6812 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:44:22,268 basehttp 4908 6812 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:44:32,299 basehttp 4908 6812 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:44:36,300 basehttp 4908 6812 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:44:42,303 basehttp 4908 6812 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:45:06,284 basehttp 4908 6812 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:45:14,274 basehttp 4908 6812 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:45:22,342 basehttp 4908 7692 "POST /api/auth/token/refresh/ HTTP/1.1" 200 835
+INFO 2026-06-01 17:45:22,365 basehttp 4908 6812 "POST /api/auth/token/refresh/ HTTP/1.1" 200 835
+WARNING 2026-06-01 17:45:36,275 basehttp 4908 6812 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 17:45:38,270 basehttp 4908 6812 "GET /api/auth/admin/users/?page=1&page_size=20 HTTP/1.1" 404 9174
+WARNING 2026-06-01 17:46:06,290 basehttp 4908 6812 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:46:14,278 basehttp 4908 6812 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:47:14,295 basehttp 4908 6812 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:47:14,299 basehttp 4908 7692 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:48:14,296 basehttp 4908 6812 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 17:48:14,313 basehttp 4908 8880 "GET /api/auth/admin/users/?page=1&page_size=20 HTTP/1.1" 404 9174
+INFO 2026-06-01 17:48:14,315 basehttp 4908 7692 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:48:36,282 basehttp 4908 7692 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 17:49:05,477 basehttp 4908 7692 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:49:14,963 basehttp 4908 7692 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:50:14,312 basehttp 4908 8880 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:50:14,319 basehttp 4908 7692 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:50:21,977 basehttp 4908 7692 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:50:23,602 views 4908 16656 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-01 17:50:23,609 views 4908 13568 CategoryViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-01 17:50:23,640 basehttp 4908 8356 "GET /api/homepage/ HTTP/1.1" 404 4787
+INFO 2026-06-01 17:50:23,702 views 4908 13568 Successfully returned 4 categories
+INFO 2026-06-01 17:50:23,719 views 4908 16656 Successfully paginated 1 products
+INFO 2026-06-01 17:50:23,719 basehttp 4908 13568 "GET /api/products/categories/ HTTP/1.1" 200 537
+INFO 2026-06-01 17:50:23,767 basehttp 4908 16656 "GET /api/products/products/ HTTP/1.1" 200 2137
+INFO 2026-06-01 17:50:32,326 basehttp 4908 7692 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:50:36,280 basehttp 4908 7692 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:50:42,286 basehttp 4908 7692 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:50:52,310 basehttp 4908 7692 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:51:02,278 basehttp 4908 7692 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:51:06,379 basehttp 4908 7692 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:51:12,289 basehttp 4908 7692 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:51:22,312 basehttp 4908 7692 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:52:14,332 basehttp 4908 7692 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:52:14,344 basehttp 4908 8880 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:53:14,504 basehttp 4908 8880 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:53:14,508 basehttp 4908 7692 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:53:25,537 basehttp 4908 7692 "GET /api/auth/admin/users/?page=1&page_size=20 HTTP/1.1" 404 9174
+WARNING 2026-06-01 17:54:14,314 basehttp 4908 7692 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:54:14,318 basehttp 4908 8880 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:54:35,433 basehttp 4908 8880 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:54:36,038 basehttp 4908 8880 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:54:42,276 basehttp 4908 8880 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:54:52,270 basehttp 4908 8880 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:55:02,290 basehttp 4908 8880 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:55:06,302 basehttp 4908 8880 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:55:12,271 basehttp 4908 8880 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:55:22,307 basehttp 4908 8880 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 17:55:32,286 basehttp 4908 8880 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:55:36,286 basehttp 4908 8880 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:55:42,302 basehttp 4908 8880 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:56:14,282 basehttp 4908 8880 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:56:14,285 basehttp 4908 7692 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:57:14,370 basehttp 4908 8880 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:57:14,374 basehttp 4908 7692 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:57:36,005 basehttp 4908 8880 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 17:58:06,285 basehttp 4908 8880 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:58:14,273 basehttp 4908 8880 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:58:36,309 basehttp 4908 8880 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 17:59:14,280 basehttp 4908 8880 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 17:59:14,287 basehttp 4908 7692 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 17:59:54,412 basehttp 4908 7692 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 18:00:06,275 basehttp 4908 7692 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 18:00:14,299 basehttp 4908 7692 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 18:00:36,304 basehttp 4908 7692 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+WARNING 2026-06-01 18:01:14,654 basehttp 4908 7692 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9187
+INFO 2026-06-01 18:01:15,159 basehttp 4908 7692 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 18:01:16,482 autoreload 4908 8744 D:\Munna\Munna\icommerce\icommerce\backend\accounts\views.py changed, reloading.
+INFO 2026-06-01 18:01:29,453 autoreload 18304 13420 Watching for file changes with StatReloader
+INFO 2026-06-01 18:01:47,894 autoreload 18304 13420 D:\Munna\Munna\icommerce\icommerce\backend\accounts\urls.py changed, reloading.
+INFO 2026-06-01 18:01:52,775 autoreload 1236 9520 Watching for file changes with StatReloader
+INFO 2026-06-01 18:01:59,030 autoreload 1236 9520 D:\Munna\Munna\icommerce\icommerce\backend\accounts\urls.py changed, reloading.
+INFO 2026-06-01 18:02:02,760 autoreload 12860 13812 Watching for file changes with StatReloader
+WARNING 2026-06-01 18:02:14,327 basehttp 12860 18804 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9760
+INFO 2026-06-01 18:02:14,356 basehttp 12860 6600 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 18:03:14,314 basehttp 12860 6600 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9760
+INFO 2026-06-01 18:03:14,326 basehttp 12860 18804 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 18:03:40,937 basehttp 12860 19140 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 18:03:40,937 basehttp 12860 5880 "GET /api/homepage/ HTTP/1.1" 404 4787
+WARNING 2026-06-01 18:03:41,121 basehttp 12860 2676 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 18:03:41,538 basehttp 12860 19140 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 18:03:42,476 basehttp 12860 5880 "GET /api/site-config/ HTTP/1.1" 404 4796
+WARNING 2026-06-01 18:03:42,644 basehttp 12860 2676 "GET /api/site-config/footer/ HTTP/1.1" 404 4817
+WARNING 2026-06-01 18:03:42,678 basehttp 12860 5880 "GET /api/website/site-config/ HTTP/1.1" 404 23020
+WARNING 2026-06-01 18:03:43,290 basehttp 12860 18804 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9760
+INFO 2026-06-01 18:03:43,294 basehttp 12860 6600 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 18:04:14,311 basehttp 12860 6600 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9760
+INFO 2026-06-01 18:04:14,315 basehttp 12860 18804 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 18:04:46,305 basehttp 12860 18804 "GET /api/auth/admin/users/?page=1&page_size=20 HTTP/1.1" 200 882
+WARNING 2026-06-01 18:05:14,329 basehttp 12860 18804 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9760
+INFO 2026-06-01 18:05:14,334 basehttp 12860 6600 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 18:06:01,959 basehttp 12860 6600 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9760
+INFO 2026-06-01 18:06:03,573 basehttp 12860 6600 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 18:06:05,403 basehttp 12860 6600 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9760
+INFO 2026-06-01 18:06:12,271 basehttp 12860 6600 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 18:06:22,279 basehttp 12860 6600 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-01 18:06:32,001 basehttp 12860 6600 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-01 18:06:35,404 basehttp 12860 6600 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9760
+INFO 2026-06-01 18:06:37,851 basehttp 12860 6600 "OPTIONS /api/auth/admin/vendors/ HTTP/1.1" 200 0
+WARNING 2026-06-01 18:06:37,872 basehttp 12860 6600 "GET /api/auth/admin/vendors/ HTTP/1.1" 404 9729
+INFO 2026-06-01 18:06:39,333 basehttp 12860 6600 "OPTIONS /api/auth/logout/ HTTP/1.1" 200 0
+INFO 2026-06-01 18:06:39,370 basehttp 12860 6600 "POST /api/auth/logout/ HTTP/1.1" 200 37
+INFO 2026-06-01 18:06:39,500 views 12860 2856 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-01 18:06:39,502 views 12860 13180 CategoryViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-01 18:06:39,527 basehttp 12860 7108 "GET /api/homepage/ HTTP/1.1" 404 4787
+INFO 2026-06-01 18:06:39,553 views 12860 13180 Successfully returned 4 categories
+INFO 2026-06-01 18:06:39,557 basehttp 12860 13180 "GET /api/products/categories/ HTTP/1.1" 200 537
+INFO 2026-06-01 18:06:39,569 views 12860 2856 Successfully paginated 1 products
+INFO 2026-06-01 18:06:39,606 basehttp 12860 2856 "GET /api/products/products/ HTTP/1.1" 200 2137
+INFO 2026-06-01 18:06:41,607 basehttp 12860 2856 "GET /api/wholesale/content/ HTTP/1.1" 200 82
+WARNING 2026-06-01 18:06:43,346 basehttp 12860 6600 "GET /api/auth/admin/vendors/ HTTP/1.1" 404 9729
+WARNING 2026-06-01 18:06:57,815 basehttp 12860 6600 "GET /api/auth/admin/vendors/ HTTP/1.1" 404 9729
+INFO 2026-06-01 18:06:58,468 basehttp 12860 16256 "POST /api/wholesale/auth/login/ HTTP/1.1" 200 1524
+WARNING 2026-06-01 18:07:05,402 basehttp 12860 6600 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9760
+INFO 2026-06-01 18:07:09,135 basehttp 12860 6600 "GET /api/auth/admin/users/?page=1&page_size=20 HTTP/1.1" 200 882
+INFO 2026-06-01 18:07:21,285 basehttp 12860 11644 "GET /api/wholesale/profile/ HTTP/1.1" 200 598
+INFO 2026-06-01 18:07:21,314 basehttp 12860 11652 "GET /api/wholesale/notifications/ HTTP/1.1" 200 52
+ERROR 2026-06-01 18:07:23,682 log 12860 13992 Internal Server Error: /api/orders/my-orders/
+Traceback (most recent call last):
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\fields\__init__.py", line 2123, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'aeb0c152-f97f-4c91-804f-91e64dcb7742'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 503, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 420, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\views.py", line 330, in perform_authentication
+    request.user
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\request.py", line 232, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework\request.py", line 385, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework_simplejwt\authentication.py", line 51, in authenticate
+    return self.get_user(validated_token), validated_token
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\rest_framework_simplejwt\authentication.py", line 132, in get_user
+    user = self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 635, in get
+    clone = self._chain() if self.query.combinator else self.filter(*args, **kwargs)
+                                                        ~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1609, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1641, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1555, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\sql\query.py", line 1385, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\lookups.py", line 30, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\lookups.py", line 369, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\lookups.py", line 88, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\USER\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\fields\__init__.py", line 2125, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got 'aeb0c152-f97f-4c91-804f-91e64dcb7742'.
+ERROR 2026-06-01 18:07:24,213 basehttp 12860 13992 "GET /api/orders/my-orders/ HTTP/1.1" 500 213756
+WARNING 2026-06-01 18:07:35,407 basehttp 12860 6600 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 9760
+INFO 2026-06-01 18:07:38,294 basehttp 12860 6600 "OPTIONS /api/auth/admin/users/2/ HTTP/1.1" 200 0
+INFO 2026-06-01 18:07:38,348 basehttp 12860 6600 "PATCH /api/auth/admin/users/2/ HTTP/1.1" 200 34
+INFO 2026-06-01 18:07:38,368 basehttp 12860 6600 "GET /api/auth/admin/users/?page=1&page_size=20 HTTP/1.1" 200 884
+INFO 2026-06-01 18:07:55,129 basehttp 12860 13992 - Broken pipe from ('127.0.0.1', 2667)
+INFO 2026-06-01 18:07:55,129 basehttp 12860 5880 - Broken pipe from ('127.0.0.1', 2602)

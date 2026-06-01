@@ -19,6 +19,11 @@ const columns = [
   { key: "name", label: "Name" },
   { key: "email", label: "Email" },
   { key: "user_type", label: "Role", render: (v) => <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${v === "ADMIN" ? "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400" : v === "SELLER" ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" : v === "VENDOR" ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400" : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"}`}>{v}</span> },
+  { key: 'business_name', label: 'Business', render: (v) => v || '—' },
+  { key: 'wholesale_status', label: 'Wholesale', render: (v) => v
+      ? <span className="px-2 py-0.5 text-xs rounded-full font-medium bg-green-100 text-green-700">{v}</span>
+      : '—'
+  },
   { key: "is_active", label: "Status", render: (v) => <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${v ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"}`}>{v ? "Active" : "Inactive"}</span> },
   { key: "date_joined", label: "Joined", render: (v) => v ? new Date(v).toLocaleDateString() : "—" },
 ];

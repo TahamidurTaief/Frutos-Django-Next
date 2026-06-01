@@ -32,4 +32,10 @@ urlpatterns = [
 
     path('password-reset/send-otp/', views.SendPasswordResetOTPView.as_view(),       name='password-reset-send-otp'),
     path('password-reset/verify/',   views.VerifyOTPAndResetPasswordView.as_view(),  name='password-reset-verify'),
+
+
+
+    # Admin user management
+    path('admin/users/',          views.AdminUserListView.as_view(),   name='admin-user-list'),
+    path('admin/users/<int:pk>/', views.AdminUserDetailView.as_view(), name='admin-user-detail'),
 ]

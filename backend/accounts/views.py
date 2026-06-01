@@ -297,3 +297,139 @@ class VerifyOTPAndResetPasswordView(APIView):
             return Response({'detail': 'Password reset successful.'})
         except User.DoesNotExist:
             return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+
+# for dashboard API endpoints, see dashboard/api_views.py
+from django.contrib.auth import get_user_model
+from rest_framework import permissions, status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
+User = get_user_model()
+
+class AdminUserListView(APIView):
+    """
+    GET  /api/auth/admin/users/   — সব user list (normal + wholesale)
+    POST /api/auth/admin/users/   — নতুন user create
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        # শুধু ADMIN/SELLER/VENDOR access পাবে
+        if not request.user.user_type in ['ADMIN', 'SELLER']:
+            return Response({'detail': 'Forbidden'}, status=403)
+
+        search    = request.GET.get('search', '')
+        page      = int(request.GET.get('page', 1))
+        page_size = int(request.GET.get('page_size', 20))
+
+        qs = User.objects.select_related('profile').order_by('-date_joined')
+
+        if search:
+            from django.db.models import Q
+            qs = qs.filter(
+                Q(email__icontains=search) |
+                Q(name__icontains=search)
+            )
+
+        total = qs.count()
+        start = (page - 1) * page_size
+        users = qs[start:start + page_size]
+
+        data = []
+        for u in users:
+            # Wholesale user কিনা check করো
+            is_wholesale = hasattr(u, 'wholesale_profile')
+            data.append({
+                'id':          u.id,
+                'name':        getattr(u, 'name', '') or u.email,
+                'email':       u.email,
+                'user_type':   getattr(u, 'user_type', 'CUSTOMER'),
+                'is_active':   u.is_active,
+                'date_joined': u.date_joined,
+                'phone':       getattr(u.profile, 'phone', '') if hasattr(u, 'profile') else '',
+                'is_wholesale': is_wholesale,
+                # Wholesale specific data
+                'wholesale_status': getattr(
+                    getattr(u, 'wholesale_profile', None), 'status', None
+                ),
+                'business_name': getattr(
+                    getattr(u, 'wholesale_profile', None), 'business_name', None
+                ),
+            })
+
+        return Response({
+            'count':   total,
+            'results': data,
+        })
+
+    def post(self, request):
+        if request.user.user_type not in ['ADMIN']:
+            return Response({'detail': 'Forbidden'}, status=403)
+
+        email     = request.data.get('email', '').strip().lower()
+        name      = request.data.get('name', '').strip()
+        password  = request.data.get('password', '')
+        user_type = request.data.get('user_type', 'CUSTOMER')
+
+        if not email or not password:
+            return Response({'detail': 'Email and password required.'}, status=400)
+
+        if User.objects.filter(email__iexact=email).exists():
+            return Response({'detail': 'Email already exists.'}, status=400)
+
+        user = User.objects.create_user(
+            email=email,
+            password=password,
+            name=name,
+        )
+        if hasattr(user, 'user_type'):
+            user.user_type = user_type
+            user.save()
+
+        return Response({
+            'id':        user.id,
+            'email':     user.email,
+            'name':      getattr(user, 'name', ''),
+            'user_type': getattr(user, 'user_type', 'CUSTOMER'),
+            'is_active': user.is_active,
+        }, status=201)
+
+
+class AdminUserDetailView(APIView):
+    """
+    PATCH  /api/auth/admin/users/<id>/
+    DELETE /api/auth/admin/users/<id>/
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def patch(self, request, pk):
+        if request.user.user_type not in ['ADMIN']:
+            return Response({'detail': 'Forbidden'}, status=403)
+        try:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            return Response({'detail': 'Not found.'}, status=404)
+
+        if 'name' in request.data:
+            user.name = request.data['name']
+        if 'is_active' in request.data:
+            user.is_active = request.data['is_active']
+        if 'user_type' in request.data:
+            user.user_type = request.data['user_type']
+        user.save()
+
+        return Response({'detail': 'Updated successfully.'})
+
+    def delete(self, request, pk):
+        if request.user.user_type not in ['ADMIN']:
+            return Response({'detail': 'Forbidden'}, status=403)
+        try:
+            user = User.objects.get(pk=pk)
+            user.delete()
+            return Response(status=204)
+        except User.DoesNotExist:
+            return Response({'detail': 'Not found.'}, status=404)
