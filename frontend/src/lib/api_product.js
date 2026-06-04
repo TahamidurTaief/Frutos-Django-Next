@@ -130,8 +130,14 @@ async function apiFetch(path, options = {}) {
     const cleanPath = path.startsWith('/') ? path : '/' + path
     const url = cleanBase + cleanPath
 
+    const headers = { 'Content-Type': 'application/json' }
+    if (options.headers) {
+        Object.assign(headers, options.headers)
+        delete options.headers
+    }
+
     const res = await fetch(url, {
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         cache: 'no-store',
         ...options,
     })
@@ -210,7 +216,9 @@ function normalizeProduct(p) {
         unit: p.unit || '',
         origin: p.origin || '',
         rating: Number(p.rating || p.average_rating || 0),
-        reviews: Number(p.reviews || p.review_count || 0),
+        reviews: Number(p.review_count !== undefined ? p.review_count : (Array.isArray(p.reviews) ? p.reviews.length : p.reviews || 0)),
+        reviewsList: Array.isArray(p.reviews) ? p.reviews : [],
+        userCanReview: p.user_can_review || { can_review: false, message: "" },
         description: p.description || '',
         shortDesc: p.short_description || p.shortDesc || '',
         keyFeatures: p.key_features || p.keyFeatures || '',
@@ -248,10 +256,14 @@ export async function getProductById(id) {
 }
 
 // ✅ FIX: slug endpoint — Django-এ by_slug action থাকতে হবে (নিচে দেখো)
-export async function getProductBySlug(slug) {
-    const data = await apiFetch(`${PRODUCT_ENDPOINT}/${slug}/`, {
-        next: { tags: ['products'] },
-    })
+export async function getProductBySlug(slug, options = {}) {
+    const fetchOptions = { next: { tags: ['products'] } }
+    if (options.token) {
+        fetchOptions.headers = {
+            'Authorization': `Bearer ${options.token}`
+        }
+    }
+    const data = await apiFetch(`${PRODUCT_ENDPOINT}/${slug}/`, fetchOptions)
     return {
         ...normalizeProduct(data),
         related: toArray(data.related).map(normalizeProduct),
@@ -269,4 +281,27 @@ export async function getCategories() {
 export async function getCategoryObjects() {
     const data = await apiFetch(`${CATEGORY_ENDPOINT}/`)
     return toArray(data)
+}
+
+// ─── Reviews ──────────────────────────────────────────────────────────────────
+
+export async function submitReview(token, data) {
+    const cleanBase = API_BASE.endsWith('/') ? API_BASE.slice(0, -1) : API_BASE
+    const url = `${cleanBase}${BASE_ROUTE}/reviews/`
+
+    const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(data),
+    })
+
+    if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}))
+        throw new Error(errorData.detail || errorData.error || 'Failed to submit review')
+    }
+
+    return res.json()
 }

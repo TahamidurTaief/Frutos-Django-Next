@@ -1,7 +1,9 @@
 # products/serializers.py
 from rest_framework import serializers
+from django.db.models import Q
 from .models import *
 from shops.serializers import ShopSerializer
+from orders.models import OrderItem
 
 class BrandSerializer(serializers.ModelSerializer):
     logo_url = serializers.SerializerMethodField()
@@ -86,9 +88,44 @@ class ProductAdditionalImageSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()
+    product_name = serializers.CharField(source='product.name', read_only=True)
     class Meta:
         model = Review
-        fields = ['id', 'user', 'rating', 'comment', 'created_at']
+        fields = ['id', 'user', 'product', 'product_name', 'rating', 'comment', 'created_at']
+
+class ReviewCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['product', 'rating', 'comment']
+
+    def validate(self, attrs):
+        request = self.context.get('request')
+        if not request or not request.user.is_authenticated:
+            raise serializers.ValidationError("Authentication required.")
+            
+        user = request.user
+        product = attrs.get('product')
+
+        if user.is_staff or getattr(user, 'user_type', '') == 'ADMIN':
+            return attrs
+
+        has_purchased = OrderItem.objects.filter(
+            Q(order__user=user) | Q(order__wholesale_user=user) | Q(order__customer_email=user.email),
+            order__status='DELIVERED',
+            product=product
+        ).exists()
+
+        if not has_purchased:
+            raise serializers.ValidationError({"detail": "You can only review products you have purchased and received."})
+
+        review_exists = Review.objects.filter(user=user, product=product)
+        if self.instance:
+            review_exists = review_exists.exclude(id=self.instance.id)
+            
+        if review_exists.exists():
+            raise serializers.ValidationError({"detail": "You have already reviewed this product."})
+
+        return attrs
 
 class ProductSerializer(serializers.ModelSerializer):
     shop = ShopSerializer(read_only=True)
@@ -104,6 +141,7 @@ class ProductSerializer(serializers.ModelSerializer):
     thumbnail_url = serializers.SerializerMethodField()
     rating = serializers.SerializerMethodField()
     review_count = serializers.SerializerMethodField()
+    user_can_review = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -113,7 +151,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'weight', 'length', 'width', 'height',  # Added physical properties for shipping
             'thumbnail_url', 'specifications', 'additional_images',
             'origin', 'unit', 'wholesale_unit', 'badge', 'badge_color',
-            'colors', 'sizes', 'reviews', 'rating', 'review_count'
+            'colors', 'sizes', 'reviews', 'rating', 'review_count', 'user_can_review'
         ]
         
     def get_thumbnail_url(self, obj):
@@ -128,7 +166,30 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_review_count(self, obj):
         return obj.reviews.count()
-    
+        
+    def get_user_can_review(self, obj):
+        request = self.context.get('request')
+        if not request or not request.user.is_authenticated:
+            return {"can_review": False, "message": "Please log in to submit a review."}
+        
+        user = request.user
+        if user.is_staff or getattr(user, 'user_type', '') == 'ADMIN':
+            return {"can_review": True, "message": ""}
+            
+        has_purchased = OrderItem.objects.filter(
+            Q(order__user=user) | Q(order__wholesale_user=user) | Q(order__customer_email=user.email),
+            order__status='DELIVERED',
+            product=obj
+        ).exists()
+        
+        if not has_purchased:
+            return {"can_review": False, "message": "You can only review products you have purchased and received."}
+            
+        if Review.objects.filter(user=user, product=obj).exists():
+            return {"can_review": False, "message": "You have already reviewed this product."}
+            
+        return {"can_review": True, "message": ""}
+
     def to_representation(self, instance):
         """
         Custom representation to handle dynamic pricing based on user type and wholesaler approval status

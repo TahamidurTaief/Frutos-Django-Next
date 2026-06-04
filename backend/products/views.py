@@ -8,12 +8,13 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from orders.models import Order
-from .models import Product, Category, SubCategory, Color, Brand, Size, ProductSpecification, ProductAdditionalImage
+from .models import Product, Category, SubCategory, Color, Brand, Size, ProductSpecification, ProductAdditionalImage, Review
 from django.db.models import Count, ProtectedError
 from .serializers import (
     ProductSerializer, ProductWriteSerializer,
     CategorySerializer, SubCategorySerializer,
     ColorSerializer, BrandSerializer, SizeSerializer,
+    ReviewSerializer, ReviewCreateSerializer
 )
 from .permissions import IsShopOwnerOrReadOnly
 from .filters import ProductFilter
@@ -570,3 +571,15 @@ class BrandViewSet(viewsets.ModelViewSet):
                 {"error": f"Internal server error: {str(e)}"}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all().order_by('-created_at')
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
+    def get_serializer_class(self):
+        if self.action in ['create', 'update', 'partial_update']:
+            return ReviewCreateSerializer
+        return ReviewSerializer
+        
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

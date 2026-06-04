@@ -146,7 +146,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         maxAge: 30 * 24 * 60 * 60,
     },
 
-    secret: process.env.NEXTAUTH_SECRET,
+    // secret: process.env.NEXTAUTH_SECRET,
+    secret: process.env.AUTH_SECRET,
 })
 
 async function refreshAccessToken(token) {

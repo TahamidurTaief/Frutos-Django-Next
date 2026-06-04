@@ -2,6 +2,7 @@
 import { notFound } from 'next/navigation'
 import { getProductBySlug, getProducts } from '@/lib/api_product'
 import ProductDetailClient from './ProductDetailClient'
+import { auth } from '@/auth'
 
 
 export const dynamic = 'force-dynamic'
@@ -27,13 +28,17 @@ export async function generateMetadata({ params }) {
 
 export default async function ProductPage({ params }) {
   const { slug } = await params
+  
+  const session = await auth()
+  const token = session?.user?.accessToken
+  
   let product
 
   try {
-    product = await getProductBySlug(slug)
+    product = await getProductBySlug(slug, { token })
   } catch {
     notFound()
   }
 
-  return <ProductDetailClient product={product} related={product.related ?? []} />
+  return <ProductDetailClient product={product} related={product.related ?? []} session={session} />
 }

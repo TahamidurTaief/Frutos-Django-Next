@@ -2,7 +2,7 @@
 
 'use client'
 import { useSession } from 'next-auth/react'
-import { useState, useRef, useMemo } from 'react'
+import { useState, useRef, useMemo, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import ProductCard from '@/app/components/ProductCard'
@@ -11,6 +11,7 @@ import {
   ShoppingCart, ShoppingBag, Check, Truck, Store,
   Minus, Plus, ArrowRight, CreditCard, Zap, Lock,
 } from 'lucide-react'
+import { useAuth } from '@/app/context/AuthContext'
 
 // ─── Star Rating ──────────────────────────────────────────────────────────────
 
@@ -134,9 +135,100 @@ function UnitSelector({ unitOptions, hasUnits, selectedUnitId, onChange, fallbac
   )
 }
 
+// ─── Review Form Component ───────────────────────────────────────────────────
+
+function ReviewForm({ product, session, localToken }) {
+  const [rating, setRating] = useState(5)
+  const [comment, setComment] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [message, setMessage] = useState('')
+
+  const canReview = product.userCanReview?.can_review
+  const disabledMessage = product.userCanReview?.message
+
+  const hasAuth = !!session || !!localToken
+  const activeToken = session?.user?.accessToken || session?.access || localToken
+
+  if (!hasAuth) {
+    return (
+      <div className="bg-[#FAFAF8] border border-[#BCCAC1]/40 rounded-xl p-6 mb-10 text-center">
+        <p className="text-sm text-[#6D7A73]">Please log in to submit a review.</p>
+      </div>
+    )
+  }
+
+  if (!canReview) {
+    return (
+      <div className="bg-[#FAFAF8] border border-[#BCCAC1]/40 rounded-xl p-6 mb-10 text-center">
+        <p className="text-sm font-medium text-[#855000]">{disabledMessage}</p>
+      </div>
+    )
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setMessage('')
+    try {
+      const { submitReview } = await import('@/lib/api_product')
+      await submitReview(activeToken, {
+        product: product.id,
+        rating,
+        comment
+      })
+      setMessage('Review submitted successfully! Please refresh the page to see it.')
+      setComment('')
+      setRating(5)
+    } catch (err) {
+      setMessage(err.message || 'Failed to submit review.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  return (
+    <div className="bg-white border border-[#BCCAC1]/40 rounded-xl p-6 mb-10">
+      <h4 className="font-bold text-[#151E13] mb-4">Write a Review</h4>
+      {message && (
+        <div className={`p-3 rounded-lg mb-4 text-sm ${message.includes('success') ? 'bg-[#ECF7E4] text-[#00694C]' : 'bg-red-50 text-red-600'}`}>
+          {message}
+        </div>
+      )}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div>
+          <label className="text-xs font-bold uppercase tracking-widest text-[#6D7A73] mb-2 block">Rating</label>
+          <div className="flex gap-1">
+            {[1,2,3,4,5].map(i => (
+              <button type="button" key={i} onClick={() => setRating(i)} className="p-1 cursor-pointer hover:scale-110 transition-transform">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill={i <= rating ? '#855000' : '#E5E7EB'}>
+                  <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+                </svg>
+              </button>
+            ))}
+          </div>
+        </div>
+        <div>
+          <label className="text-xs font-bold uppercase tracking-widest text-[#6D7A73] mb-2 block">Comment</label>
+          <textarea
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            rows="4"
+            className="w-full bg-[#FAFAF8] border border-[#BCCAC1]/40 rounded-xl px-4 py-3 text-sm text-[#151E13] focus:ring-2 focus:ring-[#00694C]/20 outline-none resize-none"
+            placeholder="Share your experience..."
+            required
+          />
+        </div>
+        <button type="submit" disabled={isSubmitting} className="self-start rounded-xl px-6 py-2.5 bg-[#00694C] text-white font-bold text-sm hover:bg-[#085041] transition-colors disabled:opacity-50 cursor-pointer">
+          {isSubmitting ? 'Submitting...' : 'Submit Review'}
+        </button>
+      </form>
+    </div>
+  )
+}
+
 // ─── Tab Section ─────────────────────────────────────────────────────────────
 
-function TabSection({ product }) {
+function TabSection({ product, session, localToken }) {
   const [tab, setTab] = useState('Description')
   const tabs = ['Description', 'Nutritional Info', 'Origin', 'Reviews']
 
@@ -238,22 +330,28 @@ function TabSection({ product }) {
                 <StarRating rating={product.rating} reviews={product.reviews} size={14} />
               </div>
             </div>
-            {[
-              { name: 'María G.', date: '2 weeks ago', rating: 5, body: "Absolutely the best quality I've found. You can taste the difference immediately." },
-              { name: 'James T.', date: '1 month ago', rating: 4, body: 'Arrived perfectly packaged and fresh. Flavour was excellent. Will definitely reorder.' },
-              { name: 'Saoirse O.', date: '1 month ago', rating: 5, body: "My family won't go back to standard supermarket produce after trying this." },
-            ].map((r) => (
-              <div key={r.name} className="border-b border-[#BCCAC1]/30 pb-7 mb-7 last:border-0">
-                <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <p style={{ fontWeight: 600, fontSize: '14px', color: '#151E13' }}>{r.name}</p>
-                    <p style={{ fontSize: '12px', color: '#6D7A73' }}>{r.date}</p>
+            <ReviewForm product={product} session={session} localToken={localToken} />
+            
+            {product.reviewsList && product.reviewsList.length > 0 ? (
+              product.reviewsList.map((r, idx) => {
+                const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+                const formattedDate = new Date(r.created_at).toLocaleDateString(undefined, dateOptions);
+                return (
+                  <div key={r.id || idx} className="border-b border-[#BCCAC1]/30 pb-7 mb-7 last:border-0">
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <p style={{ fontWeight: 600, fontSize: '14px', color: '#151E13' }}>{r.user}</p>
+                        <p style={{ fontSize: '12px', color: '#6D7A73' }}>{formattedDate}</p>
+                      </div>
+                      <StarRating rating={r.rating} reviews={0} size={13} />
+                    </div>
+                    <p style={{ fontSize: '14px', color: '#3D4943', lineHeight: 1.7 }}>{r.comment}</p>
                   </div>
-                  <StarRating rating={r.rating} reviews={0} size={13} />
-                </div>
-                <p style={{ fontSize: '14px', color: '#3D4943', lineHeight: 1.7 }}>{r.body}</p>
-              </div>
-            ))}
+                )
+              })
+            ) : (
+              <p className="text-sm text-[#6D7A73]">No reviews yet. Be the first to review this product!</p>
+            )}
           </div>
         )}
       </div>
@@ -288,9 +386,27 @@ function RelatedProducts({ related }) {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export default function ProductDetailClient({ product, related }) {
+export default function ProductDetailClient({ product: initialProduct, related }) {
   const { data: session }    = useSession()
+  const { getAccess } = useAuth()
   const isApprovedWholesale  = session?.user?.isApproved === true
+
+  const [product, setProduct] = useState(initialProduct)
+  const [localToken, setLocalToken] = useState(null)
+
+  useEffect(() => {
+    const token = getAccess()
+    if (token) {
+      setLocalToken(token)
+      if (!session) {
+        import('@/lib/api_product').then(({ getProductBySlug }) => {
+           getProductBySlug(initialProduct.slug, { token }).then(fetched => {
+             setProduct(fetched)
+           }).catch(console.error)
+        })
+      }
+    }
+  }, [initialProduct.slug, session, getAccess])
 
   const {
     unitOptions, hasUnits,
@@ -763,7 +879,7 @@ export default function ProductDetailClient({ product, related }) {
 
       {/* ── TABS + RELATED  */}
       <div className="max-w-[1280px] mx-auto px-4 lg:px-10 mt-8 lg:mt-16 pb-36 lg:pb-0">
-        <TabSection product={product} />
+        <TabSection product={product} session={session} localToken={localToken} />
         <RelatedProducts related={related} />
       </div>
 

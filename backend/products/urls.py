@@ -1,7 +1,7 @@
 # products/urls.py
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import ProductViewSet, CategoryViewSet, SubCategoryViewSet, ColorViewSet, BrandViewSet, SizeViewSet
+from .views import ProductViewSet, CategoryViewSet, SubCategoryViewSet, ColorViewSet, BrandViewSet, SizeViewSet, ReviewViewSet
 
 # Create router for ViewSets
 router = DefaultRouter()
@@ -11,6 +11,7 @@ router.register(r'subcategories', SubCategoryViewSet, basename='subcategory')
 router.register(r'colors', ColorViewSet, basename='color')
 router.register(r'brands', BrandViewSet, basename='brand')
 router.register(r'sizes', SizeViewSet, basename='size')
+router.register(r'reviews', ReviewViewSet, basename='review')
 
 app_name = 'products'
 
