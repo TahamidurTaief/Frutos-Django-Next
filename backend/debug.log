@@ -30434,3 +30434,4 @@ INFO 2026-06-03 15:17:50,704 basehttp 14720 17208 "GET /api/orders/?ordering=-or
 WARNING 2026-06-03 15:18:21,467 basehttp 14720 17208 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10335
 INFO 2026-06-03 15:18:30,904 basehttp 14720 17888 - Broken pipe from ('127.0.0.1', 4927)
 INFO 2026-06-03 15:18:30,933 basehttp 14720 15184 - Broken pipe from ('127.0.0.1', 4928)
+INFO 2026-06-03 18:16:25,851 autoreload 12112 16676 Watching for file changes with StatReloader
