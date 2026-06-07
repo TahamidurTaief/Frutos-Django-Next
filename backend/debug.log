@@ -36055,3 +36055,1371 @@ INFO 2026-06-06 17:58:25,457 autoreload 10636 5988 D:\Munna\Munna\icommerce\icom
 INFO 2026-06-06 17:58:37,769 autoreload 14000 6452 Watching for file changes with StatReloader
 INFO 2026-06-06 17:58:51,603 autoreload 14000 6452 D:\Munna\Munna\icommerce\icommerce\backend\website\urls.py changed, reloading.
 INFO 2026-06-06 17:58:55,839 autoreload 11776 18176 Watching for file changes with StatReloader
+INFO 2026-06-06 17:59:10,996 views 11776 19872 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 17:59:10,997 views 11776 11132 CategoryViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-06 17:59:11,033 basehttp 11776 15032 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 17:59:11,053 views 11776 11132 Successfully returned 4 categories
+INFO 2026-06-06 17:59:11,056 basehttp 11776 11132 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 17:59:11,066 views 11776 19872 Successfully paginated 3 products
+INFO 2026-06-06 17:59:11,117 basehttp 11776 19872 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:00:12,669 views 11776 18072 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:00:12,670 views 11776 5920 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:00:12,819 views 11776 5920 Successfully returned 4 categories
+INFO 2026-06-06 18:00:12,823 basehttp 11776 5920 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:00:12,900 views 11776 18072 Successfully paginated 3 products
+INFO 2026-06-06 18:00:12,943 basehttp 11776 18072 "GET /api/products/products/ HTTP/1.1" 200 8366
+WARNING 2026-06-06 18:00:13,858 basehttp 11776 15032 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:00:21,781 basehttp 11776 18072 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-06 18:00:23,216 basehttp 11776 10040 "GET /api/website/site-config/ HTTP/1.1" 200 326
+WARNING 2026-06-06 18:00:28,955 basehttp 11776 15032 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:01:11,491 basehttp 11776 15032 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:01:36,942 basehttp 11776 15032 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:02:03,577 basehttp 11776 15032 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:02:36,651 views 11776 17864 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:02:36,654 views 11776 19088 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:02:36,801 basehttp 11776 8604 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-06 18:02:36,807 views 11776 19088 Successfully returned 4 categories
+INFO 2026-06-06 18:02:36,842 basehttp 11776 768 "GET /api/website/hero-banners/ HTTP/1.1" 200 52
+INFO 2026-06-06 18:02:36,846 basehttp 11776 19088 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:02:36,889 views 11776 17864 Successfully paginated 3 products
+INFO 2026-06-06 18:02:37,014 basehttp 11776 17864 "GET /api/products/products/ HTTP/1.1" 200 8366
+WARNING 2026-06-06 18:02:39,448 basehttp 11776 15032 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-06 18:02:39,453 views 11776 9308 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:02:39,581 views 11776 9308 Successfully paginated 3 products
+INFO 2026-06-06 18:02:39,659 basehttp 11776 9308 "GET /api/products/products/ HTTP/1.1" 200 8366
+WARNING 2026-06-06 18:02:40,632 basehttp 11776 9308 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:02:57,250 basehttp 11776 9308 "OPTIONS /api/website/offer-banners/ HTTP/1.1" 200 0
+WARNING 2026-06-06 18:02:57,453 basehttp 11776 9308 "GET /api/website/offer-banners/ HTTP/1.1" 401 172
+INFO 2026-06-06 18:02:57,543 basehttp 11776 9308 "POST /api/auth/token/refresh/ HTTP/1.1" 200 777
+INFO 2026-06-06 18:02:57,580 basehttp 11776 9308 "GET /api/website/offer-banners/ HTTP/1.1" 200 52
+INFO 2026-06-06 18:02:58,187 basehttp 11776 9308 "GET /api/website/hero-banners/ HTTP/1.1" 200 52
+WARNING 2026-06-06 18:02:58,345 basehttp 11776 9308 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:03:04,088 basehttp 11776 11892 "GET /api/website/site-config/ HTTP/1.1" 200 326
+WARNING 2026-06-06 18:03:05,247 basehttp 11776 9308 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-06 18:03:05,433 basehttp 11776 9308 "OPTIONS /api/orders/?ordering=-ordered_at HTTP/1.1" 200 0
+INFO 2026-06-06 18:03:05,433 basehttp 11776 15032 "OPTIONS /api/auth/notifications/unread-count/ HTTP/1.1" 200 0
+INFO 2026-06-06 18:03:05,567 basehttp 11776 15032 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-06 18:03:05,574 views 11776 9308 Orders list request from user: elarbol@gmail.com
+WARNING 2026-06-06 18:03:05,663 basehttp 11776 15032 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:03:05,663 views 11776 9308 User authenticated: True
+INFO 2026-06-06 18:03:05,740 views 11776 9308 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+WARNING 2026-06-06 18:03:05,741 basehttp 11776 15032 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:03:05,750 views 11776 9308 Orders queryset count: 4
+INFO 2026-06-06 18:03:05,803 views 11776 9308 Serialized orders count: 4
+INFO 2026-06-06 18:03:05,806 basehttp 11776 9308 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 3715
+INFO 2026-06-06 18:03:09,664 basehttp 11776 9308 "GET /api/website/offer-categories/ HTTP/1.1" 200 52
+INFO 2026-06-06 18:03:10,034 basehttp 11776 9308 "GET /api/website/navbar-settings/ HTTP/1.1" 200 52
+INFO 2026-06-06 18:03:25,900 basehttp 11776 9308 "OPTIONS /api/website/social-links/ HTTP/1.1" 200 0
+INFO 2026-06-06 18:03:25,931 basehttp 11776 9308 "GET /api/website/social-links/ HTTP/1.1" 200 52
+INFO 2026-06-06 18:03:28,637 basehttp 11776 9308 "OPTIONS /api/website/site-settings/ HTTP/1.1" 200 0
+INFO 2026-06-06 18:03:28,669 basehttp 11776 9308 "GET /api/website/site-settings/ HTTP/1.1" 200 52
+INFO 2026-06-06 18:03:35,473 basehttp 11776 9308 "GET /api/website/footer-links/ HTTP/1.1" 200 52
+WARNING 2026-06-06 18:03:35,599 basehttp 11776 9308 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:03:36,417 basehttp 11776 9308 "OPTIONS /api/website/footer-sections/ HTTP/1.1" 200 0
+INFO 2026-06-06 18:03:36,444 basehttp 11776 9308 "GET /api/website/footer-sections/ HTTP/1.1" 200 52
+INFO 2026-06-06 18:03:42,180 basehttp 11776 9308 "GET /api/website/blog-posts/ HTTP/1.1" 200 52
+INFO 2026-06-06 18:03:48,875 basehttp 11776 9308 "GET /api/sections/sections/?page_size=15 HTTP/1.1" 200 52
+INFO 2026-06-06 18:03:48,877 basehttp 11776 15032 "GET /api/sections/section-items/?page_size=15 HTTP/1.1" 200 52
+INFO 2026-06-06 18:03:48,883 basehttp 11776 11068 "GET /api/sections/page-sections/?page_size=15 HTTP/1.1" 200 52
+INFO 2026-06-06 18:03:48,956 basehttp 11776 4452 "GET /api/sections/sections/?page_size=200 HTTP/1.1" 200 52
+INFO 2026-06-06 18:03:48,975 views 11776 11068 CategoryViewSet.list called with params: <QueryDict: {'page_size': ['200']}>
+INFO 2026-06-06 18:03:49,017 views 11776 6264 ProductViewSet.list called with params: <QueryDict: {'page_size': ['200'], 'is_active': ['true']}>
+INFO 2026-06-06 18:03:49,108 views 11776 11068 Successfully returned 4 categories
+INFO 2026-06-06 18:03:49,112 basehttp 11776 11068 "GET /api/products/categories/?page_size=200 HTTP/1.1" 200 725
+INFO 2026-06-06 18:03:49,138 views 11776 6264 Successfully paginated 3 products
+INFO 2026-06-06 18:03:49,196 basehttp 11776 6264 "GET /api/products/products/?page_size=200&is_active=true HTTP/1.1" 200 8363
+INFO 2026-06-06 18:03:52,385 basehttp 11776 6264 "OPTIONS /api/auth/dashboard/admin/ HTTP/1.1" 200 0
+INFO 2026-06-06 18:03:52,385 basehttp 11776 11068 "OPTIONS /api/orders/?page_size=50&ordering=-ordered_at HTTP/1.1" 200 0
+INFO 2026-06-06 18:03:52,385 basehttp 11776 4452 "OPTIONS /api/fulfillment/stores/admin/ HTTP/1.1" 200 0
+INFO 2026-06-06 18:03:52,519 views 11776 6264 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-06 18:03:52,546 views 11776 6264 User authenticated: True
+INFO 2026-06-06 18:03:52,565 basehttp 11776 11068 "GET /api/auth/dashboard/admin/ HTTP/1.1" 200 266
+INFO 2026-06-06 18:03:52,568 basehttp 11776 4452 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-06 18:03:52,587 views 11776 6264 Query params: <QueryDict: {'page_size': ['50'], 'ordering': ['-ordered_at']}>
+INFO 2026-06-06 18:03:52,655 views 11776 6264 Orders queryset count: 4
+INFO 2026-06-06 18:03:52,755 views 11776 6264 Serialized orders count: 4
+INFO 2026-06-06 18:03:52,786 basehttp 11776 6264 "GET /api/orders/?page_size=50&ordering=-ordered_at HTTP/1.1" 200 3715
+INFO 2026-06-06 18:03:53,042 basehttp 11776 16124 "GET /media/stores/banners/freshdrop.avif HTTP/1.1" 304 0
+INFO 2026-06-06 18:03:55,327 basehttp 11776 4452 "OPTIONS /api/products/products/?page_size=10&ordering=-created_at HTTP/1.1" 200 0
+INFO 2026-06-06 18:03:55,327 basehttp 11776 6264 "OPTIONS /api/orders/?page_size=500&ordering=-ordered_at HTTP/1.1" 200 0
+INFO 2026-06-06 18:03:55,420 views 11776 11068 ProductViewSet.list called with params: <QueryDict: {'page_size': ['10'], 'ordering': ['-created_at']}>
+INFO 2026-06-06 18:03:55,421 views 11776 15032 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-06 18:03:55,437 basehttp 11776 6264 "GET /api/auth/dashboard/admin/ HTTP/1.1" 200 266
+INFO 2026-06-06 18:03:55,449 basehttp 11776 4452 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-06 18:03:55,467 views 11776 15032 User authenticated: True
+INFO 2026-06-06 18:03:55,533 views 11776 11068 Successfully paginated 3 products
+INFO 2026-06-06 18:03:55,534 views 11776 15032 Query params: <QueryDict: {'page_size': ['500'], 'ordering': ['-ordered_at']}>
+INFO 2026-06-06 18:03:55,635 views 11776 15032 Orders queryset count: 4
+INFO 2026-06-06 18:03:55,661 basehttp 11776 11068 "GET /api/products/products/?page_size=10&ordering=-created_at HTTP/1.1" 200 8363
+INFO 2026-06-06 18:03:55,732 views 11776 15032 Serialized orders count: 4
+INFO 2026-06-06 18:03:55,738 basehttp 11776 15032 "GET /api/orders/?page_size=500&ordering=-ordered_at HTTP/1.1" 200 3715
+INFO 2026-06-06 18:03:58,933 basehttp 11776 15032 "OPTIONS /api/products/categories/?page_size=20&page=1 HTTP/1.1" 200 0
+INFO 2026-06-06 18:03:58,933 basehttp 11776 11068 "OPTIONS /api/products/subcategories/?page_size=20&page=1 HTTP/1.1" 200 0
+INFO 2026-06-06 18:03:58,979 views 11776 15032 SubCategoryViewSet.list called with params: <QueryDict: {'page_size': ['20'], 'page': ['1']}>
+INFO 2026-06-06 18:03:58,980 views 11776 11068 CategoryViewSet.list called with params: <QueryDict: {'page_size': ['20'], 'page': ['1']}>
+INFO 2026-06-06 18:03:58,995 views 11776 15032 Successfully returned 4 subcategories
+INFO 2026-06-06 18:03:59,002 views 11776 11068 Successfully returned 4 categories
+INFO 2026-06-06 18:03:59,003 basehttp 11776 15032 "GET /api/products/subcategories/?page_size=20&page=1 HTTP/1.1" 200 271
+INFO 2026-06-06 18:03:59,005 basehttp 11776 11068 "GET /api/products/categories/?page_size=20&page=1 HTTP/1.1" 200 725
+INFO 2026-06-06 18:03:59,062 basehttp 11776 16124 "GET /media/categories/futs.jpg HTTP/1.1" 304 0
+INFO 2026-06-06 18:03:59,064 basehttp 11776 10844 "GET /media/categories/grocery.avif HTTP/1.1" 304 0
+INFO 2026-06-06 18:04:01,253 basehttp 11776 4452 "OPTIONS /api/products/sizes/?page_size=20&page=1 HTTP/1.1" 200 0
+INFO 2026-06-06 18:04:01,253 basehttp 11776 15032 "OPTIONS /api/products/colors/?page_size=20&page=1 HTTP/1.1" 200 0
+INFO 2026-06-06 18:04:01,253 basehttp 11776 11068 "OPTIONS /api/products/brands/?page_size=20&page=1 HTTP/1.1" 200 0
+INFO 2026-06-06 18:04:01,281 views 11776 15032 ColorViewSet.list called with params: <QueryDict: {'page_size': ['20'], 'page': ['1']}>
+INFO 2026-06-06 18:04:01,301 views 11776 4452 BrandViewSet.list called with params: <QueryDict: {'page_size': ['20'], 'page': ['1']}>
+INFO 2026-06-06 18:04:01,343 basehttp 11776 11068 "GET /api/products/sizes/?page_size=20&page=1 HTTP/1.1" 200 52
+INFO 2026-06-06 18:04:01,348 views 11776 15032 Successfully returned 4 colors
+INFO 2026-06-06 18:04:01,354 views 11776 4452 Successfully returned 4 brands
+INFO 2026-06-06 18:04:01,356 basehttp 11776 15032 "GET /api/products/colors/?page_size=20&page=1 HTTP/1.1" 200 98
+INFO 2026-06-06 18:04:01,361 basehttp 11776 4452 "GET /api/products/brands/?page_size=20&page=1 HTTP/1.1" 200 249
+INFO 2026-06-06 18:04:03,288 basehttp 11776 6264 "OPTIONS /api/products/products/?page_size=500 HTTP/1.1" 200 0
+INFO 2026-06-06 18:04:03,288 basehttp 11776 4452 "OPTIONS /api/products/reviews/ HTTP/1.1" 200 0
+INFO 2026-06-06 18:04:03,288 basehttp 11776 15032 "OPTIONS /api/products/products/?page_size=500 HTTP/1.1" 200 0
+INFO 2026-06-06 18:04:03,288 basehttp 11776 11068 "OPTIONS /api/products/reviews/ HTTP/1.1" 200 0
+INFO 2026-06-06 18:04:03,341 views 11776 6264 ProductViewSet.list called with params: <QueryDict: {'page_size': ['500']}>
+INFO 2026-06-06 18:04:03,427 basehttp 11776 15032 "GET /api/products/reviews/ HTTP/1.1" 200 794
+INFO 2026-06-06 18:04:03,443 views 11776 6264 Successfully paginated 3 products
+INFO 2026-06-06 18:04:03,477 basehttp 11776 15032 "GET /api/products/reviews/ HTTP/1.1" 200 794
+INFO 2026-06-06 18:04:03,538 basehttp 11776 6264 "GET /api/products/products/?page_size=500 HTTP/1.1" 200 8363
+INFO 2026-06-06 18:04:03,550 views 11776 6264 ProductViewSet.list called with params: <QueryDict: {'page_size': ['500']}>
+INFO 2026-06-06 18:04:03,592 views 11776 6264 Successfully paginated 3 products
+INFO 2026-06-06 18:04:03,638 basehttp 11776 6264 "GET /api/products/products/?page_size=500 HTTP/1.1" 200 8363
+WARNING 2026-06-06 18:04:05,616 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:04:06,830 basehttp 11776 6264 "GET /api/orders/free-shipping-rules/?page_size=20&page=1 HTTP/1.1" 200 213
+INFO 2026-06-06 18:04:06,834 basehttp 11776 15032 "GET /api/orders/coupons/?page_size=20&page=1 HTTP/1.1" 200 657
+INFO 2026-06-06 18:04:08,534 views 11776 15032 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-06 18:04:08,537 views 11776 15032 User authenticated: True
+INFO 2026-06-06 18:04:08,538 views 11776 15032 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+INFO 2026-06-06 18:04:08,541 views 11776 15032 Orders queryset count: 4
+INFO 2026-06-06 18:04:08,579 views 11776 15032 Serialized orders count: 4
+INFO 2026-06-06 18:04:08,588 basehttp 11776 15032 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 3715
+INFO 2026-06-06 18:04:12,309 basehttp 11776 15032 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-06 18:04:12,361 basehttp 11776 15032 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-06 18:04:19,805 basehttp 11776 15032 "OPTIONS /api/fulfillment/stores/1/ HTTP/1.1" 200 0
+INFO 2026-06-06 18:04:21,445 basehttp 11776 15032 "PATCH /api/fulfillment/stores/1/ HTTP/1.1" 200 560
+INFO 2026-06-06 18:04:21,537 basehttp 11776 15032 "OPTIONS /api/fulfillment/stores/1/features/ HTTP/1.1" 200 0
+INFO 2026-06-06 18:04:21,798 basehttp 11776 15032 "PUT /api/fulfillment/stores/1/features/ HTTP/1.1" 200 50
+INFO 2026-06-06 18:04:21,924 basehttp 11776 15032 "OPTIONS /api/fulfillment/stores/1/availability/ HTTP/1.1" 200 0
+INFO 2026-06-06 18:04:22,004 basehttp 11776 15032 "PUT /api/fulfillment/stores/1/availability/ HTTP/1.1" 200 29
+INFO 2026-06-06 18:04:22,297 basehttp 11776 15032 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-06 18:04:25,913 basehttp 11776 11712 "GET /api/fulfillment/stores/ HTTP/1.1" 200 562
+INFO 2026-06-06 18:04:35,235 basehttp 11776 15032 "GET /api/orders/coupons/?page_size=20&page=1 HTTP/1.1" 200 657
+INFO 2026-06-06 18:04:35,244 basehttp 11776 6264 "GET /api/orders/free-shipping-rules/?page_size=20&page=1 HTTP/1.1" 200 213
+WARNING 2026-06-06 18:04:35,602 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:04:38,663 views 11776 6264 ProductViewSet.list called with params: <QueryDict: {'page_size': ['200']}>
+INFO 2026-06-06 18:04:38,700 views 11776 6264 Successfully paginated 3 products
+INFO 2026-06-06 18:04:38,752 basehttp 11776 6264 "GET /api/products/products/?page_size=200 HTTP/1.1" 200 8366
+INFO 2026-06-06 18:04:38,755 views 11776 6264 ProductViewSet.list called with params: <QueryDict: {'page_size': ['200']}>
+INFO 2026-06-06 18:04:38,798 views 11776 6264 Successfully paginated 3 products
+INFO 2026-06-06 18:04:38,836 basehttp 11776 6264 "GET /api/products/products/?page_size=200 HTTP/1.1" 200 8366
+WARNING 2026-06-06 18:05:05,597 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:05:35,639 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:06:05,597 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:06:35,612 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:07:05,597 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:07:35,610 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:08:05,600 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:08:35,599 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:09:05,602 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:09:35,596 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:10:05,595 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:10:35,609 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:11:05,604 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:11:35,599 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:12:05,596 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:12:35,604 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:13:05,602 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:13:35,599 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:14:05,602 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:14:35,607 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:15:05,607 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:15:35,614 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:16:05,603 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:16:23,826 views 11776 6264 ProductViewSet.list called with params: <QueryDict: {'page_size': ['200']}>
+INFO 2026-06-06 18:16:23,867 views 11776 6264 Successfully paginated 3 products
+INFO 2026-06-06 18:16:23,907 basehttp 11776 6264 "GET /api/products/products/?page_size=200 HTTP/1.1" 200 8366
+INFO 2026-06-06 18:16:23,912 views 11776 6264 ProductViewSet.list called with params: <QueryDict: {'page_size': ['200']}>
+INFO 2026-06-06 18:16:23,965 views 11776 6264 Successfully paginated 3 products
+INFO 2026-06-06 18:16:23,996 basehttp 11776 6264 "GET /api/products/products/?page_size=200 HTTP/1.1" 200 8366
+WARNING 2026-06-06 18:16:35,642 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:17:05,602 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:17:20,349 basehttp 11776 6264 "OPTIONS /api/orders/coupons/ HTTP/1.1" 200 0
+INFO 2026-06-06 18:17:20,411 basehttp 11776 6264 "POST /api/orders/coupons/ HTTP/1.1" 201 610
+INFO 2026-06-06 18:17:20,440 basehttp 11776 6264 "GET /api/orders/coupons/?page_size=20&page=1 HTTP/1.1" 200 1268
+INFO 2026-06-06 18:17:28,700 views 11776 5712 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:17:28,704 views 11776 10556 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:17:28,754 views 11776 10556 Successfully returned 4 categories
+INFO 2026-06-06 18:17:28,791 views 11776 5712 Successfully paginated 3 products
+INFO 2026-06-06 18:17:28,801 basehttp 11776 10556 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:17:28,951 basehttp 11776 5712 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:17:35,179 views 11776 15980 ProductViewSet.retrieve called with slug: apple
+INFO 2026-06-06 18:17:35,211 views 11776 15980 Successfully retrieved product: Apple
+INFO 2026-06-06 18:17:35,238 basehttp 11776 15980 "GET /api/products/products/apple/ HTTP/1.1" 200 2344
+WARNING 2026-06-06 18:17:35,942 basehttp 11776 6264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:18:01,213 basehttp 11776 14984 "GET /api/delivery-charge/?subtotal=0 HTTP/1.1" 404 4824
+WARNING 2026-06-06 18:18:01,213 basehttp 11776 12356 "GET /api/fulfillment/stores/nearest/ HTTP/1.1" 404 6473
+WARNING 2026-06-06 18:18:01,601 basehttp 11776 6264 "GET /api/products/cd577b0d-f1e3-4edf-a9bb-fd3f43211a74/ HTTP/1.1" 404 16531
+WARNING 2026-06-06 18:18:01,631 basehttp 11776 16648 "GET /api/products/cd577b0d-f1e3-4edf-a9bb-fd3f43211a74/ HTTP/1.1" 404 16531
+WARNING 2026-06-06 18:18:05,952 basehttp 11776 16648 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:18:10,384 basehttp 11776 16648 "OPTIONS /api/orders/coupons/validate/ HTTP/1.1" 200 0
+INFO 2026-06-06 18:18:10,402 basehttp 11776 16648 "POST /api/orders/coupons/validate/ HTTP/1.1" 200 103
+INFO 2026-06-06 18:18:13,747 basehttp 11776 16648 "POST /api/orders/coupons/validate/ HTTP/1.1" 200 823
+INFO 2026-06-06 18:18:40,278 views 11776 12380 ProductViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-06 18:18:40,314 basehttp 11776 16396 "GET /api/delivery-charge/?subtotal=0 HTTP/1.1" 404 4824
+WARNING 2026-06-06 18:18:40,315 basehttp 11776 5524 "GET /api/delivery/windows/ HTTP/1.1" 404 4816
+INFO 2026-06-06 18:18:40,362 views 11776 12380 Successfully paginated 3 products
+INFO 2026-06-06 18:18:40,428 basehttp 11776 12380 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:18:43,851 views 11776 5524 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:18:43,858 views 11776 12380 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:18:43,881 views 11776 12380 Successfully returned 4 categories
+INFO 2026-06-06 18:18:43,890 basehttp 11776 12380 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:18:43,894 views 11776 5524 Successfully paginated 3 products
+INFO 2026-06-06 18:18:43,944 basehttp 11776 5524 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:18:45,981 views 11776 5524 ProductViewSet.retrieve called with slug: lychee
+INFO 2026-06-06 18:18:46,018 views 11776 5524 Successfully retrieved product: Lychee
+INFO 2026-06-06 18:18:46,054 basehttp 11776 5524 "GET /api/products/products/lychee/ HTTP/1.1" 200 3235
+INFO 2026-06-06 18:18:46,413 basehttp 11776 1236 "GET /media/products/additional_images/lichyee.jfif HTTP/1.1" 304 0
+INFO 2026-06-06 18:18:46,426 basehttp 11776 13612 "GET /media/products/additional_images/images_80.jfif HTTP/1.1" 304 0
+INFO 2026-06-06 18:18:46,447 basehttp 11776 2748 "GET /media/products/additional_images/lychie.jfif HTTP/1.1" 304 0
+WARNING 2026-06-06 18:19:11,035 basehttp 11776 13724 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:19:16,137 basehttp 11776 19876 "GET /api/delivery-charge/?subtotal=0 HTTP/1.1" 404 4824
+WARNING 2026-06-06 18:19:16,311 basehttp 11776 14788 "GET /api/fulfillment/stores/nearest/ HTTP/1.1" 404 6473
+WARNING 2026-06-06 18:19:16,541 basehttp 11776 13724 "GET /api/products/907ce95b-6ad4-473e-944b-b1220f0e52f6/ HTTP/1.1" 404 16531
+WARNING 2026-06-06 18:19:16,582 basehttp 11776 7344 "GET /api/products/907ce95b-6ad4-473e-944b-b1220f0e52f6/ HTTP/1.1" 404 16531
+INFO 2026-06-06 18:19:25,518 basehttp 11776 7344 "POST /api/orders/coupons/validate/ HTTP/1.1" 200 823
+INFO 2026-06-06 18:19:47,453 views 11776 4528 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:19:47,454 views 11776 17608 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:19:47,485 views 11776 17608 Successfully returned 4 categories
+INFO 2026-06-06 18:19:47,487 basehttp 11776 17608 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:19:47,499 views 11776 4528 Successfully paginated 3 products
+INFO 2026-06-06 18:19:47,582 basehttp 11776 4528 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:19:57,908 views 11776 10532 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:19:57,914 views 11776 17864 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:19:57,935 views 11776 17864 Successfully returned 4 categories
+INFO 2026-06-06 18:19:57,937 basehttp 11776 17864 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:19:57,947 views 11776 10532 Successfully paginated 3 products
+INFO 2026-06-06 18:19:57,983 basehttp 11776 10532 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:20:07,856 views 11776 5796 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:20:07,862 views 11776 12700 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:20:07,880 views 11776 12700 Successfully returned 4 categories
+INFO 2026-06-06 18:20:07,882 basehttp 11776 12700 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:20:07,896 views 11776 5796 Successfully paginated 3 products
+INFO 2026-06-06 18:20:07,933 basehttp 11776 5796 "GET /api/products/products/ HTTP/1.1" 200 8366
+WARNING 2026-06-06 18:20:11,081 basehttp 11776 7344 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:20:17,851 views 11776 20148 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:20:17,856 views 11776 6504 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:20:17,885 views 11776 6504 Successfully returned 4 categories
+INFO 2026-06-06 18:20:17,888 basehttp 11776 6504 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:20:17,898 views 11776 20148 Successfully paginated 3 products
+INFO 2026-06-06 18:20:17,927 basehttp 11776 20148 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:20:27,847 views 11776 16856 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:20:27,854 views 11776 19708 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:20:27,872 views 11776 19708 Successfully returned 4 categories
+INFO 2026-06-06 18:20:27,877 basehttp 11776 19708 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:20:27,889 views 11776 16856 Successfully paginated 3 products
+INFO 2026-06-06 18:20:27,922 basehttp 11776 16856 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:20:37,847 views 11776 2000 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:20:37,853 views 11776 20052 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:20:37,872 views 11776 20052 Successfully returned 4 categories
+INFO 2026-06-06 18:20:37,875 basehttp 11776 20052 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:20:37,885 views 11776 2000 Successfully paginated 3 products
+INFO 2026-06-06 18:20:37,921 basehttp 11776 2000 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:20:47,844 views 11776 14376 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:20:47,850 views 11776 8280 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:20:47,870 views 11776 8280 Successfully returned 4 categories
+INFO 2026-06-06 18:20:47,872 basehttp 11776 8280 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:20:47,887 views 11776 14376 Successfully paginated 3 products
+INFO 2026-06-06 18:20:47,917 basehttp 11776 14376 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:20:57,859 views 11776 15916 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:20:57,866 views 11776 10332 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:20:57,885 views 11776 10332 Successfully returned 4 categories
+INFO 2026-06-06 18:20:57,890 basehttp 11776 10332 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:20:57,899 views 11776 15916 Successfully paginated 3 products
+INFO 2026-06-06 18:20:57,939 basehttp 11776 15916 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:21:07,860 views 11776 9480 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:21:07,861 views 11776 20200 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:21:07,886 views 11776 20200 Successfully returned 4 categories
+INFO 2026-06-06 18:21:07,888 basehttp 11776 20200 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:21:07,897 views 11776 9480 Successfully paginated 3 products
+INFO 2026-06-06 18:21:07,935 basehttp 11776 9480 "GET /api/products/products/ HTTP/1.1" 200 8366
+WARNING 2026-06-06 18:21:11,032 basehttp 11776 7344 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:21:17,845 views 11776 3256 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:21:17,846 views 11776 19316 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:21:17,868 views 11776 19316 Successfully returned 4 categories
+INFO 2026-06-06 18:21:17,871 basehttp 11776 19316 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:21:17,883 views 11776 3256 Successfully paginated 3 products
+INFO 2026-06-06 18:21:17,921 basehttp 11776 3256 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:21:27,848 views 11776 12936 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:21:27,853 views 11776 19356 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:21:27,874 views 11776 19356 Successfully returned 4 categories
+INFO 2026-06-06 18:21:27,877 basehttp 11776 19356 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:21:27,887 views 11776 12936 Successfully paginated 3 products
+INFO 2026-06-06 18:21:27,920 basehttp 11776 12936 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:21:37,854 views 11776 6984 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:21:37,860 views 11776 16056 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:21:37,879 views 11776 16056 Successfully returned 4 categories
+INFO 2026-06-06 18:21:37,882 basehttp 11776 16056 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:21:37,893 views 11776 6984 Successfully paginated 3 products
+INFO 2026-06-06 18:21:37,934 basehttp 11776 6984 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:21:47,852 views 11776 460 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:21:47,853 views 11776 8808 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:21:47,890 views 11776 8808 Successfully returned 4 categories
+INFO 2026-06-06 18:21:47,895 basehttp 11776 8808 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:21:47,911 views 11776 460 Successfully paginated 3 products
+INFO 2026-06-06 18:21:47,951 basehttp 11776 460 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:21:57,856 views 11776 9372 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:21:57,862 views 11776 2812 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:21:57,882 views 11776 2812 Successfully returned 4 categories
+INFO 2026-06-06 18:21:57,884 basehttp 11776 2812 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:21:57,893 views 11776 9372 Successfully paginated 3 products
+INFO 2026-06-06 18:21:57,932 basehttp 11776 9372 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:22:07,848 views 11776 18776 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:22:07,855 views 11776 472 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:22:07,877 views 11776 472 Successfully returned 4 categories
+INFO 2026-06-06 18:22:07,879 basehttp 11776 472 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:22:07,890 views 11776 18776 Successfully paginated 3 products
+INFO 2026-06-06 18:22:07,929 basehttp 11776 18776 "GET /api/products/products/ HTTP/1.1" 200 8366
+WARNING 2026-06-06 18:22:11,094 basehttp 11776 7344 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:22:17,864 views 11776 11872 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:22:17,869 views 11776 17064 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:22:17,891 views 11776 17064 Successfully returned 4 categories
+INFO 2026-06-06 18:22:17,897 basehttp 11776 17064 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:22:17,905 views 11776 11872 Successfully paginated 3 products
+INFO 2026-06-06 18:22:17,942 basehttp 11776 11872 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:22:27,857 views 11776 2244 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:22:27,858 views 11776 3332 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:22:27,888 views 11776 3332 Successfully returned 4 categories
+INFO 2026-06-06 18:22:27,892 basehttp 11776 3332 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:22:27,898 views 11776 2244 Successfully paginated 3 products
+INFO 2026-06-06 18:22:27,980 basehttp 11776 2244 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:22:37,844 views 11776 20264 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:22:37,849 views 11776 8640 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:22:37,867 views 11776 8640 Successfully returned 4 categories
+INFO 2026-06-06 18:22:37,870 basehttp 11776 8640 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:22:37,885 views 11776 20264 Successfully paginated 3 products
+INFO 2026-06-06 18:22:37,924 basehttp 11776 20264 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:22:47,849 views 11776 13116 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:22:47,856 views 11776 11212 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:22:47,878 views 11776 11212 Successfully returned 4 categories
+INFO 2026-06-06 18:22:47,879 basehttp 11776 11212 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:22:47,891 views 11776 13116 Successfully paginated 3 products
+INFO 2026-06-06 18:22:47,939 basehttp 11776 13116 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:22:57,844 views 11776 780 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:22:57,845 views 11776 12996 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:22:57,867 views 11776 12996 Successfully returned 4 categories
+INFO 2026-06-06 18:22:57,871 basehttp 11776 12996 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:22:57,887 views 11776 780 Successfully paginated 3 products
+INFO 2026-06-06 18:22:57,924 basehttp 11776 780 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:23:07,965 views 11776 4196 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:23:08,017 views 11776 15284 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:23:08,022 views 11776 4196 Successfully paginated 3 products
+INFO 2026-06-06 18:23:08,034 views 11776 15284 Successfully returned 4 categories
+INFO 2026-06-06 18:23:08,047 basehttp 11776 15284 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:23:08,078 basehttp 11776 4196 "GET /api/products/products/ HTTP/1.1" 200 8366
+WARNING 2026-06-06 18:23:11,001 basehttp 11776 7344 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:23:17,848 views 11776 14032 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:23:17,849 views 11776 4856 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:23:17,888 views 11776 4856 Successfully returned 4 categories
+INFO 2026-06-06 18:23:17,890 basehttp 11776 4856 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:23:17,899 views 11776 14032 Successfully paginated 3 products
+INFO 2026-06-06 18:23:17,930 basehttp 11776 14032 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:23:27,855 views 11776 9996 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:23:27,856 views 11776 5108 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:23:27,876 views 11776 5108 Successfully returned 4 categories
+INFO 2026-06-06 18:23:27,880 basehttp 11776 5108 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:23:27,897 views 11776 9996 Successfully paginated 3 products
+INFO 2026-06-06 18:23:27,948 basehttp 11776 9996 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:23:37,845 views 11776 16640 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:23:37,852 views 11776 6608 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:23:37,873 views 11776 6608 Successfully returned 4 categories
+INFO 2026-06-06 18:23:37,875 basehttp 11776 6608 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:23:37,885 views 11776 16640 Successfully paginated 3 products
+INFO 2026-06-06 18:23:37,920 basehttp 11776 16640 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:23:47,852 views 11776 1948 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:23:47,853 views 11776 1352 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:23:47,877 views 11776 1352 Successfully returned 4 categories
+INFO 2026-06-06 18:23:47,882 basehttp 11776 1352 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:23:47,896 views 11776 1948 Successfully paginated 3 products
+INFO 2026-06-06 18:23:47,930 basehttp 11776 1948 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:23:57,848 views 11776 9148 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:23:57,855 views 11776 564 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:23:57,874 views 11776 564 Successfully returned 4 categories
+INFO 2026-06-06 18:23:57,876 basehttp 11776 564 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:23:57,889 views 11776 9148 Successfully paginated 3 products
+INFO 2026-06-06 18:23:57,925 basehttp 11776 9148 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:24:07,945 views 11776 2700 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:24:07,946 views 11776 19560 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:24:07,970 views 11776 19560 Successfully returned 4 categories
+INFO 2026-06-06 18:24:07,972 basehttp 11776 19560 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:24:07,985 views 11776 2700 Successfully paginated 3 products
+INFO 2026-06-06 18:24:08,030 basehttp 11776 2700 "GET /api/products/products/ HTTP/1.1" 200 8366
+WARNING 2026-06-06 18:24:11,004 basehttp 11776 7344 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:24:17,945 views 11776 13784 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:24:17,952 views 11776 16908 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:24:17,972 views 11776 16908 Successfully returned 4 categories
+INFO 2026-06-06 18:24:17,977 basehttp 11776 16908 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:24:17,990 views 11776 13784 Successfully paginated 3 products
+INFO 2026-06-06 18:24:18,025 basehttp 11776 13784 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:24:27,945 views 11776 11868 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:24:27,950 views 11776 12500 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:24:27,976 views 11776 12500 Successfully returned 4 categories
+INFO 2026-06-06 18:24:27,980 basehttp 11776 12500 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:24:27,990 views 11776 11868 Successfully paginated 3 products
+INFO 2026-06-06 18:24:28,028 basehttp 11776 11868 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:24:37,953 views 11776 11248 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:24:37,959 views 11776 10588 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:24:37,978 views 11776 10588 Successfully returned 4 categories
+INFO 2026-06-06 18:24:37,984 basehttp 11776 10588 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:24:37,995 views 11776 11248 Successfully paginated 3 products
+INFO 2026-06-06 18:24:38,036 basehttp 11776 11248 "GET /api/products/products/ HTTP/1.1" 200 8366
+WARNING 2026-06-06 18:24:45,361 basehttp 11776 7344 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:24:46,611 basehttp 11776 4652 "GET /api/website/site-config/ HTTP/1.1" 200 326
+WARNING 2026-06-06 18:24:47,476 basehttp 11776 7344 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-06 18:24:47,619 views 11776 7344 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-06 18:24:47,661 views 11776 7344 User authenticated: True
+INFO 2026-06-06 18:24:47,663 views 11776 7344 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+INFO 2026-06-06 18:24:47,665 views 11776 7344 Orders queryset count: 4
+INFO 2026-06-06 18:24:47,791 views 11776 7344 Serialized orders count: 4
+INFO 2026-06-06 18:24:47,818 basehttp 11776 7344 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 3715
+INFO 2026-06-06 18:24:47,827 basehttp 11776 15476 "GET /api/orders/coupons/?page_size=20&page=1 HTTP/1.1" 200 1268
+INFO 2026-06-06 18:24:47,957 basehttp 11776 17640 "GET /api/orders/free-shipping-rules/?page_size=20&page=1 HTTP/1.1" 200 213
+INFO 2026-06-06 18:24:48,070 basehttp 11776 1040 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-06 18:24:48,157 basehttp 11776 13696 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:24:48,184 basehttp 11776 1040 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:24:48,435 views 11776 4652 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:24:48,466 views 11776 17396 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:24:48,470 views 11776 4652 Successfully paginated 3 products
+INFO 2026-06-06 18:24:48,502 views 11776 17396 Successfully returned 4 categories
+INFO 2026-06-06 18:24:48,515 basehttp 11776 17396 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:24:48,524 basehttp 11776 4652 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:24:57,951 views 11776 8568 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:24:57,962 views 11776 9584 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:24:57,984 views 11776 9584 Successfully returned 4 categories
+INFO 2026-06-06 18:24:57,987 basehttp 11776 9584 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:24:57,998 views 11776 8568 Successfully paginated 3 products
+INFO 2026-06-06 18:24:58,036 basehttp 11776 8568 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:25:07,942 views 11776 1912 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:25:07,944 views 11776 17824 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:25:07,968 views 11776 17824 Successfully returned 4 categories
+INFO 2026-06-06 18:25:07,973 basehttp 11776 17824 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:25:07,991 views 11776 1912 Successfully paginated 3 products
+INFO 2026-06-06 18:25:08,046 basehttp 11776 1912 "GET /api/products/products/ HTTP/1.1" 200 8366
+WARNING 2026-06-06 18:25:17,751 basehttp 11776 1040 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:25:17,950 views 11776 15764 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:25:17,955 views 11776 19212 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:25:17,972 views 11776 19212 Successfully returned 4 categories
+INFO 2026-06-06 18:25:17,975 basehttp 11776 19212 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:25:17,989 views 11776 15764 Successfully paginated 3 products
+INFO 2026-06-06 18:25:18,023 basehttp 11776 15764 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:25:27,946 views 11776 17552 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:25:27,947 views 11776 9920 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:25:27,964 views 11776 9920 Successfully returned 4 categories
+INFO 2026-06-06 18:25:27,970 basehttp 11776 9920 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:25:27,985 views 11776 17552 Successfully paginated 3 products
+INFO 2026-06-06 18:25:28,020 basehttp 11776 17552 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-06 18:25:37,938 views 11776 19480 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:25:37,939 views 11776 6708 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:25:37,962 views 11776 6708 Successfully returned 4 categories
+INFO 2026-06-06 18:25:37,967 basehttp 11776 6708 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:25:37,977 views 11776 19480 Successfully paginated 3 products
+INFO 2026-06-06 18:25:38,012 basehttp 11776 19480 "GET /api/products/products/ HTTP/1.1" 200 8366
+WARNING 2026-06-06 18:25:47,741 basehttp 11776 1040 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:26:11,039 views 11776 6592 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:26:11,049 views 11776 12388 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:26:11,077 views 11776 12388 Successfully returned 4 categories
+INFO 2026-06-06 18:26:11,082 basehttp 11776 12388 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:26:11,089 views 11776 6592 Successfully paginated 3 products
+INFO 2026-06-06 18:26:11,146 basehttp 11776 6592 "GET /api/products/products/ HTTP/1.1" 200 8366
+WARNING 2026-06-06 18:26:17,751 basehttp 11776 1040 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:26:47,741 basehttp 11776 1040 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:27:11,503 views 11776 1164 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:27:11,505 views 11776 10744 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:27:11,540 views 11776 10744 Successfully returned 4 categories
+INFO 2026-06-06 18:27:11,550 basehttp 11776 10744 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:27:11,556 views 11776 1164 Successfully paginated 3 products
+INFO 2026-06-06 18:27:11,621 basehttp 11776 1164 "GET /api/products/products/ HTTP/1.1" 200 8366
+WARNING 2026-06-06 18:27:17,748 basehttp 11776 1040 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:27:47,748 basehttp 11776 1040 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:28:11,000 views 11776 10364 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:28:11,006 views 11776 13772 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:28:11,038 views 11776 13772 Successfully returned 4 categories
+INFO 2026-06-06 18:28:11,040 basehttp 11776 13772 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:28:11,049 views 11776 10364 Successfully paginated 3 products
+INFO 2026-06-06 18:28:11,083 basehttp 11776 10364 "GET /api/products/products/ HTTP/1.1" 200 8366
+WARNING 2026-06-06 18:28:17,749 basehttp 11776 1040 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:28:47,747 basehttp 11776 1040 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:29:10,963 views 11776 8288 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:29:10,968 views 11776 15272 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:29:10,987 views 11776 15272 Successfully returned 4 categories
+INFO 2026-06-06 18:29:10,989 basehttp 11776 15272 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:29:10,997 views 11776 8288 Successfully paginated 3 products
+INFO 2026-06-06 18:29:11,032 basehttp 11776 8288 "GET /api/products/products/ HTTP/1.1" 200 8366
+WARNING 2026-06-06 18:29:17,747 basehttp 11776 1040 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:29:47,756 basehttp 11776 1040 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:30:10,961 views 11776 2912 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:30:10,966 views 11776 6100 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:30:10,984 views 11776 6100 Successfully returned 4 categories
+INFO 2026-06-06 18:30:10,988 basehttp 11776 6100 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:30:10,998 views 11776 2912 Successfully paginated 3 products
+INFO 2026-06-06 18:30:11,032 basehttp 11776 2912 "GET /api/products/products/ HTTP/1.1" 200 8366
+WARNING 2026-06-06 18:30:17,751 basehttp 11776 1040 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:30:47,744 basehttp 11776 1040 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:31:10,955 views 11776 2268 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:31:10,957 views 11776 3476 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:31:10,980 views 11776 3476 Successfully returned 4 categories
+INFO 2026-06-06 18:31:10,982 basehttp 11776 3476 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:31:10,991 views 11776 2268 Successfully paginated 3 products
+INFO 2026-06-06 18:31:11,023 basehttp 11776 2268 "GET /api/products/products/ HTTP/1.1" 200 8366
+WARNING 2026-06-06 18:31:17,755 basehttp 11776 1040 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:31:47,752 basehttp 11776 1040 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-06 18:32:10,964 views 11776 18892 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:32:10,966 views 11776 11520 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-06 18:32:10,986 views 11776 11520 Successfully returned 4 categories
+INFO 2026-06-06 18:32:10,989 basehttp 11776 11520 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-06 18:32:11,002 views 11776 18892 Successfully paginated 3 products
+INFO 2026-06-06 18:32:11,040 basehttp 11776 18892 "GET /api/products/products/ HTTP/1.1" 200 8366
+WARNING 2026-06-06 18:32:17,751 basehttp 11776 1040 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-06 18:32:47,745 basehttp 11776 1040 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:20:11,189 autoreload 10412 14184 Watching for file changes with StatReloader
+INFO 2026-06-07 10:22:21,171 views 10412 19380 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:22:21,175 views 10412 8476 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:22:21,230 basehttp 10412 7864 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-07 10:22:21,247 views 10412 8476 Successfully returned 4 categories
+INFO 2026-06-07 10:22:21,253 basehttp 10412 8476 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:22:21,277 views 10412 19380 Successfully paginated 3 products
+INFO 2026-06-07 10:22:21,397 basehttp 10412 4388 "GET /api/website/hero-banners/ HTTP/1.1" 200 52
+INFO 2026-06-07 10:22:21,427 basehttp 10412 19380 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-07 10:22:22,862 basehttp 10412 18672 "GET /media/products/thumbnails/apple.jfif HTTP/1.1" 304 0
+INFO 2026-06-07 10:22:22,864 basehttp 10412 17984 "GET /media/products/thumbnails/mango_2.jfif HTTP/1.1" 304 0
+INFO 2026-06-07 10:22:22,875 basehttp 10412 17800 "GET /media/products/thumbnails/lychess.jpg HTTP/1.1" 304 0
+INFO 2026-06-07 10:22:23,157 views 10412 14232 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:22:23,232 views 10412 14232 Successfully paginated 3 products
+INFO 2026-06-07 10:22:23,289 basehttp 10412 14232 "GET /api/products/products/ HTTP/1.1" 200 8366
+WARNING 2026-06-07 10:22:26,232 basehttp 10412 13572 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 10:22:31,974 views 10412 5952 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:22:31,976 views 10412 18160 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:22:32,011 views 10412 18160 Successfully returned 4 categories
+INFO 2026-06-07 10:22:32,013 basehttp 10412 18160 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:22:32,027 views 10412 5952 Successfully paginated 3 products
+INFO 2026-06-07 10:22:32,072 basehttp 10412 5952 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-07 10:22:43,166 views 10412 9164 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:22:43,168 views 10412 15392 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:22:43,191 views 10412 15392 Successfully returned 4 categories
+INFO 2026-06-07 10:22:43,196 basehttp 10412 15392 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:22:43,203 views 10412 9164 Successfully paginated 3 products
+INFO 2026-06-07 10:22:43,230 basehttp 10412 9164 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-07 10:22:53,459 views 10412 2944 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:22:53,460 views 10412 11500 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:22:53,475 views 10412 11500 Successfully returned 4 categories
+INFO 2026-06-07 10:22:53,479 basehttp 10412 11500 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:22:53,491 views 10412 2944 Successfully paginated 3 products
+INFO 2026-06-07 10:22:53,526 basehttp 10412 2944 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-07 10:22:54,342 basehttp 10412 2944 "GET /api/website/site-config/ HTTP/1.1" 200 326
+WARNING 2026-06-07 10:22:55,262 basehttp 10412 13572 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 10:22:55,365 basehttp 10412 13572 "OPTIONS /api/orders/?ordering=-ordered_at HTTP/1.1" 200 0
+INFO 2026-06-07 10:22:55,366 basehttp 10412 14232 "OPTIONS /api/auth/notifications/unread-count/ HTTP/1.1" 200 0
+INFO 2026-06-07 10:22:55,373 basehttp 10412 13572 "OPTIONS /api/fulfillment/stores/admin/ HTTP/1.1" 200 0
+INFO 2026-06-07 10:22:55,375 basehttp 10412 17516 "OPTIONS /api/orders/?page_size=50&ordering=-ordered_at HTTP/1.1" 200 0
+INFO 2026-06-07 10:22:55,376 basehttp 10412 7868 "OPTIONS /api/auth/dashboard/admin/ HTTP/1.1" 200 0
+INFO 2026-06-07 10:22:55,522 basehttp 10412 18216 "OPTIONS /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 200 0
+INFO 2026-06-07 10:22:55,539 basehttp 10412 18216 "OPTIONS /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 200 0
+WARNING 2026-06-07 10:22:55,622 basehttp 10412 18216 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 10:22:55,624 basehttp 10412 14232 "GET /api/orders/?page_size=50&ordering=-ordered_at HTTP/1.1" 401 172
+WARNING 2026-06-07 10:22:55,626 basehttp 10412 13572 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 401 172
+WARNING 2026-06-07 10:22:55,627 basehttp 10412 17516 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 401 172
+WARNING 2026-06-07 10:22:55,628 basehttp 10412 7868 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 401 172
+WARNING 2026-06-07 10:22:55,628 basehttp 10412 14632 "GET /api/auth/dashboard/admin/ HTTP/1.1" 401 172
+WARNING 2026-06-07 10:22:55,660 basehttp 10412 7868 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:22:55,898 basehttp 10412 7868 "OPTIONS /api/auth/token/refresh/ HTTP/1.1" 200 0
+INFO 2026-06-07 10:22:56,008 basehttp 10412 7868 "POST /api/auth/token/refresh/ HTTP/1.1" 200 777
+INFO 2026-06-07 10:22:56,075 basehttp 10412 14632 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-07 10:22:56,077 views 10412 18216 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-07 10:22:56,084 views 10412 7868 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-07 10:22:56,109 basehttp 10412 17516 "GET /api/auth/dashboard/admin/ HTTP/1.1" 200 266
+INFO 2026-06-07 10:22:56,120 views 10412 18216 User authenticated: True
+INFO 2026-06-07 10:22:56,159 views 10412 18216 Query params: <QueryDict: {'page_size': ['50'], 'ordering': ['-ordered_at']}>
+INFO 2026-06-07 10:22:56,150 views 10412 7868 User authenticated: True
+INFO 2026-06-07 10:22:56,139 basehttp 10412 13572 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 10:22:56,160 views 10412 18216 Orders queryset count: 4
+INFO 2026-06-07 10:22:56,166 views 10412 7868 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+INFO 2026-06-07 10:22:56,187 views 10412 7868 Orders queryset count: 4
+INFO 2026-06-07 10:22:56,277 views 10412 7868 Serialized orders count: 4
+INFO 2026-06-07 10:22:56,291 views 10412 18216 Serialized orders count: 4
+INFO 2026-06-07 10:22:56,297 basehttp 10412 18216 "GET /api/orders/?page_size=50&ordering=-ordered_at HTTP/1.1" 200 3715
+INFO 2026-06-07 10:22:56,292 basehttp 10412 7868 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 3715
+INFO 2026-06-07 10:22:56,588 basehttp 10412 17800 "GET /media/stores/banners/freshdrop.avif HTTP/1.1" 304 0
+INFO 2026-06-07 10:23:01,655 basehttp 10412 18216 "OPTIONS /api/products/products/?page=1&page_size=20 HTTP/1.1" 200 0
+INFO 2026-06-07 10:23:01,666 basehttp 10412 17516 "OPTIONS /api/products/sizes/?page_size=200 HTTP/1.1" 200 0
+INFO 2026-06-07 10:23:01,666 basehttp 10412 7868 "OPTIONS /api/products/brands/?page_size=200 HTTP/1.1" 200 0
+INFO 2026-06-07 10:23:01,666 basehttp 10412 13572 "OPTIONS /api/products/colors/?page_size=200 HTTP/1.1" 200 0
+INFO 2026-06-07 10:23:01,667 basehttp 10412 14632 "OPTIONS /api/products/categories/?page_size=200 HTTP/1.1" 200 0
+INFO 2026-06-07 10:23:01,676 basehttp 10412 18216 "OPTIONS /api/shops/shops/?page_size=200 HTTP/1.1" 200 0
+INFO 2026-06-07 10:23:01,688 basehttp 10412 7868 "OPTIONS /api/products/subcategories/?page_size=200 HTTP/1.1" 200 0
+INFO 2026-06-07 10:23:01,718 views 10412 14632 ProductViewSet.list called with params: <QueryDict: {'page': ['1'], 'page_size': ['20']}>
+INFO 2026-06-07 10:23:01,721 views 10412 18216 ColorViewSet.list called with params: <QueryDict: {'page_size': ['200']}>
+INFO 2026-06-07 10:23:01,724 views 10412 17516 BrandViewSet.list called with params: <QueryDict: {'page_size': ['200']}>
+INFO 2026-06-07 10:23:01,730 views 10412 7868 ShopViewSet.list called with params: <QueryDict: {'page_size': ['200']}>
+INFO 2026-06-07 10:23:01,731 basehttp 10412 13572 "GET /api/products/sizes/?page_size=200 HTTP/1.1" 200 52
+INFO 2026-06-07 10:23:01,731 views 10412 14232 CategoryViewSet.list called with params: <QueryDict: {'page_size': ['200']}>
+INFO 2026-06-07 10:23:01,767 views 10412 18216 Successfully returned 4 colors
+INFO 2026-06-07 10:23:01,781 views 10412 17516 Successfully returned 4 brands
+INFO 2026-06-07 10:23:01,792 basehttp 10412 18216 "GET /api/products/colors/?page_size=200 HTTP/1.1" 200 98
+INFO 2026-06-07 10:23:01,793 views 10412 7868 Successfully paginated 1 shops
+INFO 2026-06-07 10:23:01,802 basehttp 10412 17516 "GET /api/products/brands/?page_size=200 HTTP/1.1" 200 249
+INFO 2026-06-07 10:23:01,818 views 10412 14232 Successfully returned 4 categories
+INFO 2026-06-07 10:23:01,830 views 10412 13572 SubCategoryViewSet.list called with params: <QueryDict: {'page_size': ['200']}>
+INFO 2026-06-07 10:23:01,836 views 10412 14632 Successfully paginated 3 products
+INFO 2026-06-07 10:23:01,844 basehttp 10412 7868 "GET /api/shops/shops/?page_size=200 HTTP/1.1" 200 746
+INFO 2026-06-07 10:23:01,850 basehttp 10412 14232 "GET /api/products/categories/?page_size=200 HTTP/1.1" 200 725
+INFO 2026-06-07 10:23:01,857 views 10412 13572 Successfully returned 4 subcategories
+INFO 2026-06-07 10:23:01,910 basehttp 10412 13572 "GET /api/products/subcategories/?page_size=200 HTTP/1.1" 200 271
+INFO 2026-06-07 10:23:01,932 basehttp 10412 14632 "GET /api/products/products/?page=1&page_size=20 HTTP/1.1" 200 8363
+INFO 2026-06-07 10:23:03,442 views 10412 1716 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:23:03,448 views 10412 7692 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:23:03,477 views 10412 7692 Successfully returned 4 categories
+INFO 2026-06-07 10:23:03,483 basehttp 10412 7692 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:23:03,491 views 10412 1716 Successfully paginated 3 products
+INFO 2026-06-07 10:23:03,547 basehttp 10412 1716 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-07 10:23:13,456 views 10412 3780 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:23:13,457 views 10412 8372 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:23:13,475 views 10412 8372 Successfully returned 4 categories
+INFO 2026-06-07 10:23:13,476 basehttp 10412 8372 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:23:13,492 views 10412 3780 Successfully paginated 3 products
+INFO 2026-06-07 10:23:13,516 basehttp 10412 3780 "GET /api/products/products/ HTTP/1.1" 200 8366
+INFO 2026-06-07 10:23:17,672 basehttp 10412 14632 "OPTIONS /api/products/products/mango/ HTTP/1.1" 200 0
+INFO 2026-06-07 10:23:18,397 signals 10412 14632 Product updated: Mango (ID: 2c65dc51-3260-4f31-a085-4e50ef6b53b2)
+INFO 2026-06-07 10:23:18,652 signals 10412 14632 Revalidate request for tag="product-2c65dc51-3260-4f31-a085-4e50ef6b53b2" to http://localhost:3000/api/revalidate returned status 200
+INFO 2026-06-07 10:23:18,696 signals 10412 14632 Revalidate request for tag="products" to http://localhost:3000/api/revalidate returned status 200
+INFO 2026-06-07 10:23:18,771 basehttp 10412 14632 "PUT /api/products/products/mango/ HTTP/1.1" 200 2736
+INFO 2026-06-07 10:23:18,837 views 10412 14632 ProductViewSet.list called with params: <QueryDict: {'page': ['1'], 'page_size': ['20']}>
+INFO 2026-06-07 10:23:18,865 views 10412 14632 Successfully paginated 3 products
+INFO 2026-06-07 10:23:18,901 basehttp 10412 14632 "GET /api/products/products/?page=1&page_size=20 HTTP/1.1" 200 8367
+INFO 2026-06-07 10:23:21,157 views 10412 8992 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:23:21,158 views 10412 4412 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:23:21,173 basehttp 10412 5800 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-07 10:23:21,196 views 10412 8992 Successfully returned 4 categories
+INFO 2026-06-07 10:23:21,199 basehttp 10412 8992 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:23:21,200 views 10412 4412 Successfully paginated 3 products
+INFO 2026-06-07 10:23:21,248 basehttp 10412 4412 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:23:22,367 views 10412 14632 ProductViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-07 10:23:22,399 basehttp 10412 13572 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 10:23:22,437 views 10412 14632 Successfully paginated 3 products
+INFO 2026-06-07 10:23:22,518 basehttp 10412 14632 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:23:26,441 basehttp 10412 14632 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:23:31,308 basehttp 10412 14632 "OPTIONS /api/auth/admin/users/?page=1&page_size=20 HTTP/1.1" 200 0
+INFO 2026-06-07 10:23:31,335 basehttp 10412 14632 "GET /api/auth/admin/users/?page=1&page_size=20 HTTP/1.1" 200 1092
+INFO 2026-06-07 10:23:33,428 views 10412 1196 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:23:33,432 views 10412 7876 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:23:33,454 views 10412 7876 Successfully returned 4 categories
+INFO 2026-06-07 10:23:33,456 basehttp 10412 7876 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:23:33,465 views 10412 1196 Successfully paginated 3 products
+INFO 2026-06-07 10:23:33,492 basehttp 10412 1196 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:23:37,134 basehttp 10412 14632 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 10:23:37,166 basehttp 10412 14632 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 10:23:43,476 views 10412 14532 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:23:43,481 views 10412 6652 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:23:43,587 views 10412 6652 Successfully returned 4 categories
+INFO 2026-06-07 10:23:43,589 basehttp 10412 6652 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:23:43,596 views 10412 14532 Successfully paginated 3 products
+INFO 2026-06-07 10:23:43,621 basehttp 10412 14532 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:23:53,445 views 10412 12852 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:23:53,450 views 10412 3972 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:23:53,463 views 10412 3972 Successfully returned 4 categories
+INFO 2026-06-07 10:23:53,465 basehttp 10412 3972 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:23:53,473 views 10412 12852 Successfully paginated 3 products
+INFO 2026-06-07 10:23:53,495 basehttp 10412 12852 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:23:55,501 basehttp 10412 14632 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:24:03,452 views 10412 13432 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:24:03,458 views 10412 2792 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:24:03,473 views 10412 2792 Successfully returned 4 categories
+INFO 2026-06-07 10:24:03,475 basehttp 10412 2792 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:24:03,482 views 10412 13432 Successfully paginated 3 products
+INFO 2026-06-07 10:24:03,505 basehttp 10412 13432 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:24:13,439 views 10412 18884 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:24:13,457 views 10412 14800 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:24:13,481 views 10412 14800 Successfully returned 4 categories
+INFO 2026-06-07 10:24:13,484 basehttp 10412 14800 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:24:13,487 views 10412 18884 Successfully paginated 3 products
+INFO 2026-06-07 10:24:13,512 basehttp 10412 18884 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:24:23,442 views 10412 17584 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:24:23,443 views 10412 5580 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:24:23,511 views 10412 5580 Successfully returned 4 categories
+INFO 2026-06-07 10:24:23,514 basehttp 10412 5580 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:24:23,515 views 10412 17584 Successfully paginated 3 products
+INFO 2026-06-07 10:24:23,543 basehttp 10412 17584 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:24:25,504 basehttp 10412 14632 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 10:24:55,571 basehttp 10412 14632 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:25:04,301 basehttp 10412 14632 "OPTIONS /api/fulfillment/stores/1/ HTTP/1.1" 200 0
+INFO 2026-06-07 10:25:04,696 basehttp 10412 14632 "PATCH /api/fulfillment/stores/1/ HTTP/1.1" 200 560
+INFO 2026-06-07 10:25:04,757 basehttp 10412 14632 "OPTIONS /api/fulfillment/stores/1/features/ HTTP/1.1" 200 0
+INFO 2026-06-07 10:25:04,907 basehttp 10412 14632 "PUT /api/fulfillment/stores/1/features/ HTTP/1.1" 200 50
+INFO 2026-06-07 10:25:04,930 basehttp 10412 14632 "OPTIONS /api/fulfillment/stores/1/availability/ HTTP/1.1" 200 0
+INFO 2026-06-07 10:25:04,995 basehttp 10412 14632 "PUT /api/fulfillment/stores/1/availability/ HTTP/1.1" 200 29
+INFO 2026-06-07 10:25:05,204 basehttp 10412 14632 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 10:25:08,159 views 10412 18368 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:25:08,160 views 10412 4816 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:25:08,194 views 10412 4816 Successfully returned 4 categories
+INFO 2026-06-07 10:25:08,203 basehttp 10412 4816 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:25:08,213 views 10412 18368 Successfully paginated 3 products
+INFO 2026-06-07 10:25:08,239 basehttp 10412 18368 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:25:09,383 basehttp 10412 18368 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-07 10:25:09,415 views 10412 4816 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:25:09,448 views 10412 4816 Successfully paginated 3 products
+INFO 2026-06-07 10:25:09,484 views 10412 15740 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:25:09,493 basehttp 10412 4816 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:25:09,505 views 10412 15740 Successfully returned 4 categories
+INFO 2026-06-07 10:25:09,513 basehttp 10412 15740 "GET /api/products/categories/ HTTP/1.1" 200 725
+WARNING 2026-06-07 10:25:10,162 basehttp 10412 14632 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 10:25:10,165 views 10412 13572 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:25:10,225 views 10412 13572 Successfully paginated 3 products
+INFO 2026-06-07 10:25:10,349 basehttp 10412 13572 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:25:11,862 basehttp 10412 18368 "GET /api/fulfillment/stores/ HTTP/1.1" 200 562
+INFO 2026-06-07 10:25:16,120 basehttp 10412 19732 "GET /api/fulfillment/stores/slug/dhaka-dhanmondi/ HTTP/1.1" 200 560
+INFO 2026-06-07 10:25:26,245 basehttp 10412 8852 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-07 10:25:26,253 basehttp 10412 1824 "GET /api/fulfillment/stores/slug/dhaka-dhanmondi/ HTTP/1.1" 200 560
+WARNING 2026-06-07 10:25:26,442 basehttp 10412 13572 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:25:26,960 basehttp 10412 17800 "GET /media/stores/banners/freshdrop.avif HTTP/1.1" 200 103090
+INFO 2026-06-07 10:25:27,801 views 10412 13572 ProductViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-07 10:25:27,822 basehttp 10412 14632 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 10:25:27,995 basehttp 10412 17800 "GET /media/products/thumbnails/lychess.jpg HTTP/1.1" 200 92793
+INFO 2026-06-07 10:25:28,075 views 10412 13572 Successfully paginated 3 products
+INFO 2026-06-07 10:25:28,257 basehttp 10412 13572 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:25:47,558 views 10412 984 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:25:47,560 views 10412 3280 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:25:47,592 views 10412 3280 Successfully returned 4 categories
+INFO 2026-06-07 10:25:47,596 basehttp 10412 3280 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:25:47,603 views 10412 984 Successfully paginated 3 products
+INFO 2026-06-07 10:25:47,663 basehttp 10412 984 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:25:56,455 basehttp 10412 13572 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:25:57,992 views 10412 8616 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:25:57,994 views 10412 15924 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:25:58,016 views 10412 15924 Successfully returned 4 categories
+INFO 2026-06-07 10:25:58,018 basehttp 10412 15924 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:25:58,033 views 10412 8616 Successfully paginated 3 products
+INFO 2026-06-07 10:25:58,064 basehttp 10412 8616 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:26:03,528 basehttp 10412 13572 "OPTIONS /api/website/hero-banners/ HTTP/1.1" 200 0
+INFO 2026-06-07 10:26:03,549 basehttp 10412 13572 "GET /api/website/hero-banners/ HTTP/1.1" 200 52
+INFO 2026-06-07 10:26:08,157 views 10412 16616 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:26:08,168 views 10412 15724 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:26:08,204 views 10412 15724 Successfully returned 4 categories
+INFO 2026-06-07 10:26:08,206 basehttp 10412 15724 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:26:08,213 views 10412 16616 Successfully paginated 3 products
+INFO 2026-06-07 10:26:08,240 basehttp 10412 16616 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:26:10,722 basehttp 10412 13572 "OPTIONS /api/website/footer-sections/ HTTP/1.1" 200 0
+INFO 2026-06-07 10:26:10,741 basehttp 10412 13572 "GET /api/website/footer-sections/ HTTP/1.1" 200 52
+INFO 2026-06-07 10:26:18,489 views 10412 14836 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:26:18,490 views 10412 10552 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:26:18,504 views 10412 10552 Successfully returned 4 categories
+INFO 2026-06-07 10:26:18,509 basehttp 10412 10552 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:26:18,519 views 10412 14836 Successfully paginated 3 products
+INFO 2026-06-07 10:26:18,542 basehttp 10412 14836 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:26:25,523 basehttp 10412 13572 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:26:28,449 views 10412 11924 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:26:28,455 views 10412 15492 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:26:28,468 views 10412 15492 Successfully returned 4 categories
+INFO 2026-06-07 10:26:28,471 basehttp 10412 15492 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:26:28,478 views 10412 11924 Successfully paginated 3 products
+INFO 2026-06-07 10:26:28,500 basehttp 10412 11924 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:26:38,452 views 10412 19496 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:26:38,454 views 10412 5628 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:26:38,468 views 10412 5628 Successfully returned 4 categories
+INFO 2026-06-07 10:26:38,473 basehttp 10412 5628 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:26:38,484 views 10412 19496 Successfully paginated 3 products
+INFO 2026-06-07 10:26:38,506 basehttp 10412 19496 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:26:43,438 basehttp 10412 13572 "POST /api/website/footer-sections/ HTTP/1.1" 201 132
+INFO 2026-06-07 10:26:43,462 basehttp 10412 13572 "GET /api/website/footer-sections/ HTTP/1.1" 200 184
+INFO 2026-06-07 10:26:46,498 views 10412 11800 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:26:46,500 views 10412 17996 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:26:46,524 views 10412 17996 Successfully returned 4 categories
+INFO 2026-06-07 10:26:46,526 basehttp 10412 17996 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:26:46,528 basehttp 10412 3440 "GET /api/website/site-config/ HTTP/1.1" 200 458
+INFO 2026-06-07 10:26:46,552 views 10412 11800 Successfully paginated 3 products
+INFO 2026-06-07 10:26:46,605 basehttp 10412 11800 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:26:47,354 basehttp 10412 13572 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 10:26:47,406 views 10412 14632 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:26:47,542 views 10412 14632 Successfully paginated 3 products
+INFO 2026-06-07 10:26:47,674 basehttp 10412 14632 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:26:49,776 basehttp 10412 3440 "GET /api/website/site-config/ HTTP/1.1" 200 458
+INFO 2026-06-07 10:26:49,790 views 10412 11800 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:26:49,793 views 10412 17996 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:26:49,817 views 10412 17996 Successfully returned 4 categories
+INFO 2026-06-07 10:26:49,820 basehttp 10412 17996 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:26:49,830 views 10412 11800 Successfully paginated 3 products
+INFO 2026-06-07 10:26:49,866 basehttp 10412 11800 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:26:50,627 basehttp 10412 17800 "GET /media/products/thumbnails/lychess.jpg HTTP/1.1" 200 92793
+INFO 2026-06-07 10:26:50,638 basehttp 10412 17984 "GET /media/products/thumbnails/mango_2.jfif HTTP/1.1" 200 8386
+INFO 2026-06-07 10:26:50,660 basehttp 10412 18672 "GET /media/products/thumbnails/apple.jfif HTTP/1.1" 200 8258
+INFO 2026-06-07 10:26:50,689 views 10412 13572 ProductViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-07 10:26:50,711 basehttp 10412 14632 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 10:26:50,822 views 10412 13572 Successfully paginated 3 products
+INFO 2026-06-07 10:26:50,964 basehttp 10412 13572 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:26:55,516 basehttp 10412 13572 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:26:58,971 basehttp 10412 13572 "OPTIONS /api/website/footer-links/ HTTP/1.1" 200 0
+INFO 2026-06-07 10:26:59,000 basehttp 10412 13572 "GET /api/website/footer-links/ HTTP/1.1" 200 52
+INFO 2026-06-07 10:27:01,464 views 10412 6104 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:27:01,469 views 10412 14788 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:27:01,485 views 10412 14788 Successfully returned 4 categories
+INFO 2026-06-07 10:27:01,487 basehttp 10412 14788 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:27:01,495 views 10412 6104 Successfully paginated 3 products
+INFO 2026-06-07 10:27:01,519 basehttp 10412 6104 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:27:11,436 views 10412 6504 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:27:11,438 views 10412 18988 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:27:11,476 views 10412 18988 Successfully returned 4 categories
+INFO 2026-06-07 10:27:11,503 basehttp 10412 18988 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:27:11,531 views 10412 6504 Successfully paginated 3 products
+INFO 2026-06-07 10:27:11,575 basehttp 10412 6504 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:27:21,430 views 10412 17980 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:27:21,437 views 10412 9884 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:27:21,453 views 10412 9884 Successfully returned 4 categories
+INFO 2026-06-07 10:27:21,457 basehttp 10412 9884 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:27:21,469 views 10412 17980 Successfully paginated 3 products
+INFO 2026-06-07 10:27:21,493 basehttp 10412 17980 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:27:26,448 basehttp 10412 13572 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:27:31,441 views 10412 7152 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:27:31,445 views 10412 9672 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:27:31,466 views 10412 9672 Successfully returned 4 categories
+INFO 2026-06-07 10:27:31,467 basehttp 10412 9672 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:27:31,476 views 10412 7152 Successfully paginated 3 products
+INFO 2026-06-07 10:27:31,504 basehttp 10412 7152 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:27:41,453 views 10412 6068 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:27:41,459 views 10412 17540 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:27:41,472 views 10412 17540 Successfully returned 4 categories
+INFO 2026-06-07 10:27:41,474 basehttp 10412 17540 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:27:41,486 views 10412 6068 Successfully paginated 3 products
+INFO 2026-06-07 10:27:41,512 basehttp 10412 6068 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:27:51,439 views 10412 14032 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:27:51,445 views 10412 15156 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:27:51,460 views 10412 15156 Successfully returned 4 categories
+INFO 2026-06-07 10:27:51,462 basehttp 10412 15156 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:27:51,481 views 10412 14032 Successfully paginated 3 products
+INFO 2026-06-07 10:27:51,510 basehttp 10412 14032 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:27:56,456 basehttp 10412 13572 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:28:11,435 views 10412 3848 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:28:11,440 views 10412 18740 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:28:11,459 views 10412 18740 Successfully returned 4 categories
+INFO 2026-06-07 10:28:11,462 basehttp 10412 18740 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:28:11,470 views 10412 3848 Successfully paginated 3 products
+INFO 2026-06-07 10:28:11,493 basehttp 10412 3848 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:29:11,433 basehttp 10412 13572 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:29:11,435 views 10412 20360 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:29:11,441 views 10412 944 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:29:11,457 views 10412 944 Successfully returned 4 categories
+INFO 2026-06-07 10:29:11,460 basehttp 10412 944 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:29:11,471 views 10412 20360 Successfully paginated 3 products
+INFO 2026-06-07 10:29:11,501 basehttp 10412 20360 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:29:26,440 basehttp 10412 13572 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 10:29:56,444 basehttp 10412 13572 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:30:11,453 views 10412 11736 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:30:11,454 views 10412 8920 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:30:11,479 views 10412 8920 Successfully returned 4 categories
+INFO 2026-06-07 10:30:11,483 basehttp 10412 8920 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:30:11,496 views 10412 11736 Successfully paginated 3 products
+INFO 2026-06-07 10:30:11,530 basehttp 10412 11736 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:31:11,443 basehttp 10412 14616 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:31:11,459 views 10412 13072 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:31:11,472 views 10412 14036 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:31:11,500 views 10412 14036 Successfully returned 4 categories
+INFO 2026-06-07 10:31:11,502 basehttp 10412 14036 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:31:11,559 views 10412 13072 Successfully paginated 3 products
+INFO 2026-06-07 10:31:11,663 basehttp 10412 13072 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:31:26,122 basehttp 10412 14616 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:31:26,899 views 10412 19340 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:31:26,944 views 10412 18216 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:31:26,966 views 10412 19340 Successfully paginated 3 products
+INFO 2026-06-07 10:31:26,978 views 10412 18216 Successfully returned 4 categories
+INFO 2026-06-07 10:31:27,032 basehttp 10412 18216 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:31:27,065 basehttp 10412 19340 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:31:30,809 views 10412 19340 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:31:30,811 views 10412 18216 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:31:30,852 views 10412 18216 Successfully returned 4 categories
+INFO 2026-06-07 10:31:30,858 basehttp 10412 18216 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:31:30,889 views 10412 19340 Successfully paginated 3 products
+INFO 2026-06-07 10:31:30,977 basehttp 10412 19340 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:31:41,976 views 10412 1680 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:31:41,977 views 10412 14820 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:31:42,016 views 10412 14820 Successfully returned 4 categories
+INFO 2026-06-07 10:31:42,019 basehttp 10412 14820 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:31:42,043 views 10412 1680 Successfully paginated 3 products
+INFO 2026-06-07 10:31:42,120 basehttp 10412 1680 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:31:44,561 basehttp 10412 1680 "GET /api/website/site-config/ HTTP/1.1" 200 458
+INFO 2026-06-07 10:31:44,580 views 10412 14820 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:31:44,611 views 10412 14820 Successfully paginated 3 products
+INFO 2026-06-07 10:31:44,648 basehttp 10412 14820 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:31:44,815 views 10412 10192 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:31:44,829 views 10412 10192 Successfully returned 4 categories
+INFO 2026-06-07 10:31:44,830 basehttp 10412 10192 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:31:45,439 basehttp 10412 11608 "GET /media/products/thumbnails/lychess.jpg HTTP/1.1" 200 92793
+INFO 2026-06-07 10:31:45,450 basehttp 10412 344 "GET /media/products/thumbnails/mango_2.jfif HTTP/1.1" 200 8386
+INFO 2026-06-07 10:31:45,463 basehttp 10412 11760 "GET /media/products/thumbnails/apple.jfif HTTP/1.1" 200 8258
+WARNING 2026-06-07 10:31:45,905 basehttp 10412 14616 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 10:31:45,971 views 10412 556 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:31:46,088 views 10412 556 Successfully paginated 3 products
+INFO 2026-06-07 10:31:46,178 basehttp 10412 556 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:31:56,457 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:31:56,514 views 10412 20184 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:31:56,516 views 10412 16032 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:31:56,571 views 10412 16032 Successfully returned 4 categories
+INFO 2026-06-07 10:31:56,581 views 10412 20184 Successfully paginated 3 products
+INFO 2026-06-07 10:31:56,584 basehttp 10412 16032 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:31:56,697 basehttp 10412 20184 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:32:06,545 views 10412 8660 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:32:06,556 views 10412 9616 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:32:06,587 views 10412 9616 Successfully returned 4 categories
+INFO 2026-06-07 10:32:06,589 basehttp 10412 9616 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:32:06,612 views 10412 8660 Successfully paginated 3 products
+INFO 2026-06-07 10:32:06,659 basehttp 10412 8660 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:32:16,451 views 10412 20156 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:32:16,453 views 10412 10160 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:32:16,496 views 10412 10160 Successfully returned 4 categories
+INFO 2026-06-07 10:32:16,499 basehttp 10412 10160 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:32:16,513 views 10412 20156 Successfully paginated 3 products
+INFO 2026-06-07 10:32:16,615 basehttp 10412 20156 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:32:26,471 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:32:26,493 views 10412 3008 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:32:26,522 views 10412 8996 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:32:26,585 views 10412 8996 Successfully returned 4 categories
+INFO 2026-06-07 10:32:26,593 basehttp 10412 8996 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:32:26,600 views 10412 3008 Successfully paginated 3 products
+INFO 2026-06-07 10:32:26,742 basehttp 10412 3008 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:32:36,748 views 10412 13260 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:32:36,795 views 10412 15464 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:32:36,935 views 10412 13260 Successfully paginated 3 products
+INFO 2026-06-07 10:32:37,208 views 10412 15464 Successfully returned 4 categories
+INFO 2026-06-07 10:32:37,234 basehttp 10412 15464 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:32:37,249 basehttp 10412 13260 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:32:46,461 views 10412 18248 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:32:46,473 views 10412 18964 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:32:46,494 views 10412 18964 Successfully returned 4 categories
+INFO 2026-06-07 10:32:46,497 basehttp 10412 18964 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:32:46,514 views 10412 18248 Successfully paginated 3 products
+INFO 2026-06-07 10:32:46,543 basehttp 10412 18248 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:32:56,010 views 10412 2288 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:32:56,016 views 10412 8256 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:32:56,033 views 10412 8256 Successfully returned 4 categories
+INFO 2026-06-07 10:32:56,036 basehttp 10412 8256 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:32:56,042 views 10412 2288 Successfully paginated 3 products
+INFO 2026-06-07 10:32:56,068 basehttp 10412 2288 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:32:56,432 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:33:06,027 views 10412 2800 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:33:06,032 views 10412 12360 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:33:06,047 views 10412 12360 Successfully returned 4 categories
+INFO 2026-06-07 10:33:06,050 basehttp 10412 12360 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:33:06,060 views 10412 2800 Successfully paginated 3 products
+INFO 2026-06-07 10:33:06,084 basehttp 10412 2800 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:33:16,447 views 10412 1196 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:33:16,455 views 10412 7944 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:33:16,485 views 10412 7944 Successfully returned 4 categories
+INFO 2026-06-07 10:33:16,488 basehttp 10412 7944 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:33:16,495 views 10412 1196 Successfully paginated 3 products
+INFO 2026-06-07 10:33:16,524 basehttp 10412 1196 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:33:26,435 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:33:26,438 views 10412 14408 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:33:26,444 views 10412 6304 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:33:26,459 views 10412 6304 Successfully returned 4 categories
+INFO 2026-06-07 10:33:26,462 basehttp 10412 6304 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:33:26,476 views 10412 14408 Successfully paginated 3 products
+INFO 2026-06-07 10:33:26,504 basehttp 10412 14408 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:33:36,461 views 10412 8844 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:33:36,492 views 10412 10204 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:33:36,524 views 10412 10204 Successfully returned 4 categories
+INFO 2026-06-07 10:33:36,525 basehttp 10412 10204 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:33:36,560 views 10412 8844 Successfully paginated 3 products
+INFO 2026-06-07 10:33:36,627 basehttp 10412 8844 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:33:46,441 views 10412 13728 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:33:46,451 views 10412 11860 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:33:46,478 views 10412 11860 Successfully returned 4 categories
+INFO 2026-06-07 10:33:46,480 basehttp 10412 11860 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:33:46,490 views 10412 13728 Successfully paginated 3 products
+INFO 2026-06-07 10:33:46,524 basehttp 10412 13728 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:33:56,484 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:33:56,487 views 10412 20344 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:33:56,493 views 10412 15532 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:33:56,510 views 10412 15532 Successfully returned 4 categories
+INFO 2026-06-07 10:33:56,514 basehttp 10412 15532 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:33:56,521 views 10412 20344 Successfully paginated 3 products
+INFO 2026-06-07 10:33:56,546 basehttp 10412 20344 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:34:06,430 views 10412 10184 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:34:06,432 views 10412 6592 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:34:06,448 views 10412 6592 Successfully returned 4 categories
+INFO 2026-06-07 10:34:06,451 basehttp 10412 6592 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:34:06,468 views 10412 10184 Successfully paginated 3 products
+INFO 2026-06-07 10:34:06,495 basehttp 10412 10184 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:34:16,468 views 10412 8948 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:34:16,469 views 10412 10440 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:34:16,506 views 10412 10440 Successfully returned 4 categories
+INFO 2026-06-07 10:34:16,509 basehttp 10412 10440 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:34:16,533 views 10412 8948 Successfully paginated 3 products
+INFO 2026-06-07 10:34:16,587 basehttp 10412 8948 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:34:26,505 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:34:26,523 views 10412 12768 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:34:26,531 views 10412 2872 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:34:26,549 views 10412 2872 Successfully returned 4 categories
+INFO 2026-06-07 10:34:26,554 basehttp 10412 2872 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:34:26,573 views 10412 12768 Successfully paginated 3 products
+INFO 2026-06-07 10:34:26,599 basehttp 10412 12768 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:34:36,452 views 10412 18828 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:34:36,454 views 10412 16832 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:34:36,486 views 10412 16832 Successfully returned 4 categories
+INFO 2026-06-07 10:34:36,488 basehttp 10412 16832 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:34:36,502 views 10412 18828 Successfully paginated 3 products
+INFO 2026-06-07 10:34:36,552 basehttp 10412 18828 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:34:55,714 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:34:58,785 views 10412 3112 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:34:58,789 views 10412 16516 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:34:58,859 views 10412 16516 Successfully returned 4 categories
+INFO 2026-06-07 10:34:58,882 basehttp 10412 16516 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:34:58,902 views 10412 3112 Successfully paginated 3 products
+INFO 2026-06-07 10:34:58,968 basehttp 10412 3112 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:35:01,274 basehttp 10412 3112 "GET /api/website/site-config/ HTTP/1.1" 200 458
+INFO 2026-06-07 10:35:01,289 views 10412 16516 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:35:01,317 views 10412 16516 Successfully paginated 3 products
+INFO 2026-06-07 10:35:01,349 basehttp 10412 16516 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:35:01,503 views 10412 20300 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:35:01,516 views 10412 20300 Successfully returned 4 categories
+INFO 2026-06-07 10:35:01,519 basehttp 10412 20300 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:35:02,361 basehttp 10412 11760 "GET /media/products/thumbnails/lychess.jpg HTTP/1.1" 200 92793
+INFO 2026-06-07 10:35:02,371 basehttp 10412 344 "GET /media/products/thumbnails/mango_2.jfif HTTP/1.1" 200 8386
+INFO 2026-06-07 10:35:02,371 basehttp 10412 11608 "GET /media/products/thumbnails/apple.jfif HTTP/1.1" 200 8258
+WARNING 2026-06-07 10:35:02,747 basehttp 10412 556 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 10:35:02,764 views 10412 556 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:35:02,830 views 10412 556 Successfully paginated 3 products
+INFO 2026-06-07 10:35:02,914 basehttp 10412 556 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:35:13,465 views 10412 7948 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:35:13,471 views 10412 17480 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:35:13,486 views 10412 17480 Successfully returned 4 categories
+INFO 2026-06-07 10:35:13,490 basehttp 10412 17480 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:35:13,497 views 10412 7948 Successfully paginated 3 products
+INFO 2026-06-07 10:35:13,528 basehttp 10412 7948 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:35:23,459 views 10412 2748 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:35:23,464 views 10412 17708 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:35:23,478 views 10412 17708 Successfully returned 4 categories
+INFO 2026-06-07 10:35:23,482 basehttp 10412 17708 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:35:23,489 views 10412 2748 Successfully paginated 3 products
+INFO 2026-06-07 10:35:23,514 basehttp 10412 2748 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:35:25,500 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:35:33,465 views 10412 16500 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:35:33,466 views 10412 3420 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:35:33,484 views 10412 3420 Successfully returned 4 categories
+INFO 2026-06-07 10:35:33,487 basehttp 10412 3420 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:35:33,499 views 10412 16500 Successfully paginated 3 products
+INFO 2026-06-07 10:35:33,527 basehttp 10412 16500 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:35:43,516 views 10412 4968 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:35:43,601 views 10412 16032 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:35:43,623 views 10412 16032 Successfully returned 4 categories
+INFO 2026-06-07 10:35:43,624 views 10412 4968 Successfully paginated 3 products
+INFO 2026-06-07 10:35:43,663 basehttp 10412 16032 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:35:43,771 basehttp 10412 4968 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:35:53,233 basehttp 10412 556 "OPTIONS /api/website/footer-sections/47c81b67-d99c-44a3-8276-95aaaef28a4d/ HTTP/1.1" 200 0
+INFO 2026-06-07 10:35:53,268 basehttp 10412 556 "DELETE /api/website/footer-sections/47c81b67-d99c-44a3-8276-95aaaef28a4d/ HTTP/1.1" 204 0
+INFO 2026-06-07 10:35:53,456 views 10412 14648 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:35:53,463 views 10412 18500 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:35:53,483 views 10412 18500 Successfully returned 4 categories
+INFO 2026-06-07 10:35:53,488 basehttp 10412 18500 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:35:53,508 views 10412 14648 Successfully paginated 3 products
+INFO 2026-06-07 10:35:53,548 basehttp 10412 14648 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:35:55,504 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:35:56,161 basehttp 10412 14648 "GET /api/website/site-config/ HTTP/1.1" 200 326
+WARNING 2026-06-07 10:35:57,037 basehttp 10412 556 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 10:35:57,179 basehttp 10412 556 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-07 10:35:57,186 views 10412 14616 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-07 10:35:57,187 views 10412 14616 User authenticated: True
+INFO 2026-06-07 10:35:57,188 views 10412 14616 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+INFO 2026-06-07 10:35:57,189 views 10412 14616 Orders queryset count: 4
+INFO 2026-06-07 10:35:57,217 views 10412 14616 Serialized orders count: 4
+INFO 2026-06-07 10:35:57,222 basehttp 10412 14616 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 3715
+WARNING 2026-06-07 10:35:57,308 basehttp 10412 14616 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 10:35:57,359 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 10:36:02,320 basehttp 10412 556 "DELETE /api/website/footer-sections/47c81b67-d99c-44a3-8276-95aaaef28a4d/ HTTP/1.1" 404 54
+INFO 2026-06-07 10:36:03,455 views 10412 9556 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:36:03,463 views 10412 16260 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:36:03,485 views 10412 16260 Successfully returned 4 categories
+INFO 2026-06-07 10:36:03,489 basehttp 10412 16260 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:36:03,501 views 10412 9556 Successfully paginated 3 products
+INFO 2026-06-07 10:36:03,553 basehttp 10412 9556 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:36:13,438 views 10412 20280 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:36:13,439 views 10412 7164 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:36:13,456 views 10412 7164 Successfully returned 4 categories
+INFO 2026-06-07 10:36:13,461 basehttp 10412 7164 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:36:13,471 views 10412 20280 Successfully paginated 3 products
+INFO 2026-06-07 10:36:13,495 basehttp 10412 20280 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:36:15,825 basehttp 10412 556 "PATCH /api/website/footer-sections/47c81b67-d99c-44a3-8276-95aaaef28a4d/ HTTP/1.1" 404 54
+INFO 2026-06-07 10:36:22,663 views 10412 5860 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:36:22,664 views 10412 3972 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:36:22,677 basehttp 10412 3212 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-07 10:36:22,687 views 10412 3972 Successfully returned 4 categories
+INFO 2026-06-07 10:36:22,714 views 10412 5860 Successfully paginated 3 products
+INFO 2026-06-07 10:36:22,729 basehttp 10412 3972 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:36:22,875 basehttp 10412 5860 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:36:23,104 views 10412 3212 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:36:23,105 views 10412 5860 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:36:23,143 views 10412 5860 Successfully returned 4 categories
+INFO 2026-06-07 10:36:23,150 basehttp 10412 5860 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:36:23,162 views 10412 3212 Successfully paginated 3 products
+INFO 2026-06-07 10:36:23,298 basehttp 10412 3212 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:36:24,180 basehttp 10412 556 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 10:36:24,189 basehttp 10412 344 "GET /media/products/thumbnails/apple.jfif HTTP/1.1" 200 8258
+INFO 2026-06-07 10:36:24,190 basehttp 10412 11760 "GET /media/products/thumbnails/mango_2.jfif HTTP/1.1" 200 8386
+INFO 2026-06-07 10:36:24,191 basehttp 10412 11608 "GET /media/products/thumbnails/lychess.jpg HTTP/1.1" 200 92793
+INFO 2026-06-07 10:36:24,231 views 10412 556 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:36:24,461 views 10412 556 Successfully paginated 3 products
+INFO 2026-06-07 10:36:24,524 basehttp 10412 556 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:36:27,432 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:36:34,232 views 10412 6000 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:36:34,233 views 10412 7308 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:36:34,258 views 10412 7308 Successfully returned 4 categories
+INFO 2026-06-07 10:36:34,260 basehttp 10412 7308 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:36:34,273 views 10412 6000 Successfully paginated 3 products
+INFO 2026-06-07 10:36:34,300 basehttp 10412 6000 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:36:44,435 views 10412 16572 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:36:44,441 views 10412 7792 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:36:44,458 views 10412 7792 Successfully returned 4 categories
+INFO 2026-06-07 10:36:44,460 basehttp 10412 7792 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:36:44,473 views 10412 16572 Successfully paginated 3 products
+INFO 2026-06-07 10:36:44,500 basehttp 10412 16572 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:36:54,432 views 10412 11044 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:36:54,474 views 10412 10648 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:36:54,477 views 10412 11044 Successfully paginated 3 products
+INFO 2026-06-07 10:36:54,491 views 10412 10648 Successfully returned 4 categories
+INFO 2026-06-07 10:36:54,497 basehttp 10412 10648 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:36:54,509 basehttp 10412 11044 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:36:57,470 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:37:04,434 views 10412 9944 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:37:04,439 views 10412 17800 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:37:04,455 views 10412 17800 Successfully returned 4 categories
+INFO 2026-06-07 10:37:04,457 basehttp 10412 17800 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:37:04,467 views 10412 9944 Successfully paginated 3 products
+INFO 2026-06-07 10:37:04,494 basehttp 10412 9944 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:37:14,438 views 10412 1428 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:37:14,445 views 10412 8856 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:37:14,457 views 10412 8856 Successfully returned 4 categories
+INFO 2026-06-07 10:37:14,460 basehttp 10412 8856 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:37:14,471 views 10412 1428 Successfully paginated 3 products
+INFO 2026-06-07 10:37:14,507 basehttp 10412 1428 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:37:24,447 views 10412 348 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:37:24,449 views 10412 7956 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:37:24,477 views 10412 7956 Successfully returned 4 categories
+INFO 2026-06-07 10:37:24,480 basehttp 10412 7956 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:37:24,491 views 10412 348 Successfully paginated 3 products
+INFO 2026-06-07 10:37:24,518 basehttp 10412 348 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:37:30,416 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:37:34,340 views 10412 15308 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:37:34,349 views 10412 17468 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:37:34,370 views 10412 17468 Successfully returned 4 categories
+INFO 2026-06-07 10:37:34,372 basehttp 10412 17468 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:37:34,386 views 10412 15308 Successfully paginated 3 products
+INFO 2026-06-07 10:37:34,425 basehttp 10412 15308 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:37:44,297 views 10412 7944 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:37:44,298 views 10412 1196 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:37:44,317 views 10412 1196 Successfully returned 4 categories
+INFO 2026-06-07 10:37:44,319 basehttp 10412 1196 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:37:44,328 views 10412 7944 Successfully paginated 3 products
+INFO 2026-06-07 10:37:44,354 basehttp 10412 7944 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:37:54,265 views 10412 14476 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:37:54,273 views 10412 9040 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:37:54,290 views 10412 9040 Successfully returned 4 categories
+INFO 2026-06-07 10:37:54,293 basehttp 10412 9040 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:37:54,301 views 10412 14476 Successfully paginated 3 products
+INFO 2026-06-07 10:37:54,325 basehttp 10412 14476 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:37:57,461 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:38:04,439 views 10412 15460 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:38:04,440 views 10412 14104 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:38:04,458 views 10412 14104 Successfully returned 4 categories
+INFO 2026-06-07 10:38:04,459 basehttp 10412 14104 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:38:04,475 views 10412 15460 Successfully paginated 3 products
+INFO 2026-06-07 10:38:04,504 basehttp 10412 15460 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:38:14,435 views 10412 1600 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:38:14,441 views 10412 11216 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:38:14,457 views 10412 11216 Successfully returned 4 categories
+INFO 2026-06-07 10:38:14,460 basehttp 10412 11216 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:38:14,467 views 10412 1600 Successfully paginated 3 products
+INFO 2026-06-07 10:38:14,490 basehttp 10412 1600 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:38:24,563 views 10412 14736 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:38:24,570 views 10412 10692 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:38:24,591 views 10412 10692 Successfully returned 4 categories
+INFO 2026-06-07 10:38:24,596 basehttp 10412 10692 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:38:24,710 views 10412 14736 Successfully paginated 3 products
+INFO 2026-06-07 10:38:24,837 basehttp 10412 14736 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:38:27,883 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:38:34,432 views 10412 12544 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:38:34,437 views 10412 17772 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:38:34,455 views 10412 17772 Successfully returned 4 categories
+INFO 2026-06-07 10:38:34,457 basehttp 10412 17772 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:38:34,469 views 10412 12544 Successfully paginated 3 products
+INFO 2026-06-07 10:38:34,499 basehttp 10412 12544 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:38:44,439 views 10412 12460 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:38:44,447 views 10412 17720 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:38:44,487 views 10412 17720 Successfully returned 4 categories
+INFO 2026-06-07 10:38:44,497 basehttp 10412 17720 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:38:44,498 views 10412 12460 Successfully paginated 3 products
+INFO 2026-06-07 10:38:44,544 basehttp 10412 12460 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:38:54,435 views 10412 5556 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:38:54,439 views 10412 10768 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:38:54,454 views 10412 10768 Successfully returned 4 categories
+INFO 2026-06-07 10:38:54,456 basehttp 10412 10768 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:38:54,465 views 10412 5556 Successfully paginated 3 products
+INFO 2026-06-07 10:38:54,491 basehttp 10412 5556 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:38:57,439 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:39:12,386 views 10412 10276 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:39:12,394 views 10412 13576 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:39:12,413 views 10412 13576 Successfully returned 4 categories
+INFO 2026-06-07 10:39:12,416 basehttp 10412 13576 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:39:12,431 views 10412 10276 Successfully paginated 3 products
+INFO 2026-06-07 10:39:12,471 basehttp 10412 10276 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:39:14,726 views 10412 10276 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:39:14,727 views 10412 13576 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:39:14,953 views 10412 10276 Successfully paginated 3 products
+INFO 2026-06-07 10:39:14,978 views 10412 13576 Successfully returned 4 categories
+INFO 2026-06-07 10:39:15,186 basehttp 10412 13576 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:39:15,193 basehttp 10412 10276 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:39:24,520 views 10412 6788 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:39:24,528 views 10412 6712 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:39:24,549 views 10412 6712 Successfully returned 4 categories
+INFO 2026-06-07 10:39:24,553 basehttp 10412 6712 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:39:24,564 views 10412 6788 Successfully paginated 3 products
+INFO 2026-06-07 10:39:24,606 basehttp 10412 6788 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:39:27,437 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:39:34,248 views 10412 13688 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:39:34,249 views 10412 15140 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:39:34,286 views 10412 15140 Successfully returned 4 categories
+INFO 2026-06-07 10:39:34,291 basehttp 10412 15140 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:39:34,313 views 10412 13688 Successfully paginated 3 products
+INFO 2026-06-07 10:39:34,348 basehttp 10412 13688 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:39:44,432 views 10412 2376 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:39:44,438 views 10412 19512 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:39:44,455 views 10412 19512 Successfully returned 4 categories
+INFO 2026-06-07 10:39:44,457 basehttp 10412 19512 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:39:44,469 views 10412 2376 Successfully paginated 3 products
+INFO 2026-06-07 10:39:44,501 basehttp 10412 2376 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:39:54,437 views 10412 11836 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:39:54,442 views 10412 12368 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:39:54,472 views 10412 12368 Successfully returned 4 categories
+INFO 2026-06-07 10:39:54,475 basehttp 10412 12368 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:39:54,488 views 10412 11836 Successfully paginated 3 products
+INFO 2026-06-07 10:39:54,519 basehttp 10412 11836 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:39:57,449 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:40:04,555 views 10412 11436 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:40:04,560 views 10412 15676 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:40:04,602 views 10412 15676 Successfully returned 4 categories
+INFO 2026-06-07 10:40:04,614 basehttp 10412 15676 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:40:04,649 views 10412 11436 Successfully paginated 3 products
+INFO 2026-06-07 10:40:04,696 basehttp 10412 11436 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:40:14,460 views 10412 12016 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:40:14,464 views 10412 17416 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:40:14,491 views 10412 17416 Successfully returned 4 categories
+INFO 2026-06-07 10:40:14,495 basehttp 10412 17416 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:40:14,504 views 10412 12016 Successfully paginated 3 products
+INFO 2026-06-07 10:40:14,537 basehttp 10412 12016 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:40:24,611 views 10412 3260 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:40:24,614 views 10412 17384 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:40:24,718 views 10412 17384 Successfully returned 4 categories
+INFO 2026-06-07 10:40:24,737 views 10412 3260 Successfully paginated 3 products
+INFO 2026-06-07 10:40:24,774 basehttp 10412 17384 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:40:24,843 basehttp 10412 3260 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:40:27,433 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:40:34,460 views 10412 6372 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:40:34,463 views 10412 17376 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:40:34,520 views 10412 17376 Successfully returned 4 categories
+INFO 2026-06-07 10:40:34,529 basehttp 10412 17376 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:40:34,552 views 10412 6372 Successfully paginated 3 products
+INFO 2026-06-07 10:40:34,594 basehttp 10412 6372 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:40:49,084 views 10412 10084 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:40:49,086 views 10412 14032 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:40:49,113 views 10412 14032 Successfully returned 4 categories
+INFO 2026-06-07 10:40:49,118 basehttp 10412 14032 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:40:49,135 views 10412 10084 Successfully paginated 3 products
+INFO 2026-06-07 10:40:49,168 basehttp 10412 10084 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:41:11,455 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:41:11,457 views 10412 3408 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:41:11,461 views 10412 18640 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:41:11,481 views 10412 18640 Successfully returned 4 categories
+INFO 2026-06-07 10:41:11,484 basehttp 10412 18640 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:41:11,495 views 10412 3408 Successfully paginated 3 products
+INFO 2026-06-07 10:41:11,521 basehttp 10412 3408 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:41:39,442 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:41:39,637 views 10412 14244 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:41:39,639 views 10412 10548 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:41:39,670 views 10412 10548 Successfully returned 4 categories
+INFO 2026-06-07 10:41:39,673 basehttp 10412 10548 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:41:39,687 views 10412 14244 Successfully paginated 3 products
+INFO 2026-06-07 10:41:39,717 basehttp 10412 14244 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:42:11,436 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:42:11,441 views 10412 10552 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:42:11,443 views 10412 10348 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:42:11,464 views 10412 10348 Successfully returned 4 categories
+INFO 2026-06-07 10:42:11,468 basehttp 10412 10348 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:42:11,479 views 10412 10552 Successfully paginated 3 products
+INFO 2026-06-07 10:42:11,509 basehttp 10412 10552 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:43:11,449 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:43:11,453 views 10412 600 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:43:11,458 views 10412 8264 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:43:11,478 views 10412 8264 Successfully returned 4 categories
+INFO 2026-06-07 10:43:11,481 basehttp 10412 8264 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:43:11,496 views 10412 600 Successfully paginated 3 products
+INFO 2026-06-07 10:43:11,543 basehttp 10412 600 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:44:08,479 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:44:08,547 views 10412 11180 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:44:08,548 views 10412 19160 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:44:08,569 views 10412 19160 Successfully returned 4 categories
+INFO 2026-06-07 10:44:08,571 basehttp 10412 19160 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:44:08,584 views 10412 11180 Successfully paginated 3 products
+INFO 2026-06-07 10:44:08,619 basehttp 10412 11180 "GET /api/products/products/ HTTP/1.1" 200 8370
+WARNING 2026-06-07 10:44:51,202 basehttp 10412 9972 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 10:44:51,223 basehttp 10412 9676 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 10:44:51,989 basehttp 10412 9972 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 10:44:52,007 basehttp 10412 14028 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 10:44:52,058 basehttp 10412 9676 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 10:44:52,406 basehttp 10412 6204 "GET /api/site-config/ HTTP/1.1" 404 4801
+INFO 2026-06-07 10:44:52,420 basehttp 10412 15168 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-07 10:44:52,422 basehttp 10412 11672 "GET /api/website/site-config/ HTTP/1.1" 200 326
+WARNING 2026-06-07 10:44:52,441 basehttp 10412 12708 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 10:44:52,457 basehttp 10412 9972 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 10:44:52,585 basehttp 10412 9676 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 10:44:52,941 basehttp 10412 14028 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 10:44:53,295 basehttp 10412 6204 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 10:44:53,323 basehttp 10412 11672 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 10:44:53,689 basehttp 10412 9972 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 10:44:53,752 basehttp 10412 9676 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 10:44:53,842 basehttp 10412 9972 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 10:44:53,893 basehttp 10412 9676 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 10:44:54,104 basehttp 10412 9972 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 10:44:54,155 basehttp 10412 9676 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 10:44:54,197 basehttp 10412 9972 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 10:44:54,261 basehttp 10412 14028 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 10:44:54,410 basehttp 10412 9972 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 10:44:54,524 basehttp 10412 9676 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 10:44:54,632 basehttp 10412 14028 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 10:44:54,640 basehttp 10412 9972 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 10:44:54,721 basehttp 10412 9676 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 10:44:54,790 basehttp 10412 6204 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 10:44:54,866 basehttp 10412 9972 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 10:44:54,946 basehttp 10412 9676 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 10:44:55,053 basehttp 10412 9972 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 10:44:55,089 basehttp 10412 9676 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 10:44:55,176 basehttp 10412 9972 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 10:44:55,208 basehttp 10412 9676 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 10:44:55,339 basehttp 10412 9972 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 10:44:55,377 basehttp 10412 9676 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 10:44:55,499 basehttp 10412 9972 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 10:44:55,569 basehttp 10412 9676 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 10:44:55,599 basehttp 10412 14028 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 10:44:55,650 basehttp 10412 9972 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 10:44:55,700 basehttp 10412 6204 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 10:44:55,733 basehttp 10412 9676 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 10:44:56,468 basehttp 10412 556 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 10:44:56,520 views 10412 9972 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:44:56,542 views 10412 9972 Successfully paginated 3 products
+INFO 2026-06-07 10:44:56,556 views 10412 9676 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:44:56,579 views 10412 9676 Successfully returned 4 categories
+INFO 2026-06-07 10:44:56,583 basehttp 10412 9676 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:44:56,587 basehttp 10412 9972 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:45:11,441 views 10412 7616 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:45:11,442 views 10412 15416 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 10:45:11,465 views 10412 15416 Successfully returned 4 categories
+INFO 2026-06-07 10:45:11,470 basehttp 10412 15416 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 10:45:11,484 views 10412 7616 Successfully paginated 3 products
+INFO 2026-06-07 10:45:11,519 basehttp 10412 7616 "GET /api/products/products/ HTTP/1.1" 200 8370
+INFO 2026-06-07 10:45:24,390 autoreload 10412 14184 D:\Munna\Munna\icommerce\icommerce\backend\website\urls.py changed, reloading.
+INFO 2026-06-07 10:45:30,821 autoreload 17980 6880 Watching for file changes with StatReloader
+INFO 2026-06-07 10:46:07,914 autoreload 17980 6880 D:\Munna\Munna\icommerce\icommerce\backend\website\views.py changed, reloading.
+INFO 2026-06-07 10:46:10,989 autoreload 1528 5580 Watching for file changes with StatReloader
