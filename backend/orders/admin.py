@@ -15,7 +15,10 @@ from import_export import resources, fields
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 from .models import (
     Order, OrderItem, ShippingMethod, OrderUpdate, OrderPayment, Coupon, ShippingTier,
-    FreeShippingRule, DeliverySlot, BlockedDate
+    FreeShippingRule, DeliverySlot, BlockedDate,
+    ShippingZone, ShippingZoneCoverage, WeightShippingRule, OrderValueShippingRule,
+    CategoryShippingRule, CourierProvider, Warehouse, WarehouseZoneMapping,
+    LeftoverPackShippingRule
 )
 from users.models import User
 
@@ -481,3 +484,53 @@ class DeliverySlotAdmin(admin.ModelAdmin):
     list_display = ('name', 'start_time', 'end_time', 'is_active')
     list_filter = ('is_active',)
     ordering = ('start_time',)
+
+class ShippingZoneCoverageInline(admin.TabularInline):
+    model = ShippingZoneCoverage
+    extra = 1
+
+@admin.register(ShippingZone)
+class ShippingZoneAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code', 'base_charge', 'delivery_sla', 'priority', 'is_active')
+    list_filter = ('is_active',)
+    search_fields = ('name', 'code')
+    inlines = [ShippingZoneCoverageInline]
+
+@admin.register(WeightShippingRule)
+class WeightShippingRuleAdmin(admin.ModelAdmin):
+    list_display = ('name', 'min_weight', 'max_weight', 'base_cost', 'per_kg_cost', 'zone', 'is_active')
+    list_filter = ('is_active', 'zone')
+    search_fields = ('name',)
+
+@admin.register(OrderValueShippingRule)
+class OrderValueShippingRuleAdmin(admin.ModelAdmin):
+    list_display = ('name', 'min_order_value', 'max_order_value', 'shipping_cost', 'is_free_shipping', 'zone', 'is_active')
+    list_filter = ('is_active', 'is_free_shipping', 'zone')
+
+@admin.register(CategoryShippingRule)
+class CategoryShippingRuleAdmin(admin.ModelAdmin):
+    list_display = ('category', 'additional_charge', 'is_override', 'override_cost', 'is_active')
+    list_filter = ('is_active', 'is_override')
+
+@admin.register(CourierProvider)
+class CourierProviderAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug', 'is_active')
+    list_filter = ('is_active',)
+    search_fields = ('name', 'slug')
+    filter_horizontal = ('supported_zones',)
+
+class WarehouseZoneMappingInline(admin.TabularInline):
+    model = WarehouseZoneMapping
+    extra = 1
+
+@admin.register(Warehouse)
+class WarehouseAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code', 'city', 'zone', 'is_active')
+    list_filter = ('is_active', 'zone')
+    search_fields = ('name', 'code', 'city')
+    inlines = [WarehouseZoneMappingInline]
+
+@admin.register(LeftoverPackShippingRule)
+class LeftoverPackShippingRuleAdmin(admin.ModelAdmin):
+    list_display = ('name', 'rule_type', 'fixed_cost', 'reduction_percent', 'zone', 'is_active')
+    list_filter = ('is_active', 'rule_type', 'zone')

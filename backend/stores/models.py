@@ -3,6 +3,7 @@ stores/models.py
 """
 import re
 import urllib.request
+from django.conf import settings
 from django.db import models
 from django.core.validators import MinValueValidator
 
@@ -54,6 +55,7 @@ def _format_time_12h(t) -> str:
 
 
 class Store(models.Model):
+    owner        = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='stores_owned', help_text='Store Owner for managing leftover packs')
     slug         = models.SlugField(max_length=100, unique=True)
     name         = models.CharField(max_length=200)
     short_name   = models.CharField(max_length=80)
@@ -162,19 +164,40 @@ class StoreAvailability(models.Model):
 
 
 class LeftoverPack(models.Model):
+    PACKAGE_TYPE_CHOICES = [
+        ('KG', 'KG'),
+        ('Box', 'Box'),
+        ('Bundle', 'Bundle'),
+        ('Carton', 'Carton'),
+        ('Piece', 'Piece'),
+        ('Sack', 'Sack'),
+        ('Other', 'Other'),
+    ]
     store       = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='leftover_packs')
     name        = models.CharField(max_length=200)
     description = models.CharField(max_length=300)
-    price       = models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(0)])
+    
+    # Pricing
+    original_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, validators=[MinValueValidator(0)])
+    price       = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)], help_text="Selling price")
+    shipping_charge = models.DecimalField(max_digits=10, decimal_places=2, default=0, validators=[MinValueValidator(0)])
+
+    # Product Details
+    package_type = models.CharField(max_length=50, choices=PACKAGE_TYPE_CHOICES, default='Box')
+    weight_quantity = models.CharField(max_length=100, blank=True, help_text='e.g., 5 KG, 2 Boxes')
+    stock = models.PositiveIntegerField(default=0)
+    estimated_delivery = models.CharField(max_length=150, blank=True, help_text='e.g., 1-2 Business Days')
 
     # ── Image upload (replaces URLField) ─────────────────────────────────────
     image       = models.ImageField(
         upload_to='stores/leftover-packs/',
-        help_text='Pack image — upload JPG/PNG/WebP',
+        help_text='Main Pack image — upload JPG/PNG/WebP',
     )
 
     is_active   = models.BooleanField(default=True)
     order       = models.PositiveSmallIntegerField(default=0)
+    created_at  = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at  = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     class Meta:
         app_label = 'stores'
@@ -182,3 +205,23 @@ class LeftoverPack(models.Model):
 
     def __str__(self):
         return f'{self.store.short_name} — {self.name} (€{self.price})'
+
+    @property
+    def discount_percentage(self):
+        if self.original_price and self.price and self.original_price > self.price:
+            return round(((self.original_price - self.price) / self.original_price) * 100, 2)
+        return 0
+
+
+class LeftoverPackImage(models.Model):
+    pack = models.ForeignKey(LeftoverPack, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='stores/leftover-packs/gallery/')
+    order = models.PositiveSmallIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        app_label = 'stores'
+        ordering = ['order', 'id']
+
+    def __str__(self):
+        return f"Image for {self.pack.name}"

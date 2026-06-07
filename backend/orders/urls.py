@@ -63,9 +63,26 @@ router.register(r'shipping-categories', ShippingCategoryViewSet,  basename='ship
 router.register(r'shipping-tiers',      ShippingTierViewSet,      basename='shipping-tier')
 router.register(r'free-shipping-rules', FreeShippingRuleViewSet,  basename='free-shipping-rule')
 router.register(r'coupons',             CouponViewSet,            basename='coupon')
+
+# New Shipping System ViewSets
+from .shipping_views import (
+    ShippingZoneViewSet, WeightShippingRuleViewSet, OrderValueShippingRuleViewSet,
+    CategoryShippingRuleViewSet as NewCategoryShippingRuleViewSet,
+    CourierProviderViewSet, WarehouseViewSet, LeftoverPackShippingRuleViewSet,
+)
+router.register(r'shipping-zones', ShippingZoneViewSet, basename='shipping-zone')
+router.register(r'weight-shipping-rules', WeightShippingRuleViewSet, basename='weight-shipping-rule')
+router.register(r'order-value-shipping-rules', OrderValueShippingRuleViewSet, basename='order-value-shipping-rule')
+router.register(r'new-category-shipping-rules', NewCategoryShippingRuleViewSet, basename='new-category-shipping-rule')
+router.register(r'courier-providers', CourierProviderViewSet, basename='courier-provider')
+router.register(r'warehouses', WarehouseViewSet, basename='warehouse')
+router.register(r'leftover-pack-shipping-rules', LeftoverPackShippingRuleViewSet, basename='leftover-pack-shipping-rule')
+
 router.register(r'',                    OrderViewSet,             basename='order')  # ← সবার শেষে
 
 app_name = 'orders'
+
+from .shipping_views import calculate_shipping_v2, detect_zone_api, free_shipping_check
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -73,6 +90,12 @@ urlpatterns = [
     path('payment/accounts/',               PaymentAccountsAPIView.as_view(),       name='payment-accounts'),
     path('analyze-cart-shipping/',          analyze_cart_shipping,                  name='analyze-cart-shipping'),
     path('enhanced-checkout-calculation/',  enhanced_checkout_calculation,          name='enhanced-checkout-calculation'),
+    
+    # New Shipping System API endpoints
+    path('shipping/calculate/',             calculate_shipping_v2,                  name='shipping-calculate-v2'),
+    path('shipping/detect-zone/',           detect_zone_api,                        name='shipping-detect-zone'),
+    path('shipping/free-shipping-check/',   free_shipping_check,                    name='shipping-free-check'),
+
     path('debug/',                          debug_orders_api,                       name='debug-orders'),
     path('invoice/<str:order_number>/',     order_invoice,                          name='order-invoice'),
 ]

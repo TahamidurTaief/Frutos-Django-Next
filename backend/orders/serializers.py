@@ -22,16 +22,30 @@ logger = logging.getLogger(__name__)
 # ══════════════════════════════════════════════════════════════════
 
 class OrderItemCreateSerializer(serializers.Serializer):
-    """Single item in an order — product is UUID string."""
-    product  = serializers.UUIDField()
-    quantity = serializers.IntegerField(min_value=1)
-    color    = serializers.IntegerField(allow_null=True, required=False)
-    size     = serializers.IntegerField(allow_null=True, required=False)
+    """Single item in an order — product or leftover_pack is ID/UUID string."""
+    product       = serializers.UUIDField(required=False, allow_null=True)
+    leftover_pack = serializers.IntegerField(required=False, allow_null=True)
+    item_type     = serializers.CharField(required=False, default='product')
+    quantity      = serializers.IntegerField(min_value=1)
+    color         = serializers.IntegerField(allow_null=True, required=False)
+    size          = serializers.IntegerField(allow_null=True, required=False)
 
-    def validate_product(self, value):
-        if not Product.objects.filter(id=value).exists():
-            raise serializers.ValidationError("Product does not exist.")
-        return value
+    def validate(self, data):
+        item_type = data.get('item_type', 'product')
+        if item_type == 'product':
+            if not data.get('product'):
+                raise serializers.ValidationError({"product": "Product ID is required for product items."})
+            if not Product.objects.filter(id=data['product']).exists():
+                raise serializers.ValidationError({"product": "Product does not exist."})
+        elif item_type == 'pack':
+            if not data.get('leftover_pack'):
+                raise serializers.ValidationError({"leftover_pack": "Pack ID is required for leftover pack items."})
+            from stores.models import LeftoverPack
+            if not LeftoverPack.objects.filter(id=data['leftover_pack']).exists():
+                raise serializers.ValidationError({"leftover_pack": "Leftover Pack does not exist."})
+        else:
+            raise serializers.ValidationError({"item_type": "Invalid item_type. Must be 'product' or 'pack'."})
+        return data
 
     def validate_color(self, value):
         if value is not None and not Color.objects.filter(id=value).exists():
@@ -91,23 +105,44 @@ class OrderCreateSerializer(serializers.Serializer):
             cart_items    = []
 
             for item_data in items_data:
-                try:
-                    product = Product.objects.get(id=item_data['product'])
-                except Product.DoesNotExist:
-                    raise serializers.ValidationError(
-                        f"Product '{item_data['product']}' not found."
-                    )
-                qty        = item_data['quantity']
-                unit_price = product.discount_price if product.discount_price else product.price
-                subtotal   = unit_price * qty
-                cart_subtotal += subtotal
-                cart_items.append({
-                    'product':    product,
-                    'quantity':   qty,
-                    'unit_price': unit_price,
-                    'color_id':   item_data.get('color'),
-                    'size_id':    item_data.get('size'),
-                })
+                item_type = item_data.get('item_type', 'product')
+                qty       = item_data['quantity']
+                
+                if item_type == 'product':
+                    try:
+                        product = Product.objects.get(id=item_data['product'])
+                    except Product.DoesNotExist:
+                        raise serializers.ValidationError(f"Product '{item_data['product']}' not found.")
+                    
+                    unit_price = product.discount_price if product.discount_price else product.price
+                    subtotal   = unit_price * qty
+                    cart_subtotal += subtotal
+                    cart_items.append({
+                        'item_type':  'product',
+                        'product':    product,
+                        'quantity':   qty,
+                        'unit_price': unit_price,
+                        'color_id':   item_data.get('color'),
+                        'size_id':    item_data.get('size'),
+                    })
+                elif item_type == 'pack':
+                    from stores.models import LeftoverPack
+                    try:
+                        pack = LeftoverPack.objects.get(id=item_data['leftover_pack'])
+                    except LeftoverPack.DoesNotExist:
+                        raise serializers.ValidationError(f"Pack '{item_data['leftover_pack']}' not found.")
+                    
+                    unit_price = pack.price
+                    subtotal   = unit_price * qty
+                    cart_subtotal += subtotal
+                    cart_items.append({
+                        'item_type':     'pack',
+                        'leftover_pack': pack,
+                        'quantity':      qty,
+                        'unit_price':    unit_price,
+                        'color_id':      None,
+                        'size_id':       None,
+                    })
 
             # ── Wholesale validation ──────────────────────────────
             if user and getattr(user, 'user_type', None) == 'WHOLESALER':
@@ -162,19 +197,29 @@ class OrderCreateSerializer(serializers.Serializer):
             for item in cart_items:
                 color = None
                 size  = None
-                if item['color_id']:
+                if item.get('color_id'):
                     color = Color.objects.filter(id=item['color_id']).first()
-                if item['size_id']:
+                if item.get('size_id'):
                     size = Size.objects.filter(id=item['size_id']).first()
 
-                OrderItem.objects.create(
-                    order      = order,
-                    product    = item['product'],
-                    quantity   = item['quantity'],
-                    unit_price = item['unit_price'],
-                    color      = color,
-                    size       = size,
-                )
+                if item.get('item_type') == 'product':
+                    OrderItem.objects.create(
+                        order      = order,
+                        product    = item['product'],
+                        quantity   = item['quantity'],
+                        unit_price = item['unit_price'],
+                        color      = color,
+                        size       = size,
+                    )
+                else:
+                    OrderItem.objects.create(
+                        order         = order,
+                        leftover_pack = item['leftover_pack'],
+                        quantity      = item['quantity'],
+                        unit_price    = item['unit_price'],
+                        color         = color,
+                        size          = size,
+                    )
 
             # ── Order log ─────────────────────────────────────────
             OrderUpdate.objects.create(
@@ -189,6 +234,8 @@ class OrderCreateSerializer(serializers.Serializer):
         from collections import defaultdict
         category_quantities = defaultdict(int)
         for item in cart_items:
+            if item.get('item_type') == 'pack':
+                continue
             product  = item['product']
             category = product.sub_category.category
             category_quantities[category] += item['quantity']
@@ -219,7 +266,7 @@ class OrderUpdateSerializer(serializers.ModelSerializer):
 
 
 class OrderItemReadSerializer(serializers.ModelSerializer):
-    product_name  = serializers.CharField(source='product.name',   read_only=True)
+    product_name  = serializers.SerializerMethodField()
     product_image = serializers.SerializerMethodField()
     color_name    = serializers.CharField(source='color.name',     read_only=True)
     size_name     = serializers.CharField(source='size.name',      read_only=True)
@@ -228,15 +275,25 @@ class OrderItemReadSerializer(serializers.ModelSerializer):
     class Meta:
         model  = OrderItem
         fields = [
-            'id', 'product', 'product_name', 'product_image',
+            'id', 'product', 'product_name', 'product_image', 'leftover_pack',
             'color', 'color_name', 'size', 'size_name',
             'quantity', 'unit_price', 'line_total',
         ]
 
+    def get_product_name(self, obj):
+        if obj.product:
+            return obj.product.name
+        if obj.leftover_pack:
+            return f"Leftover Pack: {obj.leftover_pack.name}"
+        return "Unknown"
+
     def get_product_image(self, obj):
+        request = self.context.get('request')
         if obj.product and obj.product.thumbnail:
-            request = self.context.get('request')
-            url     = obj.product.thumbnail.url
+            url = obj.product.thumbnail.url
+            return request.build_absolute_uri(url) if request else url
+        if obj.leftover_pack and obj.leftover_pack.image:
+            url = obj.leftover_pack.image.url
             return request.build_absolute_uri(url) if request else url
         return None
 
@@ -464,13 +521,20 @@ class AddressSerializer(serializers.ModelSerializer):
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
-    product = serializers.StringRelatedField()
+    product = serializers.SerializerMethodField()
     color   = serializers.StringRelatedField()
     size    = serializers.StringRelatedField()
 
     class Meta:
         model  = OrderItem
-        fields = ['id', 'product', 'color', 'size', 'quantity', 'unit_price']
+        fields = ['id', 'product', 'leftover_pack', 'color', 'size', 'quantity', 'unit_price']
+
+    def get_product(self, obj):
+        if obj.product:
+            return obj.product.name
+        if obj.leftover_pack:
+            return f"Pack: {obj.leftover_pack.name}"
+        return "Unknown"
 
 
 class OrderPaymentSerializer(serializers.ModelSerializer):

@@ -21,6 +21,14 @@ function toArray(data) {
 }
 
 function normalizeCartItem(item) {
+  if (item.item_type === 'pack') {
+    return {
+      leftover_pack: item.id,
+      item_type: 'pack',
+      quantity: parseInt(item?.qty ?? item?.quantity ?? item?.count ?? 0, 10)
+    }
+  }
+
   const rawId =
     item?.product_id ??
     item?.productId  ??
@@ -30,7 +38,7 @@ function normalizeCartItem(item) {
 
   const productId = rawId != null ? String(rawId) : null
   const quantity  = parseInt(item?.qty ?? item?.quantity ?? item?.count ?? 0, 10)
-  return { product: productId, quantity }
+  return { product: productId, item_type: 'product', quantity, color: item.color, size: item.size }
 }
 
 export default function CheckoutShell({ deliveryDates, deliverySlots, initialUserData, deliveryConfig }) {
@@ -163,7 +171,10 @@ export default function CheckoutShell({ deliveryDates, deliverySlots, initialUse
 
     const sanitizedItems = items
         .map(normalizeCartItem)
-        .filter(item => item.product != null && String(item.product).trim() !== '' && item.quantity > 0)
+        .filter(item => {
+          if (item.item_type === 'pack') return item.leftover_pack != null && item.quantity > 0
+          return item.product != null && String(item.product).trim() !== '' && item.quantity > 0
+        })
 
     console.log('[Checkout] Raw cart items:',   items)
     console.log('[Checkout] Sanitized items:',   sanitizedItems)

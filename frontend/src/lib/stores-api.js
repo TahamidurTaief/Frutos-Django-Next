@@ -82,3 +82,51 @@ export const FEATURE_LABELS = {
     pickup: 'Click & Collect',
     clickCollect: 'Click & Collect',
 }
+
+// ── Dashboard Leftover Packs APIs ─────────────────────────────────────────────
+
+export async function getDashboardLeftoverPacks(storeSlug, token) {
+    const res = await fetch(`${API_BASE}/fulfillment/dashboard/leftover-packs/?store_slug=${storeSlug}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+        cache: 'no-store'
+    })
+    if (!res.ok) throw new Error(`Failed to fetch leftover packs: ${res.status}`)
+    return res.json()
+}
+
+export async function createLeftoverPack(data, token) {
+    const res = await fetch(`${API_BASE}/fulfillment/dashboard/leftover-packs/`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+        body: data // FormData expected
+    })
+    if (!res.ok) throw new Error(`Failed to create leftover pack: ${res.status}`)
+    return res.json()
+}
+
+export async function updateLeftoverPack(id, data, token) {
+    const res = await fetch(`${API_BASE}/fulfillment/dashboard/leftover-packs/${id}/`, {
+        method: 'PATCH',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+        body: data // FormData expected
+    })
+    if (!res.ok) throw new Error(`Failed to update leftover pack: ${res.status}`)
+    return res.json()
+}
+
+export async function deleteLeftoverPack(id, token) {
+    const res = await fetch(`${API_BASE}/fulfillment/dashboard/leftover-packs/${id}/`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    if (!res.ok) throw new Error(`Failed to delete leftover pack: ${res.status}`)
+    return true
+}

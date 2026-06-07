@@ -4,14 +4,21 @@ stores/urls.py  — FINAL VERSION
 root urls.py তে:
     path('api/fulfillment/', include('stores.urls')),
 """
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from .views import (
     StoreListView, StoreDetailView,
     AdminStoreListCreateView, AdminStoreDetailView,
     AdminStoreFeaturesView, AdminStoreAvailabilityView,
+    DashboardLeftoverPackViewSet
 )
 
+router = DefaultRouter()
+router.register(r'dashboard/leftover-packs', DashboardLeftoverPackViewSet, basename='dashboard-leftover-packs')
+
 urlpatterns = [
+    path('', include(router.urls)),
+    
     # Public
     path('stores/',                        StoreListView.as_view(),              name='store-list'),
     path('stores/slug/<slug:slug>/',       StoreDetailView.as_view(),            name='store-detail'),

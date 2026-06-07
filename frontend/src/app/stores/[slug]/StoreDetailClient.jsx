@@ -326,6 +326,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { isStoreOpen, formatTime12h } from '@/lib/stores-api'
 import * as LucideIcons from 'lucide-react'
+import { useCart } from '@/app/context/CartContext'
 
 // ── Lucide dynamic icon helper ─────────────────────────────────────────────────
 function toPascalCase(name = '') {
@@ -359,6 +360,56 @@ function HeartIcon({ filled }) {
   return <svg width="20" height="20" fill={filled ? '#00694c' : 'none'} stroke="#00694c" strokeWidth="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
 }
 
+function PackQuickViewModal({ pack, onClose, onReserve }) {
+  if (!pack) return null;
+  return (
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-0 sm:p-5 transition-opacity" onClick={onClose}>
+      <div className="bg-white w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl overflow-hidden flex flex-col shadow-2xl transform transition-all translate-y-0" onClick={e => e.stopPropagation()}>
+        <div className="relative h-64 w-full bg-gray-100 flex-shrink-0">
+          <img src={pack.image} alt={pack.name} className="w-full h-full object-cover" />
+          <button onClick={onClose} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white/80 rounded-full text-gray-800 hover:bg-white transition-colors shadow-sm">
+            <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div className="p-6">
+          <div className="flex justify-between items-start mb-2">
+            <h2 className="text-2xl font-bold text-gray-900 leading-tight" style={{ fontFamily: '"Newsreader", Georgia, serif' }}>{pack.name}</h2>
+            <span className="text-xs uppercase font-bold text-gray-600 bg-gray-100 px-2 py-1 rounded border border-gray-200">{pack.package_type}</span>
+          </div>
+          <p className="text-gray-600 text-sm mb-4 leading-relaxed">{pack.description}</p>
+          
+          <div className="flex gap-4 mb-6">
+            <div className="bg-green-50 px-4 py-3 rounded-xl flex-1 border border-green-100">
+              <span className="block text-[10px] uppercase font-bold text-green-700 tracking-wider mb-1">Price</span>
+              <div className="flex items-end gap-2">
+                <span className="text-2xl font-bold leading-none" style={{ color: '#855000' }}>€{Number(pack.price).toFixed(2)}</span>
+                {pack.original_price && pack.original_price > pack.price && (
+                  <span className="text-sm text-gray-400 line-through leading-none mb-0.5">€{Number(pack.original_price).toFixed(2)}</span>
+                )}
+              </div>
+            </div>
+            <div className="bg-gray-50 px-4 py-3 rounded-xl flex-1 border border-gray-100">
+              <span className="block text-[10px] uppercase font-bold text-gray-600 tracking-wider mb-1">Stock & Qty</span>
+              <div className="font-semibold text-gray-900 text-sm">
+                {pack.weight_quantity && <span className="mr-2">{pack.weight_quantity}</span>}
+                <span className={pack.stock > 0 ? "text-green-600" : "text-red-500"}>{pack.stock > 0 ? `${pack.stock} left` : 'Sold out'}</span>
+              </div>
+            </div>
+          </div>
+
+          <button 
+            onClick={() => onReserve(pack)}
+            disabled={pack.stock <= 0}
+            className="w-full py-4 rounded-xl font-bold text-white text-[15px] shadow-lg active:scale-[0.98] transition-all disabled:opacity-50 disabled:active:scale-100"
+            style={{ background: pack.stock > 0 ? 'linear-gradient(135deg, #00694c 0%, #008560 100%)' : '#94a3b8' }}>
+            {pack.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function LocationMap({ store }) {
   const delta = 0.008
   const bbox  = `${store.lng - delta},${store.lat - delta},${store.lng + delta},${store.lat + delta}`
@@ -383,7 +434,9 @@ function LocationMap({ store }) {
 
 export default function StoreDetailClient({ store }) {
   const router        = useRouter()
+  const { addItem }   = useCart()
   const [fav, setFav] = useState(false)
+  const [selectedPack, setSelectedPack] = useState(null)
   const open          = isStoreOpen(store)
 
   // Format close time with AM/PM once — reuse everywhere
@@ -398,8 +451,15 @@ export default function StoreDetailClient({ store }) {
   const statusColor = open ? '#00694c' : '#e11d48'
   const dotColor    = open ? '#00694c' : '#e11d48'
 
+  const handleReserve = (pack) => {
+    // Leftover pack is passed to addItem. item_type flag is injected.
+    addItem({ ...pack, item_type: 'pack' }, pack.price, 1)
+    setSelectedPack(null)
+  }
+
   return (
     <>
+      <PackQuickViewModal pack={selectedPack} onClose={() => setSelectedPack(null)} onReserve={handleReserve} />
       {/* ═══ MOBILE ═══ */}
       <div className="md:hidden min-h-screen" style={{ background: '#f2fdea' }}>
         <header className="fixed top-0 left-0 right-0 z-50"
@@ -476,16 +536,41 @@ export default function StoreDetailClient({ store }) {
                 </div>
                 <div className="space-y-4">
                   {leftoverPacks.map((pack) => (
-                    <div key={pack.id} className="flex overflow-hidden rounded-xl" style={{ background: '#fff', boxShadow: '0 2px 12px rgba(0,33,21,0.06)' }}>
-                      <div className="w-28 h-28 flex-shrink-0"><img src={pack.image} alt={pack.name} className="w-full h-full object-cover" /></div>
+                    <div key={pack.id} className="flex overflow-hidden rounded-xl relative group transition-all" style={{ background: '#fff', boxShadow: '0 2px 12px rgba(0,33,21,0.06)' }}>
+                      <div className="w-28 h-28 flex-shrink-0 relative overflow-hidden">
+                        <img src={pack.image} alt={pack.name} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                        {pack.discount_percentage > 0 && (
+                            <div className="absolute top-2 left-2 text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm" style={{ background: '#e11d48', color: '#fff' }}>
+                              -{pack.discount_percentage}%
+                            </div>
+                        )}
+                      </div>
                       <div className="p-4 flex flex-col justify-between flex-grow">
                         <div>
-                          <h3 className="font-bold text-sm leading-snug" style={{ color: '#151e13' }}>{pack.name}</h3>
-                          <p className="text-xs mt-1" style={{ color: '#6D7A73' }}>{pack.description}</p>
+                          <div className="flex justify-between items-start">
+                            <h3 className="font-bold text-sm leading-snug" style={{ color: '#151e13' }}>{pack.name}</h3>
+                            <span className="text-[9px] uppercase font-bold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded ml-2 whitespace-nowrap">{pack.package_type}</span>
+                          </div>
+                          <p className="text-xs mt-1 line-clamp-2" style={{ color: '#6D7A73' }}>{pack.description}</p>
+                          <div className="flex items-center gap-2 mt-1.5 text-[10px]">
+                            {pack.weight_quantity && <span className="font-medium text-gray-600 border border-gray-200 px-1.5 rounded">{pack.weight_quantity}</span>}
+                            {pack.stock > 0 ? <span className="text-green-600 font-medium">{pack.stock} left</span> : <span className="text-red-500 font-medium">Sold Out</span>}
+                          </div>
                         </div>
-                        <div className="flex items-center justify-between">
-                          <span className="font-bold text-sm" style={{ color: '#855000' }}>€{Number(pack.price).toFixed(2)}</span>
-                          <button className="text-xs font-bold px-3 py-1.5 rounded-full" style={{ background: 'rgba(0,105,76,0.09)', color: '#00694c', border: 'none' }}>Reserve Now</button>
+                        <div className="flex items-end justify-between mt-2">
+                          <div className="flex flex-col">
+                              {pack.original_price && pack.original_price > pack.price && (
+                                  <span className="text-[10px] text-gray-400 line-through leading-none mb-0.5">€{Number(pack.original_price).toFixed(2)}</span>
+                              )}
+                              <span className="font-bold text-sm leading-none" style={{ color: '#855000' }}>€{Number(pack.price).toFixed(2)}</span>
+                          </div>
+                          <button 
+                            onClick={() => setSelectedPack(pack)}
+                            className="text-xs font-bold px-3 py-1.5 rounded-full transition-colors active:scale-95 disabled:opacity-50 disabled:active:scale-100" 
+                            disabled={pack.stock <= 0}
+                            style={{ background: pack.stock > 0 ? 'rgba(0,105,76,0.09)' : '#f1f5f9', color: pack.stock > 0 ? '#00694c' : '#94a3b8', border: 'none' }}>
+                            {pack.stock > 0 ? 'Reserve Now' : 'Sold Out'}
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -577,16 +662,42 @@ export default function StoreDetailClient({ store }) {
                   </div>
                   <div className="space-y-4">
                     {leftoverPacks.map((pack) => (
-                      <div key={pack.id} className="flex overflow-hidden rounded-xl" style={{ background: '#fff', boxShadow: '0 2px 12px rgba(0,33,21,0.06)' }}>
-                        <div className="w-36 h-36 flex-shrink-0"><img src={pack.image} alt={pack.name} className="w-full h-full object-cover" /></div>
+                      <div key={pack.id} className="flex overflow-hidden rounded-xl relative group transition-all" style={{ background: '#fff', boxShadow: '0 2px 12px rgba(0,33,21,0.06)' }}>
+                        <div className="w-36 h-36 flex-shrink-0 relative overflow-hidden">
+                          <img src={pack.image} alt={pack.name} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                          {pack.discount_percentage > 0 && (
+                              <div className="absolute top-2 left-2 text-[11px] font-bold px-2 py-1 rounded shadow-sm" style={{ background: '#e11d48', color: '#fff' }}>
+                                -{pack.discount_percentage}%
+                              </div>
+                          )}
+                        </div>
                         <div className="p-5 flex flex-col justify-between flex-grow">
                           <div>
-                            <h3 className="font-bold text-base leading-snug mb-1" style={{ color: '#151e13' }}>{pack.name}</h3>
-                            <p className="text-sm" style={{ color: '#6D7A73' }}>{pack.description}</p>
+                            <div className="flex justify-between items-start">
+                              <h3 className="font-bold text-base leading-snug mb-1" style={{ color: '#151e13' }}>{pack.name}</h3>
+                              <span className="text-[10px] uppercase font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded ml-3 whitespace-nowrap border border-gray-200">{pack.package_type}</span>
+                            </div>
+                            <p className="text-sm line-clamp-2" style={{ color: '#6D7A73' }}>{pack.description}</p>
+                            <div className="flex items-center gap-3 mt-2 text-xs">
+                              {pack.weight_quantity && <span className="font-medium text-gray-600 bg-gray-50 border border-gray-200 px-2 py-0.5 rounded">{pack.weight_quantity}</span>}
+                              {pack.stock > 0 ? <span className="text-green-600 font-medium">{pack.stock} available</span> : <span className="text-red-500 font-medium">Out of stock</span>}
+                              {pack.estimated_delivery && <span className="text-gray-500 font-medium ml-auto">Delivers in: {pack.estimated_delivery}</span>}
+                            </div>
                           </div>
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-lg" style={{ color: '#855000' }}>€{Number(pack.price).toFixed(2)}</span>
-                            <button className="text-sm font-bold px-5 py-2 rounded-full" style={{ background: 'rgba(0,105,76,0.09)', color: '#00694c' }}>Reserve Now</button>
+                          <div className="flex items-end justify-between mt-3">
+                            <div className="flex flex-col">
+                                {pack.original_price && pack.original_price > pack.price && (
+                                    <span className="text-xs text-gray-400 line-through leading-none mb-1">€{Number(pack.original_price).toFixed(2)}</span>
+                                )}
+                                <span className="font-bold text-lg leading-none" style={{ color: '#855000' }}>€{Number(pack.price).toFixed(2)}</span>
+                            </div>
+                            <button 
+                              onClick={() => setSelectedPack(pack)}
+                              className="text-sm font-bold px-5 py-2 rounded-full transition-colors active:scale-95 disabled:opacity-50 disabled:active:scale-100" 
+                              disabled={pack.stock <= 0}
+                              style={{ background: pack.stock > 0 ? 'rgba(0,105,76,0.09)' : '#f1f5f9', color: pack.stock > 0 ? '#00694c' : '#94a3b8' }}>
+                              {pack.stock > 0 ? 'Reserve Now' : 'Sold Out'}
+                            </button>
                           </div>
                         </div>
                       </div>

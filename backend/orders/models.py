@@ -751,7 +751,8 @@ class BlockedDate(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items', db_index=True)
-    product = models.ForeignKey('products.Product', on_delete=models.CASCADE, db_index=True)
+    product = models.ForeignKey('products.Product', on_delete=models.CASCADE, null=True, blank=True, db_index=True)
+    leftover_pack = models.ForeignKey('stores.LeftoverPack', on_delete=models.CASCADE, null=True, blank=True, db_index=True)
     color = models.ForeignKey('products.Color', on_delete=models.SET_NULL, null=True, blank=True)
     size = models.ForeignKey('products.Size', on_delete=models.SET_NULL, null=True, blank=True)
     quantity = models.PositiveIntegerField(default=1)
@@ -763,7 +764,11 @@ class OrderItem(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.quantity} of {self.product.name}"
+        if self.product:
+            return f"{self.quantity} of {self.product.name}"
+        if self.leftover_pack:
+            return f"{self.quantity} of Pack: {self.leftover_pack.name}"
+        return f"{self.quantity} of Unknown Item"
 
 class OrderUpdate(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='updates')

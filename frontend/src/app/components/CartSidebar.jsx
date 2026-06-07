@@ -324,17 +324,17 @@ export default function CartSidebar() {
                         from {item.origin}
                       </p>
                     </div>
-                    <button onClick={() => removeItem(item.id)} className="cursor-pointer text-[#bccac1] hover:text-[#ba1a1a] transition-colors mt-0.5">
+                    <button onClick={() => removeItem(item.id, item.item_type || 'product')} className="cursor-pointer text-[#bccac1] hover:text-[#ba1a1a] transition-colors mt-0.5">
                       <span className="material-symbols-outlined text-[18px]">close</span>
                     </button>
                   </div>
                   <div className="flex items-center justify-between mt-2">
                     <div className="flex items-center bg-[#f0f4f0] rounded-lg p-0.5">
-                      <button onClick={() => updateQty(item.id, item.qty - 1)} className="w-7 cursor-pointer h-7 flex items-center justify-center hover:bg-[#e2e8e2] rounded transition-colors">
+                      <button onClick={() => updateQty(item.id, item.qty - 1, item.item_type || 'product')} className="w-7 cursor-pointer h-7 flex items-center justify-center hover:bg-[#e2e8e2] rounded transition-colors">
                         <span className="material-symbols-outlined text-[16px]">remove</span>
                       </button>
                       <span className="w-7 text-center font-bold text-sm">{item.qty}</span>
-                      <button onClick={() => updateQty(item.id, item.qty + 1)} className="w-7 cursor-pointer h-7 flex items-center justify-center hover:bg-[#e2e8e2] rounded transition-colors">
+                      <button onClick={() => updateQty(item.id, item.qty + 1, item.item_type || 'product')} className="w-7 cursor-pointer h-7 flex items-center justify-center hover:bg-[#e2e8e2] rounded transition-colors">
                         <span className="material-symbols-outlined text-[16px]">add</span>
                       </button>
                     </div>

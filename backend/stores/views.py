@@ -12,8 +12,10 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.shortcuts import get_object_or_404
 from django.utils.text import slugify
 
-from .models import Store, StoreFeature, StoreAvailability, LeftoverPack
-from .serializers import StoreListSerializer, StoreDetailSerializer
+from .models import Store, StoreFeature, StoreAvailability, LeftoverPack, LeftoverPackImage
+from .serializers import StoreListSerializer, StoreDetailSerializer, LeftoverPackSerializer
+from rest_framework import viewsets
+from rest_framework.exceptions import PermissionDenied
 
 
 # ── Helper ────────────────────────────────────────────────────────────────────
@@ -220,3 +222,49 @@ class AdminStoreAvailabilityView(APIView):
                 order    = i,
             )
         return Response({'ok': True, 'availability': items})
+
+class DashboardLeftoverPackViewSet(viewsets.ModelViewSet):
+    """
+    CRUD for Store Owners to manage Leftover Packs.
+    """
+    serializer_class = LeftoverPackSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+    def get_queryset(self):
+        # Filter by store owner unless superuser
+        qs = LeftoverPack.objects.all().prefetch_related('images')
+        store_slug = self.request.query_params.get('store_slug')
+        if store_slug:
+            qs = qs.filter(store__slug=store_slug)
+
+        if self.request.user.is_superuser:
+            return qs
+        return qs.filter(store__owner=self.request.user)
+
+    def perform_create(self, serializer):
+        store_slug = self.request.data.get('store_slug') or self.request.query_params.get('store_slug')
+        if not store_slug:
+            from rest_framework.exceptions import ValidationError
+            raise ValidationError({"store_slug": "store_slug is required."})
+        
+        store = get_object_or_404(Store, slug=store_slug)
+        if not self.request.user.is_superuser and store.owner != self.request.user:
+            raise PermissionDenied("You do not own this store.")
+        
+        pack = serializer.save(store=store)
+        self._handle_images(pack)
+
+    def perform_update(self, serializer):
+        pack = serializer.save()
+        self._handle_images(pack)
+
+    def _handle_images(self, pack):
+        main_image = self.request.FILES.get('image')
+        if main_image:
+            pack.image = main_image
+            pack.save(update_fields=['image'])
+            
+        images = self.request.FILES.getlist('gallery_images')
+        for image in images:
+            LeftoverPackImage.objects.create(pack=pack, image=image)

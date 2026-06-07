@@ -174,7 +174,18 @@ const columns = [
       </span>
     ),
   },
-  { key: "user", label: "User" },
+  {
+    key: "user",
+    label: "User",
+    render: (v) => {
+      if (!v) return "—";
+      if (typeof v === "object") {
+        const name = `${v.first_name || ""} ${v.last_name || ""}`.trim();
+        return <span className="font-medium text-gray-900 dark:text-white">{name || "Unknown User"}</span>;
+      }
+      return <span className="font-medium text-gray-900 dark:text-white">{v}</span>;
+    }
+  },
   {
     key: "rating",
     label: "Rating",

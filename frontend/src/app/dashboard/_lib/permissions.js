@@ -31,6 +31,7 @@ const ROUTE_PERMISSIONS = {
   "/dashboard": DASHBOARD_ROLES,
   "/dashboard/analytics": ADMIN_ROLES,
   "/dashboard/products": DASHBOARD_ROLES,
+  "/dashboard/leftover-packs": DASHBOARD_ROLES,
   "/dashboard/orders": DASHBOARD_ROLES,
   "/dashboard/users": ADMIN_ROLES,
   "/dashboard/vendors": ADMIN_ROLES,

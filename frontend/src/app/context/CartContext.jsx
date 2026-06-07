@@ -131,12 +131,13 @@ const CartContext = createContext(null)
 function cartReducer(state, action) {
   switch (action.type) {
     case 'ADD_ITEM': {
-      const existing = state.items.find(i => i.id === action.product.id)
+      const itemType = action.product.item_type || 'product'
+      const existing = state.items.find(i => i.id === action.product.id && (i.item_type || 'product') === itemType)
       if (existing) {
         return {
           ...state,
           items: state.items.map(i =>
-            i.id === action.product.id
+            (i.id === action.product.id && (i.item_type || 'product') === itemType)
               ? {
                   ...i,
                   qty: i.qty + action.qty,
@@ -152,6 +153,7 @@ function cartReducer(state, action) {
           ...state.items,
           {
             ...action.product,
+            item_type:     itemType,
             price:         action.effectivePrice || action.product.price,
             originalPrice: action.product.price,
             qty:           action.qty,
@@ -160,15 +162,15 @@ function cartReducer(state, action) {
       }
     }
     case 'REMOVE_ITEM':
-      return { ...state, items: state.items.filter(i => i.id !== action.id) }
+      return { ...state, items: state.items.filter(i => !(i.id === action.id && (i.item_type || 'product') === action.item_type)) }
     case 'UPDATE_QTY': {
       if (action.qty < 1) {
-        return { ...state, items: state.items.filter(i => i.id !== action.id) }
+        return { ...state, items: state.items.filter(i => !(i.id === action.id && (i.item_type || 'product') === action.item_type)) }
       }
       return {
         ...state,
         items: state.items.map(i =>
-          i.id === action.id ? { ...i, qty: action.qty } : i
+          (i.id === action.id && (i.item_type || 'product') === action.item_type) ? { ...i, qty: action.qty } : i
         ),
       }
     }
@@ -256,8 +258,8 @@ export function CartProvider({ children }) {
     setSidebarOpen(true)
   }
 
-  function removeItem(id)     { dispatch({ type: 'REMOVE_ITEM', id }) }
-  function updateQty(id, qty) { dispatch({ type: 'UPDATE_QTY', id, qty }) }
+  function removeItem(id, item_type = 'product') { dispatch({ type: 'REMOVE_ITEM', id, item_type }) }
+  function updateQty(id, qty, item_type = 'product') { dispatch({ type: 'UPDATE_QTY', id, qty, item_type }) }
 
   // ── clearCart — promo ও reset হয় ──────────────────────────────────────────
   function clearCart() {

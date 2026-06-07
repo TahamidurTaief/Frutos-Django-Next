@@ -38072,3 +38072,1211 @@ INFO 2026-06-07 12:24:48,685 autoreload 1528 5580 D:\Munna\Munna\icommerce\icomm
 INFO 2026-06-07 12:24:55,210 autoreload 18652 572 Watching for file changes with StatReloader
 WARNING 2026-06-07 12:25:11,461 basehttp 18652 19804 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
 INFO 2026-06-07 12:26:33,010 autoreload 8664 19824 Watching for file changes with StatReloader
+WARNING 2026-06-07 12:27:11,499 basehttp 8664 3996 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 12:56:59,528 basehttp 8664 19580 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 12:56:59,523 basehttp 8664 6700 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 12:56:59,591 basehttp 8664 19408 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 12:56:59,741 basehttp 8664 11496 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 12:56:59,941 basehttp 8664 19580 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 12:57:00,061 basehttp 8664 6700 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 12:57:02,038 basehttp 8664 19580 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-07 12:57:02,039 basehttp 8664 19408 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-07 12:57:02,040 basehttp 8664 11496 "GET /api/website/site-config/ HTTP/1.1" 200 326
+WARNING 2026-06-07 12:57:03,303 basehttp 8664 15296 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 12:57:03,505 basehttp 8664 15296 "OPTIONS /api/orders/?ordering=-ordered_at HTTP/1.1" 200 0
+INFO 2026-06-07 12:57:03,507 basehttp 8664 10720 "OPTIONS /api/auth/notifications/unread-count/ HTTP/1.1" 200 0
+WARNING 2026-06-07 12:57:03,764 basehttp 8664 1640 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 12:57:05,284 basehttp 8664 15296 "GET /api/orders/shipping-categories/?page_size=15 HTTP/1.1" 401 172
+WARNING 2026-06-07 12:57:05,284 basehttp 8664 1640 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 401 172
+WARNING 2026-06-07 12:57:05,284 basehttp 8664 1352 "GET /api/orders/shipping-tiers/?page_size=200 HTTP/1.1" 401 172
+WARNING 2026-06-07 12:57:05,285 basehttp 8664 17212 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 401 172
+WARNING 2026-06-07 12:57:05,285 basehttp 8664 10720 "GET /api/orders/shipping-methods/?page_size=15 HTTP/1.1" 401 172
+WARNING 2026-06-07 12:57:05,285 basehttp 8664 2904 "GET /api/orders/shipping-methods/?page_size=200 HTTP/1.1" 401 172
+INFO 2026-06-07 12:57:05,311 basehttp 8664 2904 "OPTIONS /api/auth/token/refresh/ HTTP/1.1" 200 0
+WARNING 2026-06-07 12:57:05,311 basehttp 8664 15296 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 12:57:05,818 basehttp 8664 2904 "POST /api/auth/token/refresh/ HTTP/1.1" 200 777
+INFO 2026-06-07 12:57:06,229 views 8664 15296 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-07 12:57:06,249 views 8664 15296 User authenticated: True
+INFO 2026-06-07 12:57:06,250 views 8664 15296 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+INFO 2026-06-07 12:57:06,397 views 8664 15296 Orders queryset count: 4
+INFO 2026-06-07 12:57:06,455 basehttp 8664 1352 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-07 12:57:06,630 basehttp 8664 17212 "GET /api/orders/shipping-tiers/?page_size=200 HTTP/1.1" 200 989
+INFO 2026-06-07 12:57:06,743 basehttp 8664 1640 "GET /api/orders/shipping-methods/?page_size=200 HTTP/1.1" 200 2684
+INFO 2026-06-07 12:57:06,745 basehttp 8664 10720 "GET /api/orders/shipping-methods/?page_size=15 HTTP/1.1" 200 2684
+INFO 2026-06-07 12:57:06,773 basehttp 8664 2904 "GET /api/orders/shipping-categories/?page_size=15 HTTP/1.1" 200 2795
+INFO 2026-06-07 12:57:06,861 views 8664 15296 Serialized orders count: 4
+INFO 2026-06-07 12:57:06,898 basehttp 8664 15296 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 3715
+WARNING 2026-06-07 12:57:08,890 basehttp 8664 8684 "GET /api/delivery-charge/?subtotal=0 HTTP/1.1" 404 4824
+WARNING 2026-06-07 12:57:08,890 basehttp 8664 18884 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 12:57:08,902 basehttp 8664 15628 "GET /api/fulfillment/stores/nearest/ HTTP/1.1" 404 6473
+WARNING 2026-06-07 12:57:08,920 basehttp 8664 10932 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 12:57:08,957 basehttp 8664 18884 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-07 12:57:10,707 views 8664 2904 ProductViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-07 12:57:10,707 basehttp 8664 15296 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+WARNING 2026-06-07 12:57:10,972 basehttp 8664 15296 "GET /api/products/907ce95b-6ad4-473e-944b-b1220f0e52f6/ HTTP/1.1" 404 16531
+INFO 2026-06-07 12:57:11,217 views 8664 2904 Successfully paginated 3 products
+INFO 2026-06-07 12:57:11,406 basehttp 8664 2904 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 12:57:33,498 basehttp 8664 15296 "GET /api/orders/free-shipping-rules/?page_size=20&page=1 HTTP/1.1" 200 213
+INFO 2026-06-07 12:57:33,519 basehttp 8664 2904 "GET /api/orders/coupons/?page_size=20&page=1 HTTP/1.1" 200 1268
+WARNING 2026-06-07 12:57:33,551 basehttp 8664 15296 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 12:57:34,742 basehttp 8664 10720 "GET /api/orders/shipping-tiers/?page_size=200 HTTP/1.1" 200 989
+INFO 2026-06-07 12:57:34,822 basehttp 8664 1640 "GET /api/orders/shipping-methods/?page_size=200 HTTP/1.1" 200 2684
+INFO 2026-06-07 12:57:34,824 basehttp 8664 15296 "GET /api/orders/shipping-methods/?page_size=15 HTTP/1.1" 200 2684
+INFO 2026-06-07 12:57:34,827 basehttp 8664 2904 "GET /api/orders/shipping-categories/?page_size=15 HTTP/1.1" 200 2795
+INFO 2026-06-07 12:57:37,879 views 8664 10920 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 12:57:37,883 views 8664 6800 CategoryViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-07 12:57:37,921 basehttp 8664 6204 "GET /api/homepage/ HTTP/1.1" 404 4792
+INFO 2026-06-07 12:57:38,009 views 8664 10920 Successfully paginated 3 products
+INFO 2026-06-07 12:57:38,038 views 8664 6800 Successfully returned 4 categories
+INFO 2026-06-07 12:57:38,062 basehttp 8664 6800 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 12:57:38,089 basehttp 8664 10920 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 12:57:42,541 basehttp 8664 4272 "GET /api/fulfillment/stores/nearest/ HTTP/1.1" 404 6473
+WARNING 2026-06-07 12:57:42,542 basehttp 8664 15532 "GET /api/delivery-charge/?subtotal=0 HTTP/1.1" 404 4824
+WARNING 2026-06-07 12:57:42,710 basehttp 8664 1640 "GET /api/products/2c65dc51-3260-4f31-a085-4e50ef6b53b2/ HTTP/1.1" 404 16531
+WARNING 2026-06-07 12:57:42,711 basehttp 8664 2904 "GET /api/products/907ce95b-6ad4-473e-944b-b1220f0e52f6/ HTTP/1.1" 404 16531
+WARNING 2026-06-07 12:57:42,712 basehttp 8664 15296 "GET /api/products/907ce95b-6ad4-473e-944b-b1220f0e52f6/ HTTP/1.1" 404 16531
+WARNING 2026-06-07 12:57:42,734 basehttp 8664 10720 "GET /api/products/2c65dc51-3260-4f31-a085-4e50ef6b53b2/ HTTP/1.1" 404 16531
+INFO 2026-06-07 12:57:44,430 views 8664 4272 ProductViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-07 12:57:44,442 basehttp 8664 15532 "GET /api/delivery/windows/ HTTP/1.1" 404 4816
+WARNING 2026-06-07 12:57:44,490 basehttp 8664 10132 "GET /api/delivery-charge/?subtotal=0 HTTP/1.1" 404 4824
+INFO 2026-06-07 12:57:44,523 views 8664 4272 Successfully paginated 3 products
+INFO 2026-06-07 12:57:44,592 basehttp 8664 4272 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 12:58:05,302 basehttp 8664 10720 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 13:45:46,040 basehttp 8664 3212 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 13:47:05,205 views 8664 5676 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 13:47:05,207 views 8664 5256 CategoryViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-07 13:47:05,225 basehttp 8664 16004 "GET /api/site-config/ HTTP/1.1" 404 4801
+INFO 2026-06-07 13:47:05,245 views 8664 5256 Successfully returned 4 categories
+INFO 2026-06-07 13:47:05,248 basehttp 8664 5256 "GET /api/products/categories/ HTTP/1.1" 200 725
+WARNING 2026-06-07 13:47:05,278 basehttp 8664 5484 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 13:47:05,293 views 8664 5676 Successfully paginated 3 products
+INFO 2026-06-07 13:47:05,318 basehttp 8664 16004 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-07 13:47:05,340 basehttp 8664 5676 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 13:47:05,999 views 8664 10800 ProductViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-07 13:47:06,095 basehttp 8664 2492 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 13:47:06,118 views 8664 10800 Successfully paginated 3 products
+INFO 2026-06-07 13:47:06,294 basehttp 8664 10800 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 13:47:10,402 views 8664 5148 ProductViewSet.retrieve called with slug: lychee
+INFO 2026-06-07 13:47:10,507 views 8664 5148 Successfully retrieved product: Lychee
+INFO 2026-06-07 13:47:10,606 basehttp 8664 5148 "GET /api/products/products/lychee/ HTTP/1.1" 200 3235
+WARNING 2026-06-07 13:47:19,453 basehttp 8664 1236 "GET /api/fulfillment/stores/nearest/ HTTP/1.1" 404 6473
+WARNING 2026-06-07 13:47:19,455 basehttp 8664 19680 "GET /api/delivery-charge/?subtotal=0 HTTP/1.1" 404 4824
+WARNING 2026-06-07 13:47:19,696 basehttp 8664 10800 "GET /api/products/907ce95b-6ad4-473e-944b-b1220f0e52f6/ HTTP/1.1" 404 16531
+WARNING 2026-06-07 13:47:19,696 basehttp 8664 2492 "GET /api/products/2c65dc51-3260-4f31-a085-4e50ef6b53b2/ HTTP/1.1" 404 16531
+WARNING 2026-06-07 13:47:19,728 basehttp 8664 3772 "GET /api/products/907ce95b-6ad4-473e-944b-b1220f0e52f6/ HTTP/1.1" 404 16531
+WARNING 2026-06-07 13:47:19,728 basehttp 8664 14592 "GET /api/products/2c65dc51-3260-4f31-a085-4e50ef6b53b2/ HTTP/1.1" 404 16531
+INFO 2026-06-07 13:47:29,989 views 8664 10956 ProductViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-07 13:47:30,007 basehttp 8664 8256 "GET /api/delivery/windows/ HTTP/1.1" 404 4816
+WARNING 2026-06-07 13:47:30,056 basehttp 8664 20224 "GET /api/delivery-charge/?subtotal=0 HTTP/1.1" 404 4824
+INFO 2026-06-07 13:47:30,061 views 8664 10956 Successfully paginated 3 products
+INFO 2026-06-07 13:47:30,110 basehttp 8664 10956 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 13:47:38,541 views 8664 7924 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 13:47:38,542 views 8664 2964 CategoryViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-07 13:47:38,561 basehttp 8664 344 "GET /api/site-config/ HTTP/1.1" 404 4801
+INFO 2026-06-07 13:47:38,570 views 8664 2964 Successfully returned 4 categories
+INFO 2026-06-07 13:47:38,575 basehttp 8664 2964 "GET /api/products/categories/ HTTP/1.1" 200 725
+WARNING 2026-06-07 13:47:38,594 basehttp 8664 1388 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 13:47:38,605 views 8664 7924 Successfully paginated 3 products
+INFO 2026-06-07 13:47:38,612 basehttp 8664 344 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-07 13:47:38,654 basehttp 8664 7924 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 13:47:39,354 views 8664 3772 ProductViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-07 13:47:39,369 basehttp 8664 14592 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 13:47:39,410 views 8664 3772 Successfully paginated 3 products
+INFO 2026-06-07 13:47:39,527 basehttp 8664 3772 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 13:47:49,622 views 8664 5980 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 13:47:49,626 views 8664 5628 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 13:47:49,641 views 8664 5628 Successfully returned 4 categories
+INFO 2026-06-07 13:47:49,643 basehttp 8664 5628 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 13:47:49,653 views 8664 5980 Successfully paginated 3 products
+INFO 2026-06-07 13:47:49,676 basehttp 8664 5980 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 13:47:59,498 views 8664 19344 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 13:47:59,499 views 8664 9940 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 13:47:59,514 views 8664 9940 Successfully returned 4 categories
+INFO 2026-06-07 13:47:59,518 basehttp 8664 9940 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 13:47:59,533 views 8664 19344 Successfully paginated 3 products
+INFO 2026-06-07 13:47:59,567 basehttp 8664 19344 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 13:47:59,900 basehttp 8664 19344 "GET /api/fulfillment/stores/ HTTP/1.1" 200 562
+INFO 2026-06-07 14:34:00,401 autoreload 8664 19824 D:\Munna\Munna\icommerce\icommerce\backend\orders\urls.py changed, reloading.
+INFO 2026-06-07 14:34:06,304 autoreload 19580 17256 Watching for file changes with StatReloader
+INFO 2026-06-07 14:34:10,545 autoreload 19580 17256 D:\Munna\Munna\icommerce\icommerce\backend\orders\urls.py changed, reloading.
+INFO 2026-06-07 14:34:13,050 autoreload 14444 19040 Watching for file changes with StatReloader
+INFO 2026-06-07 14:34:18,026 autoreload 14444 19040 D:\Munna\Munna\icommerce\icommerce\backend\orders\admin.py changed, reloading.
+INFO 2026-06-07 14:34:28,206 autoreload 16224 468 Watching for file changes with StatReloader
+WARNING 2026-06-07 14:35:35,345 basehttp 16224 12920 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:35:35,375 basehttp 16224 14372 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 14:35:35,412 basehttp 16224 12920 "GET /api/website/site-config/ HTTP/1.1" 200 326
+WARNING 2026-06-07 14:35:36,532 basehttp 16224 8664 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 14:35:36,628 basehttp 16224 8664 "OPTIONS /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 200 0
+INFO 2026-06-07 14:35:36,628 basehttp 16224 16388 "OPTIONS /api/orders/?page_size=50&ordering=-ordered_at HTTP/1.1" 200 0
+INFO 2026-06-07 14:35:36,672 basehttp 16224 17336 "OPTIONS /api/auth/dashboard/admin/ HTTP/1.1" 200 0
+WARNING 2026-06-07 14:35:36,722 basehttp 16224 17336 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 14:35:36,729 basehttp 16224 17864 "OPTIONS /api/fulfillment/stores/admin/ HTTP/1.1" 200 0
+INFO 2026-06-07 14:35:36,746 basehttp 16224 5424 "OPTIONS /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 200 0
+WARNING 2026-06-07 14:35:36,776 basehttp 16224 5424 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:35:36,859 basehttp 16224 8664 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 401 172
+WARNING 2026-06-07 14:35:36,875 basehttp 16224 16388 "GET /api/orders/?page_size=50&ordering=-ordered_at HTTP/1.1" 401 172
+WARNING 2026-06-07 14:35:36,869 basehttp 16224 17336 "GET /api/auth/dashboard/admin/ HTTP/1.1" 401 172
+WARNING 2026-06-07 14:35:36,877 basehttp 16224 9700 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 401 172
+WARNING 2026-06-07 14:35:36,878 basehttp 16224 17864 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 401 172
+INFO 2026-06-07 14:35:37,030 basehttp 16224 17864 "POST /api/auth/token/refresh/ HTTP/1.1" 200 777
+INFO 2026-06-07 14:35:37,144 views 16224 9700 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-07 14:35:37,146 basehttp 16224 17864 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-07 14:35:37,161 views 16224 16388 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-07 14:35:37,169 views 16224 9700 User authenticated: True
+INFO 2026-06-07 14:35:37,177 views 16224 16388 User authenticated: True
+INFO 2026-06-07 14:35:37,177 views 16224 9700 Query params: <QueryDict: {'page_size': ['50'], 'ordering': ['-ordered_at']}>
+INFO 2026-06-07 14:35:37,178 views 16224 16388 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+INFO 2026-06-07 14:35:37,182 views 16224 9700 Orders queryset count: 4
+INFO 2026-06-07 14:35:37,187 views 16224 16388 Orders queryset count: 4
+INFO 2026-06-07 14:35:37,214 basehttp 16224 8664 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 14:35:37,294 basehttp 16224 17336 "GET /api/auth/dashboard/admin/ HTTP/1.1" 200 266
+INFO 2026-06-07 14:35:37,345 views 16224 16388 Serialized orders count: 4
+INFO 2026-06-07 14:35:37,357 views 16224 9700 Serialized orders count: 4
+INFO 2026-06-07 14:35:37,370 basehttp 16224 16388 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 3715
+INFO 2026-06-07 14:35:37,386 basehttp 16224 9700 "GET /api/orders/?page_size=50&ordering=-ordered_at HTTP/1.1" 200 3715
+INFO 2026-06-07 14:35:37,465 basehttp 16224 5876 "GET /media/stores/banners/freshdrop.avif HTTP/1.1" 200 103090
+INFO 2026-06-07 14:35:42,841 basehttp 16224 17336 "OPTIONS /api/orders/shipping-tiers/?page_size=200 HTTP/1.1" 200 0
+INFO 2026-06-07 14:35:42,841 basehttp 16224 9700 "OPTIONS /api/orders/shipping-methods/?page_size=15 HTTP/1.1" 200 0
+INFO 2026-06-07 14:35:42,841 basehttp 16224 16388 "OPTIONS /api/orders/shipping-categories/?page_size=15 HTTP/1.1" 200 0
+INFO 2026-06-07 14:35:42,842 basehttp 16224 8664 "OPTIONS /api/orders/shipping-methods/?page_size=200 HTTP/1.1" 200 0
+INFO 2026-06-07 14:35:42,905 basehttp 16224 8664 "GET /api/orders/shipping-tiers/?page_size=200 HTTP/1.1" 200 989
+INFO 2026-06-07 14:35:43,065 basehttp 16224 17336 "GET /api/orders/shipping-categories/?page_size=15 HTTP/1.1" 200 2795
+INFO 2026-06-07 14:35:43,065 basehttp 16224 16388 "GET /api/orders/shipping-methods/?page_size=15 HTTP/1.1" 200 2684
+INFO 2026-06-07 14:35:43,066 basehttp 16224 9700 "GET /api/orders/shipping-methods/?page_size=200 HTTP/1.1" 200 2684
+WARNING 2026-06-07 14:35:52,222 basehttp 16224 9988 "GET /api/site-config/ HTTP/1.1" 404 4801
+INFO 2026-06-07 14:35:52,241 basehttp 16224 12916 "GET /api/fulfillment/stores/ HTTP/1.1" 200 562
+WARNING 2026-06-07 14:35:52,260 basehttp 16224 1352 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 14:35:52,284 basehttp 16224 9988 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-07 14:35:53,210 views 16224 17336 ProductViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-07 14:35:53,232 basehttp 16224 9700 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 14:35:53,291 views 16224 17336 Successfully paginated 3 products
+INFO 2026-06-07 14:35:53,432 basehttp 16224 17336 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 14:36:07,434 basehttp 16224 17336 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 14:36:13,663 views 16224 12100 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:36:13,665 views 16224 15236 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:36:13,696 views 16224 15236 Successfully returned 4 categories
+INFO 2026-06-07 14:36:13,698 basehttp 16224 15236 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 14:36:13,708 views 16224 12100 Successfully paginated 3 products
+INFO 2026-06-07 14:36:13,755 basehttp 16224 12100 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 14:36:16,062 views 16224 12100 ProductViewSet.retrieve called with slug: lychee
+INFO 2026-06-07 14:36:16,100 views 16224 12100 Successfully retrieved product: Lychee
+INFO 2026-06-07 14:36:16,134 basehttp 16224 12100 "GET /api/products/products/lychee/ HTTP/1.1" 200 3235
+WARNING 2026-06-07 14:36:19,574 basehttp 16224 12100 "GET /api/delivery-charge/?subtotal=0 HTTP/1.1" 404 4824
+WARNING 2026-06-07 14:36:19,704 basehttp 16224 12320 "GET /api/fulfillment/stores/nearest/ HTTP/1.1" 404 6473
+WARNING 2026-06-07 14:36:20,192 basehttp 16224 16388 "GET /api/products/907ce95b-6ad4-473e-944b-b1220f0e52f6/ HTTP/1.1" 404 16531
+WARNING 2026-06-07 14:36:20,192 basehttp 16224 17336 "GET /api/products/907ce95b-6ad4-473e-944b-b1220f0e52f6/ HTTP/1.1" 404 16531
+WARNING 2026-06-07 14:36:20,193 basehttp 16224 9700 "GET /api/products/2c65dc51-3260-4f31-a085-4e50ef6b53b2/ HTTP/1.1" 404 16531
+WARNING 2026-06-07 14:36:20,193 basehttp 16224 8664 "GET /api/products/2c65dc51-3260-4f31-a085-4e50ef6b53b2/ HTTP/1.1" 404 16531
+INFO 2026-06-07 14:36:32,633 views 16224 14640 ProductViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-07 14:36:32,659 basehttp 16224 12616 "GET /api/delivery/windows/ HTTP/1.1" 404 4816
+WARNING 2026-06-07 14:36:32,684 basehttp 16224 5296 "GET /api/delivery-charge/?subtotal=0 HTTP/1.1" 404 4824
+INFO 2026-06-07 14:36:32,697 views 16224 14640 Successfully paginated 3 products
+INFO 2026-06-07 14:36:32,755 basehttp 16224 14640 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 14:36:37,454 basehttp 16224 8664 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:37:07,455 basehttp 16224 8664 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:37:37,441 basehttp 16224 8664 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:38:07,434 basehttp 16224 8664 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:38:37,450 basehttp 16224 8664 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:39:11,444 basehttp 16224 8664 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:39:37,436 basehttp 16224 8664 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:40:07,429 basehttp 16224 8664 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:41:11,452 basehttp 16224 8664 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:42:11,443 basehttp 16224 8664 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:43:11,456 basehttp 16224 8664 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:44:11,437 basehttp 16224 8664 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:45:11,475 basehttp 16224 8664 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:46:11,430 basehttp 16224 8664 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:47:11,435 basehttp 16224 8664 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:48:11,201 basehttp 16224 8664 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:48:13,625 basehttp 16224 6632 "GET /api/site-config/ HTTP/1.1" 404 4801
+INFO 2026-06-07 14:48:13,641 views 16224 13384 ProductViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-07 14:48:13,691 basehttp 16224 13284 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:48:13,691 basehttp 16224 5436 "GET /api/delivery-charge/?subtotal=0 HTTP/1.1" 404 4824
+WARNING 2026-06-07 14:48:13,703 basehttp 16224 19408 "GET /api/delivery/windows/ HTTP/1.1" 404 4816
+INFO 2026-06-07 14:48:13,728 views 16224 13384 Successfully paginated 3 products
+INFO 2026-06-07 14:48:13,730 basehttp 16224 6632 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-07 14:48:13,783 basehttp 16224 13384 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 14:48:14,860 basehttp 16224 8664 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 14:48:14,863 views 16224 18416 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:48:14,917 views 16224 18416 Successfully paginated 3 products
+INFO 2026-06-07 14:48:14,982 basehttp 16224 18416 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 14:48:17,447 basehttp 16224 6632 "GET /api/fulfillment/stores/ HTTP/1.1" 200 562
+INFO 2026-06-07 14:48:21,452 basehttp 16224 6632 "GET /api/fulfillment/stores/slug/dhaka-dhanmondi/ HTTP/1.1" 200 560
+INFO 2026-06-07 14:48:31,164 basehttp 16224 10824 "OPTIONS /api/shops/shops/?page_size=10&page=1 HTTP/1.1" 200 0
+INFO 2026-06-07 14:48:31,178 views 16224 10824 ShopViewSet.list called with params: <QueryDict: {'page_size': ['10'], 'page': ['1']}>
+INFO 2026-06-07 14:48:31,189 views 16224 10824 Successfully paginated 1 shops
+INFO 2026-06-07 14:48:31,197 basehttp 16224 10824 "GET /api/shops/shops/?page_size=10&page=1 HTTP/1.1" 200 746
+INFO 2026-06-07 14:48:31,572 basehttp 16224 10824 "OPTIONS /api/products/products/?page=1&page_size=20 HTTP/1.1" 200 0
+INFO 2026-06-07 14:48:31,577 basehttp 16224 10824 "OPTIONS /api/products/colors/?page_size=200 HTTP/1.1" 200 0
+INFO 2026-06-07 14:48:31,589 basehttp 16224 10824 "OPTIONS /api/products/subcategories/?page_size=200 HTTP/1.1" 200 0
+INFO 2026-06-07 14:48:31,590 basehttp 16224 8264 "OPTIONS /api/products/sizes/?page_size=200 HTTP/1.1" 200 0
+INFO 2026-06-07 14:48:31,596 basehttp 16224 14140 "OPTIONS /api/products/brands/?page_size=200 HTTP/1.1" 200 0
+INFO 2026-06-07 14:48:31,614 basehttp 16224 16908 "OPTIONS /api/products/categories/?page_size=200 HTTP/1.1" 200 0
+INFO 2026-06-07 14:48:31,619 basehttp 16224 15664 "OPTIONS /api/shops/shops/?page_size=200 HTTP/1.1" 200 0
+INFO 2026-06-07 14:48:31,649 views 16224 8264 ColorViewSet.list called with params: <QueryDict: {'page_size': ['200']}>
+INFO 2026-06-07 14:48:31,655 views 16224 14140 ProductViewSet.list called with params: <QueryDict: {'page': ['1'], 'page_size': ['20']}>
+INFO 2026-06-07 14:48:31,656 views 16224 10824 SubCategoryViewSet.list called with params: <QueryDict: {'page_size': ['200']}>
+INFO 2026-06-07 14:48:31,657 views 16224 5728 BrandViewSet.list called with params: <QueryDict: {'page_size': ['200']}>
+INFO 2026-06-07 14:48:31,673 views 16224 8264 Successfully returned 4 colors
+INFO 2026-06-07 14:48:31,683 basehttp 16224 8264 "GET /api/products/colors/?page_size=200 HTTP/1.1" 200 98
+INFO 2026-06-07 14:48:31,684 views 16224 15664 CategoryViewSet.list called with params: <QueryDict: {'page_size': ['200']}>
+INFO 2026-06-07 14:48:31,688 views 16224 5728 Successfully returned 4 brands
+INFO 2026-06-07 14:48:31,690 views 16224 10824 Successfully returned 4 subcategories
+INFO 2026-06-07 14:48:31,693 basehttp 16224 16908 "GET /api/products/sizes/?page_size=200 HTTP/1.1" 200 52
+INFO 2026-06-07 14:48:31,701 basehttp 16224 5728 "GET /api/products/brands/?page_size=200 HTTP/1.1" 200 249
+INFO 2026-06-07 14:48:31,701 basehttp 16224 10824 "GET /api/products/subcategories/?page_size=200 HTTP/1.1" 200 271
+INFO 2026-06-07 14:48:31,707 views 16224 15664 Successfully returned 4 categories
+INFO 2026-06-07 14:48:31,712 views 16224 8264 ShopViewSet.list called with params: <QueryDict: {'page_size': ['200']}>
+INFO 2026-06-07 14:48:31,715 basehttp 16224 15664 "GET /api/products/categories/?page_size=200 HTTP/1.1" 200 725
+INFO 2026-06-07 14:48:31,720 views 16224 8264 Successfully paginated 1 shops
+INFO 2026-06-07 14:48:31,736 basehttp 16224 8264 "GET /api/shops/shops/?page_size=200 HTTP/1.1" 200 746
+INFO 2026-06-07 14:48:31,742 views 16224 14140 Successfully paginated 3 products
+INFO 2026-06-07 14:48:31,791 basehttp 16224 14140 "GET /api/products/products/?page=1&page_size=20 HTTP/1.1" 200 8399
+INFO 2026-06-07 14:48:33,847 basehttp 16224 14140 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 14:48:33,888 basehttp 16224 14140 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+WARNING 2026-06-07 14:48:36,592 basehttp 16224 14140 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:49:07,436 basehttp 16224 14140 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:49:37,433 basehttp 16224 14140 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:50:11,448 basehttp 16224 14140 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 14:50:35,063 autoreload 16224 468 D:\Munna\Munna\icommerce\icommerce\backend\stores\models.py changed, reloading.
+INFO 2026-06-07 14:50:38,573 autoreload 984 18504 Watching for file changes with StatReloader
+WARNING 2026-06-07 14:51:11,473 basehttp 984 19368 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 14:51:42,726 autoreload 984 18504 D:\Munna\Munna\icommerce\icommerce\backend\stores\serializers.py changed, reloading.
+INFO 2026-06-07 14:51:45,653 autoreload 14952 11568 Watching for file changes with StatReloader
+INFO 2026-06-07 14:52:10,080 autoreload 14952 11568 D:\Munna\Munna\icommerce\icommerce\backend\stores\views.py changed, reloading.
+INFO 2026-06-07 14:52:12,812 autoreload 3504 17156 Watching for file changes with StatReloader
+WARNING 2026-06-07 14:52:13,529 basehttp 3504 17584 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 14:52:18,892 autoreload 3504 17156 D:\Munna\Munna\icommerce\icommerce\backend\stores\urls.py changed, reloading.
+INFO 2026-06-07 14:52:21,467 autoreload 13612 3848 Watching for file changes with StatReloader
+WARNING 2026-06-07 14:53:11,458 basehttp 13612 16080 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:53:37,883 basehttp 13612 11028 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:53:37,956 basehttp 13612 19044 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:53:38,127 basehttp 13612 11028 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:53:38,138 basehttp 13612 17852 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:53:38,331 basehttp 13612 19044 "GET /api/site-config/ HTTP/1.1" 404 4801
+INFO 2026-06-07 14:53:38,415 basehttp 13612 18416 "GET /api/fulfillment/stores/ HTTP/1.1" 200 562
+WARNING 2026-06-07 14:53:38,442 basehttp 13612 6812 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:53:38,510 basehttp 13612 11028 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:53:38,621 basehttp 13612 19044 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:53:38,692 basehttp 13612 17852 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:53:38,720 basehttp 13612 6812 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:53:38,982 basehttp 13612 11028 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:53:39,219 basehttp 13612 19044 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:53:39,294 basehttp 13612 17852 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:53:39,337 basehttp 13612 6812 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:53:39,413 basehttp 13612 11384 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:53:39,413 basehttp 13612 2940 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:53:39,633 basehttp 13612 11028 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:53:39,725 basehttp 13612 19044 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:53:39,866 basehttp 13612 11028 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:53:39,961 basehttp 13612 19044 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:53:40,007 basehttp 13612 17852 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:53:40,035 basehttp 13612 6812 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:53:40,279 basehttp 13612 11028 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:53:40,341 basehttp 13612 19044 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:53:41,430 basehttp 13612 16080 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:54:11,449 basehttp 13612 16080 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:54:24,609 basehttp 13612 16080 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:54:24,628 basehttp 13612 16080 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 14:54:24,718 basehttp 13612 11736 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 14:54:24,751 basehttp 13612 11736 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+WARNING 2026-06-07 14:54:24,909 basehttp 13612 5172 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:54:25,121 basehttp 13612 12232 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:54:25,122 basehttp 13612 4668 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:54:25,154 basehttp 13612 5172 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:54:26,858 basehttp 13612 5172 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:54:26,907 basehttp 13612 12232 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 14:54:26,937 basehttp 13612 12156 "GET /api/fulfillment/stores/ HTTP/1.1" 200 562
+WARNING 2026-06-07 14:54:27,034 basehttp 13612 5172 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:54:27,079 basehttp 13612 12232 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:54:55,440 basehttp 13612 11736 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:55:17,368 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:17,486 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:17,502 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:17,599 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:17,710 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:17,949 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:18,004 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:18,045 basehttp 13612 6952 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:18,046 basehttp 13612 16756 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:18,046 basehttp 13612 8624 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:18,102 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:18,137 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:18,563 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:18,627 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:18,715 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:18,799 basehttp 13612 13336 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:18,922 basehttp 13612 13136 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:19,000 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:19,035 basehttp 13612 8624 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:19,052 basehttp 13612 6952 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:19,236 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:19,318 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+INFO 2026-06-07 14:55:19,365 basehttp 13612 15648 "GET /api/fulfillment/stores/ HTTP/1.1" 200 562
+WARNING 2026-06-07 14:55:19,389 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:19,410 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:19,563 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:19,617 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:19,673 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:19,740 basehttp 13612 13336 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:19,810 basehttp 13612 13136 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:19,862 basehttp 13612 8624 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:19,874 basehttp 13612 6952 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:19,903 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:20,209 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:20,269 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:20,309 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:20,324 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:20,429 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:20,459 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:20,497 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:20,547 basehttp 13612 13336 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:20,606 basehttp 13612 13136 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:20,641 basehttp 13612 8624 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:20,654 basehttp 13612 6952 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:20,678 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:20,784 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:20,830 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:20,872 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:20,888 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:21,005 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:21,050 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:21,138 basehttp 13612 13336 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:21,200 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:21,241 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:21,241 basehttp 13612 8624 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:21,283 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:21,350 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:21,424 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:21,478 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:21,549 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:21,563 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:21,676 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:21,726 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:21,779 basehttp 13612 13336 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:21,805 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:21,816 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:21,852 basehttp 13612 8624 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:21,882 basehttp 13612 6952 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:21,911 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:21,988 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:22,081 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:22,133 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:22,146 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:22,267 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:22,314 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:22,364 basehttp 13612 13336 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:22,396 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:22,407 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:22,444 basehttp 13612 8624 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:22,472 basehttp 13612 6952 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:22,504 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:22,593 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:22,663 basehttp 13612 13336 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:22,749 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:22,765 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:22,871 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:22,923 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:22,952 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:22,987 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:23,015 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:23,052 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:23,088 basehttp 13612 8624 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:23,143 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:23,174 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:23,236 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:23,262 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:23,298 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:23,421 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:23,473 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:23,499 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:23,537 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:23,565 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:23,586 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:23,630 basehttp 13612 8624 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:23,698 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:23,737 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:23,818 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:23,855 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:23,950 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:24,084 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:24,154 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:24,184 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:24,233 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:24,257 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:24,296 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:24,332 basehttp 13612 8624 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:24,367 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:24,407 basehttp 13612 13336 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:24,483 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:24,583 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:24,633 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:24,747 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:24,802 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:24,875 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:24,972 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:25,048 basehttp 13612 13336 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:25,102 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:25,118 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:25,194 basehttp 13612 8624 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:25,266 basehttp 13612 6952 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:25,346 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:25,444 basehttp 13612 11736 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:55:25,473 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:25,512 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:25,621 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:25,659 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:25,720 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:25,767 basehttp 13612 13336 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:25,824 basehttp 13612 13136 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:25,865 basehttp 13612 8624 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:25,879 basehttp 13612 6952 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:25,903 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:25,995 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:26,047 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:26,090 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:26,132 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:26,365 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:26,487 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:26,576 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:26,699 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:26,752 basehttp 13612 13336 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:26,801 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:26,817 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:26,831 basehttp 13612 8624 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:26,929 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:26,968 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:27,004 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:27,043 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:27,142 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:27,177 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:27,255 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:27,333 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:27,414 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:27,482 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:27,634 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:27,753 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:27,861 basehttp 13612 13336 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:27,919 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:27,945 basehttp 13612 8624 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:27,951 basehttp 13612 6952 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:28,103 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:28,173 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:28,233 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:28,310 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:28,415 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:28,468 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:28,578 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:28,659 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:28,749 basehttp 13612 13336 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:28,800 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:28,814 basehttp 13612 8624 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:28,831 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:29,007 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:29,059 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:29,158 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:29,226 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:29,307 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:29,368 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:29,459 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:29,550 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:29,619 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:29,632 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:29,683 basehttp 13612 13136 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:29,740 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:29,867 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:29,908 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:30,017 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:30,061 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:30,150 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:30,211 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:30,324 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:30,434 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:30,494 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:30,514 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:30,588 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:30,663 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:30,807 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:30,859 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:30,979 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:31,050 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:31,133 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:31,199 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:31,342 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:31,394 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:31,459 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:31,546 basehttp 13612 13336 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:31,603 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:31,632 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:31,796 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:31,851 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:31,940 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:32,058 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:32,156 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:32,204 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:32,267 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:32,321 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:32,421 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:32,500 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:32,579 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:32,593 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:32,731 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:32,778 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:32,903 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:32,971 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:33,088 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:33,137 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:33,192 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:33,241 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:33,325 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:33,428 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:33,481 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:33,496 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:33,636 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:33,677 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:33,784 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:33,837 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:33,951 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:34,021 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:34,089 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:34,176 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:34,256 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:34,351 basehttp 13612 13336 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:34,412 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:34,445 basehttp 13612 10452 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:34,592 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:34,651 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:34,740 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:34,809 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:34,928 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:34,984 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:35,062 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:35,124 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:35,180 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:35,260 basehttp 13612 13336 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:35,310 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:35,344 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:35,545 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:35,602 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:35,687 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:35,745 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:35,841 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:35,887 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:35,989 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:36,050 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:36,087 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:36,103 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:36,177 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:36,266 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:36,399 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:36,455 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:36,562 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:36,605 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:36,723 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:36,778 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:36,912 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:36,990 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:37,035 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:37,049 basehttp 13612 13136 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:37,115 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:37,198 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:37,299 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:37,335 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:37,437 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:37,486 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:37,600 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:37,651 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:37,721 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:37,781 basehttp 13612 13336 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:37,842 basehttp 13612 13136 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:37,929 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:38,025 basehttp 13612 5616 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:38,305 basehttp 13612 2916 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:38,448 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:38,500 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:55:38,581 basehttp 13612 2916 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:38,648 basehttp 13612 5616 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 14:55:49,934 views 13612 11736 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-07 14:55:49,949 views 13612 11736 User authenticated: True
+INFO 2026-06-07 14:55:49,961 views 13612 11736 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+INFO 2026-06-07 14:55:49,963 basehttp 13612 16080 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-07 14:55:49,980 views 13612 11736 Orders queryset count: 4
+INFO 2026-06-07 14:55:50,077 views 13612 11736 Serialized orders count: 4
+INFO 2026-06-07 14:55:50,079 basehttp 13612 11736 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 3715
+WARNING 2026-06-07 14:55:54,627 basehttp 13612 11736 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:55:55,799 basehttp 13612 6528 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:55:55,820 basehttp 13612 9696 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 14:55:55,843 basehttp 13612 6528 "GET /api/website/site-config/ HTTP/1.1" 200 326
+WARNING 2026-06-07 14:55:56,642 basehttp 13612 11736 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 14:55:56,791 views 13612 11736 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-07 14:55:56,796 basehttp 13612 16080 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-07 14:55:56,796 views 13612 11736 User authenticated: True
+INFO 2026-06-07 14:55:56,797 views 13612 11736 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+INFO 2026-06-07 14:55:56,799 views 13612 11736 Orders queryset count: 4
+INFO 2026-06-07 14:55:56,835 views 13612 11736 Serialized orders count: 4
+INFO 2026-06-07 14:55:56,837 basehttp 13612 11736 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 3715
+WARNING 2026-06-07 14:55:56,886 basehttp 13612 16080 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 14:55:56,905 basehttp 13612 11736 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 14:55:56,949 basehttp 13612 11736 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+WARNING 2026-06-07 14:55:57,022 basehttp 13612 17136 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:56:12,116 basehttp 13612 19776 "GET /api/site-config/ HTTP/1.1" 404 4801
+INFO 2026-06-07 14:56:12,143 basehttp 13612 15296 "GET /api/fulfillment/stores/slug/dhaka-dhanmondi/ HTTP/1.1" 200 560
+WARNING 2026-06-07 14:56:12,144 basehttp 13612 5300 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 14:56:12,178 basehttp 13612 19776 "GET /api/website/site-config/ HTTP/1.1" 200 326
+WARNING 2026-06-07 14:56:13,533 basehttp 13612 17136 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 14:56:13,573 views 13612 17136 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:56:13,674 views 13612 17136 Successfully paginated 3 products
+INFO 2026-06-07 14:56:13,905 basehttp 13612 13760 "GET /api/fulfillment/stores/ HTTP/1.1" 200 562
+INFO 2026-06-07 14:56:13,905 basehttp 13612 17136 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 14:56:17,906 views 13612 20332 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:56:17,908 views 13612 16140 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:56:17,942 views 13612 16140 Successfully returned 4 categories
+INFO 2026-06-07 14:56:17,944 basehttp 13612 16140 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 14:56:17,959 views 13612 20332 Successfully paginated 3 products
+INFO 2026-06-07 14:56:18,020 basehttp 13612 20332 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 14:56:27,446 basehttp 13612 17136 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 14:56:28,535 views 13612 916 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:56:28,537 views 13612 17532 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:56:28,561 views 13612 17532 Successfully returned 4 categories
+INFO 2026-06-07 14:56:28,565 basehttp 13612 17532 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 14:56:28,573 views 13612 916 Successfully paginated 3 products
+INFO 2026-06-07 14:56:28,605 basehttp 13612 916 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 14:56:38,428 views 13612 7800 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:56:38,434 views 13612 4624 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:56:38,451 views 13612 4624 Successfully returned 4 categories
+INFO 2026-06-07 14:56:38,453 basehttp 13612 4624 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 14:56:38,465 views 13612 7800 Successfully paginated 3 products
+INFO 2026-06-07 14:56:38,497 basehttp 13612 7800 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 14:56:48,449 views 13612 13776 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:56:48,454 views 13612 11320 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:56:48,468 views 13612 11320 Successfully returned 4 categories
+INFO 2026-06-07 14:56:48,470 basehttp 13612 11320 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 14:56:48,478 views 13612 13776 Successfully paginated 3 products
+INFO 2026-06-07 14:56:48,508 basehttp 13612 13776 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 14:56:51,513 basehttp 13612 11320 - Broken pipe from ('127.0.0.1', 13261)
+INFO 2026-06-07 14:56:51,514 basehttp 13612 13776 - Broken pipe from ('127.0.0.1', 13260)
+WARNING 2026-06-07 14:56:57,432 basehttp 13612 17136 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 14:57:36,652 autoreload 9388 18324 Watching for file changes with StatReloader
+WARNING 2026-06-07 14:57:57,477 basehttp 9388 13496 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 14:57:57,525 views 9388 12668 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:57:57,527 views 9388 10692 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:57:57,556 views 9388 10692 Successfully returned 4 categories
+INFO 2026-06-07 14:57:57,560 basehttp 9388 10692 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 14:57:57,577 views 9388 12668 Successfully paginated 3 products
+INFO 2026-06-07 14:57:57,624 basehttp 9388 12668 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 14:57:58,169 basehttp 9388 12668 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 14:57:58,670 basehttp 9388 10692 "GET /api/site-config/ HTTP/1.1" 404 4801
+INFO 2026-06-07 14:57:58,833 views 9388 15384 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:57:58,834 views 9388 4612 CategoryViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-07 14:57:58,835 basehttp 9388 12668 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 14:57:58,851 basehttp 9388 13544 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 14:57:58,887 views 9388 4612 Successfully returned 4 categories
+INFO 2026-06-07 14:57:58,905 basehttp 9388 10692 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-07 14:57:58,918 basehttp 9388 12668 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-07 14:57:58,921 basehttp 9388 4612 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 14:57:58,947 views 9388 15384 Successfully paginated 3 products
+INFO 2026-06-07 14:57:59,005 basehttp 9388 15384 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 14:57:59,039 views 9388 5532 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:57:59,040 views 9388 504 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:57:59,071 views 9388 504 Successfully returned 4 categories
+INFO 2026-06-07 14:57:59,076 basehttp 9388 504 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 14:57:59,091 views 9388 5532 Successfully paginated 3 products
+INFO 2026-06-07 14:57:59,194 basehttp 9388 5532 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 14:58:00,692 basehttp 9388 13496 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 14:58:00,698 views 9388 13540 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:58:00,738 views 9388 13540 Successfully paginated 3 products
+INFO 2026-06-07 14:58:00,787 basehttp 9388 13540 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 14:58:01,050 basehttp 9388 13540 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 14:58:01,137 basehttp 9388 13496 "OPTIONS /api/auth/notifications/unread-count/ HTTP/1.1" 200 0
+INFO 2026-06-07 14:58:01,137 basehttp 9388 13540 "OPTIONS /api/orders/?ordering=-ordered_at HTTP/1.1" 200 0
+WARNING 2026-06-07 14:58:01,177 basehttp 9388 13540 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 14:58:01,197 basehttp 9388 13540 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 14:58:01,262 views 9388 13496 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-07 14:58:01,262 views 9388 13496 User authenticated: True
+INFO 2026-06-07 14:58:01,263 views 9388 13496 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+INFO 2026-06-07 14:58:01,267 basehttp 9388 9984 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-07 14:58:01,267 views 9388 13496 Orders queryset count: 4
+INFO 2026-06-07 14:58:01,291 basehttp 9388 10364 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 14:58:01,324 views 9388 13496 Serialized orders count: 4
+INFO 2026-06-07 14:58:01,328 basehttp 9388 13496 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 3715
+INFO 2026-06-07 14:58:01,330 basehttp 9388 10364 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 14:58:11,600 views 9388 15868 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:58:11,601 views 9388 10960 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:58:11,627 views 9388 10960 Successfully returned 4 categories
+INFO 2026-06-07 14:58:11,629 basehttp 9388 10960 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 14:58:11,640 views 9388 15868 Successfully paginated 3 products
+INFO 2026-06-07 14:58:11,697 basehttp 9388 15868 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 14:58:22,337 views 9388 8364 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:58:22,338 views 9388 7692 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:58:22,358 views 9388 7692 Successfully returned 4 categories
+INFO 2026-06-07 14:58:22,360 basehttp 9388 7692 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 14:58:22,371 views 9388 8364 Successfully paginated 3 products
+INFO 2026-06-07 14:58:22,402 basehttp 9388 8364 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 14:58:31,433 basehttp 9388 10364 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 14:58:31,975 views 9388 17440 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:58:31,976 views 9388 11376 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:58:31,998 views 9388 11376 Successfully returned 4 categories
+INFO 2026-06-07 14:58:32,001 basehttp 9388 11376 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 14:58:32,014 views 9388 17440 Successfully paginated 3 products
+INFO 2026-06-07 14:58:32,054 basehttp 9388 17440 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 14:58:41,479 views 9388 7500 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:58:41,480 views 9388 1836 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:58:41,498 views 9388 1836 Successfully returned 4 categories
+INFO 2026-06-07 14:58:41,500 basehttp 9388 1836 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 14:58:41,511 views 9388 7500 Successfully paginated 3 products
+INFO 2026-06-07 14:58:41,539 basehttp 9388 7500 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 14:58:51,451 views 9388 6056 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:58:51,456 views 9388 5096 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:58:51,473 views 9388 5096 Successfully returned 4 categories
+INFO 2026-06-07 14:58:51,475 basehttp 9388 5096 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 14:58:51,485 views 9388 6056 Successfully paginated 3 products
+INFO 2026-06-07 14:58:51,515 basehttp 9388 6056 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 14:59:01,434 basehttp 9388 10364 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 14:59:01,440 views 9388 1136 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:59:01,449 views 9388 13816 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:59:01,465 views 9388 13816 Successfully returned 4 categories
+INFO 2026-06-07 14:59:01,466 basehttp 9388 13816 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 14:59:01,487 views 9388 1136 Successfully paginated 3 products
+INFO 2026-06-07 14:59:01,518 basehttp 9388 1136 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 14:59:11,526 views 9388 13988 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:59:11,529 views 9388 12664 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:59:11,576 views 9388 12664 Successfully returned 4 categories
+INFO 2026-06-07 14:59:11,579 basehttp 9388 12664 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 14:59:11,593 views 9388 13988 Successfully paginated 3 products
+INFO 2026-06-07 14:59:11,650 basehttp 9388 13988 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 14:59:31,424 basehttp 9388 10364 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 14:59:41,364 views 9388 10496 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:59:41,365 views 9388 6660 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:59:41,394 views 9388 6660 Successfully returned 4 categories
+INFO 2026-06-07 14:59:41,399 basehttp 9388 6660 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 14:59:41,425 views 9388 10496 Successfully paginated 3 products
+INFO 2026-06-07 14:59:41,454 basehttp 9388 10496 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 14:59:51,437 views 9388 2316 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:59:51,438 views 9388 13884 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 14:59:51,458 views 9388 13884 Successfully returned 4 categories
+INFO 2026-06-07 14:59:51,461 basehttp 9388 13884 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 14:59:51,472 views 9388 2316 Successfully paginated 3 products
+INFO 2026-06-07 14:59:51,502 basehttp 9388 2316 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 15:00:01,432 basehttp 9388 10364 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:00:01,519 views 9388 15056 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:00:01,521 views 9388 3408 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:00:01,537 views 9388 3408 Successfully returned 4 categories
+INFO 2026-06-07 15:00:01,547 basehttp 9388 3408 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 15:00:01,557 views 9388 15056 Successfully paginated 3 products
+INFO 2026-06-07 15:00:01,581 basehttp 9388 15056 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 15:00:11,453 views 9388 11068 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:00:11,454 views 9388 10468 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:00:11,477 views 9388 10468 Successfully returned 4 categories
+INFO 2026-06-07 15:00:11,479 basehttp 9388 10468 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 15:00:11,493 views 9388 11068 Successfully paginated 3 products
+INFO 2026-06-07 15:00:11,520 basehttp 9388 11068 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 15:00:21,439 views 9388 5724 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:00:21,443 views 9388 17416 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:00:21,460 views 9388 17416 Successfully returned 4 categories
+INFO 2026-06-07 15:00:21,462 basehttp 9388 17416 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 15:00:21,474 views 9388 5724 Successfully paginated 3 products
+INFO 2026-06-07 15:00:21,505 basehttp 9388 5724 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 15:00:31,444 basehttp 9388 10364 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:00:31,447 views 9388 20076 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:00:31,448 views 9388 5432 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:00:31,464 views 9388 5432 Successfully returned 4 categories
+INFO 2026-06-07 15:00:31,467 basehttp 9388 5432 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 15:00:31,479 views 9388 20076 Successfully paginated 3 products
+INFO 2026-06-07 15:00:31,504 basehttp 9388 20076 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 15:00:41,492 views 9388 15320 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:00:41,494 views 9388 19512 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:00:41,516 views 9388 19512 Successfully returned 4 categories
+INFO 2026-06-07 15:00:41,522 basehttp 9388 19512 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 15:00:41,532 views 9388 15320 Successfully paginated 3 products
+INFO 2026-06-07 15:00:41,569 basehttp 9388 15320 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 15:01:01,445 basehttp 9388 10364 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:01:11,442 views 9388 19016 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:01:11,444 views 9388 11948 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:01:11,480 views 9388 11948 Successfully returned 4 categories
+INFO 2026-06-07 15:01:11,481 basehttp 9388 11948 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 15:01:11,495 views 9388 19016 Successfully paginated 3 products
+INFO 2026-06-07 15:01:11,535 basehttp 9388 19016 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 15:02:11,429 basehttp 9388 10364 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:02:11,433 views 9388 9096 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:02:11,439 views 9388 20360 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:02:11,453 views 9388 20360 Successfully returned 4 categories
+INFO 2026-06-07 15:02:11,456 basehttp 9388 20360 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 15:02:11,465 views 9388 9096 Successfully paginated 3 products
+INFO 2026-06-07 15:02:11,488 basehttp 9388 9096 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 15:03:11,463 basehttp 9388 10364 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:03:11,465 views 9388 2604 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:03:11,467 views 9388 18732 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:03:11,481 views 9388 18732 Successfully returned 4 categories
+INFO 2026-06-07 15:03:11,485 basehttp 9388 18732 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 15:03:11,496 views 9388 2604 Successfully paginated 3 products
+INFO 2026-06-07 15:03:11,518 basehttp 9388 2604 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 15:03:54,531 basehttp 9388 10364 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:03:55,404 views 9388 7336 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:03:55,407 views 9388 10988 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:03:55,448 views 9388 10988 Successfully returned 4 categories
+INFO 2026-06-07 15:03:55,454 basehttp 9388 10988 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 15:03:55,463 views 9388 7336 Successfully paginated 3 products
+INFO 2026-06-07 15:03:55,491 basehttp 9388 7336 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 15:03:58,225 basehttp 9388 7336 "GET /api/site-config/ HTTP/1.1" 404 4801
+INFO 2026-06-07 15:03:58,245 views 9388 10988 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:03:58,272 views 9388 10988 Successfully paginated 3 products
+INFO 2026-06-07 15:03:58,306 basehttp 9388 10988 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 15:03:58,317 views 9388 2444 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:03:58,326 views 9388 2444 Successfully returned 4 categories
+INFO 2026-06-07 15:03:58,330 basehttp 9388 2444 "GET /api/products/categories/ HTTP/1.1" 200 725
+WARNING 2026-06-07 15:03:58,343 basehttp 9388 8520 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 15:03:58,401 basehttp 9388 7336 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-07 15:03:59,368 basehttp 9388 17796 "GET /media/products/thumbnails/lychess.jpg HTTP/1.1" 200 92793
+INFO 2026-06-07 15:03:59,374 basehttp 9388 9128 "GET /media/products/thumbnails/mango_2.jfif HTTP/1.1" 200 8386
+INFO 2026-06-07 15:03:59,415 basehttp 9388 5896 "GET /media/products/thumbnails/apple.jfif HTTP/1.1" 200 8258
+WARNING 2026-06-07 15:03:59,698 basehttp 9388 10364 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 15:03:59,706 views 9388 10264 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:03:59,833 views 9388 10264 Successfully paginated 3 products
+INFO 2026-06-07 15:03:59,914 basehttp 9388 10264 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 15:04:01,430 basehttp 9388 10264 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:04:02,164 basehttp 9388 7336 "GET /api/fulfillment/stores/ HTTP/1.1" 200 562
+WARNING 2026-06-07 15:04:11,395 basehttp 9388 2684 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 15:04:11,422 basehttp 9388 5684 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 15:04:11,448 basehttp 9388 2684 "GET /api/website/site-config/ HTTP/1.1" 200 326
+WARNING 2026-06-07 15:04:12,358 basehttp 9388 10264 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+WARNING 2026-06-07 15:04:12,639 basehttp 9388 10364 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:04:12,643 basehttp 9388 10264 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-07 15:04:12,676 basehttp 9388 10364 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:04:12,721 basehttp 9388 17100 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:04:12,726 views 9388 12916 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-07 15:04:12,728 views 9388 12916 User authenticated: True
+INFO 2026-06-07 15:04:12,729 views 9388 12916 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+INFO 2026-06-07 15:04:12,742 views 9388 12916 Orders queryset count: 4
+INFO 2026-06-07 15:04:12,772 basehttp 9388 17100 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:04:12,796 views 9388 12916 Serialized orders count: 4
+INFO 2026-06-07 15:04:12,799 basehttp 9388 12916 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 3715
+INFO 2026-06-07 15:04:22,438 views 9388 12916 ProductViewSet.list called with params: <QueryDict: {'page': ['1'], 'page_size': ['20']}>
+INFO 2026-06-07 15:04:22,440 views 9388 17100 ColorViewSet.list called with params: <QueryDict: {'page_size': ['200']}>
+INFO 2026-06-07 15:04:22,445 views 9388 10364 CategoryViewSet.list called with params: <QueryDict: {'page_size': ['200']}>
+INFO 2026-06-07 15:04:22,451 views 9388 10264 SubCategoryViewSet.list called with params: <QueryDict: {'page_size': ['200']}>
+INFO 2026-06-07 15:04:22,476 views 9388 17100 Successfully returned 4 colors
+INFO 2026-06-07 15:04:22,494 basehttp 9388 17100 "GET /api/products/colors/?page_size=200 HTTP/1.1" 200 98
+INFO 2026-06-07 15:04:22,497 views 9388 10264 Successfully returned 4 subcategories
+INFO 2026-06-07 15:04:22,503 views 9388 10364 Successfully returned 4 categories
+INFO 2026-06-07 15:04:22,518 views 9388 19220 BrandViewSet.list called with params: <QueryDict: {'page_size': ['200']}>
+INFO 2026-06-07 15:04:22,519 views 9388 15484 ShopViewSet.list called with params: <QueryDict: {'page_size': ['200']}>
+INFO 2026-06-07 15:04:22,528 basehttp 9388 17100 "GET /api/products/sizes/?page_size=200 HTTP/1.1" 200 52
+INFO 2026-06-07 15:04:22,536 views 9388 12916 Successfully paginated 3 products
+INFO 2026-06-07 15:04:22,539 basehttp 9388 10264 "GET /api/products/subcategories/?page_size=200 HTTP/1.1" 200 271
+INFO 2026-06-07 15:04:22,551 basehttp 9388 10364 "GET /api/products/categories/?page_size=200 HTTP/1.1" 200 725
+INFO 2026-06-07 15:04:22,563 views 9388 19220 Successfully returned 4 brands
+INFO 2026-06-07 15:04:22,581 views 9388 15484 Successfully paginated 1 shops
+INFO 2026-06-07 15:04:22,635 basehttp 9388 19220 "GET /api/products/brands/?page_size=200 HTTP/1.1" 200 249
+INFO 2026-06-07 15:04:22,663 basehttp 9388 15484 "GET /api/shops/shops/?page_size=200 HTTP/1.1" 200 746
+INFO 2026-06-07 15:04:22,683 basehttp 9388 12916 "GET /api/products/products/?page=1&page_size=20 HTTP/1.1" 200 8399
+INFO 2026-06-07 15:04:29,421 views 9388 12916 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-07 15:04:29,422 views 9388 12916 User authenticated: True
+INFO 2026-06-07 15:04:29,422 views 9388 12916 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+INFO 2026-06-07 15:04:29,424 views 9388 12916 Orders queryset count: 4
+INFO 2026-06-07 15:04:29,468 views 9388 12916 Serialized orders count: 4
+INFO 2026-06-07 15:04:29,477 basehttp 9388 12916 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 3715
+INFO 2026-06-07 15:04:33,604 basehttp 9388 12916 "OPTIONS /api/products/reviews/ HTTP/1.1" 200 0
+INFO 2026-06-07 15:04:33,610 basehttp 9388 15484 "OPTIONS /api/products/products/?page_size=500 HTTP/1.1" 200 0
+INFO 2026-06-07 15:04:33,611 basehttp 9388 12916 "OPTIONS /api/products/products/?page_size=500 HTTP/1.1" 200 0
+INFO 2026-06-07 15:04:33,632 views 9388 15484 ProductViewSet.list called with params: <QueryDict: {'page_size': ['500']}>
+INFO 2026-06-07 15:04:33,673 views 9388 15484 Successfully paginated 3 products
+INFO 2026-06-07 15:04:33,691 basehttp 9388 12916 "GET /api/products/reviews/ HTTP/1.1" 200 794
+INFO 2026-06-07 15:04:33,750 basehttp 9388 15484 "GET /api/products/products/?page_size=500 HTTP/1.1" 200 8399
+INFO 2026-06-07 15:04:33,755 basehttp 9388 12916 "GET /api/products/reviews/ HTTP/1.1" 200 794
+INFO 2026-06-07 15:04:33,768 views 9388 15484 ProductViewSet.list called with params: <QueryDict: {'page_size': ['500']}>
+INFO 2026-06-07 15:04:33,797 views 9388 15484 Successfully paginated 3 products
+INFO 2026-06-07 15:04:33,832 basehttp 9388 15484 "GET /api/products/products/?page_size=500 HTTP/1.1" 200 8399
+WARNING 2026-06-07 15:04:42,558 basehttp 9388 15484 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:05:13,434 basehttp 9388 15484 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:05:43,430 basehttp 9388 15484 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:06:13,471 basehttp 9388 15484 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:06:35,349 views 9388 12916 ProductViewSet.list called with params: <QueryDict: {'page_size': ['500']}>
+INFO 2026-06-07 15:06:35,354 basehttp 9388 15484 "GET /api/products/reviews/ HTTP/1.1" 200 794
+INFO 2026-06-07 15:06:35,377 views 9388 12916 Successfully paginated 3 products
+INFO 2026-06-07 15:06:35,429 basehttp 9388 12916 "GET /api/products/products/?page_size=500 HTTP/1.1" 200 8399
+WARNING 2026-06-07 15:06:35,826 basehttp 9388 2316 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 15:06:36,054 basehttp 9388 6092 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 15:06:36,055 basehttp 9388 9440 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 15:06:36,074 basehttp 9388 2316 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 15:06:36,398 views 9388 15484 ProductViewSet.list called with params: <QueryDict: {'page_size': ['500']}>
+INFO 2026-06-07 15:06:36,441 basehttp 9388 12916 "GET /api/products/reviews/ HTTP/1.1" 200 794
+INFO 2026-06-07 15:06:36,451 views 9388 15484 Successfully paginated 3 products
+INFO 2026-06-07 15:06:36,485 basehttp 9388 15484 "GET /api/products/products/?page_size=500 HTTP/1.1" 200 8399
+WARNING 2026-06-07 15:06:43,440 basehttp 9388 15484 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:07:13,433 basehttp 9388 15484 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:07:35,833 basehttp 9388 15484 "GET /api/orders/shipping-tiers/?page_size=200 HTTP/1.1" 200 989
+INFO 2026-06-07 15:07:36,004 basehttp 9388 19220 "GET /api/orders/shipping-methods/?page_size=200 HTTP/1.1" 200 2684
+INFO 2026-06-07 15:07:36,017 basehttp 9388 12916 "GET /api/orders/shipping-methods/?page_size=15 HTTP/1.1" 200 2684
+INFO 2026-06-07 15:07:36,022 basehttp 9388 10364 "GET /api/orders/shipping-categories/?page_size=15 HTTP/1.1" 200 2795
+WARNING 2026-06-07 15:07:42,589 basehttp 9388 10364 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:08:12,590 basehttp 9388 10364 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:08:16,371 views 9388 12916 ProductViewSet.list called with params: <QueryDict: {'page_size': ['500']}>
+INFO 2026-06-07 15:08:16,383 basehttp 9388 10364 "GET /api/products/reviews/ HTTP/1.1" 200 794
+INFO 2026-06-07 15:08:16,432 views 9388 12916 Successfully paginated 3 products
+INFO 2026-06-07 15:08:16,443 basehttp 9388 10364 "GET /api/products/reviews/ HTTP/1.1" 200 794
+INFO 2026-06-07 15:08:16,468 basehttp 9388 12916 "GET /api/products/products/?page_size=500 HTTP/1.1" 200 8399
+INFO 2026-06-07 15:08:16,484 views 9388 12916 ProductViewSet.list called with params: <QueryDict: {'page_size': ['500']}>
+INFO 2026-06-07 15:08:16,513 views 9388 12916 Successfully paginated 3 products
+INFO 2026-06-07 15:08:16,539 basehttp 9388 12916 "GET /api/products/products/?page_size=500 HTTP/1.1" 200 8399
+INFO 2026-06-07 15:08:24,207 basehttp 9388 12916 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:08:24,252 basehttp 9388 12916 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:08:42,071 basehttp 9388 12916 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:08:42,086 basehttp 9388 10364 "OPTIONS /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 0
+INFO 2026-06-07 15:08:42,116 basehttp 9388 10364 "GET /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 52
+INFO 2026-06-07 15:08:42,135 basehttp 9388 12916 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:08:42,155 basehttp 9388 10364 "GET /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 52
+INFO 2026-06-07 15:08:42,191 basehttp 9388 12916 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:08:42,208 basehttp 9388 12916 "GET /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 52
+WARNING 2026-06-07 15:08:42,560 basehttp 9388 12916 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:09:12,577 basehttp 9388 12916 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:09:42,587 basehttp 9388 12916 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:10:13,428 basehttp 9388 12916 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:10:42,561 basehttp 9388 12916 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:11:11,365 basehttp 9388 12916 "OPTIONS /api/fulfillment/dashboard/leftover-packs/ HTTP/1.1" 200 0
+WARNING 2026-06-07 15:11:11,403 basehttp 9388 12916 "POST /api/fulfillment/dashboard/leftover-packs/ HTTP/1.1" 400 48
+WARNING 2026-06-07 15:11:12,566 basehttp 9388 12916 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:11:43,429 basehttp 9388 12916 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:12:13,435 basehttp 9388 12916 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:12:43,429 basehttp 9388 12916 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:13:28,738 basehttp 9388 14720 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 15:13:28,954 basehttp 9388 14720 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 15:13:28,977 basehttp 9388 19648 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 15:13:29,018 basehttp 9388 18192 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 15:13:29,432 basehttp 9388 12916 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:14:11,461 basehttp 9388 12916 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:14:28,792 autoreload 9388 18324 D:\Munna\Munna\icommerce\icommerce\backend\stores\serializers.py changed, reloading.
+INFO 2026-06-07 15:14:32,622 autoreload 11008 11568 Watching for file changes with StatReloader
+INFO 2026-06-07 15:14:35,244 autoreload 11008 11568 D:\Munna\Munna\icommerce\icommerce\backend\stores\serializers.py changed, reloading.
+INFO 2026-06-07 15:14:37,811 autoreload 12020 18464 Watching for file changes with StatReloader
+WARNING 2026-06-07 15:15:11,458 basehttp 12020 16328 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:15:43,439 basehttp 12020 16328 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:16:13,432 basehttp 12020 16328 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:17:10,122 basehttp 12020 16328 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:17:12,592 basehttp 12020 16328 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:17:13,544 basehttp 12020 13468 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 15:17:13,559 basehttp 12020 18124 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 15:17:13,594 basehttp 12020 13468 "GET /api/website/site-config/ HTTP/1.1" 200 326
+WARNING 2026-06-07 15:17:14,474 basehttp 12020 16328 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 15:17:14,597 basehttp 12020 16328 "OPTIONS /api/orders/?ordering=-ordered_at HTTP/1.1" 200 0
+INFO 2026-06-07 15:17:14,604 basehttp 12020 16328 "OPTIONS /api/auth/notifications/unread-count/ HTTP/1.1" 200 0
+INFO 2026-06-07 15:17:14,707 basehttp 12020 1644 "OPTIONS /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 200 0
+INFO 2026-06-07 15:17:14,718 basehttp 12020 14812 "OPTIONS /api/fulfillment/stores/admin/ HTTP/1.1" 200 0
+INFO 2026-06-07 15:17:14,747 basehttp 12020 15936 "OPTIONS /api/fulfillment/stores/admin/ HTTP/1.1" 200 0
+WARNING 2026-06-07 15:17:14,752 basehttp 12020 1644 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:17:14,760 views 12020 16328 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-07 15:17:14,762 basehttp 12020 19472 "OPTIONS /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 200 0
+INFO 2026-06-07 15:17:14,777 basehttp 12020 11040 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-07 15:17:14,820 views 12020 16328 User authenticated: True
+INFO 2026-06-07 15:17:14,890 views 12020 16328 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+INFO 2026-06-07 15:17:14,837 basehttp 12020 11280 "GET /media/products/thumbnails/lychess.jpg HTTP/1.1" 200 92793
+WARNING 2026-06-07 15:17:14,874 basehttp 12020 19472 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:17:14,880 basehttp 12020 14812 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:17:14,821 basehttp 12020 19068 "GET /media/products/thumbnails/mango_2.jfif HTTP/1.1" 200 8386
+INFO 2026-06-07 15:17:14,896 basehttp 12020 15936 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:17:14,896 views 12020 16328 Orders queryset count: 4
+INFO 2026-06-07 15:17:14,960 views 12020 16328 Serialized orders count: 4
+INFO 2026-06-07 15:17:14,978 basehttp 12020 16328 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 3715
+INFO 2026-06-07 15:17:15,117 basehttp 12020 16328 "GET /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 52
+INFO 2026-06-07 15:17:15,128 basehttp 12020 15936 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:17:15,146 basehttp 12020 16328 "GET /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 52
+INFO 2026-06-07 15:17:15,189 basehttp 12020 16328 "GET /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 52
+WARNING 2026-06-07 15:17:44,686 basehttp 12020 2940 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:17:47,213 basehttp 12020 2940 "POST /api/fulfillment/dashboard/leftover-packs/ HTTP/1.1" 201 349
+INFO 2026-06-07 15:17:47,283 basehttp 12020 2940 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:17:47,309 basehttp 12020 2940 "GET /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 401
+WARNING 2026-06-07 15:17:52,518 basehttp 12020 15724 "GET /api/site-config/ HTTP/1.1" 404 4801
+INFO 2026-06-07 15:17:52,531 basehttp 12020 19368 "GET /api/fulfillment/stores/ HTTP/1.1" 200 562
+WARNING 2026-06-07 15:17:52,551 basehttp 12020 19480 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 15:17:52,571 basehttp 12020 15724 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-07 15:17:53,451 views 12020 2940 ProductViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-07 15:17:53,508 basehttp 12020 8364 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 15:17:53,543 views 12020 2940 Successfully paginated 3 products
+INFO 2026-06-07 15:17:53,668 basehttp 12020 2940 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 15:17:57,818 basehttp 12020 11744 "GET /api/fulfillment/stores/slug/dhaka-dhanmondi/ HTTP/1.1" 200 560
+WARNING 2026-06-07 15:18:15,435 basehttp 12020 2940 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:18:45,456 basehttp 12020 4624 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:19:15,440 basehttp 12020 4624 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:19:45,431 basehttp 12020 4624 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:20:15,455 basehttp 12020 4624 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:20:44,753 basehttp 12020 4624 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:21:15,545 basehttp 12020 4624 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:21:45,427 basehttp 12020 4624 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:23:11,442 basehttp 12020 4624 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:23:48,675 basehttp 12020 4624 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:24:15,448 basehttp 12020 4624 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:24:45,450 basehttp 12020 4624 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:26:11,506 basehttp 12020 4624 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:27:06,587 autoreload 12020 18464 D:\Munna\Munna\icommerce\icommerce\backend\stores\views.py changed, reloading.
+INFO 2026-06-07 15:27:09,919 autoreload 7776 16256 Watching for file changes with StatReloader
+WARNING 2026-06-07 15:27:11,465 basehttp 7776 3944 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:28:11,453 basehttp 7776 3944 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:28:24,548 autoreload 7776 16256 D:\Munna\Munna\icommerce\icommerce\backend\orders\models.py changed, reloading.
+INFO 2026-06-07 15:28:28,264 autoreload 692 6992 Watching for file changes with StatReloader
+WARNING 2026-06-07 15:29:11,491 basehttp 692 14528 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:29:48,875 autoreload 692 6992 D:\Munna\Munna\icommerce\icommerce\backend\orders\serializers.py changed, reloading.
+INFO 2026-06-07 15:29:51,762 autoreload 9340 13564 Watching for file changes with StatReloader
+WARNING 2026-06-07 15:30:11,526 basehttp 9340 8844 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:30:11,580 basehttp 9340 15724 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 15:30:11,689 basehttp 9340 15724 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 15:30:11,713 basehttp 9340 17952 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 15:30:11,937 basehttp 9340 20368 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 15:30:12,132 basehttp 9340 15724 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 15:30:12,243 basehttp 9340 17952 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 15:30:13,511 basehttp 9340 8424 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 15:30:13,512 basehttp 9340 9804 "GET /api/fulfillment/stores/slug/dhaka-dhanmondi/ HTTP/1.1" 200 560
+INFO 2026-06-07 15:30:13,551 basehttp 9340 17004 "GET /api/website/site-config/ HTTP/1.1" 200 326
+WARNING 2026-06-07 15:30:13,567 basehttp 9340 4144 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 15:30:14,002 basehttp 9340 15724 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-07 15:30:14,931 basehttp 9340 11820 "GET /api/fulfillment/stores/ HTTP/1.1" 200 562
+WARNING 2026-06-07 15:30:15,719 basehttp 9340 8844 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+WARNING 2026-06-07 15:30:15,877 basehttp 9340 11744 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:30:15,899 basehttp 9340 11744 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:30:15,961 views 9340 8844 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-07 15:30:15,964 views 9340 8844 User authenticated: True
+INFO 2026-06-07 15:30:15,974 views 9340 8844 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+INFO 2026-06-07 15:30:15,975 basehttp 9340 15960 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-07 15:30:15,975 basehttp 9340 13208 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:30:15,981 views 9340 8844 Orders queryset count: 4
+INFO 2026-06-07 15:30:16,043 basehttp 9340 13208 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:30:16,058 views 9340 8844 Serialized orders count: 4
+INFO 2026-06-07 15:30:16,060 basehttp 9340 8844 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 3799
+WARNING 2026-06-07 15:30:16,145 basehttp 9340 8844 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 15:30:16,244 views 9340 15960 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:30:16,245 basehttp 9340 8844 "GET /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 401
+INFO 2026-06-07 15:30:16,256 basehttp 9340 13208 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:30:16,266 basehttp 9340 11744 "GET /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 401
+INFO 2026-06-07 15:30:16,446 views 9340 15960 Successfully paginated 3 products
+INFO 2026-06-07 15:30:16,533 basehttp 9340 15960 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 15:30:16,771 basehttp 9340 15960 "GET /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 401
+WARNING 2026-06-07 15:30:33,687 basehttp 9340 6440 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 15:30:33,787 basehttp 9340 17092 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 15:30:33,889 basehttp 9340 6440 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 15:30:34,011 basehttp 9340 18100 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 15:30:35,356 basehttp 9340 11616 "GET /api/fulfillment/stores/ HTTP/1.1" 200 562
+WARNING 2026-06-07 15:30:42,068 basehttp 9340 13660 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 15:30:42,324 basehttp 9340 4736 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 15:30:42,338 basehttp 9340 16632 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 15:30:42,349 basehttp 9340 13660 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 15:30:46,454 basehttp 9340 15960 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:31:16,604 basehttp 9340 15960 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:31:25,477 basehttp 9340 10608 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 15:31:25,518 basehttp 9340 13424 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 15:31:25,792 basehttp 9340 10608 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 15:31:25,911 basehttp 9340 8184 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 15:31:27,147 basehttp 9340 18692 "GET /api/fulfillment/stores/ HTTP/1.1" 200 562
+WARNING 2026-06-07 15:31:46,437 basehttp 9340 15960 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:31:47,924 basehttp 9340 8540 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 15:31:48,075 basehttp 9340 17688 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+WARNING 2026-06-07 15:31:48,076 basehttp 9340 13384 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 15:31:48,160 basehttp 9340 8540 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 15:31:48,898 basehttp 9340 10672 "GET /api/fulfillment/stores/ HTTP/1.1" 200 562
+WARNING 2026-06-07 15:32:16,427 basehttp 9340 15960 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:32:46,445 basehttp 9340 15960 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:33:02,331 basehttp 9340 6632 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 15:33:02,349 basehttp 9340 4560 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 15:33:02,371 basehttp 9340 6632 "GET /api/website/site-config/ HTTP/1.1" 200 326
+WARNING 2026-06-07 15:33:03,186 basehttp 9340 15960 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 15:33:03,290 basehttp 9340 15960 "OPTIONS /api/orders/?ordering=-ordered_at HTTP/1.1" 200 0
+INFO 2026-06-07 15:33:03,290 basehttp 9340 11744 "OPTIONS /api/auth/notifications/unread-count/ HTTP/1.1" 200 0
+INFO 2026-06-07 15:33:03,312 views 9340 11744 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-07 15:33:03,318 basehttp 9340 15960 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+INFO 2026-06-07 15:33:03,325 basehttp 9340 13208 "OPTIONS /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 200 0
+INFO 2026-06-07 15:33:03,331 basehttp 9340 8844 "OPTIONS /api/fulfillment/stores/admin/ HTTP/1.1" 200 0
+INFO 2026-06-07 15:33:03,343 views 9340 11744 User authenticated: True
+INFO 2026-06-07 15:33:03,346 basehttp 9340 15960 "OPTIONS /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 200 0
+INFO 2026-06-07 15:33:03,394 views 9340 11744 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+WARNING 2026-06-07 15:33:03,415 basehttp 9340 13208 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:33:03,425 views 9340 11744 Orders queryset count: 4
+WARNING 2026-06-07 15:33:03,426 basehttp 9340 8844 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:33:03,432 basehttp 9340 7596 "GET /media/products/thumbnails/lychess.jpg HTTP/1.1" 200 92793
+INFO 2026-06-07 15:33:03,449 basehttp 9340 15152 "GET /media/products/thumbnails/mango_2.jfif HTTP/1.1" 200 8386
+INFO 2026-06-07 15:33:03,465 basehttp 9340 11008 "OPTIONS /api/fulfillment/stores/admin/ HTTP/1.1" 200 0
+INFO 2026-06-07 15:33:03,506 views 9340 11744 Serialized orders count: 4
+INFO 2026-06-07 15:33:03,509 basehttp 9340 15960 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:33:03,522 basehttp 9340 15960 "OPTIONS /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 0
+INFO 2026-06-07 15:33:03,518 basehttp 9340 11744 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 3799
+INFO 2026-06-07 15:33:03,549 basehttp 9340 15960 "OPTIONS /api/fulfillment/stores/admin/ HTTP/1.1" 200 0
+INFO 2026-06-07 15:33:03,571 basehttp 9340 8844 "GET /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 401
+INFO 2026-06-07 15:33:03,622 basehttp 9340 11008 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:33:03,650 basehttp 9340 11008 "OPTIONS /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 0
+INFO 2026-06-07 15:33:03,652 basehttp 9340 15960 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:33:03,678 basehttp 9340 15960 "OPTIONS /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 0
+INFO 2026-06-07 15:33:03,690 basehttp 9340 11008 "GET /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 401
+INFO 2026-06-07 15:33:03,737 basehttp 9340 15960 "GET /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 401
+WARNING 2026-06-07 15:33:07,071 basehttp 9340 12592 "GET /api/site-config/ HTTP/1.1" 404 4801
+INFO 2026-06-07 15:33:07,084 basehttp 9340 2964 "GET /api/fulfillment/stores/slug/dhaka-dhanmondi/ HTTP/1.1" 200 560
+WARNING 2026-06-07 15:33:07,139 basehttp 9340 9920 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 15:33:07,657 basehttp 9340 12592 "GET /api/website/site-config/ HTTP/1.1" 200 326
+INFO 2026-06-07 15:33:07,937 basehttp 9340 16920 "GET /api/fulfillment/stores/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:33:08,082 basehttp 9340 15152 "GET /media/stores/banners/freshdrop.avif HTTP/1.1" 200 103090
+WARNING 2026-06-07 15:33:09,165 basehttp 9340 15960 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 15:33:09,170 views 9340 11008 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:33:09,378 views 9340 11008 Successfully paginated 3 products
+INFO 2026-06-07 15:33:09,452 basehttp 9340 7596 "GET /media/products/thumbnails/mango_2.jfif HTTP/1.1" 200 8386
+INFO 2026-06-07 15:33:09,461 basehttp 9340 15152 "GET /media/products/thumbnails/lychess.jpg HTTP/1.1" 200 92793
+INFO 2026-06-07 15:33:09,486 basehttp 9340 11008 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 15:33:17,990 basehttp 9340 10840 "GET /api/site-config/ HTTP/1.1" 404 4801
+WARNING 2026-06-07 15:33:18,009 basehttp 9340 12164 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 15:33:18,027 basehttp 9340 10840 "GET /api/website/site-config/ HTTP/1.1" 200 326
+WARNING 2026-06-07 15:33:18,630 basehttp 9340 11008 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 15:33:18,740 basehttp 9340 11008 "OPTIONS /api/orders/?ordering=-ordered_at HTTP/1.1" 200 0
+INFO 2026-06-07 15:33:18,758 basehttp 9340 15960 "OPTIONS /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 200 0
+INFO 2026-06-07 15:33:18,759 basehttp 9340 8844 "OPTIONS /api/fulfillment/stores/admin/ HTTP/1.1" 200 0
+INFO 2026-06-07 15:33:18,796 basehttp 9340 7596 "GET /media/products/thumbnails/mango_2.jfif HTTP/1.1" 200 8386
+WARNING 2026-06-07 15:33:18,818 basehttp 9340 13208 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:33:18,821 views 9340 11744 Orders list request from user: elarbol@gmail.com
+INFO 2026-06-07 15:33:18,821 basehttp 9340 11008 "OPTIONS /api/auth/notifications/unread-count/ HTTP/1.1" 200 0
+INFO 2026-06-07 15:33:18,822 basehttp 9340 15152 "GET /media/products/thumbnails/lychess.jpg HTTP/1.1" 200 92793
+INFO 2026-06-07 15:33:18,852 basehttp 9340 11720 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:33:18,890 basehttp 9340 15960 "OPTIONS /api/fulfillment/stores/admin/ HTTP/1.1" 200 0
+INFO 2026-06-07 15:33:18,893 basehttp 9340 8844 "OPTIONS /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 200 0
+INFO 2026-06-07 15:33:18,933 views 9340 11744 User authenticated: True
+INFO 2026-06-07 15:33:18,955 basehttp 9340 11008 "GET /api/auth/notifications/unread-count/ HTTP/1.1" 200 17
+WARNING 2026-06-07 15:33:18,993 basehttp 9340 15960 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:33:19,062 basehttp 9340 8844 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:33:19,092 views 9340 11744 Query params: <QueryDict: {'ordering': ['-ordered_at']}>
+INFO 2026-06-07 15:33:19,145 basehttp 9340 11008 "GET /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 401
+INFO 2026-06-07 15:33:19,289 basehttp 9340 11008 "GET /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 401
+INFO 2026-06-07 15:33:19,264 basehttp 9340 8844 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:33:19,242 views 9340 11744 Orders queryset count: 4
+INFO 2026-06-07 15:33:19,342 views 9340 11744 Serialized orders count: 4
+INFO 2026-06-07 15:33:19,345 basehttp 9340 11744 "GET /api/orders/?ordering=-ordered_at HTTP/1.1" 200 3799
+INFO 2026-06-07 15:33:19,351 basehttp 9340 11008 "GET /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 401
+INFO 2026-06-07 15:33:38,533 basehttp 9340 11008 "OPTIONS /api/fulfillment/dashboard/leftover-packs/1/ HTTP/1.1" 200 0
+INFO 2026-06-07 15:33:38,621 basehttp 9340 11008 "PATCH /api/fulfillment/dashboard/leftover-packs/1/ HTTP/1.1" 200 417
+INFO 2026-06-07 15:33:38,674 basehttp 9340 11008 "GET /api/fulfillment/stores/admin/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:33:38,690 basehttp 9340 11008 "GET /api/fulfillment/dashboard/leftover-packs/?store_slug=dhaka-dhanmondi HTTP/1.1" 200 469
+INFO 2026-06-07 15:33:38,722 basehttp 9340 15152 "GET /media/stores/leftover-packs/frutis_package.jpg HTTP/1.1" 200 193694
+WARNING 2026-06-07 15:33:43,761 basehttp 9340 7228 "GET /api/site-config/ HTTP/1.1" 404 4801
+INFO 2026-06-07 15:33:43,773 basehttp 9340 19436 "GET /api/fulfillment/stores/slug/dhaka-dhanmondi/ HTTP/1.1" 200 560
+WARNING 2026-06-07 15:33:43,799 basehttp 9340 10092 "GET /api/site-config/footer/ HTTP/1.1" 404 4822
+INFO 2026-06-07 15:33:43,820 basehttp 9340 7228 "GET /api/website/site-config/ HTTP/1.1" 200 326
+WARNING 2026-06-07 15:33:44,737 basehttp 9340 11008 "GET /api/delivery-charge/ HTTP/1.1" 404 4813
+INFO 2026-06-07 15:33:44,817 views 9340 11008 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:33:44,936 views 9340 11008 Successfully paginated 3 products
+INFO 2026-06-07 15:33:45,087 basehttp 9340 11008 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 15:33:46,259 basehttp 9340 10392 "GET /api/fulfillment/stores/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:33:47,884 views 9340 7228 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:33:47,892 views 9340 19436 CategoryViewSet.list called with params: <QueryDict: {}>
+WARNING 2026-06-07 15:33:47,908 basehttp 9340 10092 "GET /api/homepage/ HTTP/1.1" 404 4792
+INFO 2026-06-07 15:33:47,924 views 9340 19436 Successfully returned 4 categories
+INFO 2026-06-07 15:33:47,925 basehttp 9340 19436 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 15:33:47,946 views 9340 7228 Successfully paginated 3 products
+INFO 2026-06-07 15:33:47,978 basehttp 9340 7228 "GET /api/products/products/ HTTP/1.1" 200 8402
+WARNING 2026-06-07 15:33:49,428 basehttp 9340 11008 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+INFO 2026-06-07 15:33:52,318 views 9340 18988 ProductViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:33:52,319 views 9340 15584 CategoryViewSet.list called with params: <QueryDict: {}>
+INFO 2026-06-07 15:33:52,369 views 9340 15584 Successfully returned 4 categories
+INFO 2026-06-07 15:33:52,372 basehttp 9340 15584 "GET /api/products/categories/ HTTP/1.1" 200 725
+INFO 2026-06-07 15:33:52,385 views 9340 18988 Successfully paginated 3 products
+INFO 2026-06-07 15:33:52,433 basehttp 9340 18988 "GET /api/products/products/ HTTP/1.1" 200 8402
+INFO 2026-06-07 15:33:55,781 basehttp 9340 18988 "GET /api/fulfillment/stores/ HTTP/1.1" 200 562
+INFO 2026-06-07 15:33:58,506 basehttp 9340 18988 "GET /api/fulfillment/stores/slug/dhaka-dhanmondi/ HTTP/1.1" 200 560
+WARNING 2026-06-07 15:34:19,452 basehttp 9340 11008 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:34:49,433 basehttp 9340 11008 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:35:19,453 basehttp 9340 11008 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:35:49,448 basehttp 9340 11008 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:36:19,433 basehttp 9340 11008 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340
+WARNING 2026-06-07 15:37:06,236 basehttp 9340 12620 "GET /api/fulfillment/stores/slug/freshdrop/ HTTP/1.1" 404 46
+INFO 2026-06-07 15:37:07,129 basehttp 9340 12620 - Broken pipe from ('127.0.0.1', 14131)
+WARNING 2026-06-07 15:37:11,472 basehttp 9340 11008 "GET /api/auth/vendor/tickets/?status=OPEN&page_size=1 HTTP/1.1" 404 10340

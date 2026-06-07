@@ -81,7 +81,7 @@ export default function BasketItemList({ items, updateQty, removeItem, isApprove
                   style={{ background: '#f0f4f0' }}
                 >
                   <button
-                    onClick={() => updateQty(item.id, item.qty - 1)}
+                    onClick={() => updateQty(item.id, item.qty - 1, item.item_type || 'product')}
                     className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded transition-colors cursor-pointer hover:bg-[#e2e8e2]"
                     style={{ color: '#3d4943' }}
                     aria-label="Decrease quantity"
@@ -97,7 +97,7 @@ export default function BasketItemList({ items, updateQty, removeItem, isApprove
                   </span>
 
                   <button
-                    onClick={() => updateQty(item.id, item.qty + 1)}
+                    onClick={() => updateQty(item.id, item.qty + 1, item.item_type || 'product')}
                     className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center rounded transition-colors cursor-pointer hover:bg-[#e2e8e2]"
                     style={{ color: '#3d4943' }}
                     aria-label="Increase quantity"
@@ -107,7 +107,7 @@ export default function BasketItemList({ items, updateQty, removeItem, isApprove
                 </div>
 
                 <button
-                  onClick={() => removeItem(item.id)}
+                  onClick={() => removeItem(item.id, item.item_type || 'product')}
                   className="p-2 cursor-pointer transition-colors hover:text-[#ba1a1a]"
                   style={{ color: '#6d7a73' }}
                   aria-label="Remove item"

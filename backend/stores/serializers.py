@@ -8,16 +8,14 @@ Changes:
   - hours is auto-calculated by the model; no change needed here
 """
 from rest_framework import serializers
-from .models import Store, StoreFeature, StoreAvailability, LeftoverPack
+from .models import Store, StoreFeature, StoreAvailability, LeftoverPack, LeftoverPackImage
 
-
-class LeftoverPackSerializer(serializers.ModelSerializer):
-    price = serializers.FloatField()
+class LeftoverPackImageSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
 
     class Meta:
-        model  = LeftoverPack
-        fields = ['id', 'name', 'description', 'price', 'image']
+        model = LeftoverPackImage
+        fields = ['id', 'image', 'order']
 
     def get_image(self, obj):
         request = self.context.get('request')
@@ -25,7 +23,29 @@ class LeftoverPackSerializer(serializers.ModelSerializer):
             return request.build_absolute_uri(obj.image.url) if request else obj.image.url
         return ''
 
+class LeftoverPackSerializer(serializers.ModelSerializer):
+    price = serializers.FloatField()
+    original_price = serializers.FloatField(required=False, allow_null=True)
+    shipping_charge = serializers.FloatField(required=False)
+    description = serializers.CharField(required=False, allow_blank=True)
+    image = serializers.SerializerMethodField()
+    gallery = LeftoverPackImageSerializer(source='images', many=True, read_only=True)
+    discount_percentage = serializers.ReadOnlyField()
 
+    class Meta:
+        model  = LeftoverPack
+        fields = [
+            'id', 'name', 'description', 'original_price', 'price', 
+            'shipping_charge', 'package_type', 'weight_quantity', 
+            'stock', 'estimated_delivery', 'image', 'gallery', 
+            'discount_percentage', 'is_active', 'created_at', 'updated_at'
+        ]
+
+    def get_image(self, obj):
+        request = self.context.get('request')
+        if obj.image:
+            return request.build_absolute_uri(obj.image.url) if request else obj.image.url
+        return ''
 class StoreListSerializer(serializers.ModelSerializer):
     """
     Lightweight shape for the store finder list + map.
