@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Plus, Eye, Pencil, Trash2, Truck, Tag, Layers } from "lucide-react";
@@ -19,8 +19,8 @@ const TABS = [
   { id: "tiers", label: "Pricing Tiers", icon: Layers },
 ];
 
-const inp = "w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400";
-const lbl = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
+const inp = "w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-gray-400";
+const lbl = "block text-sm font-medium text-slate-700 mb-1";
 
 /* ─── Method Form ─────────────────────────────────────────── */
 function MethodForm({ initial = {}, onSubmit, submitLabel = "Save" }) {
@@ -62,7 +62,7 @@ function MethodForm({ initial = {}, onSubmit, submitLabel = "Save" }) {
         </div>
       </div>
       <div><label className={lbl}>Description</label><textarea rows={2} className={inp + " resize-none"} value={v.description || ""} onChange={e => set("description", e.target.value)} /></div>
-      <div className="flex justify-end pt-1"><button type="submit" className="px-4 py-2 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors">{submitLabel}</button></div>
+      <div className="flex justify-end pt-1"><button type="submit" className="px-4 py-2 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 transition-colors">{submitLabel}</button></div>
     </form>
   );
 }
@@ -80,19 +80,19 @@ function CategoryForm({ initial = {}, allMethods = [], onSubmit, submitLabel = "
       <div><label className={lbl}>Category Name *</label><input required className={inp} value={name} onChange={e => setName(e.target.value)} placeholder="e.g., Electronics, Heavy Items, Fragile" /></div>
       <div><label className={lbl}>Description</label><textarea rows={2} className={inp + " resize-none"} value={desc} onChange={e => setDesc(e.target.value)} placeholder="What product types belong here?" /></div>
       <div>
-        <label className={lbl}>Allowed Shipping Methods <span className="text-gray-400 font-normal text-xs">(leave all unchecked = allow all)</span></label>
-        <div className="border border-gray-200 dark:border-gray-800 rounded-md divide-y divide-gray-100 dark:divide-gray-800 max-h-48 overflow-y-auto">
-          {allMethods.length === 0 && <p className="text-xs text-gray-400 p-3">No methods available.</p>}
+        <label className={lbl}>Allowed Shipping Methods <span className="text-slate-400 font-normal text-xs">(leave all unchecked = allow all)</span></label>
+        <div className="border border-slate-200 rounded-md divide-y divide-gray-100 max-h-48 overflow-y-auto">
+          {allMethods.length === 0 && <p className="text-xs text-slate-400 p-3">No methods available.</p>}
           {allMethods.map(m => (
-            <label key={m.id} className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900">
+            <label key={m.id} className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-slate-50">
               <input type="checkbox" checked={selected.includes(m.id)} onChange={() => toggle(m.id)} className="rounded border-gray-300" />
-              <span className="text-sm text-gray-700 dark:text-gray-300 flex-1">{m.name}</span>
-              <span className="text-xs text-gray-400">৳{Number(m.price || 0).toLocaleString()}</span>
+              <span className="text-sm text-slate-700 flex-1">{m.name}</span>
+              <span className="text-xs text-slate-400">৳{Number(m.price || 0).toLocaleString()}</span>
             </label>
           ))}
         </div>
       </div>
-      <div className="flex justify-end pt-1"><button type="submit" className="px-4 py-2 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors">{submitLabel}</button></div>
+      <div className="flex justify-end pt-1"><button type="submit" className="px-4 py-2 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 transition-colors">{submitLabel}</button></div>
     </form>
   );
 }
@@ -151,33 +151,33 @@ function TierForm({ initial = {}, allMethods = [], onSubmit, onAddAnother, submi
         {isQty ? (
           <>
             <div><label className={lbl}>Min Quantity *</label><input required type="number" min="0" className={inp} value={v.min_quantity} onChange={e => set("min_quantity", e.target.value)} /></div>
-            <div><label className={lbl}>Max Quantity <span className="text-gray-400 font-normal text-xs">(blank = unlimited)</span></label><input type="number" min="0" className={inp} value={v.max_quantity || ""} onChange={e => set("max_quantity", e.target.value)} /></div>
+            <div><label className={lbl}>Max Quantity <span className="text-slate-400 font-normal text-xs">(blank = unlimited)</span></label><input type="number" min="0" className={inp} value={v.max_quantity || ""} onChange={e => set("max_quantity", e.target.value)} /></div>
           </>
         ) : (
           <>
             <div><label className={lbl}>Min Weight (kg) *</label><input required type="number" min="0" step="0.01" className={inp} value={v.min_weight} onChange={e => set("min_weight", e.target.value)} /></div>
-            <div><label className={lbl}>Max Weight (kg) <span className="text-gray-400 font-normal text-xs">(blank = unlimited)</span></label><input type="number" min="0" step="0.01" className={inp} value={v.max_weight || ""} onChange={e => set("max_weight", e.target.value)} /></div>
+            <div><label className={lbl}>Max Weight (kg) <span className="text-slate-400 font-normal text-xs">(blank = unlimited)</span></label><input type="number" min="0" step="0.01" className={inp} value={v.max_weight || ""} onChange={e => set("max_weight", e.target.value)} /></div>
           </>
         )}
-        <div><label className={lbl}>Priority <span className="text-gray-400 font-normal text-xs">(higher = preferred when tiers overlap)</span></label><input type="number" min="0" className={inp} value={v.priority} onChange={e => set("priority", e.target.value)} /></div>
+        <div><label className={lbl}>Priority <span className="text-slate-400 font-normal text-xs">(higher = preferred when tiers overlap)</span></label><input type="number" min="0" className={inp} value={v.priority} onChange={e => set("priority", e.target.value)} /></div>
       </div>
       <label className="flex items-center gap-2.5 cursor-pointer">
         <input type="checkbox" checked={v.has_incremental_pricing} onChange={e => set("has_incremental_pricing", e.target.checked)} className="rounded border-gray-300 w-4 h-4" />
-        <span className="text-sm text-gray-700 dark:text-gray-300">Enable incremental pricing above the minimum</span>
+        <span className="text-sm text-slate-700">Enable incremental pricing above the minimum</span>
       </label>
       {v.has_incremental_pricing && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pl-6 border-l-2 border-emerald-200 dark:border-emerald-800">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pl-6 border-l-2 border-emerald-200">
           <div><label className={lbl}>Rate per additional {isQty ? "item" : "kg"} (৳) *</label><input required type="number" min="0" step="0.01" className={inp} value={v.increment_per_unit || ""} onChange={e => set("increment_per_unit", e.target.value)} /></div>
           <div><label className={lbl}>Charge per every N {isQty ? "items" : "kg"}</label><input type="number" min="0.01" step="0.01" className={inp} value={v.increment_unit_size} onChange={e => set("increment_unit_size", e.target.value)} placeholder="1.0" /></div>
         </div>
       )}
       <div className="flex justify-end gap-2 pt-1">
         {onAddAnother && (
-          <button type="button" onClick={e => { e.preventDefault(); onAddAnother(buildData()); }} className="px-4 py-2 text-sm font-medium border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+          <button type="button" onClick={e => { e.preventDefault(); onAddAnother(buildData()); }} className="px-4 py-2 text-sm font-medium border border-gray-300 text-slate-700 rounded-md hover:bg-slate-50 transition-colors">
             Save &amp; Add Another
           </button>
         )}
-        <button type="submit" className="px-4 py-2 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors">{submitLabel}</button>
+        <button type="submit" className="px-4 py-2 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 transition-colors">{submitLabel}</button>
       </div>
     </form>
   );
@@ -193,13 +193,13 @@ function TiersGroupedView({ allMethods, tiers, loading, filterMethod, setFilterM
     : allMethods;
 
   if (loading) {
-    return <div className="py-8 text-center text-sm text-gray-400">Loading tiers…</div>;
+    return <div className="py-8 text-center text-sm text-slate-400">Loading tiers…</div>;
   }
 
   if (allMethods.length === 0) {
     return (
       <div className="py-12 text-center">
-        <p className="text-sm text-gray-400">No shipping methods found. Add a method first.</p>
+        <p className="text-sm text-slate-400">No shipping methods found. Add a method first.</p>
       </div>
     );
   }
@@ -209,14 +209,14 @@ function TiersGroupedView({ allMethods, tiers, loading, filterMethod, setFilterM
       {/* Filter bar */}
       <div className="flex items-center gap-3 mb-5">
         <select
-          className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none w-full sm:w-72"
+          className="px-3 py-2 border border-gray-300 rounded-md text-sm bg-white text-slate-800 focus:outline-none w-full sm:w-72"
           value={filterMethod} onChange={e => setFilterMethod(e.target.value)}
         >
           <option value="">All Shipping Methods</option>
           {allMethods.map(m => <option key={m.id} value={String(m.id)}>{m.name}</option>)}
         </select>
         {filterMethod && (
-          <button onClick={() => setFilterMethod("")} className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 underline whitespace-nowrap">Clear filter</button>
+          <button onClick={() => setFilterMethod("")} className="text-xs text-slate-400 hover:text-slate-600 underline whitespace-nowrap">Clear filter</button>
         )}
       </div>
 
@@ -224,32 +224,32 @@ function TiersGroupedView({ allMethods, tiers, loading, filterMethod, setFilterM
         const methodTiers = tiers.filter(t => String(t.shipping_method?.id ?? t.shipping_method) === String(method.id));
         const isOpen = !collapsed[method.id];
         return (
-          <div key={method.id} className="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden">
+          <div key={method.id} className="border border-slate-200 rounded-lg overflow-hidden">
             {/* Method header */}
-            <div className="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-900/60 cursor-pointer group" onClick={() => toggleCollapse(method.id)}>
+            <div className="flex items-center justify-between px-4 py-3 bg-slate-50 cursor-pointer group" onClick={() => toggleCollapse(method.id)}>
               <div className="flex items-center gap-3 min-w-0">
                 <button
                   type="button"
-                  className="text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-transform duration-150"
+                  className="text-slate-400 group-hover:text-slate-600 transition-transform duration-150"
                   style={{ transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
                   onClick={e => { e.stopPropagation(); toggleCollapse(method.id); }}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                 </button>
                 <div className="min-w-0">
-                  <span className="font-medium text-sm text-gray-900 dark:text-white">{method.name}</span>
-                  <span className="ml-2 text-xs text-gray-400">Base ৳{Number(method.price || 0).toLocaleString()}</span>
-                  {method.delivery_estimated_time && <span className="ml-2 text-xs text-gray-400">· {method.delivery_estimated_time}</span>}
+                  <span className="font-medium text-sm text-slate-800">{method.name}</span>
+                  <span className="ml-2 text-xs text-slate-400">Base ৳{Number(method.price || 0).toLocaleString()}</span>
+                  {method.delivery_estimated_time && <span className="ml-2 text-xs text-slate-400">· {method.delivery_estimated_time}</span>}
                 </div>
               </div>
               <div className="flex items-center gap-3 flex-shrink-0">
-                <span className="text-xs px-2 py-0.5 rounded bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+                <span className="text-xs px-2 py-0.5 rounded bg-gray-200 text-slate-600">
                   {methodTiers.length} tier{methodTiers.length !== 1 ? 's' : ''}
                 </span>
                 <button
                   type="button"
                   onClick={e => { e.stopPropagation(); onAddForMethod(method); }}
-                  className="flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded hover:bg-gray-700 dark:hover:bg-gray-100 transition-colors"
+                  className="flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-slate-900 text-white rounded hover:bg-gray-700 transition-colors"
                 >
                   <Plus className="w-3 h-3" /> Add Tier
                 </button>
@@ -258,28 +258,28 @@ function TiersGroupedView({ allMethods, tiers, loading, filterMethod, setFilterM
 
             {/* Tiers table */}
             {isOpen && (
-              <div className="divide-y divide-gray-100 dark:divide-gray-800">
+              <div className="divide-y divide-gray-100">
                 {methodTiers.length === 0 ? (
-                  <div className="px-4 py-4 text-sm text-gray-400 italic text-center">
-                    No pricing tiers. Click <span className="font-medium text-gray-500">Add Tier</span> to create one.
+                  <div className="px-4 py-4 text-sm text-slate-400 italic text-center">
+                    No pricing tiers. Click <span className="font-medium text-slate-500">Add Tier</span> to create one.
                   </div>
                 ) : (
                   <>
                     {/* Header row */}
-                    <div className="hidden sm:grid grid-cols-[90px_100px_160px_120px_90px_80px_auto] gap-3 px-4 py-2 bg-gray-50/80 dark:bg-gray-900/30 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                    <div className="hidden sm:grid grid-cols-[90px_100px_160px_120px_90px_80px_auto] gap-3 px-4 py-2 bg-slate-50/80 text-xs font-medium text-slate-500 uppercase tracking-wide">
                       <span>Type</span><span>Range</span><span>Base Price</span><span>Incremental</span><span>Rate/unit</span><span>Priority</span><span className="text-right">Actions</span>
                     </div>
                     {methodTiers.map(tier => (
-                      <div key={tier.id} className="grid grid-cols-1 sm:grid-cols-[90px_100px_160px_120px_90px_80px_auto] gap-x-3 gap-y-1 px-4 py-3 items-center text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50/50 dark:hover:bg-gray-900/30 transition-colors">
+                      <div key={tier.id} className="grid grid-cols-1 sm:grid-cols-[90px_100px_160px_120px_90px_80px_auto] gap-x-3 gap-y-1 px-4 py-3 items-center text-sm text-slate-700 hover:bg-slate-50/50 transition-colors">
                         <span className="text-xs font-medium">{tier.pricing_type === 'weight' ? 'Weight' : 'Qty'}</span>
                         <span className="text-xs">{tier.applicable_range || '—'}</span>
-                        <span className="font-medium text-gray-900 dark:text-white">৳{Number(tier.base_price || 0).toLocaleString()}</span>
-                        <span>{tier.has_incremental_pricing ? <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">✓ Yes</span> : <span className="text-xs text-gray-400">No</span>}</span>
+                        <span className="font-medium text-slate-800">৳{Number(tier.base_price || 0).toLocaleString()}</span>
+                        <span>{tier.has_incremental_pricing ? <span className="text-xs text-emerald-600 font-medium">✓ Yes</span> : <span className="text-xs text-slate-400">No</span>}</span>
                         <span className="text-xs">{tier.has_incremental_pricing && tier.increment_per_unit ? `৳${Number(tier.increment_per_unit).toLocaleString()}` : '—'}</span>
-                        <span className="text-xs text-gray-400">{tier.priority ?? 0}</span>
+                        <span className="text-xs text-slate-400">{tier.priority ?? 0}</span>
                         <div className="flex items-center justify-end gap-1">
-                          <button onClick={() => onEdit(tier)} className="p-1.5 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><Pencil className="w-3.5 h-3.5" /></button>
-                          <button onClick={() => onDelete(tier)} className="p-1.5 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30"><Trash2 className="w-3.5 h-3.5" /></button>
+                          <button onClick={() => onEdit(tier)} className="db-icon-btn"><Pencil className="w-3.5 h-3.5" /></button>
+                          <button onClick={() => onDelete(tier)} className="db-icon-btn danger"><Trash2 className="w-3.5 h-3.5" /></button>
                         </div>
                       </div>
                     ))}
@@ -292,7 +292,7 @@ function TiersGroupedView({ allMethods, tiers, loading, filterMethod, setFilterM
       })}
 
       {visibleMethods.length === 0 && (
-        <div className="py-8 text-center text-sm text-gray-400">
+        <div className="py-8 text-center text-sm text-slate-400">
           No methods match the selected filter.
         </div>
       )}
@@ -302,7 +302,7 @@ function TiersGroupedView({ allMethods, tiers, loading, filterMethod, setFilterM
 
 function ActiveBadge({ active }) {
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${active ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400" : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"}`}>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${active ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-500"}`}>
       {active ? "Active" : "Inactive"}
     </span>
   );
@@ -380,9 +380,9 @@ export default function ShippingPage() {
 
   const ab = (row, onV, onE, onD) => (
     <div className="flex items-center justify-end gap-1">
-      {onV && <button onClick={() => onV(row)} className="p-1.5 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><Eye className="w-3.5 h-3.5" /></button>}
-      <button onClick={() => onE(row)} className="p-1.5 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><Pencil className="w-3.5 h-3.5" /></button>
-      <button onClick={() => onD(row)} className="p-1.5 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30"><Trash2 className="w-3.5 h-3.5" /></button>
+      {onV && <button onClick={() => onV(row)} className="db-icon-btn"><Eye className="w-3.5 h-3.5" /></button>}
+      <button onClick={() => onE(row)} className="db-icon-btn"><Pencil className="w-3.5 h-3.5" /></button>
+      <button onClick={() => onD(row)} className="db-icon-btn danger"><Trash2 className="w-3.5 h-3.5" /></button>
     </div>
   );
 
@@ -391,16 +391,16 @@ export default function ShippingPage() {
       title="Shipping Management"
       description="Manage shipping methods, categories and pricing tiers"
       actions={
-        tab === "methods" ? <button onClick={() => setMCreate(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"><Plus className="w-4 h-4" /> Add Method</button>
-        : tab === "categories" ? <button onClick={() => setCCreate(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"><Plus className="w-4 h-4" /> Add Category</button>
-        : <button onClick={() => setTCreate(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"><Plus className="w-4 h-4" /> Add Tier</button>
+        tab === "methods" ? <button onClick={() => setMCreate(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 transition-colors"><Plus className="w-4 h-4" /> Add Method</button>
+        : tab === "categories" ? <button onClick={() => setCCreate(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 transition-colors"><Plus className="w-4 h-4" /> Add Category</button>
+        : <button onClick={() => setTCreate(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 transition-colors"><Plus className="w-4 h-4" /> Add Tier</button>
 
       }
     >
       {/* Tab Bar */}
-      <div className="flex gap-1 border-b border-gray-200 dark:border-gray-800 mb-5 overflow-x-auto">
+      <div className="flex gap-1 border-b border-slate-200 mb-5 overflow-x-auto">
         {TABS.map(t => { const Icon = t.icon; return (
-          <button key={t.id} onClick={() => { setTab(t.id); setMCreate(false); setMEdit(null); setMView(null); setMDel(null); setCCreate(false); setCEdit(null); setCView(null); setCDel(null); setTCreate(false); setTEdit(null); setTDel(null); }} className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${tab === t.id ? "border-gray-900 dark:border-white text-gray-900 dark:text-white" : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"}`}>
+          <button key={t.id} onClick={() => { setTab(t.id); setMCreate(false); setMEdit(null); setMView(null); setMDel(null); setCCreate(false); setCEdit(null); setCView(null); setCDel(null); setTCreate(false); setTEdit(null); setTDel(null); }} className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${tab === t.id ? "border-gray-900 text-slate-800" : "border-transparent text-slate-500 hover:text-slate-700"}`}>
             <Icon className="w-4 h-4" />{t.label}
           </button>
         ); })}
@@ -443,22 +443,22 @@ export default function ShippingPage() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {[["Name",mView.name],["Base Price",`৳${Number(mView.price||0).toLocaleString()}`],["Delivery",mView.delivery_estimated_time||"—"],["Pricing",mView.preferred_pricing_type==="weight"?"By Weight":"By Quantity"],["Max Weight",mView.max_weight?`${mView.max_weight} kg`:"No limit"],["Max Qty",mView.max_quantity||"No limit"],["Status",mView.is_active?"Active":"Inactive"]].map(([k,val])=>(
-                <div key={k} className="bg-gray-50 dark:bg-gray-900 rounded-md p-3">
-                  <p className="text-xs text-gray-400 mb-0.5">{k}</p>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">{String(val)}</p>
+                <div key={k} className="bg-slate-50 rounded-md p-3">
+                  <p className="text-xs text-slate-400 mb-0.5">{k}</p>
+                  <p className="text-sm font-medium text-slate-800">{String(val)}</p>
                 </div>
               ))}
             </div>
-            {mView.description && <p className="text-sm text-gray-500 dark:text-gray-400 italic">{mView.description}</p>}
+            {mView.description && <p className="text-sm text-slate-500 italic">{mView.description}</p>}
             {([...(mView.quantity_tiers||[]),...(mView.weight_tiers||[])].length>0)&&(
               <div>
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Pricing Tiers</p>
+                <p className="text-sm font-medium text-slate-700 mb-2">Pricing Tiers</p>
                 <div className="space-y-1.5">
                   {[...(mView.quantity_tiers||[]),...(mView.weight_tiers||[])].map((t,i)=>(
-                    <div key={i} className="flex justify-between items-center text-sm px-3 py-2 bg-gray-50 dark:bg-gray-900 rounded-md">
-                      <span className="text-xs text-gray-500">{t.applicable_range}</span>
-                      <span className="font-medium text-gray-900 dark:text-white">৳{Number(t.base_price||0).toLocaleString()}</span>
-                      {t.has_incremental_pricing&&<span className="text-xs text-emerald-600 dark:text-emerald-400">+ incremental</span>}
+                    <div key={i} className="flex justify-between items-center text-sm px-3 py-2 bg-slate-50 rounded-md">
+                      <span className="text-xs text-slate-500">{t.applicable_range}</span>
+                      <span className="font-medium text-slate-800">৳{Number(t.base_price||0).toLocaleString()}</span>
+                      {t.has_incremental_pricing&&<span className="text-xs text-emerald-600">+ incremental</span>}
                     </div>
                   ))}
                 </div>
@@ -479,16 +479,16 @@ export default function ShippingPage() {
       <Modal open={!!cView} onClose={() => setCView(null)} title="Category Details" maxWidth="max-w-lg">
         {cView && (
           <div className="space-y-3">
-            <p className="text-base font-semibold text-gray-900 dark:text-white">{cView.name}</p>
-            {cView.description && <p className="text-sm text-gray-500 dark:text-gray-400">{cView.description}</p>}
+            <p className="text-base font-semibold text-slate-800">{cView.name}</p>
+            {cView.description && <p className="text-sm text-slate-500">{cView.description}</p>}
             <div>
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Allowed Methods ({(cView.allowed_shipping_methods||[]).length === 0 ? "All" : (cView.allowed_shipping_methods||[]).length})</p>
+              <p className="text-sm font-medium text-slate-700 mb-1.5">Allowed Methods ({(cView.allowed_shipping_methods||[]).length === 0 ? "All" : (cView.allowed_shipping_methods||[]).length})</p>
               {(cView.allowed_shipping_methods||[]).length === 0
-                ? <p className="text-sm text-gray-400 italic">No restrictions — all active methods are allowed.</p>
+                ? <p className="text-sm text-slate-400 italic">No restrictions — all active methods are allowed.</p>
                 : <div className="space-y-1.5">{(cView.allowed_shipping_methods||[]).map(m=>(
-                    <div key={m.id} className="flex justify-between items-center px-3 py-2 bg-gray-50 dark:bg-gray-900 rounded-md text-sm">
-                      <span className="text-gray-700 dark:text-gray-300">{m.name}</span>
-                      <span className="text-gray-400">৳{Number(m.price||0).toLocaleString()}</span>
+                    <div key={m.id} className="flex justify-between items-center px-3 py-2 bg-slate-50 rounded-md text-sm">
+                      <span className="text-slate-700">{m.name}</span>
+                      <span className="text-slate-400">৳{Number(m.price||0).toLocaleString()}</span>
                     </div>
                   ))}</div>
               }
@@ -509,4 +509,5 @@ export default function ShippingPage() {
     </Container>
   );
 }
+
 

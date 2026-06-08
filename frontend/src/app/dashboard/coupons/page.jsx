@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Plus, Pencil, Trash2, Ticket, Truck } from "lucide-react";
@@ -26,8 +26,8 @@ const COUPON_TYPES = [
   { value: "USER_SPECIFIC", label: "User Specific" },
 ];
 
-const inp = "w-full min-w-0 px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400";
-const lbl = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
+const inp = "w-full min-w-0 px-3 py-2 border border-gray-300 rounded-md text-sm bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-gray-400";
+const lbl = "block text-sm font-medium text-slate-700 mb-1";
 
 function toLocalDatetime(iso) {
   if (!iso) return "";
@@ -108,8 +108,8 @@ function CouponForm({ initial = {}, onSubmit, submitLabel = "Save" }) {
   };
 
   const btnBase = "px-3 py-2 text-sm rounded-md border transition-colors cursor-pointer";
-  const btnActive = `${btnBase} bg-white dark:bg-gray-800 border-gray-400 dark:border-gray-500 text-gray-900 dark:text-white font-semibold`;
-  const btnInactive = `${btnBase} bg-transparent border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-400`;
+  const btnActive = `${btnBase} bg-white border-gray-400 text-slate-800 font-semibold`;
+  const btnInactive = `${btnBase} bg-transparent border-gray-300 text-slate-500`;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -157,32 +157,32 @@ function CouponForm({ initial = {}, onSubmit, submitLabel = "Save" }) {
 
       {/* Applicable Products */}
       <div>
-        <label className={lbl}>Applicable Products <span className="text-gray-400 font-normal">(leave empty = all products)</span></label>
+        <label className={lbl}>Applicable Products <span className="text-slate-400 font-normal">(leave empty = all products)</span></label>
         {prodLoading ? (
-          <p className="text-xs text-gray-400 py-2">Loading products…</p>
+          <p className="text-xs text-slate-400 py-2">Loading products…</p>
         ) : (
-          <div className="border border-gray-300 dark:border-gray-700 rounded-md max-h-48 overflow-y-auto divide-y divide-gray-100 dark:divide-gray-800">
+          <div className="border border-gray-300 rounded-md max-h-48 overflow-y-auto divide-y divide-gray-100">
             {products.map(p => (
-              <label key={p.id} className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50">
+              <label key={p.id} className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-slate-50">
                 <input
                   type="checkbox"
                   checked={selectedProductIds.includes(p.id)}
                   onChange={() => toggleProduct(p.id)}
                   className="accent-green-600"
                 />
-                <span className="text-sm text-gray-800 dark:text-gray-200">{p.name}</span>
+                <span className="text-sm text-gray-800">{p.name}</span>
               </label>
             ))}
-            {products.length === 0 && <p className="text-xs text-gray-400 px-3 py-2">No products found.</p>}
+            {products.length === 0 && <p className="text-xs text-slate-400 px-3 py-2">No products found.</p>}
           </div>
         )}
         {selectedProductIds.length > 0 && (
-          <p className="text-xs text-gray-500 mt-1">{selectedProductIds.length} product(s) selected</p>
+          <p className="text-xs text-slate-500 mt-1">{selectedProductIds.length} product(s) selected</p>
         )}
       </div>
 
       <div className="flex justify-end pt-1">
-        <button type="submit" disabled={submitting} className="px-4 py-2 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-50">
+        <button type="submit" disabled={submitting} className="px-4 py-2 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 disabled:opacity-50">
           {submitting ? "Saving..." : submitLabel}
         </button>
       </div>
@@ -223,7 +223,7 @@ function FreeShippingForm({ initial = {}, onSubmit, submitLabel = "Save" }) {
         </div>
       </div>
       <div className="flex justify-end pt-1">
-        <button type="submit" disabled={submitting} className="px-4 py-2 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-50">
+        <button type="submit" disabled={submitting} className="px-4 py-2 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 disabled:opacity-50">
           {submitting ? "Saving..." : submitLabel}
         </button>
       </div>
@@ -255,25 +255,25 @@ export default function CouponsPage() {
   const formatDate = (d) => d ? new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—";
 
   const couponColumns = [
-    { key: "code", label: "Code", render: (v) => <code className="text-xs font-semibold bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">{v}</code> },
+    { key: "code", label: "Code", render: (v) => <code className="text-xs font-semibold bg-slate-100 px-2 py-0.5 rounded">{v}</code> },
     { key: "type_display", label: "Type" },
     { key: "discount_percent", label: "Discount", render: (v, row) => (
-      <span className="font-medium text-green-600 dark:text-green-400">
+      <span className="font-medium text-green-600">
         {row.discount_type === "FLAT" ? `৳${parseFloat(row.discount_amount).toFixed(2)}` : `${v}%`}
       </span>
     )},
-    { key: "usage_limit", label: "Usage", render: (v, row) => v != null ? <span className="text-xs">{row.used_count}/{v}</span> : <span className="text-xs text-gray-400">Unlimited</span> },
-    { key: "active", label: "Status", render: (v) => <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${v ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"}`}>{v ? "Active" : "Inactive"}</span> },
+    { key: "usage_limit", label: "Usage", render: (v, row) => v != null ? <span className="text-xs">{row.used_count}/{v}</span> : <span className="text-xs text-slate-400">Unlimited</span> },
+    { key: "active", label: "Status", render: (v) => <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${v ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"}`}>{v ? "Active" : "Inactive"}</span> },
     { key: "is_expired", label: "Expired", render: (v) => v ? <span className="text-xs text-red-500 font-medium">Expired</span> : <span className="text-xs text-green-600">Valid</span> },
     { key: "valid_from", label: "Valid From", render: formatDate },
     { key: "expires_at", label: "Expires", render: formatDate },
   ];
 
   const freeShippingColumns = [
-    { key: "name", label: "Name", render: (v) => v || <span className="text-gray-400 text-xs">Unnamed</span> },
+    { key: "name", label: "Name", render: (v) => v || <span className="text-slate-400 text-xs">Unnamed</span> },
     { key: "threshold_amount", label: "Threshold (৳)", render: (v) => <span className="font-medium">৳{parseFloat(v).toLocaleString()}</span> },
-    { key: "applicable_categories", label: "Categories", render: (v) => v?.length ? v.map(c => c.name).join(", ") : <span className="text-gray-400 text-xs">All categories</span> },
-    { key: "active", label: "Status", render: (v) => <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${v ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"}`}>{v ? "Active" : "Inactive"}</span> },
+    { key: "applicable_categories", label: "Categories", render: (v) => v?.length ? v.map(c => c.name).join(", ") : <span className="text-slate-400 text-xs">All categories</span> },
+    { key: "active", label: "Status", render: (v) => <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${v ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"}`}>{v ? "Active" : "Inactive"}</span> },
     { key: "created_at", label: "Created", render: formatDate },
   ];
 
@@ -299,20 +299,20 @@ export default function CouponsPage() {
 
   const actions = (row) => (
     <div className="flex items-center gap-1">
-      <button onClick={() => setModal({ open: true, mode: "edit", item: row })} className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"><Pencil className="w-3.5 h-3.5" /></button>
-      <button onClick={() => setConfirm({ open: true, item: row, tab })} className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-950/30 text-gray-500 hover:text-red-600 dark:hover:text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>
+      <button onClick={() => setModal({ open: true, mode: "edit", item: row })} className="p-1.5 rounded-md hover:bg-slate-100 text-slate-500 hover:text-slate-700"><Pencil className="w-3.5 h-3.5" /></button>
+      <button onClick={() => setConfirm({ open: true, item: row, tab })} className="p-1.5 rounded-md hover:bg-red-50 text-slate-500 hover:text-red-600"><Trash2 className="w-3.5 h-3.5" /></button>
     </div>
   );
 
   return (
     <Container title="Coupons & Promotions" description="Manage discount coupons and free shipping rules">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div className="flex gap-1 bg-gray-100 dark:bg-gray-900 p-0.5 rounded-lg">
+        <div className="flex gap-1 bg-slate-100 p-0.5 rounded-lg">
           {TABS.map(t => (
-            <button key={t.id} onClick={() => { setTab(t.id); setModal({ open: false, mode: "create", item: null }); setConfirm({ open: false, item: null, tab: null }); }} className={`px-3 py-1.5 text-sm rounded-md transition-colors ${tab === t.id ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm font-medium" : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"}`}>{t.label}</button>
+            <button key={t.id} onClick={() => { setTab(t.id); setModal({ open: false, mode: "create", item: null }); setConfirm({ open: false, item: null, tab: null }); }} className={`px-3 py-1.5 text-sm rounded-md transition-colors ${tab === t.id ? "bg-white text-slate-800 shadow-sm font-medium" : "text-slate-500 hover:text-slate-700"}`}>{t.label}</button>
           ))}
         </div>
-        <button onClick={() => setModal({ open: true, mode: "create", item: null })} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 whitespace-nowrap">
+        <button onClick={() => setModal({ open: true, mode: "create", item: null })} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 whitespace-nowrap">
           <Plus className="w-3.5 h-3.5" /> Add {getLabel()}
         </button>
       </div>

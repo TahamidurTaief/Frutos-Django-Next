@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useCallback } from "react";
 import { Toaster as HotToaster, toast as hotToast } from "react-hot-toast";
+import { CheckCircle, XCircle, Info } from "lucide-react";
 
 const ToastContext = createContext(null);
 
@@ -14,22 +15,36 @@ export function ToastProvider({ children }) {
     <ToastContext.Provider value={{ success, error, info }}>
       {children}
       <HotToaster
-        position="top-center"
+        position="top-right"
+        gutter={10}
         toastOptions={{
           duration: 4000,
           style: {
-            borderRadius: "8px",
+            borderRadius: "12px",
             fontSize: "13px",
-            fontWeight: 500,
-            maxWidth: "360px",
+            fontWeight: "600",
+            maxWidth: "380px",
+            background: "#ffffff",
+            color: "#1e293b",
+            border: "1px solid #f1f5f9",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
+            padding: "12px 16px",
           },
           success: {
-            style: { background: "#059669", color: "#fff" },
-            iconTheme: { primary: "#fff", secondary: "#059669" },
+            style: {
+              background: "#ffffff",
+              color: "#166534",
+              borderLeft: "4px solid #22c55e",
+            },
+            iconTheme: { primary: "#22c55e", secondary: "#ffffff" },
           },
           error: {
-            style: { background: "#dc2626", color: "#fff" },
-            iconTheme: { primary: "#fff", secondary: "#dc2626" },
+            style: {
+              background: "#ffffff",
+              color: "#991b1b",
+              borderLeft: "4px solid #ef4444",
+            },
+            iconTheme: { primary: "#ef4444", secondary: "#ffffff" },
           },
         }}
       />

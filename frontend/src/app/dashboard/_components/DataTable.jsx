@@ -4,36 +4,34 @@ import { useState, useMemo, useCallback } from "react";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search, ArrowUpDown, ArrowUp, ArrowDown, Loader2 } from "lucide-react";
 
 const statusColors = {
-  active: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400",
-  completed: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400",
-  delivered: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400",
-  published: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400",
-  paid: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400",
-  approved: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400",
-  processing: "bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400",
-  in_transit: "bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400",
-  shipped: "bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400",
-  pending: "bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400",
-  unpaid: "bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400",
-  draft: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
-  inactive: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
-  archived: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
-  cancelled: "bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400",
-  refunded: "bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400",
-  rejected: "bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400",
-  suspended: "bg-orange-50 text-orange-700 dark:bg-orange-950/30 dark:text-orange-400",
-  seller: "bg-purple-50 text-purple-700 dark:bg-purple-950/30 dark:text-purple-400",
-  vendor: "bg-indigo-50 text-indigo-700 dark:bg-indigo-950/30 dark:text-indigo-400",
-  wholesaler: "bg-cyan-50 text-cyan-700 dark:bg-cyan-950/30 dark:text-cyan-400",
-  affiliate: "bg-pink-50 text-pink-700 dark:bg-pink-950/30 dark:text-pink-400",
-  customer: "bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
-  admin: "bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400",
+  active:      "bg-emerald-50 text-emerald-700",
+  completed:   "bg-emerald-50 text-emerald-700",
+  delivered:   "bg-emerald-50 text-emerald-700",
+  published:   "bg-emerald-50 text-emerald-700",
+  paid:        "bg-emerald-50 text-emerald-700",
+  approved:    "bg-emerald-50 text-emerald-700",
+  processing:  "bg-blue-50 text-blue-700",
+  in_transit:  "bg-blue-50 text-blue-700",
+  shipped:     "bg-indigo-50 text-indigo-700",
+  pending:     "bg-amber-50 text-amber-700",
+  unpaid:      "bg-amber-50 text-amber-700",
+  draft:       "bg-slate-100 text-slate-600",
+  inactive:    "bg-slate-100 text-slate-600",
+  archived:    "bg-slate-100 text-slate-600",
+  cancelled:   "bg-red-50 text-red-700",
+  refunded:    "bg-red-50 text-red-700",
+  rejected:    "bg-red-50 text-red-700",
+  suspended:   "bg-orange-50 text-orange-700",
+  seller:      "bg-purple-50 text-purple-700",
+  vendor:      "bg-indigo-50 text-indigo-700",
+  wholesaler:  "bg-cyan-50 text-cyan-700",
+  affiliate:   "bg-pink-50 text-pink-700",
+  customer:    "bg-slate-50 text-slate-700",
+  admin:       "bg-red-50 text-red-700",
 };
 
 /**
  * Dual-mode DataTable: supports client-side (default) and server-side pagination.
- *
- * Server-side props: serverSide, totalItems, currentPage, onSearch, onPageChange, loading
  */
 export default function DataTable({
   columns,
@@ -119,18 +117,18 @@ export default function DataTable({
   };
 
   return (
-    <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg">
+    <div className="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden">
       {/* Search */}
       {searchable && (
-        <div className="p-3 border-b border-gray-200 dark:border-gray-800">
+        <div className="p-4 border-b border-slate-100 bg-slate-50/50">
           <div className="relative max-w-xs">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
               type="text"
               placeholder="Search..."
               value={search}
               onChange={(e) => handleSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600"
+              className="w-full pl-9 pr-3 py-2 text-sm border border-slate-200 rounded-lg bg-white text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300 transition-all"
             />
           </div>
         </div>
@@ -139,19 +137,19 @@ export default function DataTable({
       {/* Table */}
       <div className="overflow-x-auto relative">
         {loading && (
-          <div className="absolute inset-0 bg-white/60 dark:bg-gray-950/60 z-10 flex items-center justify-center">
-            <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
+          <div className="absolute inset-0 bg-white/80 z-10 flex items-center justify-center">
+            <Loader2 className="w-5 h-5 animate-spin text-indigo-500" />
           </div>
         )}
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-200 dark:border-gray-800">
+            <tr className="border-b border-slate-100 bg-slate-50">
               {columns.map((col) => (
                 <th
                   key={col.key}
                   onClick={() => col.sortable !== false && handleSort(col.key)}
-                  className={`px-4 py-2.5 text-left font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap ${
-                    col.sortable !== false ? "cursor-pointer select-none hover:text-gray-700 dark:hover:text-gray-200" : ""
+                  className={`px-5 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap ${
+                    col.sortable !== false ? "cursor-pointer select-none hover:text-slate-700" : ""
                   }`}
                 >
                   <span className="flex items-center gap-1">
@@ -161,16 +159,16 @@ export default function DataTable({
                 </th>
               ))}
               {actions && (
-                <th className="px-4 py-2.5 text-right font-medium text-gray-500 dark:text-gray-400">
+                <th className="px-5 py-3.5 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">
                   Actions
                 </th>
               )}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-slate-100">
             {paginated.length === 0 ? (
               <tr>
-                <td colSpan={columns.length + (actions ? 1 : 0)} className="px-4 py-8 text-center text-gray-400">
+                <td colSpan={columns.length + (actions ? 1 : 0)} className="px-5 py-10 text-center text-sm font-medium text-slate-400">
                   No results found
                 </td>
               </tr>
@@ -179,15 +177,15 @@ export default function DataTable({
                 <tr
                   key={row.id || idx}
                   onClick={() => onRowClick?.(row)}
-                  className={`border-b border-gray-100 dark:border-gray-800/50 last:border-0 ${
-                    onRowClick ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900" : ""
+                  className={`transition-colors ${
+                    onRowClick ? "cursor-pointer hover:bg-slate-50" : ""
                   }`}
                 >
                   {columns.map((col) => (
-                    <td key={col.key} className="px-4 py-2.5 whitespace-nowrap text-gray-700 dark:text-gray-300">
+                    <td key={col.key} className="px-5 py-3.5 whitespace-nowrap text-slate-700">
                       {col.render ? col.render(row[col.key], row) : (
                         col.type === "status" ? (
-                          <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${statusColors[row[col.key]] || "bg-gray-100 text-gray-600"}`}>
+                          <span className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded-full ${statusColors[row[col.key]] || "bg-slate-100 text-slate-600"}`}>
                             {String(row[col.key]).replace(/_/g, " ")}
                           </span>
                         ) : col.type === "currency" ? (
@@ -199,7 +197,7 @@ export default function DataTable({
                     </td>
                   ))}
                   {actions && (
-                    <td className="px-4 py-2.5 text-right">
+                    <td className="px-5 py-3.5 text-right">
                       {actions(row)}
                     </td>
                   )}
@@ -211,23 +209,23 @@ export default function DataTable({
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between px-4 py-2.5 border-t border-gray-200 dark:border-gray-800 text-sm text-gray-500 dark:text-gray-400">
-        <span>
+      <div className="flex items-center justify-between px-5 py-3.5 border-t border-slate-100 bg-slate-50/50 text-sm text-slate-500">
+        <span className="text-xs font-medium">
           {total === 0 ? "0 results" : `${(activePage - 1) * pageSize + 1}–${Math.min(activePage * pageSize, total)} of ${total}`}
         </span>
         <div className="flex items-center gap-1">
-          <button onClick={() => goToPage(1)} disabled={activePage === 1} className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30">
-            <ChevronsLeft className="w-4 h-4" />
+          <button onClick={() => goToPage(1)} disabled={activePage === 1} className="p-1.5 rounded-lg hover:bg-slate-200 disabled:opacity-30 transition-colors">
+            <ChevronsLeft className="w-3.5 h-3.5" />
           </button>
-          <button onClick={() => goToPage(Math.max(1, activePage - 1))} disabled={activePage === 1} className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30">
-            <ChevronLeft className="w-4 h-4" />
+          <button onClick={() => goToPage(Math.max(1, activePage - 1))} disabled={activePage === 1} className="p-1.5 rounded-lg hover:bg-slate-200 disabled:opacity-30 transition-colors">
+            <ChevronLeft className="w-3.5 h-3.5" />
           </button>
-          <span className="px-2 text-xs">{activePage} / {totalPages}</span>
-          <button onClick={() => goToPage(Math.min(totalPages, activePage + 1))} disabled={activePage === totalPages} className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30">
-            <ChevronRight className="w-4 h-4" />
+          <span className="px-2 text-xs font-semibold text-slate-600">{activePage} / {totalPages}</span>
+          <button onClick={() => goToPage(Math.min(totalPages, activePage + 1))} disabled={activePage === totalPages} className="p-1.5 rounded-lg hover:bg-slate-200 disabled:opacity-30 transition-colors">
+            <ChevronRight className="w-3.5 h-3.5" />
           </button>
-          <button onClick={() => goToPage(totalPages)} disabled={activePage === totalPages} className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30">
-            <ChevronsRight className="w-4 h-4" />
+          <button onClick={() => goToPage(totalPages)} disabled={activePage === totalPages} className="p-1.5 rounded-lg hover:bg-slate-200 disabled:opacity-30 transition-colors">
+            <ChevronsRight className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>

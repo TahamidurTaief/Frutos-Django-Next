@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Plus, Eye, Pencil, Trash2 } from "lucide-react";
@@ -43,7 +43,7 @@ const statusCol = (key = "is_active") => ({
   key,
   label: "Status",
   render: (v) => (
-    <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${v ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"}`}>
+    <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${v ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"}`}>
       {v ? "Active" : "Inactive"}
     </span>
   ),
@@ -54,7 +54,7 @@ const activeField = { key: "is_active", label: "Active", type: "select", require
 // Hero Banners
 const heroColumns = [
   { key: "title", label: "Title", render: (v) => <span title={v}>{clip(v)}</span> },
-  { key: "subtitle", label: "Subtitle", render: (v) => v ? <span className="text-gray-500 dark:text-gray-400 text-xs" title={v}>{clip(v, 45)}</span> : "—" },
+  { key: "subtitle", label: "Subtitle", render: (v) => v ? <span className="text-slate-500 text-xs" title={v}>{clip(v, 45)}</span> : "—" },
   { key: "order", label: "Order" },
   statusCol(),
 ];
@@ -85,7 +85,7 @@ const offerFields = [
 // Horizontal Promo Banners
 const horizontalColumns = [
   { key: "title", label: "Title", render: (v) => <span title={v}>{clip(v)}</span> },
-  { key: "subtitle", label: "Subtitle", render: (v) => v ? <span className="text-gray-500 dark:text-gray-400 text-xs" title={v}>{clip(v, 45)}</span> : "—" },
+  { key: "subtitle", label: "Subtitle", render: (v) => v ? <span className="text-slate-500 text-xs" title={v}>{clip(v, 45)}</span> : "—" },
   { key: "order", label: "Order" },
   statusCol(),
 ];
@@ -103,8 +103,8 @@ const horizontalFields = [
 const offerCatColumns = [
   { key: "title", label: "Title", render: (v) => <span title={v}>{clip(v, 35)}</span> },
   { key: "name", label: "Name", render: (v) => <span title={v}>{clip(v, 25)}</span> },
-  { key: "link", label: "Link", render: (v) => v ? <span className="font-mono text-xs text-gray-500" title={v}>{clip(v, 35)}</span> : "—" },
-  { key: "badge_text", label: "Badge", render: (v) => v ? <span className="px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 font-medium">{v}</span> : "—" },
+  { key: "link", label: "Link", render: (v) => v ? <span className="font-mono text-xs text-slate-500" title={v}>{clip(v, 35)}</span> : "—" },
+  { key: "badge_text", label: "Badge", render: (v) => v ? <span className="px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-600 font-medium">{v}</span> : "—" },
   { key: "order", label: "Order" },
   statusCol(),
 ];
@@ -125,7 +125,7 @@ const offerCatFields = [
 const navbarColumns = [
   { key: "name", label: "Name", render: (v) => <span title={v}>{clip(v, 30)}</span> },
   { key: "link_type", label: "Type", render: (v) => <span className="capitalize">{v}</span> },
-  { key: "url", label: "URL", render: (v) => v ? <span className="font-mono text-xs text-gray-500" title={v}>{clip(v, 35)}</span> : "—" },
+  { key: "url", label: "URL", render: (v) => v ? <span className="font-mono text-xs text-slate-500" title={v}>{clip(v, 35)}</span> : "—" },
   { key: "order", label: "Order" },
   statusCol(),
 ];
@@ -143,7 +143,7 @@ const navbarFields = [
 // Blog Posts
 const blogColumns = [
   { key: "title", label: "Title", render: (v) => <span title={v}>{clip(v, 40)}</span> },
-  { key: "slug", label: "Slug", render: (v) => <span className="font-mono text-xs text-gray-500" title={v}>{clip(v, 30)}</span> },
+  { key: "slug", label: "Slug", render: (v) => <span className="font-mono text-xs text-slate-500" title={v}>{clip(v, 30)}</span> },
   { key: "is_featured", label: "Featured", render: (v) => v ? <span className="text-xs text-amber-600 font-medium">Featured</span> : "—" },
   statusCol("is_active"),
   { key: "publish_date", label: "Published", render: (v) => v ? new Date(v).toLocaleDateString() : "—" },
@@ -181,7 +181,7 @@ const footerFields = [
 // Footer Links
 const footerLinkColumns = [
   { key: "text", label: "Text", render: (v) => <span title={v}>{clip(v, 30)}</span> },
-  { key: "url", label: "URL", render: (v) => v ? <span className="font-mono text-xs text-gray-500" title={v}>{clip(v, 40)}</span> : "—" },
+  { key: "url", label: "URL", render: (v) => v ? <span className="font-mono text-xs text-slate-500" title={v}>{clip(v, 40)}</span> : "—" },
   { key: "order", label: "Order" },
   { key: "open_in_new_tab", label: "New Tab", render: (v) => v ? "Yes" : "No" },
   statusCol(),
@@ -199,7 +199,7 @@ const footerLinkFields = [
 // Social Links
 const socialColumns = [
   { key: "platform", label: "Platform", render: (v) => <span title={v}>{clip(v, 25)}</span> },
-  { key: "url", label: "URL", render: (v) => v ? <span className="font-mono text-xs text-gray-500" title={v}>{clip(v, 45)}</span> : "—" },
+  { key: "url", label: "URL", render: (v) => v ? <span className="font-mono text-xs text-slate-500" title={v}>{clip(v, 45)}</span> : "—" },
   { key: "order", label: "Order" },
   statusCol(),
 ];
@@ -213,8 +213,8 @@ const socialFields = [
 
 // Site Settings
 const settingsColumns = [
-  { key: "key", label: "Key", render: (v) => <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded">{v}</code> },
-  { key: "value", label: "Value", render: (v) => <span className="font-mono text-xs text-gray-600 dark:text-gray-400" title={String(v ?? "")}>{clip(v, 50)}</span> },
+  { key: "key", label: "Key", render: (v) => <code className="text-xs bg-slate-100 px-1.5 py-0.5 rounded">{v}</code> },
+  { key: "value", label: "Value", render: (v) => <span className="font-mono text-xs text-slate-600" title={String(v ?? "")}>{clip(v, 50)}</span> },
   { key: "setting_type", label: "Type", render: (v) => <span className="capitalize">{v}</span> },
   { key: "group", label: "Group", render: (v) => <span className="capitalize">{v}</span> },
   statusCol(),
@@ -283,7 +283,7 @@ function TabTable({ service, columns, formFields, lookupField = "id", boolFields
   return (
     <>
       <div className="flex justify-end mb-3">
-        <button onClick={() => setCreateOpen(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors">
+        <button onClick={() => setCreateOpen(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 transition-colors">
           <Plus className="w-4 h-4" /> Add
         </button>
       </div>
@@ -300,9 +300,9 @@ function TabTable({ service, columns, formFields, lookupField = "id", boolFields
         searchable
         actions={(row) => (
           <div className="flex items-center justify-end gap-1">
-            <button onClick={() => setViewItem(row)} className="p-1.5 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><Eye className="w-3.5 h-3.5" /></button>
-            <button onClick={() => setEditItem(row)} className="p-1.5 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><Pencil className="w-3.5 h-3.5" /></button>
-            <button onClick={() => setDeleteItem(row)} className="p-1.5 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30"><Trash2 className="w-3.5 h-3.5" /></button>
+            <button onClick={() => setViewItem(row)} className="db-icon-btn"><Eye className="w-3.5 h-3.5" /></button>
+            <button onClick={() => setEditItem(row)} className="db-icon-btn"><Pencil className="w-3.5 h-3.5" /></button>
+            <button onClick={() => setDeleteItem(row)} className="db-icon-btn danger"><Trash2 className="w-3.5 h-3.5" /></button>
           </div>
         )}
       />
@@ -316,9 +316,9 @@ function TabTable({ service, columns, formFields, lookupField = "id", boolFields
         {viewItem && (
           <div className="space-y-3">
             {Object.entries(viewItem).filter(([k]) => !["id", "image", "image_url_final"].includes(k)).map(([key, val]) => (
-              <div key={key} className="flex justify-between py-1.5 border-b border-gray-100 dark:border-gray-800 last:border-0">
-                <span className="text-sm text-gray-500 capitalize">{key.replace(/_/g, " ")}</span>
-                <span className="text-sm font-medium text-gray-900 dark:text-white max-w-[60%] text-right truncate">{typeof val === "object" ? JSON.stringify(val) : String(val ?? "—")}</span>
+              <div key={key} className="flex justify-between py-1.5 border-b border-slate-100 last:border-0">
+                <span className="text-sm text-slate-500 capitalize">{key.replace(/_/g, " ")}</span>
+                <span className="text-sm font-medium text-slate-800 max-w-[60%] text-right truncate">{typeof val === "object" ? JSON.stringify(val) : String(val ?? "—")}</span>
               </div>
             ))}
           </div>
@@ -336,15 +336,15 @@ export default function WebsitePage() {
 
   return (
     <Container title="Website Content" description="Manage banners, navigation, footer, blog, and site settings">
-      <div className="flex gap-1 overflow-x-auto border-b border-gray-200 dark:border-gray-800 mb-4 pb-px">
+      <div className="flex gap-1 overflow-x-auto border-b border-slate-200 mb-4 pb-px">
         {TABS.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`px-3 py-2 text-sm font-medium border-b-2 transition-colors -mb-px whitespace-nowrap ${
               activeTab === tab.id
-                ? "border-gray-900 dark:border-white text-gray-900 dark:text-white"
-                : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                ? "border-gray-900 text-slate-800"
+                : "border-transparent text-slate-500 hover:text-slate-700"
             }`}
           >
             {tab.label}
@@ -362,3 +362,4 @@ export default function WebsitePage() {
     </Container>
   );
 }
+

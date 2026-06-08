@@ -28,8 +28,8 @@ const columns = [
   { key: "thumbnail_url", label: "", sortable: false, render: (v) => v ? (
     <img src={v} alt="" className="w-8 h-8 rounded object-cover" />
   ) : (
-    <div className="w-8 h-8 rounded bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-      <ImageIcon className="w-3.5 h-3.5 text-gray-400" />
+    <div className="w-8 h-8 rounded bg-slate-100 flex items-center justify-center">
+      <ImageIcon className="w-3.5 h-3.5 text-slate-400" />
     </div>
   )},
   { key: "name",           label: "Name" },
@@ -51,8 +51,8 @@ const TABS = [
 ];
 
 // ── Shared styles ──────────────────────────────────────────────
-const inputCls = "w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400";
-const labelCls = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
+const inputCls = "w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300 transition-all";
+const labelCls = "block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5";
 
 // ── Product Form ───────────────────────────────────────────────
 function ProductForm({
@@ -214,20 +214,28 @@ function ProductForm({
 
       {/* Error */}
       {error && (
-        <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg px-3 py-2">
+        <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
           {error}
         </div>
       )}
 
       {/* Tab nav */}
-      <div className="flex gap-0.5 flex-wrap border-b border-gray-200 dark:border-gray-800">
+      <div className="flex gap-1 flex-wrap mb-4" style={{ borderBottom: "2px solid #f1f5f9", paddingBottom: "0" }}>
         {TABS.map(t => (
           <button key={t.id} type="button" onClick={() => setActiveTab(t.id)}
-            className={`px-3 py-1.5 text-xs font-medium transition-colors rounded-t-md -mb-px border-b-2 ${
-              activeTab === t.id
-                ? "border-gray-900 dark:border-white text-gray-900 dark:text-white"
-                : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-            }`}
+            style={{
+              padding: "8px 14px",
+              fontSize: "12px",
+              fontWeight: "700",
+              borderRadius: "8px 8px 0 0",
+              border: "none",
+              cursor: "pointer",
+              marginBottom: "-2px",
+              borderBottom: activeTab === t.id ? "2px solid #0f172a" : "2px solid transparent",
+              background: activeTab === t.id ? "#f8fafc" : "transparent",
+              color: activeTab === t.id ? "#0f172a" : "#94a3b8",
+              transition: "all 0.15s",
+            }}
           >{t.label}</button>
         ))}
       </div>
@@ -279,7 +287,7 @@ function ProductForm({
           </div>
 
           {/* Business */}
-          <div className="grid grid-cols-2 gap-3 pt-2 border-t border-gray-100 dark:border-gray-800">
+          <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-100">
             <div>
               <label className={labelCls}>Shop <span className="text-red-500">*</span></label>
               <SearchableSelect required value={form.shop} onChange={v => handleChange("shop", v)}
@@ -319,7 +327,7 @@ function ProductForm({
           <label className={labelCls}>Product Description</label>
           <textarea value={form.description} onChange={e => handleChange("description", e.target.value)}
             rows={12} className={`${inputCls} resize-y`} placeholder="Full product description... HTML supported." />
-          <p className="text-xs text-gray-400 mt-1">Basic HTML tags are supported (bold, italic, lists etc.).</p>
+          <p className="text-xs text-slate-400 mt-1">Basic HTML tags are supported (bold, italic, lists etc.).</p>
         </div>
       )}
 
@@ -332,7 +340,7 @@ function ProductForm({
               onChange={e => handleChange("nutritional_info", e.target.value)}
               rows={10} className={`${inputCls} resize-y font-mono text-xs`}
               placeholder={"Per 100g:\nCalories: 52 kcal\nProtein: 0.3 g\nCarbohydrates: 14 g\nFat: 0.2 g\nFiber: 2.4 g\nSugar: 10 g"} />
-            <p className="text-xs text-gray-400 mt-1">Shown on the Nutritional Info tab on the product page.</p>
+            <p className="text-xs text-slate-400 mt-1">Shown on the Nutritional Info tab on the product page.</p>
           </div>
         </div>
       )}
@@ -374,9 +382,9 @@ function ProductForm({
           </div>
 
           {/* Physical dimensions */}
-          <div className="pt-2 border-t border-gray-100 dark:border-gray-800">
+          <div className="pt-2 border-t border-slate-100">
             <button type="button" onClick={() => setShowPhysical(p => !p)}
-              className="flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 mb-2">
+              className="flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-slate-700 mb-2">
               {showPhysical ? <ChevronUp className="w-3 h-3"/> : <ChevronDown className="w-3 h-3"/>}
               Physical dimensions (for shipping calculation)
             </button>
@@ -405,7 +413,7 @@ function ProductForm({
               {thumbnailPreview && !thumbnailRemoved && (
                 <div className="relative">
                   <img src={thumbnailPreview} alt="thumb"
-                    className="w-24 h-24 rounded-lg object-cover border border-gray-200 dark:border-gray-700" />
+                    className="w-24 h-24 rounded-lg object-cover border border-slate-200" />
                   <button type="button"
                     onClick={() => { setThumbnail(null); setThumbnailPreview(""); setThumbnailRemoved(true); }}
                     className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center">
@@ -413,9 +421,9 @@ function ProductForm({
                   </button>
                 </div>
               )}
-              <label className="flex items-center gap-2 px-3 py-2 border border-dashed border-gray-300 dark:border-gray-600 rounded-md cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 h-24 justify-center flex-col">
-                <Upload className="w-5 h-5 text-gray-400" />
-                <span className="text-xs text-gray-400">Upload thumbnail</span>
+              <label className="flex items-center gap-2 px-3 py-2 border border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-slate-50 h-24 justify-center flex-col">
+                <Upload className="w-5 h-5 text-slate-400" />
+                <span className="text-xs text-slate-400">Upload thumbnail</span>
                 <input type="file" accept="image/*" className="hidden" onChange={e => {
                   const f = e.target.files?.[0];
                   if (f) { setThumbnail(f); setThumbnailPreview(URL.createObjectURL(f)); setThumbnailRemoved(false); }
@@ -431,7 +439,7 @@ function ProductForm({
               {existingImages.map(img => (
                 <div key={img.id} className="relative">
                   <img src={img.image} alt=""
-                    className="w-20 h-20 rounded-lg object-cover border border-gray-200 dark:border-gray-700" />
+                    className="w-20 h-20 rounded-lg object-cover border border-slate-200" />
                   <button type="button"
                     onClick={() => { setExistingImages(prev => prev.filter(i => i.id !== img.id)); setRemoveImageIds(prev => [...prev, img.id]); }}
                     className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center">
@@ -442,7 +450,7 @@ function ProductForm({
               {additionalImages.map((f, i) => (
                 <div key={`n-${i}`} className="relative">
                   <img src={URL.createObjectURL(f)} alt=""
-                    className="w-20 h-20 rounded-lg object-cover border border-gray-200 dark:border-gray-700" />
+                    className="w-20 h-20 rounded-lg object-cover border border-slate-200" />
                   <button type="button"
                     onClick={() => setAdditionalImages(prev => prev.filter((_, j) => j !== i))}
                     className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center">
@@ -450,9 +458,9 @@ function ProductForm({
                   </button>
                 </div>
               ))}
-              <label className="w-20 h-20 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg cursor-pointer hover:border-gray-400">
-                <Upload className="w-4 h-4 text-gray-400" />
-                <span className="text-[10px] text-gray-400 mt-1">Add more</span>
+              <label className="w-20 h-20 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400">
+                <Upload className="w-4 h-4 text-slate-400" />
+                <span className="text-[10px] text-slate-400 mt-1">Add more</span>
                 <input type="file" accept="image/*" multiple className="hidden"
                   onChange={e => setAdditionalImages(prev => [...prev, ...Array.from(e.target.files || [])])} />
               </label>
@@ -464,21 +472,21 @@ function ProductForm({
             <div className="flex items-center justify-between mb-1">
               <label className={labelCls}>Colors</label>
               <button type="button" onClick={() => setShowAddColor(v => !v)}
-                className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-0.5">
+                className="text-xs text-blue-600 hover:underline flex items-center gap-0.5">
                 <Plus className="w-3 h-3" /> New Color
               </button>
             </div>
             {showAddColor && (
-              <div className="flex items-center gap-2 mb-2 p-2 border border-dashed border-gray-300 dark:border-gray-600 rounded-md">
+              <div className="flex items-center gap-2 mb-2 p-2 border border-dashed border-gray-300 rounded-md">
                 <input type="text" value={newColorName} onChange={e => setNewColorName(e.target.value)}
-                  placeholder="Color name" className="flex-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none" />
+                  placeholder="Color name" className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded bg-white text-slate-800 focus:outline-none" />
                 <input type="color" value={newColorHex} onChange={e => setNewColorHex(e.target.value)}
                   className="w-8 h-7 rounded cursor-pointer border-0 p-0" />
                 <button type="button" onClick={handleAddColor} disabled={addingColor || !newColorName.trim()}
-                  className="px-2 py-1 text-xs bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded disabled:opacity-50">
+                  className="px-2 py-1 text-xs bg-slate-900 text-white rounded disabled:opacity-50">
                   {addingColor ? "..." : "Add"}
                 </button>
-                <button type="button" onClick={() => setShowAddColor(false)} className="text-gray-400 hover:text-gray-600">
+                <button type="button" onClick={() => setShowAddColor(false)} className="text-slate-400 hover:text-slate-600">
                   <X className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -488,14 +496,14 @@ function ProductForm({
                 <button key={c.id} type="button" onClick={() => toggleMulti("colors", c.id)}
                   className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs border transition-colors ${
                     form.colors.includes(c.id)
-                      ? "border-gray-900 dark:border-white bg-gray-900 dark:bg-white text-white dark:text-gray-900"
-                      : "border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-400"
+                      ? "border-gray-900 bg-slate-900 text-white"
+                      : "border-slate-200 text-slate-600 hover:border-gray-400"
                   }`}>
-                  {c.hex_code && <span className="w-3 h-3 rounded-full border border-gray-200" style={{ background: c.hex_code }} />}
+                  {c.hex_code && <span className="w-3 h-3 rounded-full border border-slate-200" style={{ background: c.hex_code }} />}
                   {c.name}
                 </button>
               ))}
-              {colors.length === 0 && <span className="text-xs text-gray-400">No colors yet — add one above</span>}
+              {colors.length === 0 && <span className="text-xs text-slate-400">No colors yet — add one above</span>}
             </div>
           </div>
 
@@ -504,19 +512,19 @@ function ProductForm({
             <div className="flex items-center justify-between mb-1">
               <label className={labelCls}>Sizes</label>
               <button type="button" onClick={() => setShowAddSize(v => !v)}
-                className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-0.5">
+                className="text-xs text-blue-600 hover:underline flex items-center gap-0.5">
                 <Plus className="w-3 h-3" /> New Size
               </button>
             </div>
             {showAddSize && (
-              <div className="flex items-center gap-2 mb-2 p-2 border border-dashed border-gray-300 dark:border-gray-600 rounded-md">
+              <div className="flex items-center gap-2 mb-2 p-2 border border-dashed border-gray-300 rounded-md">
                 <input type="text" value={newSizeName} onChange={e => setNewSizeName(e.target.value)}
-                  placeholder="Size (e.g., XL, 42)" className="flex-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none" />
+                  placeholder="Size (e.g., XL, 42)" className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded bg-white text-slate-800 focus:outline-none" />
                 <button type="button" onClick={handleAddSize} disabled={addingSize || !newSizeName.trim()}
-                  className="px-2 py-1 text-xs bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded disabled:opacity-50">
+                  className="px-2 py-1 text-xs bg-slate-900 text-white rounded disabled:opacity-50">
                   {addingSize ? "..." : "Add"}
                 </button>
-                <button type="button" onClick={() => setShowAddSize(false)} className="text-gray-400 hover:text-gray-600">
+                <button type="button" onClick={() => setShowAddSize(false)} className="text-slate-400 hover:text-slate-600">
                   <X className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -526,13 +534,13 @@ function ProductForm({
                 <button key={s.id} type="button" onClick={() => toggleMulti("sizes", s.id)}
                   className={`px-2.5 py-1 rounded-full text-xs border transition-colors ${
                     form.sizes.includes(s.id)
-                      ? "border-gray-900 dark:border-white bg-gray-900 dark:bg-white text-white dark:text-gray-900"
-                      : "border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-400"
+                      ? "border-gray-900 bg-slate-900 text-white"
+                      : "border-slate-200 text-slate-600 hover:border-gray-400"
                   }`}>
                   {s.name}
                 </button>
               ))}
-              {sizes.length === 0 && <span className="text-xs text-gray-400">No sizes yet — add one above</span>}
+              {sizes.length === 0 && <span className="text-xs text-slate-400">No sizes yet — add one above</span>}
             </div>
           </div>
         </div>
@@ -542,12 +550,12 @@ function ProductForm({
       {activeTab === "specs" && (
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-slate-500">
               Key-value pairs shown on product page (e.g., Storage → Cool & dry).
             </p>
             <button type="button"
               onClick={() => setSpecs(prev => [...prev, { name: "", value: "" }])}
-              className="text-xs border border-gray-300 dark:border-gray-700 rounded px-2 py-1 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center gap-1">
+              className="text-xs border border-gray-300 rounded px-2 py-1 text-slate-600 hover:bg-slate-50 flex items-center gap-1">
               <Plus className="w-3 h-3" /> Add Row
             </button>
           </div>
@@ -566,25 +574,32 @@ function ProductForm({
               </div>
             ))}
             {specs.length === 0 && (
-              <p className="text-xs text-gray-400 py-6 text-center">No specifications yet. Click "+ Add Row" to start.</p>
+              <p className="text-xs text-slate-400 py-6 text-center">No specifications yet. Click "+ Add Row" to start.</p>
             )}
           </div>
         </div>
       )}
 
       {/* Submit + tab dots */}
-      <div className="flex justify-between items-center pt-3 border-t border-gray-200 dark:border-gray-800">
+      <div className="flex justify-between items-center pt-3" style={{ borderTop: "1px solid #f1f5f9" }}>
         <div className="flex gap-1.5">
           {TABS.map(t => (
             <button key={t.id} type="button" onClick={() => setActiveTab(t.id)}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                activeTab === t.id ? "bg-gray-900 dark:bg-white" : "bg-gray-300 dark:bg-gray-700"
-              }`} />
+              style={{
+                width: "8px",
+                height: "8px",
+                borderRadius: "50%",
+                border: "none",
+                cursor: "pointer",
+                background: activeTab === t.id ? "#0f172a" : "#e2e8f0",
+                transition: "background 0.15s",
+                padding: 0,
+              }}
+            />
           ))}
         </div>
-        <button type="submit" disabled={submitting}
-          className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-50 transition-colors">
-          {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+        <button type="submit" disabled={submitting} className="db-btn-primary" style={{ opacity: submitting ? 0.6 : 1 }}>
+          {submitting && <Loader2 size={13} className="animate-spin" />}
           {submitting ? "Saving..." : submitLabel}
         </button>
       </div>
@@ -596,9 +611,9 @@ function ProductForm({
 function ProductView({ item }) {
   if (!item) return null;
   const Row = ({ label, value }) => (
-    <div className="flex justify-between py-1.5 border-b border-gray-100 dark:border-gray-800 last:border-0">
-      <span className="text-sm text-gray-500 dark:text-gray-400">{label}</span>
-      <span className="text-sm font-medium text-gray-900 dark:text-white text-right max-w-[60%]">{String(value ?? "—")}</span>
+    <div className="flex justify-between py-1.5 border-b border-slate-100 last:border-0">
+      <span className="text-sm text-slate-500">{label}</span>
+      <span className="text-sm font-medium text-slate-800 text-right max-w-[60%]">{String(value ?? "—")}</span>
     </div>
   );
 
@@ -606,11 +621,11 @@ function ProductView({ item }) {
     <div className="space-y-5 max-h-[75vh] overflow-y-auto pr-1">
       {item.thumbnail_url && (
         <img src={item.thumbnail_url} alt={item.name}
-          className="w-full h-48 object-cover rounded-lg border border-gray-200 dark:border-gray-700" />
+          className="w-full h-48 object-cover rounded-lg border border-slate-200" />
       )}
 
       <div>
-        <h4 className="text-xs font-medium uppercase tracking-wider text-gray-400 mb-2">Product Information</h4>
+        <h4 className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2">Product Information</h4>
         <Row label="Name"              value={item.name} />
         <Row label="Slug"              value={item.slug} />
         <Row label="Origin"            value={item.origin} />
@@ -626,7 +641,7 @@ function ProductView({ item }) {
       </div>
 
       <div>
-        <h4 className="text-xs font-medium uppercase tracking-wider text-gray-400 mb-2">Pricing & Inventory</h4>
+        <h4 className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2">Pricing & Inventory</h4>
         <Row label="Price"          value={`৳${Number(item.price).toLocaleString()}`} />
         <Row label="Sale Price"     value={item.discount_price  ? `৳${Number(item.discount_price).toLocaleString()}`  : "—"} />
         <Row label="Wholesale Price"value={item.wholesale_price ? `৳${Number(item.wholesale_price).toLocaleString()}` : "—"} />
@@ -637,8 +652,8 @@ function ProductView({ item }) {
 
       {item.nutritional_info && (
         <div>
-          <h4 className="text-xs font-medium uppercase tracking-wider text-gray-400 mb-2">Nutritional Info</h4>
-          <pre className="text-xs text-gray-700 dark:text-gray-300 whitespace-pre-wrap font-mono bg-gray-50 dark:bg-gray-900 p-3 rounded-md">
+          <h4 className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2">Nutritional Info</h4>
+          <pre className="text-xs text-slate-700 whitespace-pre-wrap font-mono bg-slate-50 p-3 rounded-md">
             {item.nutritional_info}
           </pre>
         </div>
@@ -646,7 +661,7 @@ function ProductView({ item }) {
 
       {(item.weight || item.length || item.width || item.height) && (
         <div>
-          <h4 className="text-xs font-medium uppercase tracking-wider text-gray-400 mb-2">Physical</h4>
+          <h4 className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2">Physical</h4>
           <Row label="Weight"     value={item.weight ? `${item.weight} kg` : "—"} />
           <Row label="Dimensions" value={[item.length, item.width, item.height].filter(Boolean).join(" × ") || "—"} />
         </div>
@@ -654,12 +669,12 @@ function ProductView({ item }) {
 
       {(item.colors?.length > 0 || item.sizes?.length > 0) && (
         <div>
-          <h4 className="text-xs font-medium uppercase tracking-wider text-gray-400 mb-2">Variants</h4>
+          <h4 className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2">Variants</h4>
           {item.colors?.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mb-2">
-              <span className="text-xs text-gray-500 mr-1">Colors:</span>
+              <span className="text-xs text-slate-500 mr-1">Colors:</span>
               {item.colors.map(c => (
-                <span key={c.id} className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+                <span key={c.id} className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-slate-100 text-slate-700">
                   {c.hex_code && <span className="w-2.5 h-2.5 rounded-full" style={{ background: c.hex_code }} />}
                   {c.name}
                 </span>
@@ -668,9 +683,9 @@ function ProductView({ item }) {
           )}
           {item.sizes?.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
-              <span className="text-xs text-gray-500 mr-1">Sizes:</span>
+              <span className="text-xs text-slate-500 mr-1">Sizes:</span>
               {item.sizes.map(s => (
-                <span key={s.id} className="px-2 py-0.5 rounded-full text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">{s.name}</span>
+                <span key={s.id} className="px-2 py-0.5 rounded-full text-xs bg-slate-100 text-slate-700">{s.name}</span>
               ))}
             </div>
           )}
@@ -679,25 +694,25 @@ function ProductView({ item }) {
 
       {item.specifications?.length > 0 && (
         <div>
-          <h4 className="text-xs font-medium uppercase tracking-wider text-gray-400 mb-2">Specifications</h4>
+          <h4 className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2">Specifications</h4>
           {item.specifications.map((s, i) => <Row key={i} label={s.name} value={s.value} />)}
         </div>
       )}
 
       {item.additional_images?.length > 0 && (
         <div>
-          <h4 className="text-xs font-medium uppercase tracking-wider text-gray-400 mb-2">Additional Images</h4>
+          <h4 className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2">Additional Images</h4>
           <div className="flex flex-wrap gap-2">
             {item.additional_images.map((img, i) => (
               <img key={i} src={img.image} alt=""
-                className="w-20 h-20 rounded-lg object-cover border border-gray-200 dark:border-gray-700" />
+                className="w-20 h-20 rounded-lg object-cover border border-slate-200" />
             ))}
           </div>
         </div>
       )}
 
       <div>
-        <h4 className="text-xs font-medium uppercase tracking-wider text-gray-400 mb-2">Meta</h4>
+        <h4 className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2">Meta</h4>
         <Row label="Rating"  value={item.rating ? `${Number(item.rating).toFixed(1)} (${item.review_count} reviews)` : "No reviews"} />
         <Row label="Created" value={item.created_at ? new Date(item.created_at).toLocaleString() : "—"} />
         <Row label="Updated" value={item.updated_at ? new Date(item.updated_at).toLocaleString() : "—"} />
@@ -745,9 +760,8 @@ export default function ProductsPage() {
       title="Products"
       description="Manage your product catalog"
       actions={
-        <button onClick={() => setCreateOpen(true)}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors">
-          <Plus className="w-4 h-4" /> Add Product
+        <button onClick={() => setCreateOpen(true)} className="db-btn-primary">
+          <Plus size={15} /> Add Product
         </button>
       }
     >
@@ -759,15 +773,15 @@ export default function ProductsPage() {
         actions={(row) => (
           <div className="flex items-center justify-end gap-1">
             <button onClick={() => setViewItem(row)}
-              className="p-1.5 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+              className="db-icon-btn">
               <Eye className="w-3.5 h-3.5" />
             </button>
             <button onClick={() => setEditItem(row)}
-              className="p-1.5 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+              className="db-icon-btn">
               <Pencil className="w-3.5 h-3.5" />
             </button>
             <button onClick={() => setDeleteItem(row)}
-              className="p-1.5 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30">
+              className="db-icon-btn danger">
               <Trash2 className="w-3.5 h-3.5" />
             </button>
           </div>

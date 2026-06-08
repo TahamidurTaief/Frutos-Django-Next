@@ -62,7 +62,6 @@ const navGroups = [
     items: [
       { name: "Users", href: "/dashboard/users", icon: Users },
       { name: 'Stores', href: '/dashboard/stores', icon: Store },
-      // { name: "Vendors", href: "/dashboard/vendors", icon: Building2 },
       { name: "Shops", href: "/dashboard/shops", icon: Store },
     ],
   },
@@ -94,7 +93,6 @@ export default function Sidebar({ collapsed, onToggle }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [badges, setBadges] = useState({ openTickets: 0 });
 
-  // Poll open-ticket count every 30s for notification badge
   useEffect(() => {
     const fetchCount = async () => {
       try {
@@ -121,54 +119,40 @@ export default function Sidebar({ collapsed, onToggle }) {
   };
 
   const NavContent = () => (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-white">
       {/* Logo */}
-      {/* <div className="h-14 flex items-center px-4 border-b border-gray-200 dark:border-gray-800 shrink-0">
+      <div className="h-14 flex items-center px-4 border-b border-slate-100 shrink-0 bg-white">
         {!collapsed && (
-          <span className="text-base font-semibold text-gray-900 dark:text-white">
-            iCommerce
-          </span>
+          <div className="flex items-center gap-2.5">
+            <div className="relative h-8 w-8 shrink-0 rounded-lg overflow-hidden shadow-sm">
+              <Image
+                src="/favicon_orrange.jpeg"
+                alt="El-Arbol Logo"
+                fill
+                priority
+                className="object-contain"
+              />
+            </div>
+            <span className="text-base font-bold text-slate-800 whitespace-nowrap tracking-tight">
+              El-Arbol
+            </span>
+          </div>
         )}
+
         <button
           onClick={onToggle}
-          className="ml-auto p-1.5 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hidden md:flex"
+          className="ml-auto p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 hidden md:flex transition-colors"
         >
           <ChevronLeft className={`w-4 h-4 transition-transform ${collapsed ? "rotate-180" : ""}`} />
         </button>
-      </div> */}
-      {/* Logo */}
-    <div className="h-14 flex items-center px-4 border-b border-gray-200 dark:border-gray-800 shrink-0">
-      {!collapsed && (
-        <div className="flex items-center gap-2">
-          <div className="relative h-8 w-8 shrink-0">
-            <Image 
-              src="/favicon_orrange.jpeg" 
-              alt="El-Arbol Logo" 
-              fill 
-              priority 
-              className="object-contain" 
-            />
-          </div>
-          <span className="text-base font-bold text-gray-900 dark:text-white whitespace-nowrap">
-            El-Arbol
-          </span>
-        </div>
-      )}
-      
-      <button
-        onClick={onToggle}
-        className="ml-auto p-1.5 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hidden md:flex"
-      >
-        <ChevronLeft className={`w-4 h-4 transition-transform ${collapsed ? "rotate-180" : ""}`} />
-      </button>
-    </div>
+      </div>
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-5">
+      <nav className="flex-1 overflow-y-auto py-4 px-2.5 space-y-5">
         {filteredGroups.map((group) => (
           <div key={group.label}>
             {!collapsed && (
-              <p className="px-2 mb-1.5 text-[11px] font-medium uppercase tracking-wider text-gray-400 dark:text-gray-500">
+              <p className="px-2.5 mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-400">
                 {group.label}
               </p>
             )}
@@ -182,18 +166,18 @@ export default function Sidebar({ collapsed, onToggle }) {
                     key={item.href}
                     href={item.href}
                     onClick={() => setMobileOpen(false)}
-                    className={`flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm transition-colors ${
+                    className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm font-medium transition-all ${
                       active
-                        ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900"
-                        : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
+                        ? "bg-slate-900 text-white shadow-sm"
+                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                     }`}
                     title={collapsed ? item.name : undefined}
                   >
-                    <Icon className="w-4 h-4 shrink-0" />
+                    <Icon className={`w-4 h-4 shrink-0 ${active ? "text-white" : "text-slate-400"}`} />
                     {!collapsed && <span className="flex-1">{item.name}</span>}
                     {badgeCount > 0 && (
                       <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center ${
-                        active ? "bg-white/20 text-white dark:bg-gray-900/20 dark:text-gray-900" : "bg-red-500 text-white"
+                        active ? "bg-white/20 text-white" : "bg-red-500 text-white"
                       }`}>
                         {badgeCount > 99 ? "99+" : badgeCount}
                       </span>
@@ -207,10 +191,10 @@ export default function Sidebar({ collapsed, onToggle }) {
       </nav>
 
       {/* Logout */}
-      <div className="border-t border-gray-200 dark:border-gray-800 p-2 shrink-0">
+      <div className="border-t border-slate-100 p-2.5 shrink-0 bg-white">
         <button
           onClick={logout}
-          className="flex items-center gap-2.5 w-full px-2.5 py-2 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-colors"
+          className="flex items-center gap-2.5 w-full px-2.5 py-2 rounded-lg text-sm font-medium text-slate-500 hover:bg-red-50 hover:text-red-600 transition-all"
           title={collapsed ? "Logout" : undefined}
         >
           <LogOut className="w-4 h-4 shrink-0" />
@@ -225,22 +209,22 @@ export default function Sidebar({ collapsed, onToggle }) {
       {/* Mobile toggle */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="md:hidden fixed top-3 left-3 z-50 p-1.5 rounded-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-sm"
+        className="md:hidden fixed top-3 left-3 z-50 p-1.5 rounded-lg bg-white border border-slate-200 shadow-sm"
       >
-        <Menu className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+        <Menu className="w-5 h-5 text-slate-700" />
       </button>
 
       {/* Mobile overlay */}
       {mobileOpen && (
         <div className="md:hidden fixed inset-0 z-40">
           <div
-            className="absolute inset-0 bg-black/30"
+            className="absolute inset-0 bg-black/20 backdrop-blur-sm"
             onClick={() => setMobileOpen(false)}
           />
-          <aside className="relative w-64 h-full bg-white dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 shadow-xl">
+          <aside className="relative w-64 h-full bg-white border-r border-slate-100 shadow-xl">
             <button
               onClick={() => setMobileOpen(false)}
-              className="absolute top-3 right-3 p-1 rounded-md text-gray-400 hover:text-gray-600"
+              className="absolute top-3 right-3 p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100"
             >
               <X className="w-5 h-5" />
             </button>
@@ -251,7 +235,7 @@ export default function Sidebar({ collapsed, onToggle }) {
 
       {/* Desktop sidebar */}
       <aside
-        className={`hidden md:flex flex-col shrink-0 h-screen sticky top-0 bg-white dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 transition-all duration-200 ${
+        className={`hidden md:flex flex-col shrink-0 h-screen sticky top-0 bg-white border-r border-slate-100 transition-all duration-200 shadow-sm ${
           collapsed ? "w-16" : "w-56"
         }`}
       >

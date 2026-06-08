@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
 
 export default function FormModal({ fields, initialValues = {}, onSubmit, submitLabel = "Save", loading: externalLoading }) {
   const [values, setValues] = useState(initialValues);
@@ -27,18 +27,63 @@ export default function FormModal({ fields, initialValues = {}, onSubmit, submit
     }
   };
 
+  const inputStyle = {
+    width: "100%",
+    padding: "10px 14px",
+    border: "1.5px solid #e2e8f0",
+    borderRadius: "10px",
+    fontSize: "14px",
+    color: "#1e293b",
+    background: "#ffffff",
+    outline: "none",
+    boxSizing: "border-box",
+    transition: "border-color 0.15s, box-shadow 0.15s",
+    fontFamily: "inherit",
+  };
+
+  const handleFocus = (e) => {
+    e.target.style.borderColor = "#6366f1";
+    e.target.style.boxShadow = "0 0 0 3px rgba(99,102,241,0.1)";
+  };
+
+  const handleBlur = (e) => {
+    e.target.style.borderColor = "#e2e8f0";
+    e.target.style.boxShadow = "none";
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
       {error && (
-        <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg px-3 py-2">
-          {error}
+        <div style={{
+          display: "flex",
+          alignItems: "flex-start",
+          gap: "10px",
+          padding: "12px 16px",
+          background: "#fef2f2",
+          border: "1.5px solid #fecaca",
+          borderRadius: "10px",
+          color: "#dc2626",
+          fontSize: "13px",
+          fontWeight: "600",
+        }}>
+          <AlertCircle size={16} style={{ flexShrink: 0, marginTop: "1px" }} />
+          <span>{error}</span>
         </div>
       )}
+
       {fields.map((field) => (
         <div key={field.key}>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label style={{
+            display: "block",
+            fontSize: "11px",
+            fontWeight: "700",
+            color: "#64748b",
+            textTransform: "uppercase",
+            letterSpacing: "0.06em",
+            marginBottom: "7px",
+          }}>
             {field.label}
-            {field.required && <span className="text-red-500 ml-0.5">*</span>}
+            {field.required && <span style={{ color: "#ef4444", marginLeft: "3px" }}>*</span>}
           </label>
 
           {field.type === "select" ? (
@@ -46,7 +91,9 @@ export default function FormModal({ fields, initialValues = {}, onSubmit, submit
               value={values[field.key] ?? ""}
               onChange={(e) => handleChange(field.key, e.target.value)}
               required={field.required}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400"
+              style={{ ...inputStyle, cursor: "pointer", appearance: "auto" }}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             >
               <option value="">Select...</option>
               {field.options?.map((opt) => (
@@ -58,9 +105,11 @@ export default function FormModal({ fields, initialValues = {}, onSubmit, submit
               value={values[field.key] ?? ""}
               onChange={(e) => handleChange(field.key, e.target.value)}
               required={field.required}
-              rows={3}
+              rows={4}
               placeholder={field.placeholder}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400 resize-none"
+              style={{ ...inputStyle, resize: "vertical", minHeight: "100px" }}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
           ) : (
             <input
@@ -69,19 +118,38 @@ export default function FormModal({ fields, initialValues = {}, onSubmit, submit
               onChange={(e) => handleChange(field.key, e.target.value)}
               required={field.required}
               placeholder={field.placeholder}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400"
+              style={inputStyle}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
           )}
         </div>
       ))}
 
-      <div className="flex justify-end pt-2">
+      <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: "8px" }}>
         <button
           type="submit"
           disabled={isLoading}
-          className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-50 transition-colors"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "7px",
+            padding: "10px 22px",
+            fontSize: "13px",
+            fontWeight: "700",
+            background: "#0f172a",
+            color: "#ffffff",
+            borderRadius: "10px",
+            border: "none",
+            cursor: isLoading ? "not-allowed" : "pointer",
+            opacity: isLoading ? 0.6 : 1,
+            transition: "all 0.15s",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+          }}
+          onMouseEnter={e => { if (!isLoading) e.currentTarget.style.background = "#1e293b"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "#0f172a"; }}
         >
-          {isLoading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+          {isLoading && <Loader2 size={14} className="animate-spin" />}
           {submitLabel}
         </button>
       </div>

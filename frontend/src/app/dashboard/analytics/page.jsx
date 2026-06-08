@@ -1,4 +1,4 @@
-// "use client";
+﻿// "use client";
 
 // import {
 //   BarChart, Bar, PieChart, Pie, Cell,
@@ -21,32 +21,32 @@
 
 // function KpiCard({ label, value, icon: Icon, sub, color = "gray" }) {
 //   const colors = {
-//     indigo: "bg-indigo-50 text-indigo-600 dark:bg-indigo-950/30 dark:text-indigo-400",
-//     emerald: "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400",
-//     blue: "bg-blue-50 text-blue-600 dark:bg-blue-950/30 dark:text-blue-400",
-//     amber: "bg-amber-50 text-amber-600 dark:bg-amber-950/30 dark:text-amber-400",
-//     violet: "bg-violet-50 text-violet-600 dark:bg-violet-950/30 dark:text-violet-400",
-//     red: "bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400",
-//     gray: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300",
+//     indigo: "bg-indigo-50 text-indigo-600",
+//     emerald: "bg-emerald-50 text-emerald-600",
+//     blue: "bg-blue-50 text-blue-600",
+//     amber: "bg-amber-50 text-amber-600",
+//     violet: "bg-violet-50 text-violet-600",
+//     red: "bg-red-50 text-red-600",
+//     gray: "bg-slate-100 text-slate-600",
 //   };
 //   return (
-//     <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+//     <div className="bg-white border border-slate-200 rounded-lg p-4">
 //       <div className="flex items-start justify-between mb-3">
 //         <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${colors[color]}`}>
 //           <Icon className="w-4.5 h-4.5" size={18} />
 //         </div>
 //       </div>
-//       <p className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">{value}</p>
-//       <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{label}</p>
-//       {sub && <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 font-medium">{sub}</p>}
+//       <p className="text-2xl font-bold text-slate-800 leading-tight">{value}</p>
+//       <p className="text-xs text-slate-500 mt-0.5">{label}</p>
+//       {sub && <p className="text-xs text-slate-400 mt-0.5 font-medium">{sub}</p>}
 //     </div>
 //   );
 // }
 
 // function ChartCard({ title, children, className = "" }) {
 //   return (
-//     <div className={`bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg p-4 ${className}`}>
-//       <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>
+//     <div className={`bg-white border border-slate-200 rounded-lg p-4 ${className}`}>
+//       <h3 className="text-sm font-semibold text-slate-800 mb-4">{title}</h3>
 //       {children}
 //     </div>
 //   );
@@ -55,8 +55,8 @@
 // const CustomTooltip = ({ active, payload, label, prefix = "" }) => {
 //   if (!active || !payload?.length) return null;
 //   return (
-//     <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg px-3 py-2 text-xs">
-//       {label && <p className="text-gray-500 dark:text-gray-400 mb-1">{label}</p>}
+//     <div className="bg-white border border-slate-200 rounded-lg shadow-lg px-3 py-2 text-xs">
+//       {label && <p className="text-slate-500 mb-1">{label}</p>}
 //       {payload.map((p, i) => (
 //         <p key={i} className="font-medium" style={{ color: p.color || p.fill }}>
 //           {p.name}: {prefix}{typeof p.value === "number" ? p.value.toLocaleString() : p.value}
@@ -85,7 +85,7 @@
 //   const orders = recentOrders?.results || (Array.isArray(recentOrders) ? recentOrders : []);
 //   const topProducts = (topProductsRaw?.results || (Array.isArray(topProductsRaw) ? topProductsRaw : [])).slice(0, 10);
 
-//   // ─── Computed Metrics ───────────────────────────────────────────────────────
+//   // â”€â”€â”€ Computed Metrics â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 //   const totalRevenue = Number(stats?.total_revenue || 0) || orders.reduce((s, o) => s + Number(o.total_amount || 0), 0);
 //   const totalOrders = Number(stats?.total_orders || 0) || orders.length;
 //   const totalUsers = Number(stats?.total_users || 0);
@@ -96,7 +96,7 @@
 //   const paidCount = orders.filter(o => o.payment_status === "PAID").length;
 //   const pendingCount = orders.filter(o => o.status === "PENDING").length;
 
-//   // ─── Monthly Aggregations ────────────────────────────────────────────────────
+//   // â”€â”€â”€ Monthly Aggregations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 //   const MONTH_ORDER = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 //   const monthlyMap = {};
 //   orders.forEach(o => {
@@ -110,7 +110,7 @@
 //     .sort((a, b) => a.monthIdx - b.monthIdx)
 //     .map(m => ({ ...m, revenue: Math.round(m.revenue) }));
 
-//   // ─── Last 14 days daily orders ───────────────────────────────────────────────
+//   // â”€â”€â”€ Last 14 days daily orders â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 //   const dailyMap = {};
 //   const now = new Date();
 //   for (let i = 13; i >= 0; i--) {
@@ -128,7 +128,7 @@
 //   });
 //   const dailyData = Object.values(dailyMap);
 
-//   // ─── Status & Payment Breakdown ──────────────────────────────────────────────
+//   // â”€â”€â”€ Status & Payment Breakdown â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 //   const statusMap = {};
 //   const paymentMap = {};
 //   orders.forEach(o => {
@@ -142,7 +142,7 @@
 //     return (
 //       <Container title="Analytics" description="Store performance metrics">
 //         <div className="flex items-center justify-center py-20">
-//           <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+//           <Loader2 className="w-6 h-6 animate-spin text-slate-400" />
 //         </div>
 //       </Container>
 //     );
@@ -153,9 +153,9 @@
 
 //       {/* KPI Row 1 */}
 //       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-//         <KpiCard label="Total Revenue" value={`৳${totalRevenue.toLocaleString()}`} icon={DollarSign} color="emerald" sub="all time" />
+//         <KpiCard label="Total Revenue" value={`à§³${totalRevenue.toLocaleString()}`} icon={DollarSign} color="emerald" sub="all time" />
 //         <KpiCard label="Total Orders" value={totalOrders.toLocaleString()} icon={ShoppingCart} color="blue" sub={`${pendingCount} pending`} />
-//         <KpiCard label="Avg Order Value" value={`৳${avgOrderValue.toLocaleString()}`} icon={TrendingUp} color="indigo" sub="per order" />
+//         <KpiCard label="Avg Order Value" value={`à§³${avgOrderValue.toLocaleString()}`} icon={TrendingUp} color="indigo" sub="per order" />
 //         <KpiCard label="Delivery Rate" value={`${deliveryRate}%`} icon={CheckCircle} color="emerald" sub={`${deliveredCount} delivered`} />
 //         <KpiCard label="Total Users" value={totalUsers.toLocaleString()} icon={Users} color="violet" sub={`${stats?.total_customers || 0} customers`} />
 //         <KpiCard label="Products" value={totalProducts.toLocaleString()} icon={Package} color="amber" sub="listed" />
@@ -163,7 +163,7 @@
 
 //       {/* Charts Row 1: Revenue + Daily Orders */}
 //       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-//         <ChartCard title="Monthly Revenue (৳)">
+//         <ChartCard title="Monthly Revenue (à§³)">
 //           <div className="h-56">
 //             {monthlyData.length > 0 ? (
 //               <ResponsiveContainer width="100%" height="100%">
@@ -177,12 +177,12 @@
 //                   <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
 //                   <XAxis dataKey="month" tick={{ fontSize: 11 }} stroke="#9ca3af" />
 //                   <YAxis tick={{ fontSize: 11 }} stroke="#9ca3af" />
-//                   <Tooltip content={<CustomTooltip prefix="৳" />} />
+//                   <Tooltip content={<CustomTooltip prefix="à§³" />} />
 //                   <Area type="monotone" dataKey="revenue" name="Revenue" stroke="#4f46e5" fill="url(#revGrad)" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
 //                 </AreaChart>
 //               </ResponsiveContainer>
 //             ) : (
-//               <div className="flex items-center justify-center h-full text-sm text-gray-400">No revenue data yet</div>
+//               <div className="flex items-center justify-center h-full text-sm text-slate-400">No revenue data yet</div>
 //             )}
 //           </div>
 //         </ChartCard>
@@ -200,7 +200,7 @@
 //                 </BarChart>
 //               </ResponsiveContainer>
 //             ) : (
-//               <div className="flex items-center justify-center h-full text-sm text-gray-400">No order data yet</div>
+//               <div className="flex items-center justify-center h-full text-sm text-slate-400">No order data yet</div>
 //             )}
 //           </div>
 //         </ChartCard>
@@ -208,7 +208,7 @@
 
 //       {/* Charts Row 2: Daily trend + Status + Payment */}
 //       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-//         <ChartCard title="Last 14 Days — Daily Orders" className="lg:col-span-1">
+//         <ChartCard title="Last 14 Days â€” Daily Orders" className="lg:col-span-1">
 //           <div className="h-48">
 //             <ResponsiveContainer width="100%" height="100%">
 //               <AreaChart data={dailyData} margin={{ top: 4, right: 4, left: -28, bottom: 0 }}>
@@ -242,12 +242,12 @@
 //                 </PieChart>
 //               </ResponsiveContainer>
 //             ) : (
-//               <div className="flex items-center justify-center h-full text-xs text-gray-400">No data</div>
+//               <div className="flex items-center justify-center h-full text-xs text-slate-400">No data</div>
 //             )}
 //           </div>
 //           <div className="flex flex-wrap gap-x-3 gap-y-1 justify-center mt-1">
 //             {statusBreakdown.map(item => (
-//               <span key={item.name} className="flex items-center gap-1 text-[10px] text-gray-500">
+//               <span key={item.name} className="flex items-center gap-1 text-[10px] text-slate-500">
 //                 <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: STATUS_COLORS[item.name] || "#999" }} />
 //                 {item.name} ({item.value})
 //               </span>
@@ -269,12 +269,12 @@
 //                 </PieChart>
 //               </ResponsiveContainer>
 //             ) : (
-//               <div className="flex items-center justify-center h-full text-xs text-gray-400">No data</div>
+//               <div className="flex items-center justify-center h-full text-xs text-slate-400">No data</div>
 //             )}
 //           </div>
 //           <div className="flex flex-wrap gap-x-3 gap-y-1 justify-center mt-1">
 //             {paymentBreakdown.map(item => (
-//               <span key={item.name} className="flex items-center gap-1 text-[10px] text-gray-500">
+//               <span key={item.name} className="flex items-center gap-1 text-[10px] text-slate-500">
 //                 <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: PAYMENT_COLORS[item.name] || "#999" }} />
 //                 {item.name} ({item.value})
 //               </span>
@@ -286,33 +286,33 @@
 //       {/* Summary Metric Boxes */}
 //       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
 //         {[
-//           ["Customers", stats?.total_customers || 0, "bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400"],
-//           ["Sellers", stats?.total_sellers || 0, "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400"],
-//           ["Vendors", stats?.total_vendors || 0, "bg-violet-50 text-violet-700 dark:bg-violet-950/30 dark:text-violet-400"],
-//           ["Admins", stats?.total_admins || 0, "bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400"],
-//           ["Paid Orders", paidCount, "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400"],
-//           ["Cancelled", statusMap.CANCELLED || 0, "bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400"],
+//           ["Customers", stats?.total_customers || 0, "bg-blue-50 text-blue-700"],
+//           ["Sellers", stats?.total_sellers || 0, "bg-emerald-50 text-emerald-700"],
+//           ["Vendors", stats?.total_vendors || 0, "bg-violet-50 text-violet-700"],
+//           ["Admins", stats?.total_admins || 0, "bg-amber-50 text-amber-700"],
+//           ["Paid Orders", paidCount, "bg-emerald-50 text-emerald-700"],
+//           ["Cancelled", statusMap.CANCELLED || 0, "bg-red-50 text-red-700"],
 //         ].map(([label, val, cls]) => (
-//           <div key={label} className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-3">
-//             <p className="text-xs text-gray-500 dark:text-gray-400">{label}</p>
+//           <div key={label} className="bg-white border border-slate-200 rounded-lg px-4 py-3">
+//             <p className="text-xs text-slate-500">{label}</p>
 //             <p className={`text-xl font-bold mt-0.5 ${cls}`}>{Number(val).toLocaleString()}</p>
 //           </div>
 //         ))}
 //       </div>
 
 //       {/* Top Products */}
-//       <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg">
-//         <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-800 flex items-center gap-2">
-//           <BarChart2 className="w-4 h-4 text-gray-400" />
-//           <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Product Inventory Overview</h3>
+//       <div className="bg-white border border-slate-200 rounded-lg">
+//         <div className="px-4 py-3 border-b border-slate-200 flex items-center gap-2">
+//           <BarChart2 className="w-4 h-4 text-slate-400" />
+//           <h3 className="text-sm font-semibold text-slate-800">Product Inventory Overview</h3>
 //         </div>
 //         {topProducts.length > 0 ? (
 //           <div className="overflow-x-auto">
 //             <table className="w-full text-sm">
 //               <thead>
-//                 <tr className="border-b border-gray-100 dark:border-gray-800">
+//                 <tr className="border-b border-slate-100">
 //                   {["#", "Product Name", "Price", "Stock", "Status", "Stock Level"].map(h => (
-//                     <th key={h} className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400">{h}</th>
+//                     <th key={h} className="px-4 py-2.5 text-left text-xs font-medium text-slate-500">{h}</th>
 //                   ))}
 //                 </tr>
 //               </thead>
@@ -322,18 +322,18 @@
 //                   const stockPct = Math.min(100, (Number(product.stock || 0) / maxStock) * 100);
 //                   const stockColor = stockPct > 60 ? "#10b981" : stockPct > 25 ? "#f59e0b" : "#ef4444";
 //                   return (
-//                     <tr key={product.id || i} className="border-b border-gray-50 dark:border-gray-800/50 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
-//                       <td className="px-4 py-2.5 text-xs text-gray-400">{i + 1}</td>
-//                       <td className="px-4 py-2.5 font-medium text-gray-900 dark:text-white max-w-[200px] truncate">{product.name}</td>
-//                       <td className="px-4 py-2.5 text-gray-700 dark:text-gray-300">৳{Number(product.price || 0).toLocaleString()}</td>
-//                       <td className="px-4 py-2.5 text-gray-700 dark:text-gray-300 font-medium">{product.stock ?? "—"}</td>
+//                     <tr key={product.id || i} className="border-b border-gray-50 last:border-0 hover:bg-slate-50 transition-colors">
+//                       <td className="px-4 py-2.5 text-xs text-slate-400">{i + 1}</td>
+//                       <td className="px-4 py-2.5 font-medium text-slate-800 max-w-[200px] truncate">{product.name}</td>
+//                       <td className="px-4 py-2.5 text-slate-700">à§³{Number(product.price || 0).toLocaleString()}</td>
+//                       <td className="px-4 py-2.5 text-slate-700 font-medium">{product.stock ?? "â€”"}</td>
 //                       <td className="px-4 py-2.5">
-//                         <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${product.is_active !== false ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400" : "bg-gray-100 text-gray-500 dark:bg-gray-800"}`}>
+//                         <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${product.is_active !== false ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-500"}`}>
 //                           {product.is_active !== false ? "Active" : "Inactive"}
 //                         </span>
 //                       </td>
 //                       <td className="px-4 py-2.5 w-32">
-//                         <div className="w-full bg-gray-100 dark:bg-gray-800 h-1.5 rounded-full">
+//                         <div className="w-full bg-slate-100 h-1.5 rounded-full">
 //                           <div className="h-1.5 rounded-full transition-all" style={{ width: `${stockPct}%`, backgroundColor: stockColor }} />
 //                         </div>
 //                       </td>
@@ -344,7 +344,7 @@
 //             </table>
 //           </div>
 //         ) : (
-//           <div className="px-4 py-8 text-center text-sm text-gray-400">No products data available</div>
+//           <div className="px-4 py-8 text-center text-sm text-slate-400">No products data available</div>
 //         )}
 //       </div>
 
@@ -375,32 +375,44 @@ const PAYMENT_COLORS = { PAID: "#10b981", PENDING: "#f59e0b", FAILED: "#ef4444" 
 
 function KpiCard({ label, value, icon: Icon, sub, color = "gray" }) {
   const colors = {
-    indigo: "bg-indigo-50 text-indigo-600 dark:bg-indigo-950/30 dark:text-indigo-400",
-    emerald: "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400",
-    blue: "bg-blue-50 text-blue-600 dark:bg-blue-950/30 dark:text-blue-400",
-    amber: "bg-amber-50 text-amber-600 dark:bg-amber-950/30 dark:text-amber-400",
-    violet: "bg-violet-50 text-violet-600 dark:bg-violet-950/30 dark:text-violet-400",
-    red: "bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400",
-    gray: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300",
+    indigo:  "bg-indigo-50 text-indigo-600",
+    emerald: "bg-emerald-50 text-emerald-600",
+    blue:    "bg-blue-50 text-blue-600",
+    amber:   "bg-amber-50 text-amber-600",
+    violet:  "bg-violet-50 text-violet-600",
+    red:     "bg-red-50 text-red-600",
+    gray:    "bg-slate-100 text-slate-500",
+  };
+  const valColors = {
+    indigo:  "text-slate-800",
+    emerald: "text-emerald-600",
+    blue:    "text-slate-800",
+    amber:   "text-slate-800",
+    violet:  "text-slate-800",
+    red:     "text-slate-800",
+    gray:    "text-slate-800",
   };
   return (
-    <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+    <div className="bg-white border border-slate-100 rounded-xl p-5 shadow-sm hover:shadow-md transition-all">
       <div className="flex items-start justify-between mb-3">
-        <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${colors[color]}`}>
-          <Icon className="w-4.5 h-4.5" size={18} />
+        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${colors[color]}`}>
+          <Icon className="w-5 h-5" size={20} />
         </div>
       </div>
-      <p className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">{value}</p>
-      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{label}</p>
-      {sub && <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 font-medium">{sub}</p>}
+      <p className={`text-2xl font-black leading-tight ${valColors[color]}`}>{value}</p>
+      <p className="text-xs font-bold text-slate-400 mt-1 uppercase tracking-wider">{label}</p>
+      {sub && <p className="text-xs text-slate-400 mt-0.5 font-semibold">{sub}</p>}
     </div>
   );
 }
 
-function ChartCard({ title, children, className = "" }) {
+function ChartCard({ title, children, className = "", badge }) {
   return (
-    <div className={`bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg p-4 ${className}`}>
-      <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>
+    <div className={`bg-white border border-slate-100 rounded-xl p-6 shadow-sm ${className}`}>
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="text-sm font-bold text-slate-800">{title}</h3>
+        {badge && <span className="px-2.5 py-1 bg-indigo-50 text-indigo-600 text-xs font-bold rounded-full">{badge}</span>}
+      </div>
       {children}
     </div>
   );
@@ -409,10 +421,10 @@ function ChartCard({ title, children, className = "" }) {
 const CustomTooltip = ({ active, payload, label, prefix = "" }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg px-3 py-2 text-xs">
-      {label && <p className="text-gray-500 dark:text-gray-400 mb-1">{label}</p>}
+    <div className="bg-white border border-slate-200 rounded-xl shadow-lg px-4 py-3 text-xs">
+      {label && <p className="text-slate-500 mb-1.5 font-semibold">{label}</p>}
       {payload.map((p, i) => (
-        <p key={i} className="font-medium" style={{ color: p.color || p.fill }}>
+        <p key={i} className="font-bold" style={{ color: p.color || p.fill }}>
           {p.name}: {prefix}{typeof p.value === "number" ? p.value.toLocaleString() : p.value}
         </p>
       ))}
@@ -476,7 +488,7 @@ export default function AnalyticsPage() {
   const orders = recentOrders?.results || (Array.isArray(recentOrders) ? recentOrders : []);
   const topProducts = (topProductsRaw?.results || (Array.isArray(topProductsRaw) ? topProductsRaw : [])).slice(0, 10);
 
-  // ─── Computed Metrics ───────────────────────────────────────────────────────
+  // â”€â”€â”€ Computed Metrics â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const totalRevenue = Number(stats?.total_revenue || 0) || orders.reduce((s, o) => s + Number(o.total_amount || 0), 0);
   const totalOrders = Number(stats?.total_orders || 0) || orders.length;
   const totalUsers = Number(stats?.total_users || 0);
@@ -487,7 +499,7 @@ export default function AnalyticsPage() {
   const paidCount = orders.filter(o => o.payment_status === "PAID").length;
   const pendingCount = orders.filter(o => o.status === "PENDING").length;
 
-  // ─── Monthly Aggregations ────────────────────────────────────────────────────
+  // â”€â”€â”€ Monthly Aggregations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const MONTH_ORDER = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   const monthlyMap = {};
   orders.forEach(o => {
@@ -501,7 +513,7 @@ export default function AnalyticsPage() {
     .sort((a, b) => a.monthIdx - b.monthIdx)
     .map(m => ({ ...m, revenue: Math.round(m.revenue) }));
 
-  // ─── Last 14 days daily orders ───────────────────────────────────────────────
+  // â”€â”€â”€ Last 14 days daily orders â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const dailyMap = {};
   const now = new Date();
   for (let i = 13; i >= 0; i--) {
@@ -519,7 +531,7 @@ export default function AnalyticsPage() {
   });
   const dailyData = Object.values(dailyMap);
 
-  // ─── Status & Payment Breakdown ──────────────────────────────────────────────
+  // â”€â”€â”€ Status & Payment Breakdown â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const statusMap = {};
   const paymentMap = {};
   orders.forEach(o => {
@@ -529,7 +541,7 @@ export default function AnalyticsPage() {
   const statusBreakdown = Object.entries(statusMap).map(([name, value]) => ({ name, value }));
   const paymentBreakdown = Object.entries(paymentMap).map(([name, value]) => ({ name, value }));
 
-  // ─── Leftover Packs Metrics ──────────────────────────────────────────────────
+  // â”€â”€â”€ Leftover Packs Metrics â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const totalLeftoverPacks = leftoverPacks.length;
   let totalLeftoverPacksAvailable = 0;
   let totalLeftoverPacksSold = 0;
@@ -576,20 +588,20 @@ export default function AnalyticsPage() {
     return (
       <Container title="Analytics" description="Store performance metrics">
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+          <Loader2 className="w-6 h-6 animate-spin text-slate-400" />
         </div>
       </Container>
     );
   }
 
   return (
-    <Container title="Analytics" description="Real-time store performance metrics and insights">
+    <Container title="Analytics" description="Real-time store performance metrics and insights" >
 
       {/* KPI Row 1 */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        <KpiCard label="Total Revenue" value={`৳${totalRevenue.toLocaleString()}`} icon={DollarSign} color="emerald" sub="all time" />
+        <KpiCard label="Total Revenue" value={`à§³${totalRevenue.toLocaleString()}`} icon={DollarSign} color="emerald" sub="all time" />
         <KpiCard label="Total Orders" value={totalOrders.toLocaleString()} icon={ShoppingCart} color="blue" sub={`${pendingCount} pending`} />
-        <KpiCard label="Avg Order Value" value={`৳${avgOrderValue.toLocaleString()}`} icon={TrendingUp} color="indigo" sub="per order" />
+        <KpiCard label="Avg Order Value" value={`à§³${avgOrderValue.toLocaleString()}`} icon={TrendingUp} color="indigo" sub="per order" />
         <KpiCard label="Delivery Rate" value={`${deliveryRate}%`} icon={CheckCircle} color="emerald" sub={`${deliveredCount} delivered`} />
         <KpiCard label="Total Users" value={totalUsers.toLocaleString()} icon={Users} color="violet" sub={`${stats?.total_customers || 0} customers`} />
         <KpiCard label="Products" value={totalProducts.toLocaleString()} icon={Package} color="amber" sub="listed" />
@@ -597,7 +609,7 @@ export default function AnalyticsPage() {
 
       {/* Charts Row 1: Revenue + Daily Orders */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <ChartCard title="Monthly Revenue (৳)">
+        <ChartCard title="Monthly Revenue (à§³)">
           <div className="h-56">
             {monthlyData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
@@ -611,12 +623,12 @@ export default function AnalyticsPage() {
                   <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
                   <XAxis dataKey="month" tick={{ fontSize: 11 }} stroke="#9ca3af" />
                   <YAxis tick={{ fontSize: 11 }} stroke="#9ca3af" />
-                  <Tooltip content={<CustomTooltip prefix="৳" />} />
+                  <Tooltip content={<CustomTooltip prefix="à§³" />} />
                   <Area type="monotone" dataKey="revenue" name="Revenue" stroke="#4f46e5" fill="url(#revGrad)" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
                 </AreaChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex items-center justify-center h-full text-sm text-gray-400">No revenue data yet</div>
+              <div className="flex items-center justify-center h-full text-sm text-slate-400">No revenue data yet</div>
             )}
           </div>
         </ChartCard>
@@ -634,7 +646,7 @@ export default function AnalyticsPage() {
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex items-center justify-center h-full text-sm text-gray-400">No order data yet</div>
+              <div className="flex items-center justify-center h-full text-sm text-slate-400">No order data yet</div>
             )}
           </div>
         </ChartCard>
@@ -642,7 +654,7 @@ export default function AnalyticsPage() {
 
       {/* Charts Row 2: Daily trend + Status + Payment */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <ChartCard title="Last 14 Days — Daily Orders" className="lg:col-span-1">
+        <ChartCard title="Last 14 Days â€” Daily Orders" className="lg:col-span-1">
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={dailyData} margin={{ top: 4, right: 4, left: -28, bottom: 0 }}>
@@ -676,12 +688,12 @@ export default function AnalyticsPage() {
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex items-center justify-center h-full text-xs text-gray-400">No data</div>
+              <div className="flex items-center justify-center h-full text-xs text-slate-400">No data</div>
             )}
           </div>
           <div className="flex flex-wrap gap-x-3 gap-y-1 justify-center mt-1">
             {statusBreakdown.map(item => (
-              <span key={item.name} className="flex items-center gap-1 text-[10px] text-gray-500">
+              <span key={item.name} className="flex items-center gap-1 text-[10px] text-slate-500">
                 <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: STATUS_COLORS[item.name] || "#999" }} />
                 {item.name} ({item.value})
               </span>
@@ -703,12 +715,12 @@ export default function AnalyticsPage() {
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex items-center justify-center h-full text-xs text-gray-400">No data</div>
+              <div className="flex items-center justify-center h-full text-xs text-slate-400">No data</div>
             )}
           </div>
           <div className="flex flex-wrap gap-x-3 gap-y-1 justify-center mt-1">
             {paymentBreakdown.map(item => (
-              <span key={item.name} className="flex items-center gap-1 text-[10px] text-gray-500">
+              <span key={item.name} className="flex items-center gap-1 text-[10px] text-slate-500">
                 <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: PAYMENT_COLORS[item.name] || "#999" }} />
                 {item.name} ({item.value})
               </span>
@@ -720,16 +732,16 @@ export default function AnalyticsPage() {
       {/* Summary Metric Boxes */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {[
-          ["Customers", stats?.total_customers || 0, "bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400"],
-          ["Sellers", stats?.total_sellers || 0, "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400"],
-          ["Vendors", stats?.total_vendors || 0, "bg-violet-50 text-violet-700 dark:bg-violet-950/30 dark:text-violet-400"],
-          ["Admins", stats?.total_admins || 0, "bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400"],
-          ["Paid Orders", paidCount, "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400"],
-          ["Cancelled", statusMap.CANCELLED || 0, "bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400"],
-        ].map(([label, val, cls]) => (
-          <div key={label} className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-3">
-            <p className="text-xs text-gray-500 dark:text-gray-400">{label}</p>
-            <p className={`text-xl font-bold mt-0.5 ${cls}`}>{Number(val).toLocaleString()}</p>
+          ["Customers",  stats?.total_customers || 0, "text-blue-600",    "bg-blue-50"],
+          ["Sellers",    stats?.total_sellers   || 0, "text-indigo-600",  "bg-indigo-50"],
+          ["Vendors",    stats?.total_vendors   || 0, "text-violet-600",  "bg-violet-50"],
+          ["Admins",     stats?.total_admins    || 0, "text-amber-600",   "bg-amber-50"],
+          ["Paid Orders",paidCount,                   "text-emerald-600", "bg-emerald-50"],
+          ["Cancelled",  statusMap.CANCELLED    || 0, "text-red-600",     "bg-red-50"],
+        ].map(([label, val, textCls, bgCls]) => (
+          <div key={label} className="bg-white border border-slate-100 rounded-xl px-5 py-4 shadow-sm hover:shadow-md transition-all">
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{label}</p>
+            <p className={`text-2xl font-black mt-0.5 ${textCls}`}>{Number(val).toLocaleString()}</p>
           </div>
         ))}
       </div>
@@ -738,20 +750,20 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
         {/* Store stats */}
-        <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg p-4">
-          <div className="flex items-center gap-2 mb-4">
-            <Store className="w-4 h-4 text-gray-400" />
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Store Summary</h3>
+        <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="p-2 bg-teal-50 text-teal-600 rounded-lg"><Store className="w-5 h-5" /></div>
+            <h3 className="text-sm font-bold text-slate-800">Store Summary</h3>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {[
-              { label: 'Total Stores',    value: allStores.length,   color: 'text-gray-900 dark:text-white' },
-              { label: 'Active',          value: activeStores.length, color: 'text-emerald-600 dark:text-emerald-400' },
-              { label: 'Inactive',        value: inactiveStores.length, color: 'text-gray-400' },
+              { label: 'Total Stores', value: allStores.length,   color: 'text-slate-800' },
+              { label: 'Active',       value: activeStores.length, color: 'text-emerald-600' },
+              { label: 'Inactive',     value: inactiveStores.length, color: 'text-slate-400' },
             ].map(({ label, value, color }) => (
-              <div key={label} className="flex items-center justify-between py-1.5 border-b border-gray-50 dark:border-gray-800 last:border-0">
-                <span className="text-xs text-gray-500">{label}</span>
-                <span className={`text-sm font-bold ${color}`}>{value}</span>
+              <div key={label} className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
+                <span className="text-xs font-semibold text-slate-500">{label}</span>
+                <span className={`text-sm font-black ${color}`}>{value}</span>
               </div>
             ))}
           </div>
@@ -771,29 +783,29 @@ export default function AnalyticsPage() {
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex items-center justify-center h-full text-xs text-gray-400">No stores data</div>
+              <div className="flex items-center justify-center h-full text-xs text-slate-400">No stores data</div>
             )}
           </div>
         </ChartCard>
 
         {/* Store list */}
-        <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <MapPin className="w-4 h-4 text-gray-400" />
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Store Locations</h3>
+        <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg"><MapPin className="w-5 h-5" /></div>
+            <h3 className="text-sm font-bold text-slate-800">Store Locations</h3>
           </div>
-          <div className="space-y-2 max-h-36 overflow-y-auto">
+          <div className="space-y-2 max-h-40 overflow-y-auto">
             {allStores.length === 0 ? (
-              <p className="text-xs text-gray-400 text-center py-4">No stores yet</p>
+              <p className="text-xs text-slate-400 text-center py-4">No stores yet</p>
             ) : allStores.map(store => (
-              <div key={store.id} className="flex items-center gap-2">
-                <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${store.is_active ? 'bg-emerald-400' : 'bg-gray-300'}`} />
+              <div key={store.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors">
+                <span className={`w-2 h-2 rounded-full flex-shrink-0 ${store.is_active ? 'bg-emerald-400' : 'bg-slate-300'}`} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-gray-900 dark:text-white truncate">{store.name}</p>
-                  <p className="text-[10px] text-gray-400">{store.city}</p>
+                  <p className="text-xs font-bold text-slate-800 truncate">{store.name}</p>
+                  <p className="text-[10px] text-slate-400 font-medium">{store.city}</p>
                 </div>
                 {(store.features || []).slice(0, 1).map(f => (
-                  <span key={f} className="text-[9px] px-1.5 py-0.5 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 rounded capitalize">{f}</span>
+                  <span key={f} className="text-[9px] px-1.5 py-0.5 bg-emerald-50 text-emerald-700 rounded-full capitalize font-bold">{f}</span>
                 ))}
               </div>
             ))}
@@ -802,40 +814,40 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Offers Analytics */}
-      <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg mt-4 mb-4">
-        <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-800 flex items-center gap-2">
-          <Tag className="w-4 h-4 text-blue-500" />
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Offers Analytics</h3>
+      <div className="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden">
+        <div className="px-6 py-5 border-b border-slate-100 flex items-center gap-3 bg-white">
+          <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><Tag className="w-5 h-5" /></div>
+          <h3 className="text-sm font-bold text-slate-800">Offers Analytics</h3>
         </div>
         
         <div className="p-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Metrics summary */}
           <div className="lg:col-span-1 space-y-3">
              <div className="grid grid-cols-2 gap-3">
-               <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/50 rounded-lg p-3">
-                  <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">Total Offers</p>
-                  <p className="text-2xl font-bold text-blue-700 dark:text-blue-300 mt-1">{allOffers.length}</p>
+               <div className="bg-blue-50 border border-blue-100 rounded-lg p-3">
+                  <p className="text-xs text-blue-600 font-medium">Total Offers</p>
+                  <p className="text-2xl font-bold text-blue-700 mt-1">{allOffers.length}</p>
                </div>
-               <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/50 rounded-lg p-3">
-                  <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">Active Offers</p>
-                  <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300 mt-1">{activeOffersCount}</p>
+               <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-3">
+                  <p className="text-xs text-emerald-600 font-medium">Active Offers</p>
+                  <p className="text-2xl font-bold text-emerald-700 mt-1">{activeOffersCount}</p>
                </div>
              </div>
              
-             <div className="bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-lg p-3">
+             <div className="bg-slate-50 border border-slate-100 rounded-lg p-3">
                 <div className="flex justify-between items-center mb-2">
-                   <p className="text-xs text-gray-500 dark:text-gray-400">Active vs Inactive</p>
-                   <p className="text-xs font-medium text-gray-700 dark:text-gray-300">{allOffers.length} Total Offers</p>
+                   <p className="text-xs text-slate-500">Active vs Inactive</p>
+                   <p className="text-xs font-medium text-slate-700">{allOffers.length} Total Offers</p>
                 </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-2 flex overflow-hidden">
+                <div className="w-full bg-gray-200 rounded-full h-2 mb-2 flex overflow-hidden">
                    <div style={{ width: `${Math.max((activeOffersCount / (allOffers.length || 1)) * 100, 0)}%` }} className="bg-emerald-400"></div>
                    <div style={{ width: `${Math.max((inactiveOffersCount / (allOffers.length || 1)) * 100, 0)}%` }} className="bg-gray-400"></div>
                 </div>
                 <div className="flex justify-between text-[11px]">
-                   <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
+                   <span className="flex items-center gap-1 text-emerald-600 font-medium">
                       <span className="w-2 h-2 rounded-full bg-emerald-400"></span> Active ({activeOffersCount})
                    </span>
-                   <span className="flex items-center gap-1 text-gray-500 dark:text-gray-400 font-medium">
+                   <span className="flex items-center gap-1 text-slate-500 font-medium">
                       <span className="w-2 h-2 rounded-full bg-gray-400"></span> Inactive ({inactiveOffersCount})
                    </span>
                 </div>
@@ -844,7 +856,7 @@ export default function AnalyticsPage() {
           
           {/* Chart by Status */}
           <div className="lg:col-span-1 min-w-0">
-             <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Offers by Status</h4>
+             <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Offers by Status</h4>
              <div className="h-40 w-full min-h-[160px]">
                {offersStatusData.length > 0 ? (
                  <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
@@ -858,29 +870,29 @@ export default function AnalyticsPage() {
                    </PieChart>
                  </ResponsiveContainer>
                ) : (
-                 <div className="flex items-center justify-center h-full text-sm text-gray-400">No offers data found</div>
+                 <div className="flex items-center justify-center h-full text-sm text-slate-400">No offers data found</div>
                )}
              </div>
           </div>
 
           {/* Recent/Top Offers List */}
           <div className="lg:col-span-1">
-             <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Top Offers</h4>
+             <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Top Offers</h4>
              <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
                {allOffers.length === 0 ? (
-                 <p className="text-xs text-gray-400 py-4">No offers available</p>
+                 <p className="text-xs text-slate-400 py-4">No offers available</p>
                ) : allOffers.slice(0, 4).map(offer => (
-                 <div key={offer.id || offer.slug} className="flex items-center gap-3 p-2 rounded-lg border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/50">
+                 <div key={offer.id || offer.slug} className="flex items-center gap-3 p-2 rounded-lg border border-slate-100 bg-slate-50/50">
                    {offer.image ? (
                      <img src={offer.image} alt={offer.title} className="w-8 h-8 rounded-md object-cover flex-shrink-0" />
                    ) : (
-                     <div className="w-8 h-8 rounded-md bg-gray-200 dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
-                       <Tag className="w-3 h-3 text-gray-400" />
+                     <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center flex-shrink-0">
+                       <Tag className="w-3 h-3 text-slate-400" />
                      </div>
                    )}
                    <div className="flex-1 min-w-0">
-                     <p className="text-xs font-medium text-gray-900 dark:text-white truncate">{offer.title}</p>
-                     <p className="text-[10px] text-gray-500">{offer.discount_percentage ? `${offer.discount_percentage}% OFF` : 'Offer'}</p>
+                     <p className="text-xs font-medium text-slate-800 truncate">{offer.title}</p>
+                     <p className="text-[10px] text-slate-500">{offer.discount_percentage ? `${offer.discount_percentage}% OFF` : 'Offer'}</p>
                    </div>
                    <span className={`flex-shrink-0 w-2 h-2 rounded-full ${offer.is_active !== false ? 'bg-emerald-400' : 'bg-gray-400'}`} />
                  </div>
@@ -891,54 +903,54 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Leftover Packs Analytics */}
-      <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg mt-4 mb-4">
-        <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-800 flex items-center gap-2">
-          <Package className="w-4 h-4 text-emerald-500" />
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Leftover Packs Analytics</h3>
+      <div className="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden">
+        <div className="px-6 py-5 border-b border-slate-100 flex items-center gap-3 bg-white">
+          <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><Package className="w-5 h-5" /></div>
+          <h3 className="text-sm font-bold text-slate-800">Leftover Packs Analytics</h3>
         </div>
         
         <div className="p-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Metrics summary */}
           <div className="lg:col-span-1 space-y-3">
              <div className="grid grid-cols-2 gap-3">
-               <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/50 rounded-lg p-3">
-                  <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">Total Packs</p>
-                  <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300 mt-1">{totalLeftoverPacks}</p>
+               <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-3">
+                  <p className="text-xs text-emerald-600 font-medium">Total Packs</p>
+                  <p className="text-2xl font-bold text-emerald-700 mt-1">{totalLeftoverPacks}</p>
                </div>
-               <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/50 rounded-lg p-3">
-                  <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">Pack Revenue</p>
-                  <p className="text-2xl font-bold text-blue-700 dark:text-blue-300 mt-1">৳{leftoverPackRevenue.toLocaleString()}</p>
+               <div className="bg-blue-50 border border-blue-100 rounded-lg p-3">
+                  <p className="text-xs text-blue-600 font-medium">Pack Revenue</p>
+                  <p className="text-2xl font-bold text-blue-700 mt-1">à§³{leftoverPackRevenue.toLocaleString()}</p>
                </div>
              </div>
              
-             <div className="bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-lg p-3">
+             <div className="bg-slate-50 border border-slate-100 rounded-lg p-3">
                 <div className="flex justify-between items-center mb-2">
-                   <p className="text-xs text-gray-500 dark:text-gray-400">Available vs Sold</p>
-                   <p className="text-xs font-medium text-gray-700 dark:text-gray-300">{totalLeftoverPacksAvailable + totalLeftoverPacksSold} Total Units</p>
+                   <p className="text-xs text-slate-500">Available vs Sold</p>
+                   <p className="text-xs font-medium text-slate-700">{totalLeftoverPacksAvailable + totalLeftoverPacksSold} Total Units</p>
                 </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-2 flex overflow-hidden">
+                <div className="w-full bg-gray-200 rounded-full h-2 mb-2 flex overflow-hidden">
                    <div style={{ width: `${Math.max((totalLeftoverPacksAvailable / (totalLeftoverPacksAvailable + totalLeftoverPacksSold || 1)) * 100, 0)}%` }} className="bg-emerald-400"></div>
                    <div style={{ width: `${Math.max((totalLeftoverPacksSold / (totalLeftoverPacksAvailable + totalLeftoverPacksSold || 1)) * 100, 0)}%` }} className="bg-amber-400"></div>
                 </div>
                 <div className="flex justify-between text-[11px]">
-                   <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
+                   <span className="flex items-center gap-1 text-emerald-600 font-medium">
                       <span className="w-2 h-2 rounded-full bg-emerald-400"></span> Available ({totalLeftoverPacksAvailable})
                    </span>
-                   <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400 font-medium">
+                   <span className="flex items-center gap-1 text-amber-600 font-medium">
                       <span className="w-2 h-2 rounded-full bg-amber-400"></span> Sold ({totalLeftoverPacksSold})
                    </span>
                 </div>
              </div>
 
-             <div className="bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-lg p-3">
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Orders with Packs</p>
-                  <p className="text-xl font-bold text-gray-900 dark:text-white">{leftoverPackOrdersCount}</p>
+             <div className="bg-slate-50 border border-slate-100 rounded-lg p-3">
+                  <p className="text-xs text-slate-500 mb-1">Orders with Packs</p>
+                  <p className="text-xl font-bold text-slate-800">{leftoverPackOrdersCount}</p>
              </div>
           </div>
           
           {/* Chart by Store */}
           <div className="lg:col-span-2">
-             <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">Pack Units by Store</h4>
+             <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Pack Units by Store</h4>
              <div className="h-48 w-full">
                {leftoverPacksByStore.length > 0 ? (
                  <ResponsiveContainer width="100%" height="100%">
@@ -953,7 +965,7 @@ export default function AnalyticsPage() {
                    </BarChart>
                  </ResponsiveContainer>
                ) : (
-                 <div className="flex items-center justify-center h-full text-sm text-gray-400">No leftover packs data found</div>
+                 <div className="flex items-center justify-center h-full text-sm text-slate-400">No leftover packs data found</div>
                )}
              </div>
           </div>
@@ -961,18 +973,18 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Top Products */}
-      <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg">
-        <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-800 flex items-center gap-2">
-          <BarChart2 className="w-4 h-4 text-gray-400" />
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Product Inventory Overview</h3>
+      <div className="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden">
+        <div className="px-6 py-5 border-b border-slate-100 flex items-center gap-3">
+          <div className="p-2 bg-slate-100 text-slate-500 rounded-lg"><BarChart2 className="w-5 h-5" /></div>
+          <h3 className="text-sm font-bold text-slate-800">Product Inventory Overview</h3>
         </div>
         {topProducts.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100 dark:border-gray-800">
+                <tr className="border-b border-slate-100 bg-slate-50">
                   {["#", "Product Name", "Price", "Stock", "Status", "Stock Level"].map(h => (
-                    <th key={h} className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400">{h}</th>
+                    <th key={h} className="px-5 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -982,18 +994,18 @@ export default function AnalyticsPage() {
                   const stockPct = Math.min(100, (Number(product.stock || 0) / maxStock) * 100);
                   const stockColor = stockPct > 60 ? "#10b981" : stockPct > 25 ? "#f59e0b" : "#ef4444";
                   return (
-                    <tr key={product.id || i} className="border-b border-gray-50 dark:border-gray-800/50 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
-                      <td className="px-4 py-2.5 text-xs text-gray-400">{i + 1}</td>
-                      <td className="px-4 py-2.5 font-medium text-gray-900 dark:text-white max-w-[200px] truncate">{product.name}</td>
-                      <td className="px-4 py-2.5 text-gray-700 dark:text-gray-300">৳{Number(product.price || 0).toLocaleString()}</td>
-                      <td className="px-4 py-2.5 text-gray-700 dark:text-gray-300 font-medium">{product.stock ?? "—"}</td>
+                    <tr key={product.id || i} className="border-b border-gray-50 last:border-0 hover:bg-slate-50 transition-colors">
+                      <td className="px-4 py-2.5 text-xs text-slate-400">{i + 1}</td>
+                      <td className="px-4 py-2.5 font-medium text-slate-800 max-w-[200px] truncate">{product.name}</td>
+                      <td className="px-4 py-2.5 text-slate-700">à§³{Number(product.price || 0).toLocaleString()}</td>
+                      <td className="px-4 py-2.5 text-slate-700 font-medium">{product.stock ?? "â€”"}</td>
                       <td className="px-4 py-2.5">
-                        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${product.is_active !== false ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400" : "bg-gray-100 text-gray-500 dark:bg-gray-800"}`}>
+                        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${product.is_active !== false ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-500"}`}>
                           {product.is_active !== false ? "Active" : "Inactive"}
                         </span>
                       </td>
                       <td className="px-4 py-2.5 w-32">
-                        <div className="w-full bg-gray-100 dark:bg-gray-800 h-1.5 rounded-full">
+                        <div className="w-full bg-slate-100 h-1.5 rounded-full">
                           <div className="h-1.5 rounded-full transition-all" style={{ width: `${stockPct}%`, backgroundColor: stockColor }} />
                         </div>
                       </td>
@@ -1004,7 +1016,7 @@ export default function AnalyticsPage() {
             </table>
           </div>
         ) : (
-          <div className="px-4 py-8 text-center text-sm text-gray-400">No products data available</div>
+          <div className="px-4 py-8 text-center text-sm text-slate-400">No products data available</div>
         )}
       </div>
 

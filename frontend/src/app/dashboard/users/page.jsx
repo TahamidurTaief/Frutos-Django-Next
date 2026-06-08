@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Plus, Eye, Pencil, Trash2 } from "lucide-react";
@@ -24,11 +24,11 @@ const FILTERS = [
 
 function RoleBadge({ value }) {
   const map = {
-    ADMIN:     "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
-    SELLER:    "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-    WHOLESALE: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
-    VENDOR:    "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
-    CUSTOMER:  "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
+    ADMIN:     "bg-purple-100 text-purple-700",
+    SELLER:    "bg-blue-100 text-blue-700",
+    WHOLESALE: "bg-emerald-100 text-emerald-700",
+    VENDOR:    "bg-amber-100 text-amber-700",
+    CUSTOMER:  "bg-slate-100 text-slate-600",
   };
   return (
     <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${map[value] || map.CUSTOMER}`}>
@@ -38,12 +38,12 @@ function RoleBadge({ value }) {
 }
 
 function WholesaleStatusBadge({ value }) {
-  if (!value) return <span className="text-gray-400">—</span>;
+  if (!value) return <span className="text-slate-400">—</span>;
   const map = {
-    approved:  "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-    pending:   "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
-    rejected:  "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
-    suspended: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
+    approved:  "bg-green-100 text-green-700",
+    pending:   "bg-amber-100 text-amber-700",
+    rejected:  "bg-red-100 text-red-700",
+    suspended: "bg-slate-100 text-slate-600",
   };
   return (
     <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${map[value] || map.pending}`}>
@@ -53,23 +53,23 @@ function WholesaleStatusBadge({ value }) {
 }
 
 const columns = [
-  { key: "id",               label: "ID",        render: (v) => <span className="text-xs text-gray-400">{String(v).startsWith('ws_') ? `WS-${v.replace('ws_','')}` : v}</span> },
+  { key: "id",               label: "ID",        render: (v) => <span className="text-xs text-slate-400">{String(v).startsWith('ws_') ? `WS-${v.replace('ws_','')}` : v}</span> },
   { key: "avatar",           label: "Photo",     render: (v, row) => (
-    <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center border border-gray-200 shrink-0">
+    <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center border border-slate-200 shrink-0">
       {v ? (
         <img src={v} alt={row.name || "User"} className="w-full h-full object-cover" />
       ) : (
-        <span className="text-xs font-semibold text-gray-500">{(row.name || row.email || "U").charAt(0).toUpperCase()}</span>
+        <span className="text-xs font-semibold text-slate-500">{(row.name || row.email || "U").charAt(0).toUpperCase()}</span>
       )}
     </div>
   )},
   { key: "name",             label: "Name" },
   { key: "email",            label: "Email" },
   { key: "user_type",        label: "Role",      render: (v) => <RoleBadge value={v} /> },
-  { key: "business_name",    label: "Business",  render: (v) => v || <span className="text-gray-400">—</span> },
+  { key: "business_name",    label: "Business",  render: (v) => v || <span className="text-slate-400">—</span> },
   { key: "wholesale_status", label: "WS Status", render: (v) => <WholesaleStatusBadge value={v} /> },
   { key: "is_active",        label: "Status",    render: (v) => (
-    <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${v ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"}`}>
+    <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${v ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"}`}>
       {v ? "Active" : "Inactive"}
     </span>
   )},
@@ -192,27 +192,22 @@ export default function UsersPage() {
   return (
     <Container title="Users" description="Manage user accounts — normal, wholesale, and admin">
 
-      {/* Filter tabs */}
-      <div className="flex items-center gap-2 flex-wrap mb-1">
+      <div className="db-filter-bar">
         {FILTERS.map(f => (
           <button
             key={f.value}
             onClick={() => { setFilter(f.value); setPage(1); }}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-              activeFilter === f.value
-                ? "bg-gray-900 dark:bg-white text-white dark:text-gray-900"
-                : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
-            }`}
+            className={`db-filter-pill${activeFilter === f.value ? " active" : ""}`}
           >
             {f.label}
           </button>
         ))}
-        <div className="ml-auto">
+        <div style={{ marginLeft: "auto" }}>
           <button
             onClick={() => setCreateOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
+            className="db-btn-primary"
           >
-            <Plus className="w-4 h-4" /> Add User
+            <Plus size={15} /> Add User
           </button>
         </div>
       </div>
@@ -230,20 +225,12 @@ export default function UsersPage() {
         searchable
         actions={(row) => (
         <div className="flex items-center justify-end gap-1">
-          <button onClick={() => setViewItem(row)} className="p-1.5 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><Eye className="w-3.5 h-3.5" /></button>
-          
-          <button onClick={() => setEditItem({ ...row, is_active: String(row.is_active),wholesale_status: row.wholesale_status || 'PENDING',})} className="p-1.5 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><Pencil className="w-3.5 h-3.5" /></button>
-          
+          <button onClick={() => setViewItem(row)} className="db-icon-btn" title="View"><Eye size={14} /></button>
+          <button onClick={() => setEditItem({ ...row, is_active: String(row.is_active), wholesale_status: row.wholesale_status || 'PENDING' })} className="db-icon-btn" title="Edit"><Pencil size={14} /></button>
           {row.user_type === 'WHOLESALER' && row.wholesale_status === 'PENDING' && (
-            <button
-              onClick={() => handleApproveWholesale(row)}
-              className="px-2 py-1 text-xs font-medium rounded bg-green-600 text-white hover:bg-green-700"
-            >
-              Approve
-            </button>
+            <button onClick={() => handleApproveWholesale(row)} style={{ padding: "5px 10px", fontSize: "11px", fontWeight: "700", borderRadius: "7px", background: "#22c55e", color: "white", border: "none", cursor: "pointer" }}>Approve</button>
           )}
-          
-          <button onClick={() => setDeleteItem(row)} className="p-1.5 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30"><Trash2 className="w-3.5 h-3.5" /></button>
+          <button onClick={() => setDeleteItem(row)} className="db-icon-btn danger" title="Delete"><Trash2 size={14} /></button>
         </div>
       )}
       />
@@ -267,11 +254,11 @@ export default function UsersPage() {
         {viewItem && (
           <div className="space-y-4">
             <div className="flex justify-center mb-4">
-              <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center border border-gray-200">
+              <div className="w-20 h-20 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center border border-slate-200">
                 {viewItem.avatar ? (
                   <img src={viewItem.avatar} alt={viewItem.name || "User"} className="w-full h-full object-cover" />
                 ) : (
-                  <span className="text-2xl font-semibold text-gray-500">{(viewItem.name || viewItem.email || "U").charAt(0).toUpperCase()}</span>
+                  <span className="text-2xl font-semibold text-slate-500">{(viewItem.name || viewItem.email || "U").charAt(0).toUpperCase()}</span>
                 )}
               </div>
             </div>
@@ -285,9 +272,9 @@ export default function UsersPage() {
                 ["Status",    viewItem.is_active ? "Active" : "Inactive"],
                 ["Joined",    viewItem.date_joined ? new Date(viewItem.date_joined).toLocaleDateString() : "—"],
               ].map(([label, val]) => (
-                <div key={label} className="flex justify-between py-1.5 border-b border-gray-100 dark:border-gray-800 last:border-0">
-                  <span className="text-sm text-gray-500">{label}</span>
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">{String(val)}</span>
+                <div key={label} className="flex justify-between py-1.5 border-b border-slate-100 last:border-0">
+                  <span className="text-sm text-slate-500">{label}</span>
+                  <span className="text-sm font-medium text-slate-800">{String(val)}</span>
                 </div>
               ))}
             </div>

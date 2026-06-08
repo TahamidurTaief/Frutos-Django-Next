@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Plus, Eye, Pencil, Trash2, ToggleLeft, ToggleRight } from "lucide-react";
@@ -20,8 +20,8 @@ const columns = [
   { key: "name", label: "Shop Name" },
   { key: "owner_name", label: "Owner", render: (_, row) => row.owner?.name || row.owner?.email || "—" },
   { key: "contact_email", label: "Email", render: (v) => v || "—" },
-  { key: "is_active", label: "Active", render: (v) => <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${v ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"}`}>{v ? "Active" : "Inactive"}</span> },
-  { key: "is_verified", label: "Verified", render: (v) => <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${v ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" : "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"}`}>{v ? "Verified" : "Pending"}</span> },
+  { key: "is_active", label: "Active", render: (v) => <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${v ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"}`}>{v ? "Active" : "Inactive"}</span> },
+  { key: "is_verified", label: "Verified", render: (v) => <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${v ? "bg-blue-100 text-blue-700" : "bg-amber-100 text-amber-600"}`}>{v ? "Verified" : "Pending"}</span> },
   { key: "created_at", label: "Created", render: (v) => v ? new Date(v).toLocaleDateString() : "—" },
 ];
 
@@ -97,7 +97,7 @@ export default function ShopsPage() {
   return (
     <Container title="Shops" description="Manage vendor storefronts">
       <div className="flex justify-end mb-3">
-        <button onClick={() => setCreateOpen(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors">
+        <button onClick={() => setCreateOpen(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 transition-colors">
           <Plus className="w-4 h-4" /> Add Shop
         </button>
       </div>
@@ -117,13 +117,13 @@ export default function ShopsPage() {
             <button
               onClick={() => handleToggleActive(row)}
               title={row.is_active ? "Deactivate" : "Activate"}
-              className={`p-1.5 rounded transition-colors ${row.is_active ? "text-green-500 hover:text-green-700 hover:bg-green-50 dark:hover:bg-green-950/30" : "text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800"}`}
+              className={`p-1.5 rounded transition-colors ${row.is_active ? "text-green-500 hover:text-green-700 hover:bg-green-50" : "text-slate-400 hover:text-slate-600 hover:bg-slate-100"}`}
             >
               {row.is_active ? <ToggleRight className="w-4 h-4" /> : <ToggleLeft className="w-4 h-4" />}
             </button>
-            <button onClick={() => setViewItem(row)} className="p-1.5 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><Eye className="w-3.5 h-3.5" /></button>
-            <button onClick={() => setEditItem(row)} className="p-1.5 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><Pencil className="w-3.5 h-3.5" /></button>
-            <button onClick={() => setDeleteItem(row)} className="p-1.5 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30"><Trash2 className="w-3.5 h-3.5" /></button>
+            <button onClick={() => setViewItem(row)} className="db-icon-btn"><Eye className="w-3.5 h-3.5" /></button>
+            <button onClick={() => setEditItem(row)} className="db-icon-btn"><Pencil className="w-3.5 h-3.5" /></button>
+            <button onClick={() => setDeleteItem(row)} className="db-icon-btn danger"><Trash2 className="w-3.5 h-3.5" /></button>
           </div>
         )}
       />
@@ -154,9 +154,9 @@ export default function ShopsPage() {
               ["Description", viewItem.description || "—"],
               ["Created", viewItem.created_at ? new Date(viewItem.created_at).toLocaleDateString() : "—"],
             ].map(([label, val]) => (
-              <div key={label} className="flex justify-between py-1.5 border-b border-gray-100 dark:border-gray-800 last:border-0">
-                <span className="text-sm text-gray-500">{label}</span>
-                <span className="text-sm font-medium text-gray-900 dark:text-white max-w-[60%] text-right">{String(val)}</span>
+              <div key={label} className="flex justify-between py-1.5 border-b border-slate-100 last:border-0">
+                <span className="text-sm text-slate-500">{label}</span>
+                <span className="text-sm font-medium text-slate-800 max-w-[60%] text-right">{String(val)}</span>
               </div>
             ))}
           </div>
@@ -166,3 +166,4 @@ export default function ShopsPage() {
     </Container>
   );
 }
+

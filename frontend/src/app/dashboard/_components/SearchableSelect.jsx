@@ -3,20 +3,6 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, Search, Check } from "lucide-react";
 
-/**
- * SearchableSelect — custom dropdown with built-in search, replacing native <select>.
- *
- * Props:
- *   options         [{ value, label }]   — option list
- *   value           string | number      — currently selected value
- *   onChange        (value) => void      — called on selection
- *   placeholder     string              — shown when nothing is selected
- *   searchPlaceholder string            — search input hint
- *   disabled        boolean
- *   required        boolean             — uses hidden native input for HTML5 validation
- *   name            string              — name for the hidden input
- *   className       string              — extra classes on the trigger button
- */
 export default function SearchableSelect({
   options = [],
   value = "",
@@ -38,7 +24,6 @@ export default function SearchableSelect({
     ? options.filter(o => o.label?.toLowerCase().includes(search.toLowerCase()))
     : options;
 
-  // Close on outside click
   useEffect(() => {
     if (!open) return;
     const handler = (e) => {
@@ -51,7 +36,6 @@ export default function SearchableSelect({
     return () => document.removeEventListener("mousedown", handler);
   }, [open]);
 
-  // Close on Escape
   useEffect(() => {
     if (!open) return;
     const handler = (e) => {
@@ -61,7 +45,6 @@ export default function SearchableSelect({
     return () => document.removeEventListener("keydown", handler);
   }, [open]);
 
-  // Auto-focus search when opened
   useEffect(() => {
     if (open && searchRef.current) searchRef.current.focus();
   }, [open]);
@@ -77,21 +60,46 @@ export default function SearchableSelect({
   };
 
   return (
-    <div ref={containerRef} className="relative">
-      {/* Trigger button */}
+    <div ref={containerRef} style={{ position: "relative" }}>
       <button
         type="button"
         disabled={disabled}
         onClick={toggleOpen}
-        className={`w-full flex items-center justify-between gap-2 px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm bg-white dark:bg-gray-900 text-left focus:outline-none focus:ring-1 focus:ring-gray-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${selected ? "text-gray-900 dark:text-white" : "text-gray-400"} ${className}`}
+        style={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "8px",
+          padding: "10px 14px",
+          border: open ? "1.5px solid #6366f1" : "1.5px solid #e2e8f0",
+          borderRadius: "10px",
+          fontSize: "14px",
+          background: "#ffffff",
+          color: selected ? "#1e293b" : "#94a3b8",
+          cursor: disabled ? "not-allowed" : "pointer",
+          opacity: disabled ? 0.5 : 1,
+          boxShadow: open ? "0 0 0 3px rgba(99,102,241,0.1)" : "none",
+          transition: "all 0.15s",
+          outline: "none",
+          textAlign: "left",
+          fontFamily: "inherit",
+        }}
       >
-        <span className="truncate flex-1">{selected ? selected.label : placeholder}</span>
+        <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontWeight: selected ? "600" : "400" }}>
+          {selected ? selected.label : placeholder}
+        </span>
         <ChevronDown
-          className={`w-4 h-4 text-gray-400 shrink-0 transition-transform duration-150 ${open ? "rotate-180" : ""}`}
+          size={16}
+          style={{
+            color: "#94a3b8",
+            flexShrink: 0,
+            transform: open ? "rotate(180deg)" : "rotate(0deg)",
+            transition: "transform 0.15s",
+          }}
         />
       </button>
 
-      {/* Hidden native input for HTML5 required validation */}
       {required && (
         <input
           tabIndex={-1}
@@ -100,32 +108,64 @@ export default function SearchableSelect({
           value={value ?? ""}
           onChange={() => {}}
           aria-hidden="true"
-          className="absolute bottom-0 left-0 w-full opacity-0 pointer-events-none h-0"
+          style={{ position: "absolute", bottom: 0, left: 0, width: "100%", opacity: 0, pointerEvents: "none", height: 0 }}
         />
       )}
 
-      {/* Dropdown panel */}
       {open && (
-        <div className="absolute z-50 w-full mt-1 min-w-[180px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg overflow-hidden">
+        <div style={{
+          position: "absolute",
+          zIndex: 100,
+          width: "100%",
+          marginTop: "6px",
+          minWidth: "180px",
+          background: "#ffffff",
+          border: "1.5px solid #e2e8f0",
+          borderRadius: "12px",
+          boxShadow: "0 8px 30px rgba(0,0,0,0.12)",
+          overflow: "hidden",
+          animation: "db-modal-in 0.15s ease",
+        }}>
           {/* Search box */}
-          <div className="p-2 border-b border-gray-100 dark:border-gray-800">
-            <div className="relative">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
+          <div style={{ padding: "10px", borderBottom: "1px solid #f1f5f9" }}>
+            <div style={{ position: "relative" }}>
+              <Search
+                size={13}
+                style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: "#94a3b8", pointerEvents: "none" }}
+              />
               <input
                 ref={searchRef}
                 type="text"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder={searchPlaceholder}
-                className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600"
+                style={{
+                  width: "100%",
+                  paddingLeft: "30px",
+                  paddingRight: "10px",
+                  paddingTop: "7px",
+                  paddingBottom: "7px",
+                  fontSize: "13px",
+                  border: "1.5px solid #e2e8f0",
+                  borderRadius: "8px",
+                  background: "#f8fafc",
+                  color: "#1e293b",
+                  outline: "none",
+                  boxSizing: "border-box",
+                  fontFamily: "inherit",
+                }}
+                onFocus={e => { e.target.style.borderColor = "#6366f1"; e.target.style.background = "#ffffff"; }}
+                onBlur={e => { e.target.style.borderColor = "#e2e8f0"; e.target.style.background = "#f8fafc"; }}
               />
             </div>
           </div>
 
           {/* Options list */}
-          <div className="max-h-52 overflow-y-auto">
+          <div style={{ maxHeight: "220px", overflowY: "auto" }}>
             {filtered.length === 0 ? (
-              <div className="px-3 py-4 text-center text-sm text-gray-400">No options found</div>
+              <div style={{ padding: "16px", textAlign: "center", fontSize: "13px", color: "#94a3b8", fontWeight: "500" }}>
+                No options found
+              </div>
             ) : (
               filtered.map(o => {
                 const isSelected = String(o.value) === String(value);
@@ -134,10 +174,29 @@ export default function SearchableSelect({
                     key={o.value}
                     type="button"
                     onClick={() => handleSelect(o.value)}
-                    className={`w-full flex items-center justify-between gap-2 px-3 py-2 text-sm text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 ${isSelected ? "bg-gray-50 dark:bg-gray-800 font-medium text-gray-900 dark:text-white" : "text-gray-700 dark:text-gray-300"}`}
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: "8px",
+                      padding: "10px 14px",
+                      fontSize: "13px",
+                      textAlign: "left",
+                      background: isSelected ? "#f0f9ff" : "transparent",
+                      color: isSelected ? "#0ea5e9" : "#374151",
+                      fontWeight: isSelected ? "700" : "500",
+                      border: "none",
+                      cursor: "pointer",
+                      borderBottom: "1px solid #f8fafc",
+                      transition: "background 0.1s",
+                      fontFamily: "inherit",
+                    }}
+                    onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = "#f8fafc"; }}
+                    onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = "transparent"; }}
                   >
-                    <span className="truncate flex-1">{o.label}</span>
-                    {isSelected && <Check className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 shrink-0" />}
+                    <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{o.label}</span>
+                    {isSelected && <Check size={13} style={{ color: "#0ea5e9", flexShrink: 0 }} />}
                   </button>
                 );
               })

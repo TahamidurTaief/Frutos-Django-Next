@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Plus, Pencil, Trash2, Upload, X, Palette, Ruler, Image as ImageIcon } from "lucide-react";
@@ -18,8 +18,8 @@ const TABS = [
   { id: "sizes", label: "Sizes" },
 ];
 
-const inp = "w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400";
-const lbl = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
+const inp = "w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-gray-400";
+const lbl = "block text-sm font-medium text-slate-700 mb-1";
 
 /* ─── Brand Form ─────────────────────────────────────────────── */
 function BrandForm({ initial = {}, onSubmit, submitLabel = "Save" }) {
@@ -80,14 +80,14 @@ function BrandForm({ initial = {}, onSubmit, submitLabel = "Save" }) {
               <button type="button" onClick={() => { setLogo(null); setPreview(""); }} className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center"><X className="w-2.5 h-2.5" /></button>
             </div>
           )}
-          <label className="flex items-center gap-2 px-3 py-2 border border-dashed border-gray-300 dark:border-gray-600 rounded-md cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900">
-            <Upload className="w-4 h-4 text-gray-400" /><span className="text-sm text-gray-500">Upload</span>
+          <label className="flex items-center gap-2 px-3 py-2 border border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-slate-50">
+            <Upload className="w-4 h-4 text-slate-400" /><span className="text-sm text-slate-500">Upload</span>
             <input type="file" accept="image/*" onChange={handleLogo} className="hidden" />
           </label>
         </div>
       </div>
       <div className="flex justify-end pt-1">
-        <button type="submit" disabled={submitting} className="px-4 py-2 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-50">
+        <button type="submit" disabled={submitting} className="px-4 py-2 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 disabled:opacity-50">
           {submitting ? "Saving..." : submitLabel}
         </button>
       </div>
@@ -115,13 +115,13 @@ function ColorForm({ initial = {}, onSubmit, submitLabel = "Save" }) {
         <div>
           <label className={lbl}>Hex Code *</label>
           <div className="flex gap-2 items-center">
-            <input type="color" value={hexCode} onChange={e => setHexCode(e.target.value)} className="w-10 h-10 p-0.5 border border-gray-300 dark:border-gray-700 rounded cursor-pointer" />
+            <input type="color" value={hexCode} onChange={e => setHexCode(e.target.value)} className="w-10 h-10 p-0.5 border border-gray-300 rounded cursor-pointer" />
             <input required className={inp} value={hexCode} onChange={e => setHexCode(e.target.value)} placeholder="#000000" pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" />
           </div>
         </div>
       </div>
       <div className="flex justify-end pt-1">
-        <button type="submit" disabled={submitting} className="px-4 py-2 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-50">
+        <button type="submit" disabled={submitting} className="px-4 py-2 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 disabled:opacity-50">
           {submitting ? "Saving..." : submitLabel}
         </button>
       </div>
@@ -145,7 +145,7 @@ function SizeForm({ initial = {}, onSubmit, submitLabel = "Save" }) {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div><label className={lbl}>Size Name *</label><input required className={inp} value={name} onChange={e => setName(e.target.value)} placeholder="e.g., XL, 42, Large" /></div>
       <div className="flex justify-end pt-1">
-        <button type="submit" disabled={submitting} className="px-4 py-2 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-50">
+        <button type="submit" disabled={submitting} className="px-4 py-2 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 disabled:opacity-50">
           {submitting ? "Saving..." : submitLabel}
         </button>
       </div>
@@ -182,17 +182,17 @@ export default function BrandsPage() {
   });
 
   const brandColumns = [
-    { key: "logo_url", label: "", sortable: false, render: (v) => v ? <img src={v} alt="" className="w-8 h-8 rounded object-cover" /> : <div className="w-8 h-8 rounded bg-gray-100 dark:bg-gray-800 flex items-center justify-center"><ImageIcon className="w-3.5 h-3.5 text-gray-400" /></div> },
+    { key: "logo_url", label: "", sortable: false, render: (v) => v ? <img src={v} alt="" className="w-8 h-8 rounded object-cover" /> : <div className="w-8 h-8 rounded bg-slate-100 flex items-center justify-center"><ImageIcon className="w-3.5 h-3.5 text-slate-400" /></div> },
     { key: "name", label: "Name" },
     { key: "slug", label: "Slug" },
-    { key: "website", label: "Website", render: (v) => v ? <a href={v} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 text-xs truncate max-w-[150px] inline-block hover:underline">{v.replace(/^https?:\/\//, "")}</a> : "—" },
-    { key: "is_active", label: "Status", render: (v) => <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${v ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"}`}>{v ? "Active" : "Inactive"}</span> },
+    { key: "website", label: "Website", render: (v) => v ? <a href={v} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-xs truncate max-w-[150px] inline-block hover:underline">{v.replace(/^https?:\/\//, "")}</a> : "—" },
+    { key: "is_active", label: "Status", render: (v) => <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${v ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"}`}>{v ? "Active" : "Inactive"}</span> },
   ];
 
   const colorColumns = [
-    { key: "hex_code", label: "", sortable: false, render: (v) => <div className="w-7 h-7 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm" style={{ backgroundColor: v }} /> },
+    { key: "hex_code", label: "", sortable: false, render: (v) => <div className="w-7 h-7 rounded-full border border-slate-200 shadow-sm" style={{ backgroundColor: v }} /> },
     { key: "name", label: "Name" },
-    { key: "hex_code", label: "Hex Code", render: (v) => <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded">{v}</code> },
+    { key: "hex_code", label: "Hex Code", render: (v) => <code className="text-xs bg-slate-100 px-1.5 py-0.5 rounded">{v}</code> },
   ];
 
   const sizeColumns = [
@@ -226,8 +226,8 @@ export default function BrandsPage() {
 
   const actions = (row) => (
     <div className="flex items-center gap-1">
-      <button onClick={() => setModal({ open: true, mode: "edit", item: row })} className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"><Pencil className="w-3.5 h-3.5" /></button>
-      <button onClick={() => setConfirm({ open: true, item: row, tab })} className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-950/30 text-gray-500 hover:text-red-600 dark:hover:text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>
+      <button onClick={() => setModal({ open: true, mode: "edit", item: row })} className="p-1.5 rounded-md hover:bg-slate-100 text-slate-500 hover:text-slate-700"><Pencil className="w-3.5 h-3.5" /></button>
+      <button onClick={() => setConfirm({ open: true, item: row, tab })} className="p-1.5 rounded-md hover:bg-red-50 text-slate-500 hover:text-red-600"><Trash2 className="w-3.5 h-3.5" /></button>
     </div>
   );
 
@@ -242,12 +242,12 @@ export default function BrandsPage() {
   return (
     <Container title="Brands & Attributes" description="Manage product brands, colors, and sizes">
       <div className="flex items-center justify-between">
-        <div className="flex gap-1 bg-gray-100 dark:bg-gray-900 p-0.5 rounded-lg">
+        <div className="flex gap-1 bg-slate-100 p-0.5 rounded-lg">
           {TABS.map(t => (
-            <button key={t.id} onClick={() => { setTab(t.id); setModal({ open: false, mode: "create", item: null }); setConfirm({ open: false, item: null, tab: null }); }} className={`px-3 py-1.5 text-sm rounded-md transition-colors ${tab === t.id ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm font-medium" : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"}`}>{t.label}</button>
+            <button key={t.id} onClick={() => { setTab(t.id); setModal({ open: false, mode: "create", item: null }); setConfirm({ open: false, item: null, tab: null }); }} className={`px-3 py-1.5 text-sm rounded-md transition-colors ${tab === t.id ? "bg-white text-slate-800 shadow-sm font-medium" : "text-slate-500 hover:text-slate-700"}`}>{t.label}</button>
           ))}
         </div>
-        <button onClick={() => setModal({ open: true, mode: "create", item: null })} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100">
+        <button onClick={() => setModal({ open: true, mode: "create", item: null })} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800">
           <Plus className="w-3.5 h-3.5" /> Add {getLabel()}
         </button>
       </div>
@@ -276,3 +276,4 @@ export default function BrandsPage() {
     </Container>
   );
 }
+

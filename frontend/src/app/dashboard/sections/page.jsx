@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Plus, Eye, Pencil, Trash2, LayoutGrid, Package, Globe } from "lucide-react";
@@ -37,13 +37,13 @@ const PAGE_CHOICES = [
   { value: "search", label: "Search Results Page" },
 ];
 
-const inp = "w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400";
-const lbl = "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1";
+const inp = "w-full px-3 py-2 border border-gray-300 rounded-md text-sm bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-gray-400";
+const lbl = "block text-sm font-medium text-slate-700 mb-1";
 
 function TypeBadge({ type }) {
-  const colors = { product: "bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400", category: "bg-purple-50 text-purple-700 dark:bg-purple-950/30 dark:text-purple-400", special_offer: "bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-600" };
+  const colors = { product: "bg-blue-50 text-blue-700", category: "bg-purple-50 text-purple-700", special_offer: "bg-amber-50 text-amber-700" };
   const labels = { product: "Product", category: "Category", special_offer: "Special Offer" };
-  return <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${colors[type] || "bg-gray-100 text-gray-500"}`}>{labels[type] || type}</span>;
+  return <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${colors[type] || "bg-slate-100 text-slate-500"}`}>{labels[type] || type}</span>;
 }
 
 /* ─── Section Form ─────────────────────────────────────────── */
@@ -100,8 +100,8 @@ function SectionForm({ initial = {}, onSubmit, submitLabel = "Save" }) {
       </div>
       <div><label className={lbl}>Description</label><textarea rows={2} className={inp + " resize-none"} value={v.description} onChange={e => set("description", e.target.value)} /></div>
       {isOffer && (
-        <div className="border border-amber-200 dark:border-amber-800 rounded-lg p-4 space-y-3 bg-amber-50/40 dark:bg-amber-950/20">
-          <p className="text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wide">Special Offer Settings</p>
+        <div className="border border-amber-200 rounded-lg p-4 space-y-3 bg-amber-50/40">
+          <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide">Special Offer Settings</p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div><label className={lbl}>Discount % *</label><input required type="number" min="0" max="100" step="0.01" className={inp} value={v.discount_percentage} onChange={e => set("discount_percentage", e.target.value)} placeholder="20.00" /></div>
             <div><label className={lbl}>Offer Start</label><input type="datetime-local" className={inp} value={v.offer_start_date || ""} onChange={e => set("offer_start_date", e.target.value)} /></div>
@@ -109,7 +109,7 @@ function SectionForm({ initial = {}, onSubmit, submitLabel = "Save" }) {
           </div>
         </div>
       )}
-      <div className="flex justify-end pt-1"><button type="submit" className="px-4 py-2 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors">{submitLabel}</button></div>
+      <div className="flex justify-end pt-1"><button type="submit" className="px-4 py-2 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 transition-colors">{submitLabel}</button></div>
     </form>
   );
 }
@@ -178,7 +178,7 @@ function ItemForm({ isEdit = false, initial = {}, sections = [], products = [], 
           options={sections.map(s => ({ value: s.id, label: `${s.name} (${s.section_type_display || s.section_type})` }))}
         />
         {sectionId && section && (
-          <p className="text-xs text-gray-400 mt-1">Type: <TypeBadge type={section.section_type} /></p>
+          <p className="text-xs text-slate-400 mt-1">Type: <TypeBadge type={section.section_type} /></p>
         )}
       </div>
 
@@ -214,7 +214,7 @@ function ItemForm({ isEdit = false, initial = {}, sections = [], products = [], 
           <label className={lbl}>
             {showProduct ? "Products" : "Categories"}
             {selectedIds.length > 0 && (
-              <span className="ml-2 text-xs font-medium text-gray-900 dark:text-white bg-gray-200 dark:bg-gray-700 px-1.5 py-0.5 rounded">{selectedIds.length} selected</span>
+              <span className="ml-2 text-xs font-medium text-slate-800 bg-gray-200 px-1.5 py-0.5 rounded">{selectedIds.length} selected</span>
             )}
           </label>
           <input
@@ -223,21 +223,21 @@ function ItemForm({ isEdit = false, initial = {}, sections = [], products = [], 
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
-          <div className="border border-gray-200 dark:border-gray-800 rounded-md divide-y divide-gray-100 dark:divide-gray-800 max-h-56 overflow-y-auto">
+          <div className="border border-slate-200 rounded-md divide-y divide-gray-100 max-h-56 overflow-y-auto">
             {filteredItems.length === 0 && (
-              <p className="text-xs text-gray-400 p-3 italic">{search ? "No matches." : `No ${showProduct ? "products" : "categories"} available.`}</p>
+              <p className="text-xs text-slate-400 p-3 italic">{search ? "No matches." : `No ${showProduct ? "products" : "categories"} available.`}</p>
             )}
             {filteredItems.map(item => (
-              <label key={item.id} className="flex items-center gap-3 px-3 py-2.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900">
+              <label key={item.id} className="flex items-center gap-3 px-3 py-2.5 cursor-pointer hover:bg-slate-50">
                 <input
                   type="checkbox"
                   checked={selectedIds.includes(item.id)}
                   onChange={() => toggleId(item.id)}
                   className="rounded border-gray-300 w-4 h-4 flex-shrink-0"
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300 flex-1 truncate">{item.name}</span>
+                <span className="text-sm text-slate-700 flex-1 truncate">{item.name}</span>
                 {showProduct && item.price && (
-                  <span className="text-xs text-gray-400 flex-shrink-0">৳{Number(item.price).toLocaleString()}</span>
+                  <span className="text-xs text-slate-400 flex-shrink-0">৳{Number(item.price).toLocaleString()}</span>
                 )}
               </label>
             ))}
@@ -247,11 +247,11 @@ function ItemForm({ isEdit = false, initial = {}, sections = [], products = [], 
           )}
           {filteredItems.length > 0 && (
             <div className="flex gap-3 mt-1.5">
-              <button type="button" className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 underline" onClick={() => setSelectedIds(filteredItems.map(i => i.id))}>
+              <button type="button" className="text-xs text-slate-400 hover:text-slate-600 underline" onClick={() => setSelectedIds(filteredItems.map(i => i.id))}>
                 Select all{search ? " matching" : ""}
               </button>
               {selectedIds.length > 0 && (
-                <button type="button" className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 underline" onClick={() => setSelectedIds([])}>
+                <button type="button" className="text-xs text-slate-400 hover:text-slate-600 underline" onClick={() => setSelectedIds([])}>
                   Clear
                 </button>
               )}
@@ -265,18 +265,18 @@ function ItemForm({ isEdit = false, initial = {}, sections = [], products = [], 
         {sType === "special_offer" && (
           <div><label className={lbl}>Special Price (৳)</label><input type="number" min="0" step="0.01" className={inp} value={specialPrice} onChange={e => setSpecialPrice(e.target.value)} placeholder="Override product price" /></div>
         )}
-        <div><label className={lbl}>Custom Title <span className="font-normal text-xs text-gray-400">(optional)</span></label><input className={inp} value={customTitle} onChange={e => setCustomTitle(e.target.value)} placeholder="Override display name" /></div>
+        <div><label className={lbl}>Custom Title <span className="font-normal text-xs text-slate-400">(optional)</span></label><input className={inp} value={customTitle} onChange={e => setCustomTitle(e.target.value)} placeholder="Override display name" /></div>
       </div>
-      <div><label className={lbl}>Custom Description <span className="font-normal text-xs text-gray-400">(optional)</span></label><textarea rows={2} className={inp + " resize-none"} value={customDesc} onChange={e => setCustomDesc(e.target.value)} /></div>
+      <div><label className={lbl}>Custom Description <span className="font-normal text-xs text-slate-400">(optional)</span></label><textarea rows={2} className={inp + " resize-none"} value={customDesc} onChange={e => setCustomDesc(e.target.value)} /></div>
       <label className="flex items-center gap-2.5 cursor-pointer">
         <input type="checkbox" checked={featured} onChange={e => setFeatured(e.target.checked)} className="rounded border-gray-300 w-4 h-4" />
-        <span className="text-sm text-gray-700 dark:text-gray-300">Mark as featured item in this section</span>
+        <span className="text-sm text-slate-700">Mark as featured item in this section</span>
       </label>
       <div className="flex justify-end pt-1">
         <button
           type="submit"
           disabled={!isEdit && sectionId && selectedIds.length === 0}
-          className="px-4 py-2 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="px-4 py-2 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {submitLabel}{!isEdit && selectedIds.length > 1 ? ` (${selectedIds.length} items)` : ""}
         </button>
@@ -348,11 +348,11 @@ function AssignmentForm({ initial = {}, sections = [], onSubmit, submitLabel = "
         {[["show_title","Show section title on this page"],["show_subtitle","Show section subtitle on this page"],["show_view_all","Show 'View All' button"]].map(([k,l])=>(
           <label key={k} className="flex items-center gap-2.5 cursor-pointer">
             <input type="checkbox" checked={v[k]} onChange={e => set(k, e.target.checked)} className="rounded border-gray-300 w-4 h-4" />
-            <span className="text-sm text-gray-700 dark:text-gray-300">{l}</span>
+            <span className="text-sm text-slate-700">{l}</span>
           </label>
         ))}
       </div>
-      <div className="flex justify-end pt-1"><button type="submit" className="px-4 py-2 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors">{submitLabel}</button></div>
+      <div className="flex justify-end pt-1"><button type="submit" className="px-4 py-2 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 transition-colors">{submitLabel}</button></div>
     </form>
   );
 }
@@ -447,21 +447,21 @@ export default function SectionsPage() {
   };
 
   const sectionCols = [
-    { key: "order", label: "#", render: v => <span className="text-gray-400 text-xs">{v}</span> },
+    { key: "order", label: "#", render: v => <span className="text-slate-400 text-xs">{v}</span> },
     { key: "name", label: "Section Name" },
     { key: "section_type", label: "Type", render: v => <TypeBadge type={v} /> },
     { key: "title_display", label: "Display Title", render: v => v || "—" },
     { key: "max_items", label: "Max" },
     { key: "items_count", label: "Items" },
     { key: "pages_count", label: "Pages" },
-    { key: "is_active", label: "Status", render: v => <span className={`text-xs font-medium px-2 py-0.5 rounded ${v ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400" : "bg-gray-100 text-gray-500 dark:bg-gray-800"}`}>{v ? "Active" : "Inactive"}</span> },
+    { key: "is_active", label: "Status", render: v => <span className={`text-xs font-medium px-2 py-0.5 rounded ${v ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-500"}`}>{v ? "Active" : "Inactive"}</span> },
   ];
 
   const itemCols = [
     { key: "item_name", label: "Item", render: v => v || "—" },
-    { key: "item_type", label: "Type", render: v => v === "product" ? <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">Product</span> : <span className="text-xs text-purple-600 dark:text-purple-400 font-medium">Category</span> },
+    { key: "item_type", label: "Type", render: v => v === "product" ? <span className="text-xs text-blue-600 font-medium">Product</span> : <span className="text-xs text-purple-600 font-medium">Category</span> },
     { key: "order", label: "Order" },
-    { key: "is_featured", label: "Featured", render: v => v ? <span className="text-xs font-medium text-amber-600 dark:text-amber-400">★ Featured</span> : <span className="text-xs text-gray-400">—</span> },
+    { key: "is_featured", label: "Featured", render: v => v ? <span className="text-xs font-medium text-amber-600">★ Featured</span> : <span className="text-xs text-slate-400">—</span> },
     { key: "special_price", label: "Special Price", render: v => v ? `৳${Number(v).toLocaleString()}` : "—" },
   ];
 
@@ -470,14 +470,14 @@ export default function SectionsPage() {
     { key: "page_name", label: "Page", render: v => PAGE_CHOICES.find(p => p.value === v)?.label || v },
     { key: "order", label: "Order" },
     { key: "items_per_row", label: "Columns" },
-    { key: "is_active", label: "Status", render: v => <span className={`text-xs font-medium px-2 py-0.5 rounded ${v ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400" : "bg-gray-100 text-gray-500"}`}>{v ? "Active" : "Inactive"}</span> },
+    { key: "is_active", label: "Status", render: v => <span className={`text-xs font-medium px-2 py-0.5 rounded ${v ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-500"}`}>{v ? "Active" : "Inactive"}</span> },
   ];
 
   const ab = (row, onE, onD, onV) => (
     <div className="flex items-center justify-end gap-1">
-      {onV && <button onClick={() => onV(row)} className="p-1.5 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><Eye className="w-3.5 h-3.5" /></button>}
-      <button onClick={() => onE(row)} className="p-1.5 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"><Pencil className="w-3.5 h-3.5" /></button>
-      <button onClick={() => onD(row)} className="p-1.5 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30"><Trash2 className="w-3.5 h-3.5" /></button>
+      {onV && <button onClick={() => onV(row)} className="db-icon-btn"><Eye className="w-3.5 h-3.5" /></button>}
+      <button onClick={() => onE(row)} className="db-icon-btn"><Pencil className="w-3.5 h-3.5" /></button>
+      <button onClick={() => onD(row)} className="db-icon-btn danger"><Trash2 className="w-3.5 h-3.5" /></button>
     </div>
   );
 
@@ -486,15 +486,15 @@ export default function SectionsPage() {
       title="Page Sections"
       description="Manage sections, their items and page assignments"
       actions={
-        tab === "sections" ? <button onClick={() => setSCreate(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"><Plus className="w-4 h-4" /> Add Section</button>
-        : tab === "items" ? <button onClick={() => setICreate(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"><Plus className="w-4 h-4" /> Add Item</button>
-        : <button onClick={() => setACreate(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"><Plus className="w-4 h-4" /> Add Assignment</button>
+        tab === "sections" ? <button onClick={() => setSCreate(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 transition-colors"><Plus className="w-4 h-4" /> Add Section</button>
+        : tab === "items" ? <button onClick={() => setICreate(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 transition-colors"><Plus className="w-4 h-4" /> Add Item</button>
+        : <button onClick={() => setACreate(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 transition-colors"><Plus className="w-4 h-4" /> Add Assignment</button>
       }
     >
       {/* Tab Bar */}
-      <div className="flex gap-1 border-b border-gray-200 dark:border-gray-800 mb-5 overflow-x-auto">
+      <div className="flex gap-1 border-b border-slate-200 mb-5 overflow-x-auto">
         {TABS.map(t => { const Icon = t.icon; return (
-          <button key={t.id} onClick={() => setTab(t.id)} className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${tab === t.id ? "border-gray-900 dark:border-white text-gray-900 dark:text-white" : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"}`}>
+          <button key={t.id} onClick={() => setTab(t.id)} className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${tab === t.id ? "border-gray-900 text-slate-800" : "border-transparent text-slate-500 hover:text-slate-700"}`}>
             <Icon className="w-4 h-4" />{t.label}
           </button>
         ); })}
@@ -565,27 +565,27 @@ export default function SectionsPage() {
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <TypeBadge type={sView.section_type} />
-              <h3 className="text-base font-semibold text-gray-900 dark:text-white">{sView.name}</h3>
-              <span className={`text-xs px-2 py-0.5 rounded font-medium ${sView.is_active ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400" : "bg-gray-100 text-gray-500"}`}>{sView.is_active ? "Active" : "Inactive"}</span>
+              <h3 className="text-base font-semibold text-slate-800">{sView.name}</h3>
+              <span className={`text-xs px-2 py-0.5 rounded font-medium ${sView.is_active ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-500"}`}>{sView.is_active ? "Active" : "Inactive"}</span>
             </div>
-            {sView.description && <p className="text-sm text-gray-500 dark:text-gray-400">{sView.description}</p>}
+            {sView.description && <p className="text-sm text-slate-500">{sView.description}</p>}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[["Display Title", sView.title_display||"—"],["Subtitle", sView.subtitle_display||"—"],["Order", sView.order],["Max Items", sView.max_items]].map(([k,val])=>(
-                <div key={k} className="bg-gray-50 dark:bg-gray-900 rounded-md p-3">
-                  <p className="text-xs text-gray-400 mb-0.5">{k}</p>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">{String(val)}</p>
+                <div key={k} className="bg-slate-50 rounded-md p-3">
+                  <p className="text-xs text-slate-400 mb-0.5">{k}</p>
+                  <p className="text-sm font-medium text-slate-800">{String(val)}</p>
                 </div>
               ))}
             </div>
             {sView.section_type === "special_offer" && (
-              <div className="bg-amber-50 dark:bg-amber-950/20 rounded-lg p-3 text-sm">
-                <p className="font-medium text-amber-700 dark:text-amber-400 mb-1">Special Offer</p>
-                <p className="text-gray-600 dark:text-gray-400">Discount: {sView.discount_percentage || "—"}%</p>
-                {sView.offer_start_date && <p className="text-gray-500 dark:text-gray-400 text-xs">Start: {new Date(sView.offer_start_date).toLocaleString()}</p>}
-                {sView.offer_end_date && <p className="text-gray-500 dark:text-gray-400 text-xs">End: {new Date(sView.offer_end_date).toLocaleString()}</p>}
+              <div className="bg-amber-50 rounded-lg p-3 text-sm">
+                <p className="font-medium text-amber-700 mb-1">Special Offer</p>
+                <p className="text-slate-600">Discount: {sView.discount_percentage || "—"}%</p>
+                {sView.offer_start_date && <p className="text-slate-500 text-xs">Start: {new Date(sView.offer_start_date).toLocaleString()}</p>}
+                {sView.offer_end_date && <p className="text-slate-500 text-xs">End: {new Date(sView.offer_end_date).toLocaleString()}</p>}
               </div>
             )}
-            <div className="flex gap-4 text-sm text-gray-500 dark:text-gray-400 pt-1 border-t border-gray-100 dark:border-gray-800">
+            <div className="flex gap-4 text-sm text-slate-500 pt-1 border-t border-slate-100">
               <span>{sView.items_count || 0} items</span>
               <span>{sView.pages_count || 0} active page assignments</span>
             </div>
@@ -614,4 +614,5 @@ export default function SectionsPage() {
     </Container>
   );
 }
+
 

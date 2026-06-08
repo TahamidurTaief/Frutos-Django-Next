@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -21,17 +21,17 @@ const STATUS_TABS = [
 ];
 
 const PRIORITY_BADGE = {
-  LOW: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
-  MEDIUM: "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400",
-  HIGH: "bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400",
-  URGENT: "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400",
+  LOW: "bg-slate-100 text-slate-600",
+  MEDIUM: "bg-blue-100 text-blue-600",
+  HIGH: "bg-orange-100 text-orange-600",
+  URGENT: "bg-red-100 text-red-600",
 };
 
 const STATUS_BADGE = {
-  OPEN: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
-  IN_PROGRESS: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-  RESOLVED: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-  CLOSED: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
+  OPEN: "bg-yellow-100 text-yellow-700",
+  IN_PROGRESS: "bg-blue-100 text-blue-700",
+  RESOLVED: "bg-green-100 text-green-700",
+  CLOSED: "bg-slate-100 text-slate-600",
 };
 
 const STATUS_ICON = {
@@ -106,14 +106,14 @@ function TicketDetailModal({ ticket, onClose, onReplySuccess }) {
       {viewerSrc && <ImageViewer src={viewerSrc} onClose={() => setViewerSrc(null)} />}
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
         <div
-          className="bg-white dark:bg-gray-950 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+          className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="flex items-start justify-between p-5 border-b border-gray-200 dark:border-gray-800">
+          <div className="flex items-start justify-between p-5 border-b border-slate-200">
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs font-medium text-gray-400 dark:text-gray-500">Ticket #{ticket.id}</span>
+              <div className="db-filter-bar">
+                <span className="text-xs font-medium text-slate-400">Ticket #{ticket.id}</span>
                 <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-full font-medium ${STATUS_BADGE[ticket.status] || ""}`}>
                   <StatusIcon className="w-3 h-3" />
                   {ticket.status.replace("_", " ")}
@@ -122,9 +122,9 @@ function TicketDetailModal({ ticket, onClose, onReplySuccess }) {
                   {ticket.priority}
                 </span>
               </div>
-              <h2 className="text-base font-semibold text-gray-900 dark:text-white">{ticket.subject}</h2>
+              <h2 className="text-base font-semibold text-slate-800">{ticket.subject}</h2>
             </div>
-            <button onClick={onClose} className="p-1.5 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+            <button onClick={onClose} className="db-icon-btn">
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -132,28 +132,28 @@ function TicketDetailModal({ ticket, onClose, onReplySuccess }) {
           <div className="p-5 space-y-5">
             {/* Meta */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                <User className="w-4 h-4 shrink-0 text-gray-400" />
-                <span className="font-medium text-gray-900 dark:text-white">{ticket.vendor_name || "—"}</span>
+              <div className="flex items-center gap-2 text-sm text-slate-600">
+                <User className="w-4 h-4 shrink-0 text-slate-400" />
+                <span className="font-medium text-slate-800">{ticket.vendor_name || "—"}</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                <Mail className="w-4 h-4 shrink-0 text-gray-400" />
+              <div className="flex items-center gap-2 text-sm text-slate-600">
+                <Mail className="w-4 h-4 shrink-0 text-slate-400" />
                 <span>{ticket.vendor_email || "—"}</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                <Tag className="w-4 h-4 shrink-0 text-gray-400" />
+              <div className="flex items-center gap-2 text-sm text-slate-600">
+                <Tag className="w-4 h-4 shrink-0 text-slate-400" />
                 <span>{CATEGORY_LABEL[ticket.category] || ticket.category}</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                <Clock className="w-4 h-4 shrink-0 text-gray-400" />
+              <div className="flex items-center gap-2 text-sm text-slate-600">
+                <Clock className="w-4 h-4 shrink-0 text-slate-400" />
                 <span>{ticket.created_at ? new Date(ticket.created_at).toLocaleString() : "—"}</span>
               </div>
             </div>
 
             {/* Description */}
             <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-2">Description</p>
-              <div className="text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900 rounded-lg p-3 whitespace-pre-wrap leading-relaxed border border-gray-200 dark:border-gray-800">
+              <p className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2">Description</p>
+              <div className="text-sm text-slate-700 bg-slate-50 rounded-lg p-3 whitespace-pre-wrap leading-relaxed border border-slate-200">
                 {ticket.description}
               </div>
             </div>
@@ -161,13 +161,13 @@ function TicketDetailModal({ ticket, onClose, onReplySuccess }) {
             {/* Inline images extracted from description */}
             {images.length > 0 && (
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-2">Attachments</p>
+                <p className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2">Attachments</p>
                 <div className="flex flex-wrap gap-2">
                   {images.map((src, i) => (
                     <button
                       key={i}
                       onClick={() => setViewerSrc(src)}
-                      className="relative group rounded-md overflow-hidden border border-gray-200 dark:border-gray-700 w-20 h-20 shrink-0"
+                      className="relative group rounded-md overflow-hidden border border-slate-200 w-20 h-20 shrink-0"
                     >
                       <img src={src} alt={`attachment ${i + 1}`} className="w-full h-full object-cover" />
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
@@ -182,8 +182,8 @@ function TicketDetailModal({ ticket, onClose, onReplySuccess }) {
             {/* Existing admin response */}
             {ticket.admin_response && (
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-2">Previous Response</p>
-                <div className="text-sm text-gray-700 dark:text-gray-300 bg-blue-50 dark:bg-blue-950/30 rounded-lg p-3 whitespace-pre-wrap leading-relaxed border border-blue-100 dark:border-blue-900">
+                <p className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2">Previous Response</p>
+                <div className="text-sm text-slate-700 bg-blue-50 rounded-lg p-3 whitespace-pre-wrap leading-relaxed border border-blue-100">
                   {ticket.admin_response}
                 </div>
               </div>
@@ -191,7 +191,7 @@ function TicketDetailModal({ ticket, onClose, onReplySuccess }) {
 
             {/* Reply Form */}
             <form onSubmit={handleSubmit} className="space-y-3">
-              <p className="text-xs font-medium uppercase tracking-wider text-gray-400 dark:text-gray-500">
+              <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
                 {ticket.admin_response ? "Update Response" : "Reply"}
               </p>
               <textarea
@@ -199,14 +199,14 @@ function TicketDetailModal({ ticket, onClose, onReplySuccess }) {
                 onChange={(e) => setReplyText(e.target.value)}
                 rows={4}
                 placeholder="Write your response to the vendor..."
-                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400 resize-none"
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-gray-400 resize-none"
               />
               <div className="flex items-center gap-3">
                 <div className="flex-1">
                   <select
                     value={newStatus}
                     onChange={(e) => setNewStatus(e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-gray-400"
                   >
                     <option value="OPEN">Open</option>
                     <option value="IN_PROGRESS">In Progress</option>
@@ -217,7 +217,7 @@ function TicketDetailModal({ ticket, onClose, onReplySuccess }) {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-50 transition-colors"
+                  className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-slate-900 text-white rounded-md hover:bg-gray-800 disabled:opacity-50 transition-colors"
                 >
                   {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
                   Send Reply
@@ -308,7 +308,7 @@ export default function TicketsPage() {
 
       {/* Status Tabs + Controls */}
       <div className="flex items-center justify-between mb-4">
-        <div className="flex gap-1 overflow-x-auto border-b border-gray-200 dark:border-gray-800 pb-px">
+        <div className="flex gap-1 overflow-x-auto border-b border-slate-200 pb-px">
           {STATUS_TABS.map((tab) => {
             const allCount = Object.values(counts).reduce((s, c) => s + c, 0);
             const count = tab.id !== "all" ? counts[tab.id] : allCount;
@@ -318,14 +318,14 @@ export default function TicketsPage() {
                 onClick={() => { setActiveStatus(tab.id); setPage(1); }}
                 className={`px-3 py-2 text-sm font-medium border-b-2 transition-colors -mb-px whitespace-nowrap flex items-center gap-1.5 ${
                   activeStatus === tab.id
-                    ? "border-gray-900 dark:border-white text-gray-900 dark:text-white"
-                    : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                    ? "border-gray-900 text-slate-800"
+                    : "border-transparent text-slate-500 hover:text-slate-700"
                 }`}
               >
                 {tab.label}
                 {count > 0 && (
                   <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
-                    tab.id === "OPEN" ? "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400" : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
+                    tab.id === "OPEN" ? "bg-red-100 text-red-600" : "bg-slate-100 text-slate-500"
                   }`}>{count}</span>
                 )}
               </button>
@@ -338,11 +338,11 @@ export default function TicketsPage() {
             placeholder="Search…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400 w-44"
+            className="px-3 py-1.5 text-sm border border-gray-300 rounded-md bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-gray-400 w-44"
           />
           <button
             onClick={() => { fetchTickets(); fetchCounts(); }}
-            className="p-1.5 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-1.5 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
             title="Refresh"
           >
             <RefreshCw className="w-4 h-4" />
@@ -353,10 +353,10 @@ export default function TicketsPage() {
       {/* Table */}
       {loading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+          <Loader2 className="w-6 h-6 animate-spin text-slate-400" />
         </div>
       ) : tickets.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-gray-400 dark:text-gray-600">
+        <div className="flex flex-col items-center justify-center py-20 text-slate-400">
           <MessageSquare className="w-10 h-10 mb-3 opacity-40" />
           <p className="text-sm font-medium">No tickets found</p>
           <p className="text-xs mt-1">
@@ -365,36 +365,36 @@ export default function TicketsPage() {
         </div>
       ) : (
         <>
-          <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+          <div className="overflow-x-auto rounded-lg border border-slate-200">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">#</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Subject</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Vendor</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Category</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Priority</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Created</th>
-                  <th className="px-4 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                <tr className="border-b border-slate-200 bg-slate-50">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">#</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Subject</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Vendor</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Category</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Priority</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Created</th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+              <tbody className="divide-y divide-gray-100">
                 {tickets.map((ticket) => {
                   const StatusIcon = STATUS_ICON[ticket.status] || AlertCircle;
                   return (
-                    <tr key={ticket.id} className="hover:bg-gray-50 dark:hover:bg-gray-900/30 transition-colors">
-                      <td className="px-4 py-3 text-gray-400 dark:text-gray-500 font-mono text-xs">{ticket.id}</td>
+                    <tr key={ticket.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="px-4 py-3 text-slate-400 font-mono text-xs">{ticket.id}</td>
                       <td className="px-4 py-3">
-                        <p className="font-medium text-gray-900 dark:text-white max-w-[220px] truncate">{ticket.subject}</p>
-                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 max-w-[220px] truncate">{ticket.description}</p>
+                        <p className="font-medium text-slate-800 max-w-[220px] truncate">{ticket.subject}</p>
+                        <p className="text-xs text-slate-400 mt-0.5 max-w-[220px] truncate">{ticket.description}</p>
                       </td>
                       <td className="px-4 py-3">
-                        <p className="text-gray-900 dark:text-white font-medium text-xs">{ticket.vendor_name || "—"}</p>
-                        <p className="text-xs text-gray-400 dark:text-gray-500">{ticket.vendor_email || ""}</p>
+                        <p className="text-slate-800 font-medium text-xs">{ticket.vendor_name || "—"}</p>
+                        <p className="text-xs text-slate-400">{ticket.vendor_email || ""}</p>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="text-xs text-gray-600 dark:text-gray-400">{CATEGORY_LABEL[ticket.category] || ticket.category}</span>
+                        <span className="text-xs text-slate-600">{CATEGORY_LABEL[ticket.category] || ticket.category}</span>
                       </td>
                       <td className="px-4 py-3">
                         <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${PRIORITY_BADGE[ticket.priority] || ""}`}>
@@ -407,21 +407,21 @@ export default function TicketsPage() {
                           {ticket.status.replace("_", " ")}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                      <td className="px-4 py-3 text-xs text-slate-500 whitespace-nowrap">
                         {ticket.created_at ? new Date(ticket.created_at).toLocaleDateString() : "—"}
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center justify-end gap-1">
                           <button
                             onClick={() => setSelectedTicket(ticket)}
-                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-medium text-white bg-gray-800 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
+                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors"
                           >
                             <Reply className="w-3 h-3" />
                             {ticket.admin_response ? "Update" : "Reply"}
                           </button>
                           <button
                             onClick={() => setSelectedTicket(ticket)}
-                            className="p-1.5 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                            className="db-icon-btn"
                           >
                             <Eye className="w-3.5 h-3.5" />
                           </button>
@@ -437,24 +437,24 @@ export default function TicketsPage() {
           {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex items-center justify-between mt-4">
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-slate-500">
                 {totalCount} ticket{totalCount !== 1 ? "s" : ""}
               </p>
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="px-3 py-1.5 text-sm rounded-md border border-gray-300 dark:border-gray-700 disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  className="px-3 py-1.5 text-sm rounded-md border border-gray-300 disabled:opacity-40 hover:bg-slate-100 transition-colors"
                 >
                   Prev
                 </button>
-                <span className="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-400">
+                <span className="px-3 py-1.5 text-sm text-slate-600">
                   {page} / {totalPages}
                 </span>
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="px-3 py-1.5 text-sm rounded-md border border-gray-300 dark:border-gray-700 disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  className="px-3 py-1.5 text-sm rounded-md border border-gray-300 disabled:opacity-40 hover:bg-slate-100 transition-colors"
                 >
                   Next
                 </button>
@@ -466,3 +466,4 @@ export default function TicketsPage() {
     </Container>
   );
 }
+
