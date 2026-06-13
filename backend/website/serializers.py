@@ -149,16 +149,25 @@ class SocialMediaLinkSerializer(serializers.ModelSerializer):
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
     typed_value = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField()
     
     class Meta:
         model = SiteSettings
         fields = [
             'id', 'key', 'value', 'typed_value', 'setting_type', 
-            'description', 'group', 'is_active'
+            'description', 'group', 'is_active', 'image', 'image_url'
         ]
     
     def get_typed_value(self, obj):
         return obj.get_typed_value()
+        
+    def get_image_url(self, obj):
+        if obj.image:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.image.url)
+            return obj.image.url
+        return None
 
 # Grouped serializers for frontend
 class WebsiteDataSerializer(serializers.Serializer):

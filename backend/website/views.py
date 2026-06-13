@@ -179,6 +179,11 @@ class SiteSettingsViewSet(BaseWebsiteViewSet):
         if not (self.request.user and self.request.user.is_authenticated and
                 (self.request.user.is_staff or getattr(self.request.user, 'user_type', '') == 'ADMIN')):
             qs = qs.filter(is_active=True)
+            
+        group = self.request.query_params.get('group')
+        if group:
+            qs = qs.filter(group=group)
+            
         return qs
 
 class AboutPageContentViewSet(viewsets.ModelViewSet):
@@ -435,11 +440,28 @@ def site_config(request):
         if cached:
             return Response(cached)
 
-        # ── Site settings → dict ─────────────────────────────────────────
+        # ── Site Settings ──────────────────────────────────────────────────
         settings_qs = SiteSettings.objects.filter(is_active=True)
-        settings_map = {s.key: s.get_typed_value() for s in settings_qs}
-
-        # ── Navbar links ────────────────────────────────────────────────
+        settings_map = {}
+        payment_methods_custom = []
+        for s in settings_qs:
+            if s.group == 'footer_payment_methods':
+                if s.image:
+                    payment_methods_custom.append({
+                        'title': s.key,
+                        'image_url': request.build_absolute_uri(s.image.url)
+                    })
+                elif s.value:
+                    payment_methods_custom.append({
+                        'title': s.key,
+                        'image_url': s.value
+                    })
+            elif s.image:
+                settings_map[s.key] = request.build_absolute_uri(s.image.url)
+            else:
+                settings_map[s.key] = s.get_typed_value()
+                
+        # ── Navigation (Navbar) ──────────────────────────────────────────
         navbar_qs = NavbarSettings.objects.filter(is_active=True, parent__isnull=True).order_by('order', 'name')
         nav_links = [
             {'label': n.name, 'href': n.url or '#'}
@@ -479,6 +501,13 @@ def site_config(request):
             'contact_phone':   settings_map.get('contact_phone', ''),
             'contact_address': settings_map.get('contact_address', ''),
 
+            # Extra Footer Details
+            'developed_by_name': settings_map.get('developed_by_name', ''),
+            'developed_by_url':  settings_map.get('developed_by_url', ''),
+            'we_accept_text':    settings_map.get('we_accept_text', ''),
+            'quick_links_text':  settings_map.get('quick_links_text', ''),
+            'payment_methods':   payment_methods_custom,
+
             # Navigation
             'nav_links': nav_links,
 
@@ -496,7 +525,6 @@ def site_config(request):
 
             # Kept for backward compat (Footer component uses these)
             'store_locations': [],
-            'payment_methods': [],
         }
 
         cache.set(cache_key, data, CACHE_TIMEOUT)

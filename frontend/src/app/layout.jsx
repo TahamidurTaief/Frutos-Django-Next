@@ -32,13 +32,22 @@ const manrope = Manrope({
   display:  'swap',
 })
 
-export const metadata = {
-  title:       'El Árbol',
-  description: 'Artisan produce, delivered with care.',
-  icons: {
-    icon:  '/favicon_orrange.jpeg',
-    apple: '/favicon_orrange.jpeg',
-  },
+export async function generateMetadata() {
+  const siteConfig = await getSiteConfig();
+  return {
+    title: siteConfig?.meta_title || 'El Árbol',
+    description: siteConfig?.meta_description || 'Artisan produce, delivered with care.',
+    keywords: siteConfig?.meta_keywords || 'El Árbol, artisan, produce',
+    openGraph: {
+      title: siteConfig?.og_title || siteConfig?.meta_title || 'El Árbol',
+      description: siteConfig?.og_description || siteConfig?.meta_description || 'Artisan produce, delivered with care.',
+      images: siteConfig?.og_image_url ? [{ url: siteConfig.og_image_url }] : [],
+    },
+    icons: {
+      icon:  siteConfig?.favicon_url || '/favicon_orrange.jpeg',
+      apple: siteConfig?.favicon_url || '/favicon_orrange.jpeg',
+    },
+  };
 }
 
 export default async function RootLayout({ children }) {

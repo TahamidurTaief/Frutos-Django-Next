@@ -113,6 +113,10 @@ export default function Footer({ config }) {
     social_links     = [],
     payment_methods  = [],
     footer_sections  = [],
+    developed_by_name = 'Intelligent Systems and Solutions Limited',
+    developed_by_url = 'https://www.intelligentsystemsltd.com/',
+    we_accept_text   = 'Visa, Mastercard, Amex',
+    quick_links_text = '',
   } = config
 
   const currentYear  = new Date().getFullYear()
@@ -122,12 +126,17 @@ export default function Footer({ config }) {
   const activeContactPhone = contact_phone || '+880 1712-345678';
   const activeContactAddress = contact_address || 'House 12, Road 5, Dhanmondi, Dhaka, Bangladesh';
 
-  const activeNavLinks = nav_links && nav_links.length > 0 ? nav_links : [
+  const parsedQuickLinks = (quick_links_text || '').split(',').map(l => {
+    const [label, href] = l.split(':').map(s => s?.trim());
+    return { label, href: href || '#' };
+  }).filter(l => l.label);
+
+  const activeNavLinks = parsedQuickLinks.length > 0 ? parsedQuickLinks : (nav_links && nav_links.length > 0 ? nav_links : [
     { label: 'Shop All', href: '/shop' },
     { label: 'Our Stores', href: '/stores' },
     { label: 'About Us', href: '/about' },
     { label: 'Wholesale', href: '/wholesale' }
-  ];
+  ]);
 
   const activeStoreLocations = store_locations && store_locations.length > 0 ? store_locations : [
     { name: 'FreshDrop (Dhanmondi)', slug: 'dhaka-dhanmondi' }
@@ -268,11 +277,11 @@ export default function Footer({ config }) {
                 <p className="text-[10px] font-semibold tracking-wider text-gray-500 uppercase mb-2">We Accept</p>
                 <div className="flex flex-wrap gap-2">
                   {activePaymentMethods.map((pm, i) => (
-                    <div key={i} title={pm.title} className="bg-white/5 border border-white/10 rounded px-1.5 py-1 flex items-center justify-center h-6">
+                    <div key={i} title={pm.title || 'Payment Method'} className="bg-white/5 border border-white/10 rounded px-2 py-1.5 flex items-center justify-center h-8">
                       {pm.image_url ? (
-                        <img src={pm.image_url} alt={pm.title} className="max-h-3 object-contain" />
+                        <img src={pm.image_url} alt={pm.title || 'Payment Method'} className="max-h-5 object-contain" />
                       ) : (
-                        <span className="text-[9px] text-gray-400 font-medium uppercase">{pm.title}</span>
+                        <span className="text-[10px] text-gray-400 font-medium uppercase">{pm.title}</span>
                       )}
                     </div>
                   ))}
@@ -289,7 +298,7 @@ export default function Footer({ config }) {
             {copyrightText}
           </p>
           <p className="text-[11px] text-gray-500 order-3 md:order-2 text-center">
-            Developed by <a href="https://www.intelligentsystemsltd.com/" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors duration-200">Intelligent Systems and Solutions Limited</a>
+            Developed by <a href={developed_by_url} target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors duration-200">{developed_by_name}</a>
           </p>
           <div className="flex gap-4 order-1 md:order-3">
             {['Privacy Policy', 'Terms of Service', 'Cookies'].map((item) => (

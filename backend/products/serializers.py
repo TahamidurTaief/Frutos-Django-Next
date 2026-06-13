@@ -163,7 +163,8 @@ class ProductSerializer(serializers.ModelSerializer):
             'weight', 'length', 'width', 'height',  # Added physical properties for shipping
             'thumbnail_url', 'specifications', 'additional_images',
             'origin', 'unit', 'wholesale_unit', 'badge', 'badge_color',
-            'colors', 'sizes', 'reviews', 'rating', 'review_count', 'user_can_review'
+            'colors', 'sizes', 'reviews', 'rating', 'review_count', 'user_can_review',
+            'created_at', 'updated_at'
         ]
         
     def get_thumbnail_url(self, obj):
@@ -213,12 +214,15 @@ class ProductSerializer(serializers.ModelSerializer):
         user_context = {
             'is_wholesaler': False,
             'is_approved_wholesaler': False,
-            'wholesaler_status': None
+            'wholesaler_status': None,
+            'is_admin': False
         }
         
         # Check if user is authenticated and get wholesaler info
         if (request and hasattr(request, 'user') and request.user and request.user.is_authenticated):
-            if request.user.user_type == 'WHOLESALER':
+            if request.user.is_staff or getattr(request.user, 'user_type', '') == 'ADMIN':
+                user_context['is_admin'] = True
+            elif request.user.user_type == 'WHOLESALER':
                 user_context['is_wholesaler'] = True
                 # Check wholesaler approval status
                 try:
@@ -235,7 +239,10 @@ class ProductSerializer(serializers.ModelSerializer):
         data['_user_context'] = user_context
         
         # Handle pricing data based on user type and approval status
-        if user_context['is_approved_wholesaler']:
+        if user_context['is_admin']:
+            # Admins see everything, do nothing
+            pass
+        elif user_context['is_approved_wholesaler']:
             # For approved wholesalers: only include wholesale_price if it exists and >= 1
             wholesale_price = instance.wholesale_price
             if not wholesale_price or wholesale_price < 1:

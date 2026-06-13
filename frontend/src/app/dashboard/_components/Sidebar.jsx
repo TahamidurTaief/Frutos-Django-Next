@@ -29,6 +29,8 @@ import {
   Star,
   Info,
   Bell,
+  Home,
+  FileText,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -75,11 +77,10 @@ const navGroups = [
   {
     label: "Content",
     items: [
-      { name: "Website", href: "/dashboard/website", icon: Globe },
-      { name: "Home Page", href: "/dashboard/home", icon: Info },
-      { name: "About Page", href: "/dashboard/about", icon: Info },
-      { name: "Wholesale Page", href: "/dashboard/wholesale", icon: Info },
-      { name: "Sections", href: "/dashboard/sections", icon: Layers },
+      { name: "Site config", href: "/dashboard/website", icon: Globe },
+      { name: "Home Page", href: "/dashboard/home", icon: Home },
+      { name: "About Page", href: "/dashboard/about", icon: FileText },
+      { name: "Wholesale Page", href: "/dashboard/wholesale", icon: Building2 },
     ],
   },
   {

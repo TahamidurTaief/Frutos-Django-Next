@@ -160,6 +160,10 @@ export async function adminFetch(path, options = {}) {
 
     // Headers
     const headers = {...(fetchOpts.headers || {}) };
+    
+    // Disable caching for dashboard API requests
+    fetchOpts.cache = "no-store";
+
     const token = getAccessToken();
     if (token) headers["Authorization"] = `Bearer ${token}`;
 
