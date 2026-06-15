@@ -11,12 +11,17 @@ import { getProducts, getCategories, getOffers } from '@/lib/api_product'
 import { getHomepageData }            from '@/lib/api_homepage'
 import { normalizeFeatureCards, normalizeSteps } from '@/app/config/homepageIcons'
 
+import { auth } from '@/auth'
+
 export const dynamic = 'force-dynamic'
 
 export default async function HomePage() {
+  const session = await auth()
+  const token = session?.user?.accessToken
+
   // Fetch all data in parallel
   const [products, categories, homepageData, offers] = await Promise.all([
-    getProducts(),
+    getProducts({ token }),
     getCategories(),
     getHomepageData(),
     getOffers().catch(() => []), // fallback in case API isn't ready

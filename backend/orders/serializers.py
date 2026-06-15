@@ -372,6 +372,7 @@ class OrderReadSerializer(serializers.ModelSerializer):
     updates                = OrderUpdateSerializer(many=True, read_only=True)
     status_display         = serializers.CharField(source='get_status_display',         read_only=True)
     payment_status_display = serializers.CharField(source='get_payment_status_display', read_only=True)
+    is_wholesale_order     = serializers.SerializerMethodField()
 
     # Writable fields for PATCH (admin status update)
     status         = serializers.CharField(required=False)
@@ -386,9 +387,12 @@ class OrderReadSerializer(serializers.ModelSerializer):
             'customer_name', 'customer_email', 'customer_phone',
             'street_address', 'city', 'postcode',
             'payment_method', 'delivery_date', 'delivery_slot_label',
-            'tracking_number',
+            'tracking_number', 'is_wholesale_order',
             'ordered_at', 'items', 'payment', 'updates',
         ]
+
+    def get_is_wholesale_order(self, obj):
+        return bool(obj.wholesale_user_id)
 
 
 # ══════════════════════════════════════════════════════════════════
@@ -653,11 +657,15 @@ class OrderSerializer(serializers.ModelSerializer):
     payment         = OrderPaymentSerializer(read_only=True)
     shipping_method = ShippingMethodSerializer(read_only=True)
     shipping_address = AddressSerializer(read_only=True)
+    is_wholesale_order = serializers.SerializerMethodField()
 
     class Meta:
         model  = Order
         fields = [
             'id', 'order_number', 'total_amount', 'status', 'payment_status',
             'shipping_address', 'shipping_method', 'tracking_number',
-            'ordered_at', 'items', 'updates', 'payment',
+            'ordered_at', 'items', 'updates', 'payment', 'is_wholesale_order'
         ]
+
+    def get_is_wholesale_order(self, obj):
+        return bool(obj.wholesale_user_id)

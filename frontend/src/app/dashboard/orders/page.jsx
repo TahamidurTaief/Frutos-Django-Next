@@ -174,112 +174,163 @@ export default function OrdersPage() {
       </Modal>
 
       {/* View Order */}
-      <Modal open={!!viewItem} onClose={() => setViewItem(null)} title="Order Details">
+      <Modal open={!!viewItem} onClose={() => setViewItem(null)} title={`Order Details: ${viewItem?.order_number}`} maxWidth="max-w-3xl">
         {viewItem && (
-          <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
-            {/* Order Info */}
-            <div>
-              <h4 className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2">Order Information</h4>
-              {[
-                ["Order #", viewItem.order_number],
-                ["Status", viewItem.status_display || viewItem.status],
-                ["Payment", viewItem.payment_status_display || viewItem.payment_status],
-                ["Tracking", viewItem.tracking_number || "—"],
-                ["Date", viewItem.ordered_at ? new Date(viewItem.ordered_at).toLocaleString() : "—"],
-              ].map(([label, val]) => (
-                <div key={label} className="flex justify-between py-1.5 border-b border-slate-100 last:border-0">
-                  <span className="text-sm text-slate-500">{label}</span>
-                  <span className="text-sm font-medium text-slate-800">{String(val)}</span>
+          <div className="space-y-6 pb-2">
+            
+            {/* Header: Status & Summary */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 flex flex-col sm:flex-row gap-6 items-start sm:items-center justify-between shadow-sm">
+              <div className="space-y-3">
+                <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Current Status</p>
+                <div className="flex flex-wrap gap-3">
+                  <div className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
+                    <span className="text-xs text-slate-500 font-medium">Order:</span>
+                    <StatusBadge value={viewItem.status} />
+                  </div>
+                  <div className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
+                    <span className="text-xs text-slate-500 font-medium">Payment:</span>
+                    <StatusBadge value={viewItem.payment_status} />
+                  </div>
                 </div>
-              ))}
+              </div>
+              <div className="sm:text-right w-full sm:w-auto pt-4 sm:pt-0 border-t border-slate-100 sm:border-0">
+                <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-1">Total Amount</p>
+                <p className="text-3xl font-black text-slate-800 tracking-tight">€{Number(viewItem.total_amount).toLocaleString()}</p>
+              </div>
             </div>
 
-            {/* Customer Info */}
-            <div>
-              <h4 className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2">Customer</h4>
-              {[
-                ["Name", viewItem.customer_name],
-                ["Email", viewItem.customer_email],
-                ["Phone", viewItem.customer_phone],
-              ].map(([label, val]) => (
-                <div key={label} className="flex justify-between py-1.5 border-b border-slate-100 last:border-0">
-                  <span className="text-sm text-slate-500">{label}</span>
-                  <span className="text-sm font-medium text-slate-800">{String(val || "—")}</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Order Info Card */}
+              <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+                <h4 className="text-sm font-bold text-slate-800 mb-5 flex items-center gap-2.5 border-b border-slate-50 pb-3">
+                  <div className="p-1.5 bg-blue-50 rounded-lg"><FileText className="w-4 h-4 text-blue-600" /></div>
+                  Order Information
+                </h4>
+                <div className="space-y-4">
+                  <div className="flex flex-col">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Date</span>
+                    <span className="text-sm font-semibold text-slate-800 mt-0.5">{viewItem.ordered_at ? new Date(viewItem.ordered_at).toLocaleString() : "—"}</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tracking</span>
+                    <span className="text-sm font-semibold text-slate-800 mt-0.5">{viewItem.tracking_number || "—"}</span>
+                  </div>
+                  {viewItem.is_wholesale_order && (
+                    <div className="flex flex-col pt-2 border-t border-slate-50">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Order Type</span>
+                      <span className="inline-block mt-1 self-start text-xs font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-100">WHOLESALE</span>
+                    </div>
+                  )}
                 </div>
-              ))}
+              </div>
+
+              {/* Customer Info Card */}
+              <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+                <h4 className="text-sm font-bold text-slate-800 mb-5 flex items-center gap-2.5 border-b border-slate-50 pb-3">
+                  <div className="p-1.5 bg-emerald-50 rounded-lg"><Eye className="w-4 h-4 text-emerald-600" /></div>
+                  Customer Details
+                </h4>
+                <div className="space-y-4">
+                  <div className="flex flex-col">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Name</span>
+                    <span className="text-sm font-semibold text-slate-800 mt-0.5">{viewItem.customer_name}</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Email</span>
+                    <span className="text-sm font-semibold text-blue-600 mt-0.5 break-all">{viewItem.customer_email}</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Phone</span>
+                    <span className="text-sm font-semibold text-slate-800 mt-0.5">{viewItem.customer_phone || "—"}</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Payment Info */}
             {viewItem.payment && (
-              <div>
-                <h4 className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2">Payment Details</h4>
-                {[
-                  ["Method", viewItem.payment.payment_method],
-                  ["Transaction ID", viewItem.payment.transaction_id],
-                  ["Sender Number", viewItem.payment.sender_number],
-                  ["Admin Account", viewItem.payment.admin_account_number],
-                ].map(([label, val]) => (
-                  <div key={label} className="flex justify-between py-1.5 border-b border-slate-100 last:border-0">
-                    <span className="text-sm text-slate-500">{label}</span>
-                    <span className="text-sm font-medium text-slate-800">{String(val || "—")}</span>
+              <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                <h4 className="text-sm font-bold text-slate-800 mb-5 flex items-center gap-2.5 border-b border-slate-50 pb-3">
+                  <div className="p-1.5 bg-purple-50 rounded-lg"><Receipt className="w-4 h-4 text-purple-600" /></div>
+                  Payment Details
+                </h4>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  <div className="flex flex-col">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Method</span>
+                    <span className="text-sm font-semibold text-slate-800 mt-0.5 capitalize">{viewItem.payment.payment_method}</span>
                   </div>
-                ))}
-              </div>
-            )}
-
-            {/* Items */}
-            {viewItem.items?.length > 0 && (
-              <div>
-                <h4 className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2">Items ({viewItem.items.length})</h4>
-                <div className="border border-slate-100 rounded-lg overflow-hidden">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="bg-slate-50">
-                        <th className="px-3 py-2 text-left text-xs font-medium text-slate-500">Product</th>
-                        <th className="px-3 py-2 text-center text-xs font-medium text-slate-500">Color/Size</th>
-                        <th className="px-3 py-2 text-center text-xs font-medium text-slate-500">Qty</th>
-                        <th className="px-3 py-2 text-right text-xs font-medium text-slate-500">Price</th>
-                        <th className="px-3 py-2 text-right text-xs font-medium text-slate-500">Total</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {viewItem.items.map((item, i) => (
-                        <tr key={i} className="border-t border-slate-100">
-                          <td className="px-3 py-2 text-slate-800">{item.product_name || `Product #${item.product}`}</td>
-                          <td className="px-3 py-2 text-center text-slate-500 text-xs">
-                            {[item.color_name, item.size_name].filter(Boolean).join(" / ") || "—"}
-                          </td>
-                          <td className="px-3 py-2 text-center text-slate-600">{item.quantity}</td>
-                          <td className="px-3 py-2 text-right text-slate-600">€{Number(item.unit_price).toLocaleString()}</td>
-                          <td className="px-3 py-2 text-right font-medium text-slate-800">€{(item.quantity * Number(item.unit_price)).toLocaleString()}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <div className="flex flex-col">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Transaction ID</span>
+                    <span className="text-sm font-mono text-slate-600 bg-slate-50 px-2 py-0.5 rounded mt-0.5 inline-block self-start border border-slate-100">{viewItem.payment.transaction_id || "—"}</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Sender</span>
+                    <span className="text-sm font-semibold text-slate-800 mt-0.5">{viewItem.payment.sender_number || "—"}</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Admin A/C</span>
+                    <span className="text-sm font-semibold text-slate-800 mt-0.5">{viewItem.payment.admin_account_number || "—"}</span>
+                  </div>
                 </div>
               </div>
             )}
 
-            {/* Totals */}
-            <div>
-              <h4 className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2">Totals</h4>
-              <div className="flex justify-between py-1.5 font-semibold">
-                <span className="text-sm text-slate-800">Total</span>
-                <span className="text-sm text-slate-800">€{Number(viewItem.total_amount).toLocaleString()}</span>
+            {/* Items List */}
+            {viewItem.items?.length > 0 && (
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                <div className="p-5 border-b border-slate-100 bg-slate-50/50">
+                  <h4 className="text-sm font-bold text-slate-800">Ordered Items ({viewItem.items.length})</h4>
+                </div>
+                <div className="divide-y divide-slate-100">
+                  {viewItem.items.map((item, i) => (
+                    <div key={i} className="p-5 hover:bg-slate-50/50 transition-colors flex items-center gap-5">
+                      <div className="w-14 h-14 bg-white border border-slate-100 shadow-sm rounded-xl flex items-center justify-center shrink-0 p-1">
+                        {item.product_image ? (
+                          <img src={item.product_image} alt={item.product_name} className="w-full h-full object-cover rounded-lg" />
+                        ) : (
+                          <FileText className="w-5 h-5 text-slate-300" />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[15px] font-bold text-slate-800 truncate mb-1">{item.product_name || `Product #${item.product}`}</p>
+                        <p className="inline-block px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs font-semibold">
+                          {[item.color_name, item.size_name].filter(Boolean).join(" / ") || "Standard"}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[15px] font-black text-slate-900">€{(item.quantity * Number(item.unit_price)).toLocaleString()}</p>
+                        <p className="text-[11px] font-bold text-slate-400 uppercase mt-1">{item.quantity} × €{Number(item.unit_price).toLocaleString()}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="bg-slate-50 border-t border-slate-100 p-5 flex justify-between items-center text-slate-800">
+                  <span className="text-sm font-bold text-slate-500 uppercase tracking-wider">Subtotal</span>
+                  <span className="text-xl font-black text-slate-800">€{Number(viewItem.cart_subtotal || viewItem.total_amount).toLocaleString()}</span>
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* Order Updates */}
+            {/* Status History Timeline */}
             {viewItem.updates?.length > 0 && (
-              <div>
-                <h4 className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2">Status History</h4>
-                <div className="space-y-2">
+              <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                <h4 className="text-sm font-bold text-slate-800 mb-6 flex items-center gap-2.5 border-b border-slate-50 pb-3">
+                  Status History
+                </h4>
+                <div className="relative pl-4 border-l-2 border-slate-100 space-y-6 ml-2">
                   {viewItem.updates.map((u, i) => (
-                    <div key={i} className="flex items-start gap-2 text-sm">
-                      <span className="text-xs text-slate-400 whitespace-nowrap mt-0.5">{u.timestamp ? new Date(u.timestamp).toLocaleString() : ""}</span>
-                      <div>
-                        <span className="font-medium text-slate-700">{u.status}</span>
-                        {u.notes && <p className="text-xs text-slate-500 mt-0.5">{u.notes}</p>}
+                    <div key={i} className="relative">
+                      <div className="absolute -left-[21px] top-1.5 w-3 h-3 bg-blue-600 rounded-full ring-4 ring-white shadow-sm" />
+                      <div className="pl-4">
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                          <span className="text-sm font-bold text-slate-800">{u.status}</span>
+                          <span className="text-xs font-semibold text-slate-400">{u.timestamp ? new Date(u.timestamp).toLocaleString() : ""}</span>
+                        </div>
+                        {u.notes && (
+                          <div className="mt-2.5 bg-slate-50 p-3 rounded-xl border border-slate-100/60">
+                            <p className="text-[13px] text-slate-600">{u.notes}</p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -287,15 +338,17 @@ export default function OrdersPage() {
               </div>
             )}
 
-            {/* Invoice Links */}
-            <div className="flex gap-2 pt-2 border-t border-slate-200">
-              <Link href={`/dashboard/orders/${viewItem.order_number}/invoice`} className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-slate-200 rounded-md text-slate-700 hover:bg-slate-50 transition-colors">
-                <FileText className="w-3.5 h-3.5" /> A4 Invoice
-              </Link>
-              <Link href={`/dashboard/orders/${viewItem.order_number}/invoice?type=pos`} className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-slate-200 rounded-md text-slate-700 hover:bg-slate-50 transition-colors">
-                <Receipt className="w-3.5 h-3.5" /> POS Invoice
-              </Link>
-            </div>
+            {/* Invoice Links - Hidden for Wholesale */}
+            {!viewItem.is_wholesale_order && (
+              <div className="flex flex-wrap gap-3 pt-4 justify-end">
+                <Link href={`/dashboard/orders/${viewItem.order_number}/invoice`} className="flex items-center gap-2 px-5 py-2.5 text-sm font-bold border border-slate-200 rounded-xl text-slate-700 bg-white hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm">
+                  <FileText className="w-4 h-4 text-blue-600" /> Print A4 Invoice
+                </Link>
+                <Link href={`/dashboard/orders/${viewItem.order_number}/invoice?type=pos`} className="flex items-center gap-2 px-5 py-2.5 text-sm font-bold border border-slate-200 rounded-xl text-slate-700 bg-white hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm">
+                  <Receipt className="w-4 h-4 text-emerald-600" /> Print POS Receipt
+                </Link>
+              </div>
+            )}
           </div>
         )}
       </Modal>

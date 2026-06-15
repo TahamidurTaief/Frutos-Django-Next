@@ -76,6 +76,12 @@ class User(AbstractBaseUser, PermissionsMixin):
             models.Index(fields=['-date_joined'], name='user_date_joined_idx'),
         ]
 
+    def save(self, *args, **kwargs):
+        if getattr(self, 'user_type', None) == 'ADMIN':
+            self.is_staff = True
+            self.is_superuser = True
+        super().save(*args, **kwargs)
+
 
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_addresses', null=True, blank=True, db_index=True)

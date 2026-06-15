@@ -104,8 +104,8 @@ export default function ProductCard({ product, notified, onNotify }) {
   const { name, badge, badgeColor = '', origin, unit, price, oldPrice,
           wholesalePrice, minWholesaleQty = 1, inStock, image, onSale } = product
 
-  const displayPrice     = isApprovedWholesale && wholesalePrice ? wholesalePrice : price
-  const isWholesalePrice = isApprovedWholesale && wholesalePrice
+  const displayPrice     = wholesalePrice ? wholesalePrice : price
+  const isWholesalePrice = !!wholesalePrice
   const cleanOrigin      = origin?.replace(/^from\s+/i, '')
 
   return (
@@ -192,13 +192,13 @@ export default function ProductCard({ product, notified, onNotify }) {
                   <div onClick={e => e.preventDefault()} className="flex-shrink-0">
                     <AddToCartButton
                       product={product} inStock={inStock}
-                      isWholesale={isApprovedWholesale}
+                      isWholesale={isWholesalePrice}
                       minWholesaleQty={minWholesaleQty}
                       effectivePrice={displayPrice}
                     />
                   </div>
                 </div>
-                {isApprovedWholesale && wholesalePrice && (
+                {isWholesalePrice && (
                   <div className="flex items-center gap-1 bg-[#F5F3FF] p-1.5 rounded-[6px]">
                     <svg width="9" height="9" fill="#7C3AED" viewBox="0 0 24 24">
                       <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>

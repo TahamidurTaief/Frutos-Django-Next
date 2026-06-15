@@ -651,11 +651,10 @@ export default function OrderSummary({
         <div className="fixed inset-0 z-40" style={{ background: 'rgba(0,0,0,0.35)' }} onClick={() => setPopup(false)} />
       )}
       <div
-        className="fixed left-0 right-0 bottom-0 z-50 transition-transform duration-300 ease-out"
-        style={{ transform: popup ? 'translateY(0)' : 'translateY(110%)' }}
+        className="fixed left-0 right-0 top-0 z-50 transition-transform duration-300 ease-out"
+        style={{ transform: popup ? 'translateY(0)' : 'translateY(-110%)' }}
       >
-        <div className="mx-auto max-w-lg rounded-t-3xl px-6 pt-6 pb-10" style={{ background: '#ffffff', boxShadow: '0 -8px 40px rgba(0,0,0,0.15)' }}>
-          <div className="w-10 h-1 rounded-full mx-auto mb-5" style={{ background: '#dde8dd' }} />
+        <div className="mx-auto max-w-lg rounded-b-3xl px-6 pt-10 pb-6" style={{ background: '#ffffff', boxShadow: '0 8px 40px rgba(0,0,0,0.15)' }}>
           <div className="flex items-start gap-4 mb-5">
             <div className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ background: '#FFF3CD' }}>
               <span className="material-symbols-outlined" style={{ color: '#B45309', fontSize: '22px', fontVariationSettings: "'FILL' 1" }}>warning</span>
@@ -680,9 +679,10 @@ export default function OrderSummary({
               </div>
             ))}
           </div>
-          <button onClick={() => setPopup(false)} className="w-full py-4 rounded-xl text-sm font-bold cursor-pointer text-white" style={{ background: 'linear-gradient(135deg, #00694c 0%, #008560 100%)' }}>
+          <button onClick={() => setPopup(false)} className="w-full py-4 rounded-xl text-sm font-bold cursor-pointer text-white mb-2" style={{ background: 'linear-gradient(135deg, #00694c 0%, #008560 100%)' }}>
             Update My Cart
           </button>
+          <div className="w-10 h-1 rounded-full mx-auto mt-4" style={{ background: '#dde8dd' }} />
         </div>
       </div>
     </>

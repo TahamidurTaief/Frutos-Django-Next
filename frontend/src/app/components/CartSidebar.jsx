@@ -208,11 +208,12 @@
 
 'use client'
 
-import { useEffect, useRef, useState } from 'react'  // ← useState যোগ করো
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCart } from '@/app/context/CartContext'
+import toast from 'react-hot-toast'
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api'
 
@@ -232,6 +233,7 @@ export default function CartSidebar() {
 
   // ── Delivery config ───────────────────────────────────────────────────────
   const [deliveryConfig, setDeliveryConfig] = useState(null)
+  const [popup, setPopup] = useState(false)
 
   useEffect(() => {
     fetch(`${API_BASE}/delivery-charge/`, { cache: 'no-store' })
@@ -249,7 +251,13 @@ export default function CartSidebar() {
     return () => { document.body.style.overflow = '' }
   }, [sidebarOpen])
 
+  const violatingItems = items.filter(item => item.wholesalePrice && item.qty < (item.minWholesaleQty || 1))
+
   function handleCheckout() {
+    if (violatingItems.length > 0) {
+      setPopup(true)
+      return
+    }
     setSidebarOpen(false)
     router.push('/basket')
   }
@@ -414,6 +422,46 @@ export default function CartSidebar() {
           </div>
         )}
       </aside>
+
+      {/* ── Wholesale popup ────────────────────────────────────────────────── */}
+      {popup && (
+        <div className="fixed inset-0 z-[60]" style={{ background: 'rgba(0,0,0,0.35)' }} onClick={() => setPopup(false)} />
+      )}
+      <div
+        className="fixed left-0 right-0 top-0 z-[70] transition-transform duration-300 ease-out"
+        style={{ transform: popup ? 'translateY(0)' : 'translateY(-110%)' }}
+      >
+        <div className="mx-auto max-w-lg rounded-b-3xl px-6 pt-10 pb-6" style={{ background: '#ffffff', boxShadow: '0 8px 40px rgba(0,0,0,0.15)' }}>
+          <div className="flex items-start gap-4 mb-5">
+            <div className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ background: '#FFF3CD' }}>
+              <span className="material-symbols-outlined" style={{ color: '#B45309', fontSize: '22px', fontVariationSettings: "'FILL' 1" }}>warning</span>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold" style={{ color: '#151e13' }}>Minimum Quantity Required</h3>
+              <p className="text-sm mt-1" style={{ color: '#6d7a73' }}>Update the quantities below to continue.</p>
+            </div>
+          </div>
+          <div className="space-y-3 mb-6">
+            {violatingItems.map(item => (
+              <div key={item.id} className="flex items-center justify-between rounded-xl px-4 py-3" style={{ background: '#FFF8EE', border: '1px solid #FFE4B2' }}>
+                <div>
+                  <p className="text-sm font-bold" style={{ color: '#151e13' }}>{item.name}</p>
+                  <p className="text-xs mt-0.5" style={{ color: '#B45309' }}>
+                    You have {item.qty} — minimum is <span className="font-bold">{item.minWholesaleQty}</span>
+                  </p>
+                </div>
+                <span className="text-xs font-bold px-3 py-1 rounded-full flex-shrink-0" style={{ background: '#FFE4B2', color: '#92400E' }}>
+                  +{item.minWholesaleQty - item.qty} needed
+                </span>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => setPopup(false)} className="w-full py-4 rounded-xl text-sm font-bold cursor-pointer text-white mb-2" style={{ background: 'linear-gradient(135deg, #00694c 0%, #008560 100%)' }}>
+            Got it
+          </button>
+          <div className="w-10 h-1 rounded-full mx-auto mt-4" style={{ background: '#dde8dd' }} />
+        </div>
+      </div>
     </>
   )
 }

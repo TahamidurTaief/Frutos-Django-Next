@@ -232,7 +232,7 @@ function normalizeProduct(p) {
 
 // ─── Products ─────────────────────────────────────────────────────────────────
 
-export async function getProducts({ category, search, inStock } = {}) {
+export async function getProducts({ category, search, inStock, token } = {}) {
     const params = new URLSearchParams()
     if (category && category !== 'All') params.set('category', category)
     if (search) params.set('search', search)
@@ -241,8 +241,23 @@ export async function getProducts({ category, search, inStock } = {}) {
     const query = params.toString() ? `?${params.toString()}` : ''
     const path = `${PRODUCT_ENDPOINT}/${query}`.replace(/([^:]\/)\/+/g, "$1") // Remove double slashes except after protocol
 
-    const data = await apiFetch(path, { next: { tags: ['products'] } })
-    return toArray(data).map(normalizeProduct)
+    const options = { next: { tags: ['products'] } }
+    if (token) {
+        options.headers = { 'Authorization': `Bearer ${token}` }
+    }
+
+    try {
+        const data = await apiFetch(path, options)
+        return toArray(data).map(normalizeProduct)
+    } catch (error) {
+        if (error.message && (error.message.includes('401') || error.message.includes('403')) && token) {
+            console.warn(`[getProducts] Got ${error.message} with token. Retrying without token...`)
+            delete options.headers
+            const data = await apiFetch(path, options)
+            return toArray(data).map(normalizeProduct)
+        }
+        throw error
+    }
 }
 
 export async function getProductById(id) {
@@ -263,10 +278,29 @@ export async function getProductBySlug(slug, options = {}) {
             'Authorization': `Bearer ${options.token}`
         }
     }
-    const data = await apiFetch(`${PRODUCT_ENDPOINT}/${slug}/`, fetchOptions)
-    return {
-        ...normalizeProduct(data),
-        related: toArray(data.related).map(normalizeProduct),
+    try {
+        const data = await apiFetch(`${PRODUCT_ENDPOINT}/${slug}/`, fetchOptions)
+        console.log(`[getProductBySlug] Fetched data for ${slug}:`, {
+            hasWholesalePrice: !!data.wholesale_price,
+            wholesalePriceVal: data.wholesale_price,
+            isApprovedWholesaler: data._user_context?.is_approved_wholesaler,
+            tokenPassed: !!options.token
+        })
+        return {
+            ...normalizeProduct(data),
+            related: toArray(data.related).map(normalizeProduct),
+        }
+    } catch (error) {
+        if (error.message && (error.message.includes('401') || error.message.includes('403')) && options.token) {
+            console.warn(`Got ${error.message} with token for product ${slug}. Retrying without token...`)
+            delete fetchOptions.headers
+            const data = await apiFetch(`${PRODUCT_ENDPOINT}/${slug}/`, fetchOptions)
+            return {
+                ...normalizeProduct(data),
+                related: toArray(data.related).map(normalizeProduct),
+            }
+        }
+        throw error
     }
 }
 

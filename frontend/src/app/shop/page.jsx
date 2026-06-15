@@ -3,6 +3,7 @@ import { getProducts, getCategories } from '@/lib/api_product'
 import ProductListingClient from './ProductListingClient'
 
 import { Suspense } from 'react'
+import { auth } from '@/auth'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0  // always fresh on every request
@@ -13,8 +14,11 @@ export const metadata = {
 }
 
 export default async function MarketPage() {
+  const session = await auth()
+  const token = session?.user?.accessToken
+
   const [products, categories] = await Promise.all([
-    getProducts(),
+    getProducts({ token }),
     getCategories(),
   ])
 

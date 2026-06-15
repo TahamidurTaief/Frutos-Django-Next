@@ -55,7 +55,7 @@ function RichContent({ html, className = '', style = {} }) {
 
 // ─── useUnitSelector hook ─────────────────────────────────────────────────────
 
-function useUnitSelector(product, isApprovedWholesale) {
+function useUnitSelector(product) {
   const unitOptions = product.unitOptions || []
   const hasUnits    = unitOptions.length > 0
 
@@ -81,13 +81,11 @@ function useUnitSelector(product, isApprovedWholesale) {
     ? Number(selectedUnit.price)
     : Number(product.price)
 
-  const wholesaleUnitPrice = isApprovedWholesale
-    ? selectedUnit?.wholesalePrice != null
-      ? Number(selectedUnit.wholesalePrice)
-      : product.wholesalePrice != null
-        ? Number(product.wholesalePrice)
-        : null
-    : null
+  const wholesaleUnitPrice = selectedUnit?.wholesalePrice != null
+    ? Number(selectedUnit.wholesalePrice)
+    : product.wholesalePrice != null
+      ? Number(product.wholesalePrice)
+      : null
 
   return {
     unitOptions,
@@ -395,12 +393,16 @@ export default function ProductDetailClient({ product: initialProduct, related }
   const [product, setProduct] = useState(initialProduct)
   const [localToken, setLocalToken] = useState(null)
   const cleanOrigin = product.origin?.replace(/^from\s+/i, '')
+  const [hasAttemptedRefetch, setHasAttemptedRefetch] = useState(false)
 
   useEffect(() => {
-    const token = getAccess()
+    const token = session?.user?.accessToken || getAccess()
     if (token) {
       setLocalToken(token)
-      if (!session) {
+      // Refetch if we have a token but the initial product didn't include wholesale pricing
+      // Prevent infinite loops by only attempting this once
+      if (!product.wholesalePrice && !hasAttemptedRefetch) {
+        setHasAttemptedRefetch(true)
         import('@/lib/api_product').then(({ getProductBySlug }) => {
            getProductBySlug(initialProduct.slug, { token }).then(fetched => {
              setProduct(fetched)
@@ -408,13 +410,13 @@ export default function ProductDetailClient({ product: initialProduct, related }
         })
       }
     }
-  }, [initialProduct.slug, session, getAccess])
+  }, [initialProduct.slug, session, getAccess, product.wholesalePrice, hasAttemptedRefetch])
 
   const {
     unitOptions, hasUnits,
     selectedUnitId, selectedUnit, handleUnitChange,
     retailPrice, wholesaleUnitPrice,
-  } = useUnitSelector(product, isApprovedWholesale)
+  } = useUnitSelector(product)
 
   const displayPrice      = wholesaleUnitPrice ?? retailPrice
   const isWholesalePrice  = !!wholesaleUnitPrice
@@ -432,7 +434,7 @@ export default function ProductDetailClient({ product: initialProduct, related }
     : null
 
   function handleAddToCart() {
-    if (isApprovedWholesale && product.wholesalePrice) {
+    if (product.wholesalePrice) {
       // const minQty = product.minWholesaleQty || 1
       // if (qty < minQty) {
       //   // alert(`Minimum ${minQty} ${product.wholesaleUnit || 'units'} required for wholesale pricing.`)

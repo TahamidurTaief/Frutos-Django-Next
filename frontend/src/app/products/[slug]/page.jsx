@@ -36,7 +36,8 @@ export default async function ProductPage({ params }) {
 
   try {
     product = await getProductBySlug(slug, { token })
-  } catch {
+  } catch (error) {
+    console.error(`Error fetching product ${slug}:`, error)
     notFound()
   }
 

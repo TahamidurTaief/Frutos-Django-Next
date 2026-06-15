@@ -173,9 +173,11 @@ async function fetchRegularUserData() {
 export default async function CheckoutPage() {
   const session = await auth()
 
+  const token = session?.user?.accessToken
+
   const [windowsResult, productsResult, regularData, deliveryResult] = await Promise.allSettled([
     getDeliveryWindows(),
-    getProducts(),
+    getProducts({ token }),
     session?.user ? Promise.resolve(null) : fetchRegularUserData(),
     getDeliveryOption(),
   ])

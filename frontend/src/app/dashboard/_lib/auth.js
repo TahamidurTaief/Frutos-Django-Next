@@ -28,10 +28,10 @@ export async function adminLogin(email, password) {
     vendorStatus: serverUser.vendor_status || null,
   };
 
-  // Verify admin/staff/vendor
-  if (!["ADMIN", "SELLER", "VENDOR"].includes(user.userType)) {
+  // Verify admin access (only ADMIN / superuser)
+  if (user.userType !== "ADMIN") {
     clearTokens();
-    throw new Error("You do not have admin access.");
+    throw new Error("You do not have admin access. Only superusers are allowed.");
   }
 
   setStoredUser(user);

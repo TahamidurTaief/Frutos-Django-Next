@@ -5,11 +5,11 @@ import { Printer, Download, ArrowLeft, Loader2, FileText, Receipt } from "lucide
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import useSWR from "swr";
-import { ordersService, siteSettingsService } from "@/app/dashboard/_lib/services";
+import { ordersService, siteSettingsService, productsService } from "@/app/dashboard/_lib/services";
 import api from "@/app/dashboard/_lib/api";
 
 /* ─── POS Receipt Layout (thermal 80mm) ─── */
-function POSInvoice({ order, items, subtotal, total, shipping, storeName, logoUrl }) {
+function POSInvoice({ order, items, subtotal, total, shipping, storeName, logoUrl, contactEmail, contactPhone, contactAddress }) {
   return (
     <div className="bg-white border border-slate-200 rounded-lg shadow-sm mx-auto print:shadow-none print:border-0" style={{ maxWidth: "80mm" }}>
       <div className="p-4 print:p-2 text-center" style={{ fontFamily: "monospace", fontSize: "12px" }}>
@@ -20,8 +20,9 @@ function POSInvoice({ order, items, subtotal, total, shipping, storeName, logoUr
           ) : (
             <p className="font-bold text-base text-slate-800">{storeName}</p>
           )}
-          <p className="text-[10px] text-slate-500">Dhaka, Bangladesh</p>
-          <p className="text-[10px] text-slate-500">support@icommerce.passmcq.com</p>
+          {contactAddress && <p className="text-[10px] text-slate-500">{contactAddress}</p>}
+          {contactEmail && <p className="text-[10px] text-slate-500">{contactEmail}</p>}
+          {contactPhone && <p className="text-[10px] text-slate-500">{contactPhone}</p>}
         </div>
 
         {/* Order Info */}
@@ -30,6 +31,11 @@ function POSInvoice({ order, items, subtotal, total, shipping, storeName, logoUr
           <p>Date: {order.ordered_at ? new Date(order.ordered_at).toLocaleString() : "—"}</p>
           <p>Customer: {order.customer_name}</p>
           {order.customer_phone && <p>Phone: {order.customer_phone}</p>}
+          {(order.street_address || order.city) && (
+            <p>
+              Address: {order.street_address}{order.city && `, ${order.city}`}{order.postcode && ` - ${order.postcode}`}
+            </p>
+          )}
         </div>
 
         {/* Divider */}
@@ -82,7 +88,7 @@ function POSInvoice({ order, items, subtotal, total, shipping, storeName, logoUr
         {/* Footer */}
         <div className="border-t border-dashed border-gray-300 mt-2 pt-2">
           <p className="text-[10px] text-slate-400">Thank you for shopping!</p>
-          <p className="text-[10px] text-slate-400">www.icommerce.passmcq.com</p>
+          <p className="text-[10px] text-slate-400">www.elarbol.com</p>
           {logoUrl && <p className="text-[10px] text-slate-400">{storeName}</p>}
         </div>
       </div>
@@ -91,7 +97,7 @@ function POSInvoice({ order, items, subtotal, total, shipping, storeName, logoUr
 }
 
 /* ─── A4 Full Invoice Layout ─── */
-function A4Invoice({ order, items, subtotal, total, shipping, storeName, logoUrl }) {
+function A4Invoice({ order, items, subtotal, total, shipping, storeName, logoUrl, contactEmail, contactPhone, contactAddress }) {
   return (
     <div className="bg-white border border-slate-200 rounded-lg shadow-sm max-w-3xl mx-auto print:shadow-none print:border-0 print:max-w-none">
       <div className="p-8 print:p-12" style={{ minHeight: "297mm", maxWidth: "210mm", margin: "0 auto" }}>
@@ -103,8 +109,9 @@ function A4Invoice({ order, items, subtotal, total, shipping, storeName, logoUrl
             ) : (
               <h1 className="text-2xl font-bold text-slate-800">{storeName}</h1>
             )}
-            <p className="text-sm text-slate-500 mt-1">Dhaka, Bangladesh</p>
-            <p className="text-sm text-slate-500">support@icommerce.passmcq.com</p>
+            {contactAddress && <p className="text-sm text-slate-500 mt-1">{contactAddress}</p>}
+            {contactEmail && <p className="text-sm text-slate-500">{contactEmail}</p>}
+            {contactPhone && <p className="text-sm text-slate-500">{contactPhone}</p>}
           </div>
           <div className="text-right">
             <h2 className="text-lg font-semibold text-slate-800">INVOICE</h2>
@@ -123,6 +130,13 @@ function A4Invoice({ order, items, subtotal, total, shipping, storeName, logoUrl
             <p className="text-sm font-medium text-slate-800">{order.customer_name}</p>
             <p className="text-sm text-slate-500">{order.customer_email}</p>
             {order.customer_phone && <p className="text-sm text-slate-500">{order.customer_phone}</p>}
+            {(order.street_address || order.city) && (
+              <p className="text-sm text-slate-500 mt-1">
+                {order.street_address}
+                <br />
+                {order.city} {order.postcode && `- ${order.postcode}`}
+              </p>
+            )}
           </div>
           {order.payment && (
             <div>
@@ -191,7 +205,163 @@ function A4Invoice({ order, items, subtotal, total, shipping, storeName, logoUrl
         {/* Footer */}
         <div className="mt-16 pt-6 border-t border-slate-200 text-center">
           <p className="text-xs text-slate-400">Thank you for your business.</p>
-          <p className="text-xs text-slate-400 mt-0.5">{storeName} &middot; support@icommerce.passmcq.com</p>
+          <p className="text-xs text-slate-400 mt-0.5">{storeName}{contactEmail && ` · ${contactEmail}`}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Wholesale Invoice Layout ─── */
+function WholesaleInvoice({ order, items, subtotal, total, shipping, storeName, logoUrl, contactEmail, contactPhone, contactAddress, allProducts = [] }) {
+  const productsByCategory = allProducts.reduce((acc, p) => {
+    const cat = p.category_name || (p.category && p.category.name) || "Uncategorized";
+    if (!acc[cat]) acc[cat] = [];
+    acc[cat].push(p);
+    return acc;
+  }, {});
+
+  const orderedItemsMap = items.reduce((acc, item) => {
+    acc[item.product] = item;
+    return acc;
+  }, {});
+
+  return (
+    <div className="bg-white border border-slate-200 rounded-lg shadow-sm max-w-4xl mx-auto print:shadow-none print:border-0 print:max-w-none">
+      <div className="p-8 print:p-12" style={{ minHeight: "297mm", margin: "0 auto" }}>
+        
+        {/* Header */}
+        <div className="flex justify-between items-start border-b-[4px] border-indigo-600 pb-6 mb-8">
+          <div>
+            {logoUrl ? (
+              <img src={logoUrl} alt={storeName} style={{ height: '48px', width: 'auto', maxWidth: '200px' }} className="mb-2 object-contain" />
+            ) : (
+              <h1 className="text-2xl font-black text-indigo-900 tracking-tight">{storeName}</h1>
+            )}
+            <p className="text-sm text-slate-600 font-medium mt-2">B2B Wholesale Division</p>
+            {contactAddress && <p className="text-xs text-slate-500 mt-1">{contactAddress}</p>}
+            {contactEmail && <p className="text-xs text-slate-500 mt-0.5">{contactEmail}</p>}
+            {contactPhone && <p className="text-xs text-slate-500 mt-0.5">{contactPhone}</p>}
+          </div>
+          <div className="text-right">
+            <h2 className="text-3xl font-black text-slate-200 tracking-wider">COMMERCIAL INVOICE</h2>
+            <div className="mt-4 flex flex-col items-end gap-1">
+              <span className="inline-block bg-indigo-50 text-indigo-700 font-bold px-3 py-1 rounded text-sm border border-indigo-100">
+                NO: {order.order_number}
+              </span>
+              <p className="text-sm font-medium text-slate-600 mt-2">
+                Date: {order.ordered_at ? new Date(order.ordered_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "—"}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Info Grid */}
+        <div className="grid grid-cols-2 gap-12 mb-10">
+          <div className="bg-slate-50 p-5 rounded-lg border border-slate-100">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 border-b border-slate-200 pb-2">Billed To</h3>
+            <p className="text-base font-bold text-slate-800">{order.customer_name}</p>
+            <p className="text-sm text-slate-600 mt-1">{order.customer_email}</p>
+            {order.customer_phone && <p className="text-sm text-slate-600">{order.customer_phone}</p>}
+            {(order.street_address || order.city) && (
+              <p className="text-sm text-slate-600 mt-2">
+                {order.street_address}
+                <br />
+                {order.city} {order.postcode && `, ${order.postcode}`}
+              </p>
+            )}
+          </div>
+          
+          <div className="bg-slate-50 p-5 rounded-lg border border-slate-100">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 border-b border-slate-200 pb-2">Order Summary</h3>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-slate-500">Status</span>
+                <span className="font-bold text-slate-700">{order.status_display || order.status}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-slate-500">Payment Status</span>
+                <span className="font-bold text-slate-700">{order.payment_status_display || order.payment_status}</span>
+              </div>
+              {order.payment && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-500">Payment Method</span>
+                  <span className="font-bold text-slate-700 capitalize">{order.payment.payment_method}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Items Grid */}
+        <div className="mb-8 space-y-6">
+          {Object.keys(productsByCategory).length > 0 ? (
+            Object.entries(productsByCategory).map(([category, prods]) => (
+              <div key={category}>
+                <h4 className="text-[11px] font-bold text-slate-800 uppercase bg-slate-100 px-3 py-1 border border-slate-300 border-b-0 inline-block tracking-wider">
+                  {category}
+                </h4>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 border-l border-t border-slate-300">
+                  {prods.map(p => {
+                    const ordered = orderedItemsMap[p.id];
+                    return (
+                      <div key={p.id} className="border-r border-b border-slate-300 p-1.5 flex justify-between items-center text-[10px] bg-white h-full">
+                        <div className="flex gap-1.5 items-center flex-1 min-w-0 pr-1">
+                          {ordered ? (
+                            <span className="font-bold text-black shrink-0">
+                              {ordered.quantity} {[ordered.color_name, ordered.size_name].filter(Boolean).join("/") || 'pcs'}
+                            </span>
+                          ) : null}
+                          <span className={`truncate uppercase ${ordered ? "font-bold text-black" : "text-slate-500"}`} title={p.name}>
+                            {p.name}
+                          </span>
+                        </div>
+                        {ordered ? (
+                          <span className="font-bold text-black shrink-0">
+                            €{(ordered.quantity * Number(ordered.unit_price)).toLocaleString()}
+                          </span>
+                        ) : null}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="p-8 text-center text-slate-400 border border-slate-200 rounded-lg">Loading products grid...</div>
+          )}
+        </div>
+
+        {/* Totals Section */}
+        <div className="flex justify-end mb-16">
+          <div className="w-80 bg-slate-50 p-6 rounded-lg border border-slate-200">
+            <div className="space-y-3">
+              <div className="flex justify-between text-sm">
+                <span className="text-slate-500 font-medium">Subtotal</span>
+                <span className="text-slate-800 font-bold">€{subtotal.toLocaleString()}</span>
+              </div>
+              {shipping > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-500 font-medium">Shipping & Handling</span>
+                  <span className="text-slate-800 font-bold">€{shipping.toLocaleString()}</span>
+                </div>
+              )}
+              <div className="border-t-2 border-slate-200 pt-3 mt-3 flex justify-between items-center">
+                <span className="text-base font-bold text-slate-800 uppercase">Grand Total</span>
+                <span className="text-2xl font-black text-indigo-700">€{total.toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer Notes */}
+        <div className="border-t border-slate-200 pt-6">
+          <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Terms & Conditions</h4>
+          <p className="text-xs text-slate-500 leading-relaxed max-w-2xl">
+            This is a commercial wholesale invoice. Payment is due as per the agreed B2B terms. 
+            Goods remain the property of {storeName} until paid for in full. 
+            {contactEmail && `For any queries regarding this invoice, please contact ${contactEmail}.`}
+          </p>
         </div>
       </div>
     </div>
@@ -212,8 +382,11 @@ export default function InvoicePage() {
   );
   const settingsMap = {};
   (settingsRaw?.results || (Array.isArray(settingsRaw) ? settingsRaw : [])).forEach(s => { settingsMap[s.key] = s.value; });
-  const storeName = settingsMap.store_name || "iCommerce";
+  const storeName = settingsMap.store_name || "El-Arbol";
   const logoUrl = settingsMap.logo_url || null;
+  const contactEmail = settingsMap.contact_email || "";
+  const contactPhone = settingsMap.contact_phone || "";
+  const contactAddress = settingsMap.contact_address || "";
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -227,6 +400,13 @@ export default function InvoicePage() {
     () => ordersService.get(id),
     { revalidateOnFocus: false }
   );
+
+  const { data: productsRaw } = useSWR(
+    order?.is_wholesale_order ? "all-products-invoice" : null,
+    () => productsService.list({ page_size: 1000 }),
+    { revalidateOnFocus: false }
+  );
+  const allProducts = productsRaw?.results || [];
 
   const handleDownload = async () => {
     setDownloading(true);
@@ -292,21 +472,23 @@ export default function InvoicePage() {
           <ArrowLeft className="w-4 h-4" /> Back to Orders
         </Link>
         <div className="flex items-center gap-2">
-          {/* Format Toggle */}
-          <div className="flex items-center border border-slate-200 rounded-md overflow-hidden">
-            <button
-              onClick={() => setInvoiceType("a4")}
-              className={`flex items-center gap-1 px-3 py-1.5 text-xs font-medium transition-colors ${invoiceType === "a4" ? "bg-gray-900 text-white" : "text-slate-600 hover:bg-slate-50"}`}
-            >
-              <FileText className="w-3.5 h-3.5" /> A4
-            </button>
-            <button
-              onClick={() => setInvoiceType("pos")}
-              className={`flex items-center gap-1 px-3 py-1.5 text-xs font-medium transition-colors ${invoiceType === "pos" ? "bg-gray-900 text-white" : "text-slate-600 hover:bg-slate-50"}`}
-            >
-              <Receipt className="w-3.5 h-3.5" /> POS
-            </button>
-          </div>
+          {/* Format Toggle - Hidden for Wholesale */}
+          {!order.is_wholesale_order && (
+            <div className="flex items-center border border-slate-200 rounded-md overflow-hidden">
+              <button
+                onClick={() => setInvoiceType("a4")}
+                className={`flex items-center gap-1 px-3 py-1.5 text-xs font-medium transition-colors ${invoiceType === "a4" ? "bg-gray-900 text-white" : "text-slate-600 hover:bg-slate-50"}`}
+              >
+                <FileText className="w-3.5 h-3.5" /> A4
+              </button>
+              <button
+                onClick={() => setInvoiceType("pos")}
+                className={`flex items-center gap-1 px-3 py-1.5 text-xs font-medium transition-colors ${invoiceType === "pos" ? "bg-gray-900 text-white" : "text-slate-600 hover:bg-slate-50"}`}
+              >
+                <Receipt className="w-3.5 h-3.5" /> POS
+              </button>
+            </div>
+          )}
           <button
             onClick={() => window.print()}
             className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-slate-200 rounded-md text-slate-700 hover:bg-slate-50 transition-colors"
@@ -324,10 +506,12 @@ export default function InvoicePage() {
       </div>
 
       {/* Invoice Content */}
-      {invoiceType === "pos" ? (
-        <POSInvoice order={order} items={items} subtotal={subtotal} total={total} shipping={shipping} storeName={storeName} logoUrl={logoUrl} />
+      {order.is_wholesale_order ? (
+        <WholesaleInvoice order={order} items={items} subtotal={subtotal} total={total} shipping={shipping} storeName={storeName} logoUrl={logoUrl} contactEmail={contactEmail} contactPhone={contactPhone} contactAddress={contactAddress} allProducts={allProducts} />
+      ) : invoiceType === "pos" ? (
+        <POSInvoice order={order} items={items} subtotal={subtotal} total={total} shipping={shipping} storeName={storeName} logoUrl={logoUrl} contactEmail={contactEmail} contactPhone={contactPhone} contactAddress={contactAddress} />
       ) : (
-        <A4Invoice order={order} items={items} subtotal={subtotal} total={total} shipping={shipping} storeName={storeName} logoUrl={logoUrl} />
+        <A4Invoice order={order} items={items} subtotal={subtotal} total={total} shipping={shipping} storeName={storeName} logoUrl={logoUrl} contactEmail={contactEmail} contactPhone={contactPhone} contactAddress={contactAddress} />
       )}
     </div>
   );

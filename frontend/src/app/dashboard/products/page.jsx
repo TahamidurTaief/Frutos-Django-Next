@@ -46,6 +46,7 @@ const TABS = [
   { id: "description", label: "Description" },
   { id: "nutritional", label: "Nutritional" },
   { id: "pricing",     label: "Pricing & Stock" },
+  { id: "wholesale",   label: "Wholesale" },
   { id: "media",       label: "Media" },
   { id: "specs",       label: "Specifications" },
 ];
@@ -210,7 +211,7 @@ function ProductForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-h-[78vh] overflow-y-auto pr-1">
+    <form onSubmit={handleSubmit} className="space-y-4 pb-2">
 
       {/* Error */}
       {error && (
@@ -263,11 +264,6 @@ function ProductForm({
               <label className={labelCls}>Display Unit</label>
               <input className={inputCls} value={form.unit || ""}
                 onChange={e => handleChange("unit", e.target.value)} placeholder='e.g., per kg' />
-            </div>
-            <div>
-              <label className={labelCls}>Wholesale Unit</label>
-              <input className={inputCls} value={form.wholesale_unit || ""}
-                onChange={e => handleChange("wholesale_unit", e.target.value)} placeholder='e.g., per case' />
             </div>
             <div>
               <label className={labelCls}>Badge Label</label>
@@ -360,16 +356,6 @@ function ProductForm({
                 value={form.discount_price || ""} onChange={e => handleChange("discount_price", e.target.value)} placeholder="0.00" />
             </div>
             <div>
-              <label className={labelCls}>Wholesale Price (€)</label>
-              <input type="number" step="0.01" min="0" className={inputCls}
-                value={form.wholesale_price || ""} onChange={e => handleChange("wholesale_price", e.target.value)} placeholder="0.00" />
-            </div>
-            <div>
-              <label className={labelCls}>Min Purchase Qty</label>
-              <input type="number" min="1" className={inputCls}
-                value={form.minimum_purchase || ""} onChange={e => handleChange("minimum_purchase", e.target.value)} placeholder="1" />
-            </div>
-            <div>
               <label className={labelCls}>Affiliate Commission %</label>
               <input type="number" step="0.01" min="0" max="100" className={inputCls}
                 value={form.affiliate_commission_rate || ""} onChange={e => handleChange("affiliate_commission_rate", e.target.value)} placeholder="0.00" />
@@ -399,6 +385,33 @@ function ProductForm({
                 ))}
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* ── Tab: Wholesale ── */}
+      {activeTab === "wholesale" && (
+        <div className="space-y-4">
+          <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-4">
+            <h4 className="text-sm font-semibold text-indigo-900 mb-1">Wholesale Settings</h4>
+            <p className="text-xs text-indigo-700">Configure special pricing and rules for your approved wholesale customers.</p>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className={labelCls}>Wholesale Price (€)</label>
+              <input type="number" step="0.01" min="0" className={inputCls}
+                value={form.wholesale_price || ""} onChange={e => handleChange("wholesale_price", e.target.value)} placeholder="0.00" />
+            </div>
+            <div>
+              <label className={labelCls}>Wholesale Unit</label>
+              <input className={inputCls} value={form.wholesale_unit || ""}
+                onChange={e => handleChange("wholesale_unit", e.target.value)} placeholder='e.g., per case' />
+            </div>
+            <div>
+              <label className={labelCls}>Min Purchase Qty</label>
+              <input type="number" min="1" className={inputCls} value={form.minimum_purchase || ""}
+                onChange={e => handleChange("minimum_purchase", e.target.value)} placeholder="e.g., 5" />
+            </div>
           </div>
         </div>
       )}
@@ -637,7 +650,7 @@ function ProductView({ item }) {
   );
 
   return (
-    <div className="max-h-[75vh] overflow-y-auto pr-2 space-y-6 pb-6 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-slate-200 [&::-webkit-scrollbar-thumb]:rounded-full">
+    <div className="space-y-6 pb-2">
       {/* Header Section */}
       <div className="bg-gradient-to-br from-white to-slate-50 rounded-2xl border border-slate-100 p-6 shadow-sm flex flex-col md:flex-row gap-8">
         <div className="w-full md:w-48 shrink-0">
