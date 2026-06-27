@@ -12,7 +12,7 @@ import DeliverySection  from './DeliverySection'
 import PaymentSection   from './PaymentSection'
 import OrderSidebar     from './OrderSidebar'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api'
+const API_BASE = process.env.NEXT_PUBLIC_API_URL
 
 function toArray(data) {
   if (Array.isArray(data)) return data

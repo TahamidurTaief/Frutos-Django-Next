@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Plus, X, Upload, MessageSquare, Clock, CheckCircle2, AlertCircle, Loader2, ArrowLeft, Send, MoreVertical, ChevronDown, Smile, Paperclip, ZoomIn, Download, User, Tag, XCircle, Trash2 } from 'lucide-react'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api'
+const API_BASE = process.env.NEXT_PUBLIC_API_URL
 
 const CATEGORY_CHOICES = [
   { value: 'GENERAL', label: 'General Inquiry' },
@@ -497,7 +497,7 @@ const EMOJI_LIST = [
 const getFullUrl = (url) => {
   if (!url) return '';
   if (url.startsWith('http') || url.startsWith('blob:') || url.startsWith('data:')) return url;
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, '') : 'http://127.0.0.1:8000';
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, '');
   return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
 };
 
@@ -571,7 +571,7 @@ function TicketChat({ ticket: initialTicket, authFetch, onBack, getStatusBadge, 
   
   useEffect(() => {
     const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const apiHost = process.env.NEXT_PUBLIC_API_URL ? new URL(process.env.NEXT_PUBLIC_API_URL).host : '127.0.0.1:8000';
+    const apiHost = new URL(process.env.NEXT_PUBLIC_API_URL).host;
     const wsUrl = `${wsProtocol}//${apiHost}/ws/chat/ticket/${ticket.id}/`;
     
     const socket = new WebSocket(wsUrl);
@@ -689,7 +689,7 @@ function TicketChat({ ticket: initialTicket, authFetch, onBack, getStatusBadge, 
       if (currentText.trim()) formData.append('message', currentText)
       currentImages.forEach(img => formData.append('images', img))
 
-      const res = await authFetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api'}/wholesale/tickets/${ticket.id}/reply/`, {
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_API_URL}/wholesale/tickets/${ticket.id}/reply/`, {
         method: 'POST',
         body: formData,
       })
@@ -739,7 +739,7 @@ function TicketChat({ ticket: initialTicket, authFetch, onBack, getStatusBadge, 
     setDeleteModalId(null);
 
     try {
-      const res = await authFetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api'}/wholesale/tickets/${ticket.id}/messages/${msgId}/`, {
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_API_URL}/wholesale/tickets/${ticket.id}/messages/${msgId}/`, {
         method: 'DELETE',
       })
       if (!res.ok) throw new Error('Failed to delete message')
@@ -762,7 +762,7 @@ function TicketChat({ ticket: initialTicket, authFetch, onBack, getStatusBadge, 
     setEditingMessageText('');
     
     try {
-      const res = await authFetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api'}/wholesale/tickets/${ticket.id}/messages/${msgId}/`, {
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_API_URL}/wholesale/tickets/${ticket.id}/messages/${msgId}/`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: originalText })
