@@ -95,3 +95,36 @@ class Announcement(models.Model):
 
     def __str__(self):
         return self.title
+
+class DayOffRequest(models.Model):
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('APPROVED', 'Approved'),
+        ('REJECTED', 'Rejected'),
+    ]
+    
+    staff = models.ForeignKey(StaffProfile, on_delete=models.CASCADE, related_name='day_off_requests')
+    date = models.DateField()
+    reason = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        # Check if status is changed to APPROVED
+        if self.pk:
+            old = DayOffRequest.objects.get(pk=self.pk)
+            if old.status != 'APPROVED' and self.status == 'APPROVED':
+                # Create or update StaffShift to be DAY_OFF
+                shift, created = StaffShift.objects.get_or_create(
+                    staff=self.staff,
+                    date=self.date,
+                    defaults={'status': 'DAY_OFF'}
+                )
+                if not created:
+                    shift.status = 'DAY_OFF'
+                    shift.save()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.staff.user.name} - {self.date} ({self.status})"

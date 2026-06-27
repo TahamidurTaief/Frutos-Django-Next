@@ -16,4 +16,8 @@ urlpatterns = [
     path('me/tasks/', views.MyStaffTasksView.as_view(), name='staff-tasks-list'),
     path('me/tasks/<int:pk>/', views.MyStaffTaskUpdateView.as_view(), name='staff-task-update'),
     path('me/notifications/<int:pk>/', views.MyStaffNotificationDetailView.as_view(), name='staff-notification-detail'),
+    
+    # Staff Day Off Requests handled via Router
+    path('me/day-off-requests/', views.MyStaffDayOffRequestViewSet.as_view({'get': 'list', 'post': 'create'}), name='staff-day-off-requests-list'),
+    path('me/day-off-requests/<int:pk>/', views.MyStaffDayOffRequestViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='staff-day-off-requests-detail'),
 ]

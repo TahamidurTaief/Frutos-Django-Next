@@ -4,10 +4,10 @@ from rest_framework.views import APIView
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from django.db import models
-from .models import StaffProfile, StaffShift, StaffTask, StaffNotification, Announcement
+from .models import StaffProfile, StaffShift, StaffTask, StaffNotification, Announcement, DayOffRequest
 from .serializers import (
     StaffProfileSerializer, CreateStaffSerializer, StaffShiftSerializer, 
-    StaffTaskSerializer, StaffNotificationSerializer,
+    StaffTaskSerializer, StaffNotificationSerializer, DayOffRequestSerializer,
     AnnouncementSerializer, AnnouncementCreateSerializer, StoreStaffTreeSerializer
 )
 from stores.models import Store
@@ -154,6 +154,16 @@ class MyStaffNotificationDetailView(generics.RetrieveUpdateDestroyAPIView):
     
     def get_queryset(self):
         return StaffNotification.objects.filter(staff__user=self.request.user)
+
+class MyStaffDayOffRequestViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsStaffUser]
+    serializer_class = DayOffRequestSerializer
+
+    def get_queryset(self):
+        return DayOffRequest.objects.filter(staff__user=self.request.user).order_by('-created_at')
+
+    def perform_create(self, serializer):
+        serializer.save(staff=self.request.user.staff_profile, status='PENDING')
 
 # ==========================================
 # SHARED APIs (Announcements)

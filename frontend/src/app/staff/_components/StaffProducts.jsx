@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import useSWR from "swr";
 import api from "@/app/dashboard/_lib/api";
-import { Loader2, Package, Plus, Pencil, Trash2, Eye } from "lucide-react";
+import { Loader2, Package, Plus, Pencil, Trash2, Eye, Filter, ChevronDown, Check } from "lucide-react";
 import DataTable from "@/app/dashboard/_components/DataTable";
 import Modal from "@/app/dashboard/_components/Modal";
 import ConfirmDialog from "@/app/dashboard/_components/ConfirmDialog";
@@ -57,10 +57,79 @@ export default function StaffProducts({ profile }) {
   const [createOpen, setCreateOpen] = useState(false);
   const [editItem,   setEditItem]   = useState(null);
   const [deleteItem, setDeleteItem] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const filterRef = useRef(null);
   
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (filterRef.current && !filterRef.current.contains(e.target)) {
+        setIsFilterOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const formProps = { categories, brands, colors, sizes, subcategories, stores };
 
-  const data = Array.isArray(rawData) ? rawData : (rawData?.results || []);
+  let data = Array.isArray(rawData) ? rawData : (rawData?.results || []);
+  if (selectedCategory) {
+    data = data.filter(item => item.category?.id === Number(selectedCategory));
+  }
+
+  const selectedCategoryName = selectedCategory 
+    ? categories.find(c => String(c.id) === String(selectedCategory))?.name 
+    : "All Categories";
+
+  const categoryFilter = (
+    <div className="relative" ref={filterRef}>
+      <button
+        onClick={() => setIsFilterOpen(!isFilterOpen)}
+        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#00694C]/20 focus:border-[#00694C] transition-all cursor-pointer min-w-[160px] justify-between"
+      >
+        <div className="flex items-center gap-2">
+          <Filter className="w-3.5 h-3.5 text-slate-400" />
+          <span>{selectedCategoryName}</span>
+        </div>
+        <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
+      </button>
+
+      {isFilterOpen && (
+        <div className="absolute left-0 z-50 w-56 mt-2 origin-top-left bg-white border border-slate-100 rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="p-1.5 max-h-60 overflow-y-auto">
+            <button
+              onClick={() => {
+                setSelectedCategory("");
+                setIsFilterOpen(false);
+              }}
+              className={`flex items-center w-full px-3 py-2.5 text-sm rounded-lg transition-colors cursor-pointer ${
+                !selectedCategory ? 'bg-[#00694C]/10 text-[#00694C] font-semibold' : 'text-slate-700 hover:bg-slate-50'
+              }`}
+            >
+              <span className="flex-1 text-left">All Categories</span>
+              {!selectedCategory && <Check className="w-4 h-4 text-[#00694C]" />}
+            </button>
+            {categories.map((c) => (
+              <button
+                key={c.id}
+                onClick={() => {
+                  setSelectedCategory(String(c.id));
+                  setIsFilterOpen(false);
+                }}
+                className={`flex items-center w-full px-3 py-2.5 text-sm rounded-lg transition-colors cursor-pointer ${
+                  String(selectedCategory) === String(c.id) ? 'bg-[#00694C]/10 text-[#00694C] font-semibold' : 'text-slate-700 hover:bg-slate-50'
+                }`}
+              >
+                <span className="flex-1 text-left">{c.name}</span>
+                {String(selectedCategory) === String(c.id) && <Check className="w-4 h-4 text-[#00694C]" />}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   const handleCreate = async (payload) => {
     try {
@@ -125,6 +194,7 @@ export default function StaffProducts({ profile }) {
             pageSize={20}
             searchable
             searchKeys={["name"]}
+            extraFilters={categoryFilter}
             actions={(profile?.can_update_products || profile?.can_delete_products) ? ((row) => (
               <div className="flex items-center justify-end gap-1">
                 {profile?.can_update_products && (

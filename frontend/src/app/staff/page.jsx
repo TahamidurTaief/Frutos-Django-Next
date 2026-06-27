@@ -9,6 +9,7 @@ import StaffOrders from "./_components/StaffOrders";
 import StaffProducts from "./_components/StaffProducts";
 import StaffAnnouncements from "./_components/StaffAnnouncements";
 import StaffNotifications from "./_components/StaffNotifications";
+import StaffRequestDayOff from "./_components/StaffRequestDayOff";
 
 export default function StaffDashboardPage() {
   const { user, logout } = useStaffAuth();
@@ -107,8 +108,13 @@ export default function StaffDashboardPage() {
 
   const totalHours = weekDatesLocal.reduce((acc, dateStr) => {
     const shift = shifts?.find(s => s.date === dateStr);
-    
+
     if (shift && shift.status === 'DAY_OFF') {
+      return acc;
+    }
+
+    const d = new Date(dateStr);
+    if (d.getDay() === 5) { // Friday
       return acc;
     }
     
@@ -341,8 +347,9 @@ export default function StaffDashboardPage() {
                   const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
                   const dayNum = dateObj.toLocaleDateString('en-US', { day: '2-digit' });
 
-                  const isOff = shift?.status === 'DAY_OFF';
-                  const isAbsent = shift?.status === 'ABSENT';
+                  const isFriday = dateObj.getDay() === 5;
+                  const isOff = isFriday || shift?.status === 'DAY_OFF';
+                  const isAbsent = !isFriday && shift?.status === 'ABSENT';
 
                   if (isOff || isAbsent) {
                     return (
@@ -520,6 +527,8 @@ export default function StaffDashboardPage() {
                 </div>
               </div>
             </>
+          ) : activeTab === "REQUEST_DAY_OFF" ? (
+            <StaffRequestDayOff />
           ) : (
             <div className="bg-white rounded-xl p-8 text-center text-slate-500 shadow-sm mt-10">
               <h2 className="text-2xl font-serif text-[#004A3A] mb-2">Coming Soon</h2>
@@ -527,16 +536,7 @@ export default function StaffDashboardPage() {
             </div>
           )}
 
-          <footer className="mt-16 pt-8 border-t border-[#00694C]/10 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-[#00694C]/40 font-bold uppercase tracking-widest pb-10">
-            <div className="normal-case font-serif italic tracking-normal text-[13px] text-[#00694C]/50">Honest & Organic since 1994</div>
-            <div className="flex gap-8">
-              <a href="#" className="hover:text-[#00694C] transition-colors">Portal Guidelines</a>
-              <a href="#" className="hover:text-[#00694C] transition-colors">Support</a>
-              <a href="#" className="hover:text-[#00694C] transition-colors">GDPR</a>
-            </div>
-            <div>© 2025 El Árbol Retail Group</div>
-          </footer>
-
+          <div className="pb-10"></div>
         </div>
       </main>
 

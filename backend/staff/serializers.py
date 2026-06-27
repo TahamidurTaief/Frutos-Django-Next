@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import StaffProfile, StaffShift, StaffTask, StaffNotification, Announcement
+from .models import StaffProfile, StaffShift, StaffTask, StaffNotification, Announcement, DayOffRequest
 from stores.models import Store
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
@@ -39,6 +39,12 @@ class StaffNotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = StaffNotification
         fields = '__all__'
+
+class DayOffRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DayOffRequest
+        fields = '__all__'
+        read_only_fields = ('staff', 'status')
 
 class CreateStaffSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=255)
