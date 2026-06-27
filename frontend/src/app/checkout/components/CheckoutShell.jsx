@@ -38,7 +38,11 @@ function normalizeCartItem(item) {
 
   const productId = rawId != null ? String(rawId) : null
   const quantity  = parseInt(item?.qty ?? item?.quantity ?? item?.count ?? 0, 10)
-  return { product: productId, item_type: 'product', quantity, color: item.color, size: item.size || item.unit }
+  // size must be a Size model integer ID — never fall back to item.unit (which is display text like '1L bottle')
+  const sizeId = item?.size != null && String(item.size).trim() !== '' && !isNaN(Number(item.size))
+    ? item.size
+    : null
+  return { product: productId, item_type: 'product', quantity, color: item.color, size: sizeId }
 }
 
 export default function CheckoutShell({ deliveryDates, deliverySlots, initialUserData, deliveryConfig }) {
