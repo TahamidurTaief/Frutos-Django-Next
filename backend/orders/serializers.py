@@ -27,7 +27,7 @@ class OrderItemCreateSerializer(serializers.Serializer):
     leftover_pack = serializers.IntegerField(required=False, allow_null=True)
     item_type     = serializers.CharField(required=False, default='product')
     quantity      = serializers.IntegerField(min_value=1)
-    color         = serializers.IntegerField(allow_null=True, required=False)
+    color         = serializers.CharField(allow_null=True, required=False, allow_blank=True)
     size          = serializers.CharField(allow_null=True, required=False, allow_blank=True)
 
     def validate(self, data):
@@ -48,14 +48,40 @@ class OrderItemCreateSerializer(serializers.Serializer):
         return data
 
     def validate_color(self, value):
-        if value is not None and not Color.objects.filter(id=value).exists():
-            raise serializers.ValidationError("Color does not exist.")
-        return value
+        if not value:
+            return None
+            
+        try:
+            if str(value).isdigit():
+                color_obj = Color.objects.filter(id=value).first()
+                if color_obj:
+                    return color_obj.id
+                raise serializers.ValidationError(f"Color with ID '{value}' does not exist.")
+            else:
+                color_obj = Color.objects.filter(name__iexact=value).first()
+                if color_obj:
+                    return color_obj.id
+                raise serializers.ValidationError(f"Color '{value}' does not exist.")
+        except Exception as e:
+            raise serializers.ValidationError(str(e))
 
     def validate_size(self, value):
-        if value is not None and not Size.objects.filter(id=value).exists():
-            raise serializers.ValidationError("Size does not exist.")
-        return value
+        if not value:
+            return None
+            
+        try:
+            if str(value).isdigit():
+                size_obj = Size.objects.filter(id=value).first()
+                if size_obj:
+                    return size_obj.id
+                raise serializers.ValidationError(f"Size with ID '{value}' does not exist.")
+            else:
+                size_obj = Size.objects.filter(name__iexact=value).first()
+                if size_obj:
+                    return size_obj.id
+                raise serializers.ValidationError(f"Size '{value}' does not exist.")
+        except Exception as e:
+            raise serializers.ValidationError(str(e))
 
 
 class OrderCreateSerializer(serializers.Serializer):
