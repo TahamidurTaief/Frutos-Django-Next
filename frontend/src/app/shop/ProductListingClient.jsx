@@ -176,7 +176,7 @@ export default function ProductListingClient({ initialProducts = [], categories 
     let list = [...products]
 
     const storeParam = searchParams.get('store')
-    if (storeParam)             list = list.filter(p => p.store?.slug === storeParam || p.shop?.slug === storeParam)
+    if (storeParam)             list = list.filter(p => (p.stores && p.stores.some(s => s.slug === storeParam)) || p.shop?.slug === storeParam)
 
     if (dataCat !== 'All')      list = list.filter(p => p.category === dataCat)
     if (dataCat === 'On Sale')  list = list.filter(p => p.onSale)
@@ -212,7 +212,7 @@ export default function ProductListingClient({ initialProducts = [], categories 
   function catCount(cat) {
     let list = products
     const storeParam = searchParams.get('store')
-    if (storeParam) list = list.filter(p => p.store?.slug === storeParam || p.shop?.slug === storeParam)
+    if (storeParam) list = list.filter(p => (p.stores && p.stores.some(s => s.slug === storeParam)) || p.shop?.slug === storeParam)
 
     if (cat === 'All Produce') return list.length 
     return list.filter(p => p.category === cat).length 

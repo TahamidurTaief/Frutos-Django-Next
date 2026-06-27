@@ -237,27 +237,63 @@ export async function getProducts({ category, search, inStock, token } = {}) {
     if (category && category !== 'All') params.set('category', category)
     if (search) params.set('search', search)
     if (inStock !== undefined) params.set('in_stock', inStock)
+    // Request a large page_size to get all products in one shot
+    params.set('page_size', '1000')
 
-    const query = params.toString() ? `?${params.toString()}` : ''
-    const path = `${PRODUCT_ENDPOINT}/${query}`.replace(/([^:]\/)\/+/g, "$1") // Remove double slashes except after protocol
+    const query = `?${params.toString()}`
+    const cleanBase = API_BASE.endsWith('/') ? API_BASE.slice(0, -1) : API_BASE
+    const endpointPath = `${PRODUCT_ENDPOINT}/`.replace(/\/\/+/g, '/')
+    const startUrl = `${cleanBase}${endpointPath}${query}`
 
-    const options = { next: { tags: ['products'] } }
-    if (token) {
-        options.headers = { 'Authorization': `Bearer ${token}` }
-    }
+    const authHeaders = token ? { 'Authorization': `Bearer ${token}` } : {}
 
-    try {
-        const data = await apiFetch(path, options)
-        return toArray(data).map(normalizeProduct)
-    } catch (error) {
-        if (error.message && (error.message.includes('401') || error.message.includes('403')) && token) {
-            console.warn(`[getProducts] Got ${error.message} with token. Retrying without token...`)
-            delete options.headers
-            const data = await apiFetch(path, options)
-            return toArray(data).map(normalizeProduct)
+    async function fetchAllPages(url) {
+        let allResults = []
+        let nextUrl = url
+
+        while (nextUrl) {
+            const res = await fetch(nextUrl, {
+                headers: { 'Content-Type': 'application/json', ...authHeaders },
+                cache: 'no-store',
+            })
+
+            if (!res.ok) {
+                // If auth error and we have a token, retry without token once
+                if ((res.status === 401 || res.status === 403) && token) {
+                    console.warn(`[getProducts] Auth error ${res.status}. Retrying without token...`)
+                    delete authHeaders['Authorization']
+                    const res2 = await fetch(nextUrl, {
+                        headers: { 'Content-Type': 'application/json' },
+                        cache: 'no-store',
+                    })
+                    if (!res2.ok) throw new Error('API error ' + res2.status)
+                    const data2 = await res2.json()
+                    allResults = allResults.concat(Array.isArray(data2) ? data2 : (data2.results || []))
+                    nextUrl = data2.next || null
+                    continue
+                }
+                throw new Error('API error ' + res.status + ' for ' + nextUrl)
+            }
+
+            const data = await res.json()
+
+            if (Array.isArray(data)) {
+                // Plain array response — no pagination
+                allResults = allResults.concat(data)
+                break
+            } else if (data && Array.isArray(data.results)) {
+                // Paginated DRF response
+                allResults = allResults.concat(data.results)
+                nextUrl = data.next || null
+            } else {
+                break
+            }
         }
-        throw error
+        return allResults
     }
+
+    const results = await fetchAllPages(startUrl)
+    return results.map(normalizeProduct)
 }
 
 export async function getProductById(id) {
