@@ -61,7 +61,7 @@ function extractImageUrls(text = "") {
 const getFullUrl = (url) => {
   if (!url) return '';
   if (url.startsWith('http') || url.startsWith('blob:') || url.startsWith('data:')) return url;
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, '') : 'http://127.0.0.1:8000';
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, '');
   return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
 };
 
@@ -163,7 +163,7 @@ function TicketDetailModal({ ticket: initialTicket, onClose, onReplySuccess }) {
   // Connect to WebSocket for real-time chat
   useEffect(() => {
     const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const apiHost = process.env.NEXT_PUBLIC_API_URL ? new URL(process.env.NEXT_PUBLIC_API_URL).host : '127.0.0.1:8000';
+    const apiHost = new URL(process.env.NEXT_PUBLIC_API_URL).host;
     const wsUrl = `${wsProtocol}//${apiHost}/ws/chat/ticket/${ticket.id}/`;
     
     const socket = new WebSocket(wsUrl);

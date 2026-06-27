@@ -11,7 +11,7 @@ import { useCart } from '@/app/context/CartContext'
 import { useAuth } from '@/app/context/AuthContext'
 import AuthModal from '@/app/components/AuthModal'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:8000/api' : 'https://elarbol.icommerce.com.bd/api')
+const API_BASE = process.env.NEXT_PUBLIC_API_URL
 
 const navLinks = [
   { label: 'Shop',      href: '/shop'      },
@@ -161,7 +161,7 @@ export default function Navbar({ navbarLogoUrl = '', brandName = 'El Árbol' }) 
 
   // Fetch products
 useEffect(() => {
-  const base = (process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api').replace(/\/$/, '')
+  const base = (process.env.NEXT_PUBLIC_API_URL).replace(/\/$/, '')
   const mediaBase = base.replace('/api', '')
 
   fetch(`${base}/products/products/`)

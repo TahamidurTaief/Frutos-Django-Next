@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import { MessageCircle, X, Send, Search, Users, Phone, Video, Store, Loader2, Info } from 'lucide-react';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 const WS_BASE = API_BASE.replace('http://', 'ws://').replace('https://', 'wss://').replace('/api', '');
 
 export default function LiveChatWidget() {

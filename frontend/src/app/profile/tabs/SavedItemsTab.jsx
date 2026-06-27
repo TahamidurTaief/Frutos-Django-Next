@@ -8,7 +8,7 @@ import { useSession } from 'next-auth/react'
 import { slugify } from '@/app/lib/slugify'
 import AddToCartButton from '@/app/components/AddToCartButton'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api'
+const API_BASE = process.env.NEXT_PUBLIC_API_URL
 
 // ── Skeleton loader ───────────────────────────────────────────────────────────
 function SkeletonCard() {

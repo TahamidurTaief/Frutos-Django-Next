@@ -37,7 +37,7 @@ function toLocalDatetime(iso) {
 }
 
 /* ─── Coupon Form ────────────────────────────────────────────── */
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
 function CouponForm({ initial = {}, onSubmit, submitLabel = "Save" }) {
   // Derive initial applicable_products IDs from applicable_products_data or applicable_products

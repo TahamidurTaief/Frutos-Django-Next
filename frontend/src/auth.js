@@ -2,7 +2,7 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api'
+const API_BASE = process.env.NEXT_PUBLIC_API_URL
 const WHOLESALE_BASE = API_BASE + '/wholesale'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({

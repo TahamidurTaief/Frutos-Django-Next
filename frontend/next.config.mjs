@@ -5,12 +5,15 @@ const nextConfig = {
             dynamic: 0,
             static: 30,
         },
-        allowedDevOrigins: [
-            '10.17.90.71',
-            '10.17.90.71:3000',
-            'localhost:3000',
-            '127.0.0.1:3000'
-        ],
+        serverActions: {
+            allowedOrigins: [
+                '10.17.90.71',
+                '10.17.90.71:3000',
+                'localhost:3000',
+                '127.0.0.1:3000',
+                'frutos.athome.com.bd'
+            ]
+        },
     },
 
     images: {
@@ -42,6 +45,11 @@ const nextConfig = {
             {
                 protocol: 'https',
                 hostname: 'placehold.co',
+            },
+            {
+                protocol: 'https',
+                hostname: 'frutos.athome.com.bd',
+                pathname: '/media/**',
             },
         ],
     },
