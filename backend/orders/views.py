@@ -497,9 +497,20 @@ class OrderViewSet(viewsets.ModelViewSet):
                 (user.is_superuser and getattr(user, 'user_type', '') != 'STAFF')
             )
             
+            is_staff_user = user.is_authenticated and (getattr(user, 'user_type', '') == 'STAFF' or hasattr(user, 'staff_profile'))
+            
             if is_admin:
                 # Admin can filter by any user ID
                 queryset = queryset.filter(user__id=user_param)
+            elif is_staff_user:
+                try:
+                    staff_store = user.staff_profile.store
+                    if staff_store:
+                        queryset = queryset.filter(user__id=user_param, items__product__stores=staff_store).distinct()
+                    else:
+                        return queryset.none()
+                except Exception:
+                    return queryset.none()
             elif user.is_authenticated and not is_wholesale_token and str(user.id) == str(user_param):
                 # Users can fetch their own orders, including guest orders by email
                 from django.db.models import Q
@@ -518,8 +529,18 @@ class OrderViewSet(viewsets.ModelViewSet):
                 (hasattr(user, 'user_type') and user.user_type == 'ADMIN' and getattr(user, 'user_type', '') != 'STAFF') or 
                 (user.is_superuser and getattr(user, 'user_type', '') != 'STAFF')
             )
+            is_staff_user = user.is_authenticated and (getattr(user, 'user_type', '') == 'STAFF' or hasattr(user, 'staff_profile'))
             if not is_admin:
-                if is_wholesale_token:
+                if is_staff_user:
+                    try:
+                        staff_store = user.staff_profile.store
+                        if staff_store:
+                            queryset = queryset.filter(items__product__stores=staff_store).distinct()
+                        else:
+                            queryset = queryset.none()
+                    except Exception:
+                        queryset = queryset.none()
+                elif is_wholesale_token:
                     wholesale_email = self.request.auth.get('email')
                     queryset = queryset.filter(customer_email=wholesale_email)
                 else:
@@ -539,11 +560,22 @@ class OrderViewSet(viewsets.ModelViewSet):
             )
             
             # STAFF users can see all orders (for tracking/managing), but only through staff permission system
-            is_staff_user = user.is_authenticated and getattr(user, 'user_type', '') == 'STAFF'
+            is_staff_user = user.is_authenticated and (getattr(user, 'user_type', '') == 'STAFF' or hasattr(user, 'staff_profile'))
             
-            if is_admin or is_staff_user:
-                # Admin or staff can see all orders
+            if is_admin:
+                # Admin can see all orders
                 return queryset.order_by('-ordered_at')
+            
+            if is_staff_user:
+                # Staff can only see orders that contain products from their assigned store
+                try:
+                    staff_store = user.staff_profile.store
+                    if staff_store:
+                        return queryset.filter(items__product__stores=staff_store).distinct().order_by('-ordered_at')
+                except Exception:
+                    pass
+                # If staff has no store or profile, return none
+                return queryset.none()
             
             if is_wholesale_token:
                 wholesale_email = self.request.auth.get('email')
