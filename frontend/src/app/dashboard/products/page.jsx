@@ -16,11 +16,13 @@ import { useModel } from "@/app/dashboard/_lib/useModel";
 import SearchableSelect from "@/app/dashboard/_components/SearchableSelect";
 import {
   productsService, brandsService, colorsService,
-  sizesService, subcategoriesService, categoriesService, storesService,
+  sizesService, subcategoriesService, categoriesService, storesService, siteSettingsService
 } from "@/app/dashboard/_lib/services";
 import { useToastContext } from "@/app/dashboard/_components/Toaster";
 import useSWR from "swr";
 import api from "@/app/dashboard/_lib/api";
+import CategoryFilter from "@/app/dashboard/_components/CategoryFilter";
+import ClassFilter from "@/app/dashboard/_components/ClassFilter";
 
 const PAGE_SIZE = 20;
 
@@ -34,12 +36,13 @@ const columns = [
       </div>
     )
   },
-  { key: "name", label: "Name" },
+  { key: "name", label: "Name", render: (v, row) => row.variant ? <span className="flex items-center gap-1.5">{v} <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500 uppercase">{row.variant}</span></span> : v },
   { key: "price", label: "Price", render: (v) => `€${Number(v).toLocaleString()}` },
   { key: "discount_price", label: "Sale Price", render: (v) => v ? `€${Number(v).toLocaleString()}` : "—" },
   { key: "stock", label: "Stock" },
   { key: "stores", label: "Stores", render: (v) => Array.isArray(v) && v.length > 0 ? v.map(s => s.name).join(", ") : "—" },
   { key: "category", label: "Category", render: (v) => v?.name || "—" },
+  { key: "sub_category", label: "Sub Category", render: (v) => v?.name || "—" },
   { key: "is_active", label: "Status", render: (v) => v ? "active" : "inactive", type: "status" },
 ];
 
@@ -97,7 +100,10 @@ function ProductView({ item }) {
                   </span>
                 )}
               </div>
-              <h2 className="text-2xl font-black text-slate-900 mb-2 leading-tight">{item.name}</h2>
+              <h2 className="text-2xl font-black text-slate-900 mb-2 leading-tight">
+                {item.name}
+                {item.variant && <span className="ml-2 text-sm px-2 py-1 bg-slate-100 text-slate-500 rounded font-bold align-middle tracking-widest uppercase">{item.variant}</span>}
+              </h2>
               <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
                 <span className="px-2 py-1 bg-white border border-slate-200 rounded-md shadow-sm">{item.category?.name || 'Uncategorized'}</span>
                 <span className="px-2 py-1 bg-white border border-slate-200 rounded-md shadow-sm text-amber-600 font-semibold">
@@ -240,18 +246,19 @@ function ProductView({ item }) {
 // ── Main Page ──────────────────────────────────────────────────
 export default function ProductsPage() {
   const toast = useToastContext();
-  const { data, loading, totalCount, params, setSearch, setPage, create, update, remove } = useModel(productsService, {
+  const { data, loading, totalCount, params, setParams, setSearch, setPage, create, update, remove } = useModel(productsService, {
     defaultParams: { page: 1, page_size: PAGE_SIZE },
     onSuccess: (msg) => toast.success(msg),
     onError: (err) => toast.error(err?.message || "Operation failed"),
   });
 
-  const { data: brandsRaw } = useSWR("ref-brands", () => brandsService.list({ page_size: 200 }), { revalidateOnFocus: false });
-  const { data: colorsRaw } = useSWR("ref-colors", () => colorsService.list({ page_size: 200 }), { revalidateOnFocus: false });
-  const { data: sizesRaw } = useSWR("ref-sizes", () => sizesService.list({ page_size: 200 }), { revalidateOnFocus: false });
-  const { data: categoriesRaw } = useSWR("ref-categories", () => categoriesService.list({ page_size: 200 }), { revalidateOnFocus: false });
-  const { data: subcatsRaw } = useSWR("ref-subcats", () => subcategoriesService.list({ page_size: 200 }), { revalidateOnFocus: false });
-  const { data: storesRaw } = useSWR("ref-stores", () => storesService.list(), { revalidateOnFocus: false });
+  const { data: brandsRaw } = useSWR("ref-brands", () => brandsService.list({ page_size: 200 }));
+  const { data: colorsRaw } = useSWR("ref-colors", () => colorsService.list({ page_size: 200 }));
+  const { data: sizesRaw } = useSWR("ref-sizes", () => sizesService.list({ page_size: 200 }));
+  const { data: categoriesRaw } = useSWR("ref-categories", () => categoriesService.list({ page_size: 200 }));
+  const { data: subcatsRaw } = useSWR("ref-subcats", () => subcategoriesService.list({ page_size: 200 }));
+  const { data: storesRaw } = useSWR("ref-stores", () => storesService.list());
+  const { data: catalogSettingsRaw } = useSWR("site-settings-catalog", () => siteSettingsService.list({ group: "catalog" }));
 
   const brands = brandsRaw?.results || (Array.isArray(brandsRaw) ? brandsRaw : []);
   const colors = colorsRaw?.results || (Array.isArray(colorsRaw) ? colorsRaw : []);
@@ -259,6 +266,10 @@ export default function ProductsPage() {
   const categories = categoriesRaw?.results || (Array.isArray(categoriesRaw) ? categoriesRaw : []);
   const subcategories = subcatsRaw?.results || (Array.isArray(subcatsRaw) ? subcatsRaw : []);
   const stores = storesRaw?.results || (Array.isArray(storesRaw) ? storesRaw : []);
+  const catalogSettings = catalogSettingsRaw?.results || (Array.isArray(catalogSettingsRaw) ? catalogSettingsRaw : []);
+  
+  const productClassesStr = catalogSettings.find(s => s.key === 'product_classes')?.value || "";
+  const productClasses = productClassesStr.split(',').map(s => s.trim()).filter(Boolean);
 
   const [createOpen, setCreateOpen] = useState(false);
   const [editItem, setEditItem] = useState(null);
@@ -269,7 +280,7 @@ export default function ProductsPage() {
   const handleEdit = async (payload) => { await update(editItem.slug || editItem.id, payload); setEditItem(null); };
   const handleDelete = async () => { await remove(deleteItem.slug || deleteItem.id); setDeleteItem(null); };
 
-  const formProps = { categories, brands, colors, sizes, subcategories, stores };
+  const formProps = { categories, brands, colors, sizes, subcategories, stores, productClasses };
 
   return (
     <Container
@@ -286,6 +297,34 @@ export default function ProductsPage() {
         totalItems={totalCount} currentPage={params.page || 1} pageSize={PAGE_SIZE}
         onSearch={setSearch} onPageChange={p => setPage(p)}
         loading={loading} searchable
+        extraFilters={
+          <div className="flex gap-2 items-center">
+            <CategoryFilter 
+              categories={categories}
+              selectedCategory={params.category}
+              selectedSubCategory={params.subcategory}
+              onChange={(cat, sub) => {
+                setParams(p => {
+                  const next = { ...p, page: 1 };
+                  if (cat) next.category = cat; else delete next.category;
+                  if (sub) next.subcategory = sub; else delete next.subcategory;
+                  return next;
+                });
+              }}
+            />
+            <ClassFilter
+              classes={productClasses}
+              selectedClass={params.variant}
+              onChange={(variant) => {
+                setParams(p => {
+                  const next = { ...p, page: 1 };
+                  if (variant) next.variant = variant; else delete next.variant;
+                  return next;
+                });
+              }}
+            />
+          </div>
+        }
         actions={(row) => (
           <div className="flex items-center justify-end gap-1">
             <button style={{ cursor: 'pointer' }} onClick={() => setViewItem(row)}
