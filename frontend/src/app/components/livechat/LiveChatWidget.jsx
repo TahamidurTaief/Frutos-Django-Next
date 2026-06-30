@@ -4,7 +4,18 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import { MessageCircle, X, Send, Search, Users, Phone, Video, Store, Loader2, Info } from 'lucide-react';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+const API_BASE = (() => {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  let url = envUrl;
+  if (!envUrl && typeof window !== "undefined") {
+      const h = window.location.hostname;
+      if (h === "localhost" || h === "127.0.0.1" || h.startsWith("192.168.") || h.startsWith("10.")) {
+          url = "http://127.0.0.1:8000/api";
+      }
+  }
+  if (!url) url = "https://api.icommerce.passmcq.com/api";
+  return url.replace(/\/+$/, "");
+})();
 const WS_BASE = API_BASE.replace('http://', 'ws://').replace('https://', 'wss://').replace('/api', '');
 
 export default function LiveChatWidget() {

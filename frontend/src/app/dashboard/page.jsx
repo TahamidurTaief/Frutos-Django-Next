@@ -2,6 +2,7 @@
 
 import { Euro, ShoppingCart, Users, Package, Loader2, Store, MapPin, ToggleLeft, ToggleRight, Archive, Tag, UserCircle, ShieldCheck, Briefcase, Clock, BadgeCheck, UserX } from "lucide-react";
 import useSWR from "swr";
+import Link from "next/link";
 import { AreaChart, Area, BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import Container from "@/app/dashboard/_components/Container";
 import StatCard from "@/app/dashboard/_components/StatCard";
@@ -190,7 +191,7 @@ export default function DashboardHomePage() {
             <div key={i} className="bg-white border border-slate-100 rounded-xl p-5 h-28 animate-pulse shadow-sm" />
           ))
           : <>
-            <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition-all">
+            <Link href="/dashboard/users" className="bg-white rounded-xl p-5 shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md hover:-translate-y-1 transition-all">
               <div className="flex items-center gap-3 mb-2">
                 <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
                   <Users className="w-5 h-5" />
@@ -198,9 +199,9 @@ export default function DashboardHomePage() {
                 <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Users</p>
               </div>
               <p className="text-2xl font-black text-slate-800">{Number(stats?.total_users || 0).toLocaleString()}</p>
-            </div>
+            </Link>
 
-            <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition-all">
+            <Link href="/dashboard/products" className="bg-white rounded-xl p-5 shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md hover:-translate-y-1 transition-all">
               <div className="flex items-center gap-3 mb-2">
                 <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
                   <Package className="w-5 h-5" />
@@ -208,9 +209,9 @@ export default function DashboardHomePage() {
                 <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Products</p>
               </div>
               <p className="text-2xl font-black text-slate-800">{Number(stats?.total_products || 0).toLocaleString()}</p>
-            </div>
+            </Link>
 
-            <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition-all">
+            <Link href="/dashboard/offers" className="bg-white rounded-xl p-5 shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md hover:-translate-y-1 transition-all">
               <div className="flex items-center gap-3 mb-2">
                 <div className="p-2 bg-fuchsia-50 text-fuchsia-600 rounded-lg">
                   <Tag className="w-5 h-5" />
@@ -218,9 +219,9 @@ export default function DashboardHomePage() {
                 <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Active Offers</p>
               </div>
               <p className="text-2xl font-black text-slate-800">{activeOffers.length.toLocaleString()}</p>
-            </div>
+            </Link>
 
-            <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition-all">
+            <Link href="/dashboard/leftover-packs" className="bg-white rounded-xl p-5 shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md hover:-translate-y-1 transition-all">
               <div className="flex items-center gap-3 mb-2">
                 <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
                   <Archive className="w-5 h-5" />
@@ -228,9 +229,9 @@ export default function DashboardHomePage() {
                 <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Leftover Packs</p>
               </div>
               <p className="text-2xl font-black text-slate-800">{leftoverPacks.length.toLocaleString()}</p>
-            </div>
+            </Link>
 
-            <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition-all">
+            <Link href="/dashboard/orders" className="bg-white rounded-xl p-5 shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md hover:-translate-y-1 transition-all">
               <div className="flex items-center gap-3 mb-2">
                 <div className="p-2 bg-amber-50 text-amber-600 rounded-lg">
                   <ShoppingCart className="w-5 h-5" />
@@ -238,9 +239,9 @@ export default function DashboardHomePage() {
                 <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Orders</p>
               </div>
               <p className="text-2xl font-black text-slate-800">{Number(stats?.total_orders || 0).toLocaleString()}</p>
-            </div>
+            </Link>
 
-            <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition-all">
+            <Link href="/dashboard/analytics" className="bg-white rounded-xl p-5 shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md hover:-translate-y-1 transition-all">
               <div className="flex items-center gap-3 mb-2">
                 <div className="p-2 bg-green-50 text-green-600 rounded-lg">
                   <Euro className="w-5 h-5" />
@@ -248,7 +249,7 @@ export default function DashboardHomePage() {
                 <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Revenue</p>
               </div>
               <p className="text-2xl font-black text-green-600">€{Number(stats?.total_revenue || 0).toLocaleString()}</p>
-            </div>
+            </Link>
           </>
         }
       </div>

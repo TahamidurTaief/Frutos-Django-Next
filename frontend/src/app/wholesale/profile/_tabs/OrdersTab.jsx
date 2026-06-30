@@ -1,10 +1,10 @@
-// src/app/wholesale/profile/_tabs/OrdersTab.jsx
 import { useState, useMemo, useEffect } from 'react'
 import { getWholesaleDailyReports } from '@/lib/api'
 import InvoiceModal from './InvoiceModal'
 import DailyReportModal from './DailyReportModal'
+import AggregatedReportModal from './AggregatedReportModal'
 
-export default function OrdersTab({ orders, onDeleteOrder, setProfileActiveTab, accessToken }) {
+export default function OrdersTab({ orders, onDeleteOrder, setProfileActiveTab, accessToken, profile }) {
   const [mainTab, setMainTab] = useState('PREVIOUS ORDER') // 'TRACK YOUR ORDER', 'PREVIOUS ORDER', 'DAILY REPORTS'
   const [activeTab, setActiveTab] = useState('ALL') // 'ALL', 'PENDING', 'PROCESSING', 'DELIVERED', 'CANCELLED'
   const [currentPage, setCurrentPage] = useState(1)
@@ -13,6 +13,7 @@ export default function OrdersTab({ orders, onDeleteOrder, setProfileActiveTab, 
   const [dailyReports, setDailyReports] = useState([])
   const [loadingReports, setLoadingReports] = useState(false)
   const [showReportModal, setShowReportModal] = useState(false)
+  const [reportViewType, setReportViewType] = useState(null) // 'weekly' or 'monthly'
   const [hiddenOrderIds, setHiddenOrderIds] = useState(new Set())
   const [permanentlyDeletedOrderIds, setPermanentlyDeletedOrderIds] = useState(new Set())
   const [orderToDelete, setOrderToDelete] = useState(null)
@@ -147,12 +148,26 @@ export default function OrdersTab({ orders, onDeleteOrder, setProfileActiveTab, 
               <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
               Your last order [Submitted reports]
             </h2>
-            <button 
-              onClick={() => setShowReportModal(true)}
-              className="bg-[#085041] text-white px-4 py-2 rounded text-sm font-semibold hover:bg-[#064032] hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 cursor-pointer"
-            >
-              Add New
-            </button>
+            <div className="flex gap-2 flex-wrap justify-end">
+              <button 
+                onClick={() => setReportViewType('weekly')}
+                className="bg-indigo-50 border border-indigo-200 text-indigo-700 px-4 py-2 rounded text-sm font-semibold hover:bg-indigo-100 hover:-translate-y-0.5 hover:shadow-sm transition-all duration-200 cursor-pointer"
+              >
+                Weekly Report
+              </button>
+              <button 
+                onClick={() => setReportViewType('monthly')}
+                className="bg-indigo-50 border border-indigo-200 text-indigo-700 px-4 py-2 rounded text-sm font-semibold hover:bg-indigo-100 hover:-translate-y-0.5 hover:shadow-sm transition-all duration-200 cursor-pointer"
+              >
+                Monthly Report
+              </button>
+              <button 
+                onClick={() => setShowReportModal(true)}
+                className="bg-[#085041] text-white px-4 py-2 rounded text-sm font-semibold hover:bg-[#064032] hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 cursor-pointer ml-2"
+              >
+                Add New
+              </button>
+            </div>
           </div>
 
           <div className="overflow-x-auto [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full">
@@ -426,6 +441,16 @@ export default function OrdersTab({ orders, onDeleteOrder, setProfileActiveTab, 
           accessToken={accessToken} 
           onClose={() => setShowReportModal(false)}
           onReportCreated={(newReport) => setDailyReports(prev => [newReport, ...(Array.isArray(prev) ? prev : [])])}
+        />
+      )}
+
+      {/* Aggregated Report Modal */}
+      {reportViewType && (
+        <AggregatedReportModal 
+          reports={dailyReports}
+          reportType={reportViewType}
+          profile={profile}
+          onClose={() => setReportViewType(null)}
         />
       )}
 

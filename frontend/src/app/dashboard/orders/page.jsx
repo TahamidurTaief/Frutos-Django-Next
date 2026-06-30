@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Eye, FileText, Pencil, Trash2, Receipt, AlertCircle, RefreshCw, Plus } from "lucide-react";
+import { Eye, FileText, Pencil, Trash2, Receipt, AlertCircle, RefreshCw, Plus, BarChart2 } from "lucide-react";
 import Container from "@/app/dashboard/_components/Container";
 import DataTable from "@/app/dashboard/_components/DataTable";
 import Modal from "@/app/dashboard/_components/Modal";
@@ -13,6 +13,7 @@ import useSWR from "swr";
 import { ordersService } from "@/app/dashboard/_lib/services";
 import api from "@/app/dashboard/_lib/api";
 import AdminCreateOrder from "./_components/AdminCreateOrder";
+import OrdersReportModal from "./_components/OrdersReportModal";
 
 const PAGE_SIZE = 20;
 
@@ -69,12 +70,15 @@ const statusFields = [
 
 const FILTERS = [
   { label: "All", value: "" },
+  { label: "This Week", value: "THIS_WEEK" },
+  { label: "This Month", value: "THIS_MONTH" },
   { label: "Pending", value: "PENDING" },
   { label: "Processing", value: "PROCESSING" },
   { label: "Shipped", value: "SHIPPED" },
   { label: "Delivered", value: "DELIVERED" },
   { label: "Cancelled", value: "CANCELLED" },
   { label: "Wholesale", value: "WHOLESALE" },
+  { label: "Customer", value: "RETAIL" },
 ];
 
 export default function OrdersPage() {
@@ -84,6 +88,7 @@ export default function OrdersPage() {
   const [viewItem, setViewItem] = useState(null);
   const [editItem, setEditItem] = useState(null);
   const [deleteItem, setDeleteItem] = useState(null);
+  const [showReport, setShowReport] = useState(false);
 
   // Backend OrderViewSet.list returns a flat array (no pagination)
   const { data: rawData, isLoading, error, mutate } = useSWR(
@@ -96,7 +101,26 @@ export default function OrdersPage() {
   const data = activeFilter
     ? activeFilter === "WHOLESALE"
       ? rawList.filter(o => o.is_wholesale_order)
-      : rawList.filter(o => o.status === activeFilter)
+      : activeFilter === "RETAIL"
+        ? rawList.filter(o => !o.is_wholesale_order)
+        : activeFilter === "THIS_WEEK"
+          ? rawList.filter(o => {
+            if (!o.ordered_at) return false;
+            const date = new Date(o.ordered_at);
+            const now = new Date();
+            const startOfWeek = new Date(now);
+            startOfWeek.setDate(now.getDate() - now.getDay());
+            startOfWeek.setHours(0, 0, 0, 0);
+            return date >= startOfWeek;
+          })
+          : activeFilter === "THIS_MONTH"
+            ? rawList.filter(o => {
+              if (!o.ordered_at) return false;
+              const date = new Date(o.ordered_at);
+              const now = new Date();
+              return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+            })
+            : rawList.filter(o => o.status === activeFilter)
     : rawList;
   const totalCount = rawData?.count ?? data.length;
 
@@ -136,8 +160,16 @@ export default function OrdersPage() {
           )}
           {!isCreating && (
             <button
+              onClick={() => setShowReport(true)}
+              className="cursor-pointer flex items-center gap-2 px-4 py-2 text-sm font-bold bg-emerald-50 border border-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-100 hover:border-emerald-200 hover:shadow-md transition-all shadow-sm group"
+            >
+              <BarChart2 className="w-4 h-4 text-emerald-600 group-hover:scale-110 transition-transform" /> View Report
+            </button>
+          )}
+          {!isCreating && (
+            <button
               onClick={() => setIsCreating(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-[#00694C] text-white rounded-md hover:bg-[#085041] transition-colors shadow-sm"
+              className="cursor-pointer flex items-center gap-2 px-4 py-2 text-sm font-bold bg-[#00694C] text-white rounded-lg hover:bg-[#085041] transition-colors shadow-sm"
             >
               <Plus className="w-4 h-4" /> Create Order
             </button>
@@ -159,7 +191,7 @@ export default function OrdersPage() {
               <button
                 key={f.value}
                 onClick={() => setFilter(f.value)}
-                className={`db-filter-pill${activeFilter === f.value ? " active" : ""}`}
+                className={`cursor-pointer db-filter-pill${activeFilter === f.value ? " active" : ""}`}
               >
                 {f.label}
               </button>
@@ -389,9 +421,14 @@ export default function OrdersPage() {
             message={`Are you sure you want to delete order ${deleteItem?.order_number}?`}
             confirmLabel="Delete"
           />
+
+          <OrdersReportModal
+            open={showReport}
+            onClose={() => setShowReport(false)}
+            orders={rawList}
+          />
         </>
       )}
     </Container>
   );
 }
-

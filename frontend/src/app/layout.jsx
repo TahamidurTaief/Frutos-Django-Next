@@ -14,6 +14,7 @@ import Providers            from '@/app/providers'
 import SessionGuard         from '@/app/components/SessionGuard'
 import LiveChatWidget       from '@/app/components/livechat/LiveChatWidget'
 import { getSiteConfig }    from '@/lib/api_site_config'
+import NextTopLoader        from 'nextjs-toploader'
 
 //  force-dynamic সরিয়ে দাও — tag revalidation-এর সাথে conflict করে
 // export const dynamic = 'force-dynamic'   ← এটা DELETE করো
@@ -77,6 +78,7 @@ export default async function RootLayout({ children }) {
           minHeight:  '100vh',
         }}
       >
+        <NextTopLoader color="#4f46e5" showSpinner={true} />
         <Providers>
           <AuthProvider>
             <WishlistProvider>

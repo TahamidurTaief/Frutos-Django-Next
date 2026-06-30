@@ -28,11 +28,13 @@ const PAGE_SIZE = 20;
 
 const columns = [
   {
-    key: "thumbnail_url", label: "", sortable: false, render: (v) => v ? (
-      <img src={v} alt="" className="w-8 h-8 rounded object-cover" />
+    key: "thumbnail_url", label: "Photo", sortable: false, render: (v) => v ? (
+      <div className="w-10 h-10 min-w-[40px] shrink-0">
+        <img src={v} alt="" className="w-full h-full rounded-md object-cover border border-slate-200" />
+      </div>
     ) : (
-      <div className="w-8 h-8 rounded bg-slate-100 flex items-center justify-center">
-        <ImageIcon className="w-3.5 h-3.5 text-slate-400" />
+      <div className="w-10 h-10 min-w-[40px] shrink-0 rounded-md bg-slate-100 border border-slate-200 flex items-center justify-center">
+        <ImageIcon className="w-4 h-4 text-slate-400" />
       </div>
     )
   },

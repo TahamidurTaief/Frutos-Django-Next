@@ -69,7 +69,7 @@ export default function NotificationsTab({ notifications, unreadCount, onMarkAll
           <p style={{ fontSize: 13.5, margin: 0 }}>No notifications yet.</p>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {notifications.map(n => {
             const isExpanded = expanded === n.id
             const iconColor = NOTIF_ICON_COLORS[n.type] || NOTIF_ICON_COLORS.default
@@ -98,14 +98,16 @@ export default function NotificationsTab({ notifications, unreadCount, onMarkAll
             return (
               <div key={n.id} style={{
                 border: `1px solid ${n.is_read ? '#eaeaea' : '#B3E5D0'}`,
-                borderRadius: '12px', overflow: 'hidden'
+                borderRadius: '12px', overflow: 'hidden',
+                display: 'flex', flexDirection: 'column'
               }}>
                 <div 
                   onClick={() => handleClick(n)}
                   style={{
                     display: 'flex', gap: 12, padding: '16px',
                     background: n.is_read ? '#fff' : '#F0FAF5',
-                    cursor: 'pointer', alignItems: 'flex-start'
+                    cursor: 'pointer', alignItems: 'flex-start',
+                    flex: 1
                   }}>
                   
                   <div style={{

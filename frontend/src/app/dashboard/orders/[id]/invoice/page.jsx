@@ -162,35 +162,49 @@ function A4Invoice({ order, items, subtotal, total, shipping, storeName, logoUrl
             </tr>
           </thead>
           <tbody>
-            {items.map((item, i) => (
-              <tr key={i} className="border-b border-slate-100">
-                <td className="py-3 text-slate-400">{i + 1}</td>
-                <td className="py-3 text-slate-800">{item.product_name || `Product #${item.product}`}</td>
-                <td className="py-3 text-slate-500 text-xs">{item.size_name || "—"}</td>
-                <td className="py-3 text-center text-slate-600">{item.quantity}</td>
-                <td className="py-3 text-right text-slate-600">€{Number(item.unit_price).toLocaleString()}</td>
-                <td className="py-3 text-right font-medium text-slate-800">€{(item.quantity * Number(item.unit_price)).toLocaleString()}</td>
+            {items.length > 0 ? (
+              items.map((item, i) => (
+                <tr key={i} className="border-b border-slate-100">
+                  <td className="py-3 text-slate-400">{i + 1}</td>
+                  <td className="py-3 text-slate-800">{item.product_name || item.product || 'Unknown Product'}</td>
+                  <td className="py-3 text-slate-500 text-xs">{item.size_name || item.size || "—"}</td>
+                  <td className="py-3 text-center text-slate-600">{item.quantity}</td>
+                  <td className="py-3 text-right text-slate-600">€{Number(item.unit_price).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                  <td className="py-3 text-right font-medium text-slate-800">€{(item.quantity * Number(item.unit_price)).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" className="py-6 text-center text-slate-400 border-b border-slate-100">No items found for this order.</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
 
         {/* Totals */}
-        <div className="flex justify-end">
-          <div className="w-64 space-y-1.5">
+        <div className="flex justify-end mt-4">
+          <div className="w-72 space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-slate-500">Subtotal</span>
-              <span className="text-slate-800">€{subtotal.toLocaleString()}</span>
+              <span className="text-slate-500">Subtotal (Without Tax)</span>
+              <span className="text-slate-800 font-medium">€{(subtotal / 1.21).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-slate-500">Tax (IVA 21%)</span>
+              <span className="text-slate-800 font-medium">€{(subtotal - (subtotal / 1.21)).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+            </div>
+            <div className="flex justify-between text-sm pt-2 border-t border-slate-100">
+              <span className="text-slate-500">Subtotal (With Tax)</span>
+              <span className="text-slate-800 font-medium">€{subtotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
             </div>
             {shipping > 0 && (
               <div className="flex justify-between text-sm">
                 <span className="text-slate-500">Shipping</span>
-                <span className="text-slate-800">€{shipping.toLocaleString()}</span>
+                <span className="text-slate-800 font-medium">€{shipping.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
               </div>
             )}
-            <div className="flex justify-between text-sm font-semibold pt-2 border-t border-slate-200">
-              <span className="text-slate-800">Total</span>
-              <span className="text-slate-800">€{total.toLocaleString()}</span>
+            <div className="flex justify-between text-base font-bold pt-3 border-t-2 border-slate-800 mt-2">
+              <span className="text-slate-900">Total</span>
+              <span className="text-slate-900">€{total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
             </div>
           </div>
         </div>
@@ -214,10 +228,13 @@ function A4Invoice({ order, items, subtotal, total, shipping, storeName, logoUrl
 
 /* ─── Wholesale Invoice Layout ─── */
 function WholesaleInvoice({ order, items, storeName, allProducts = [] }) {
-  const productsByCategory = allProducts.reduce((acc, p) => {
+  const productsByCategoryAndSub = allProducts.reduce((acc, p) => {
     const cat = p.category_name || (p.category && p.category.name) || "Uncategorized";
-    if (!acc[cat]) acc[cat] = [];
-    acc[cat].push(p);
+    const subcat = p.sub_category_name || (p.sub_category && p.sub_category.name) || "Others";
+    
+    if (!acc[cat]) acc[cat] = {};
+    if (!acc[cat][subcat]) acc[cat][subcat] = [];
+    acc[cat][subcat].push(p);
     return acc;
   }, {});
 
@@ -246,32 +263,94 @@ function WholesaleInvoice({ order, items, storeName, allProducts = [] }) {
 
         {/* Items Grid (Warehouse Picking List) */}
         <div className="mb-4">
-          {Object.keys(productsByCategory).length > 0 ? (
-            Object.entries(productsByCategory).map(([category, prods]) => (
-              <div key={category} className="break-inside-avoid mb-0.5">
-                {/* Optional category header to maintain structure */}
-                <h4 className="text-[10px] font-bold text-black uppercase bg-slate-200 print:bg-gray-200 px-2 border-l border-r border-t border-black inline-block tracking-wider">
-                  {category}
-                </h4>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 border-l border-t border-black">
-                  {prods.map(p => {
-                    const ordered = orderedItemsMap[p.id];
-                    return (
-                      <div key={p.id} className="flex border-r border-b border-black text-[10px] bg-white h-full">
-                        {/* Name (Left side) */}
-                        <div className="flex-1 px-1.5 py-1 flex items-center min-w-0 border-r border-black border-dashed">
-                          <span className={`uppercase truncate ${ordered ? "font-black text-black" : "text-gray-800"}`} title={p.name}>
-                            {p.name}
-                          </span>
-                        </div>
-                        {/* Quantity Box (Right side partition) */}
-                        <div className="w-16 shrink-0 flex items-center justify-center font-bold text-black text-[10px] bg-slate-50 print:bg-transparent text-center px-1">
-                          {ordered ? `${ordered.quantity} ${(p.wholesale_unit || p.unit || 'pcs').replace(/^per\s+/i, '')}` : ""}
-                        </div>
-                      </div>
-                    );
-                  })}
+          {Object.keys(productsByCategoryAndSub).length > 0 ? (
+            Object.entries(productsByCategoryAndSub)
+              .sort((a, b) => {
+                const hasOrderedA = Object.values(a[1]).some(sub => sub.some(p => orderedItemsMap[p.id]));
+                const hasOrderedB = Object.values(b[1]).some(sub => sub.some(p => orderedItemsMap[p.id]));
+                if (hasOrderedA && !hasOrderedB) return -1;
+                if (!hasOrderedA && hasOrderedB) return 1;
+
+                const nameA = a[0].toLowerCase();
+                const nameB = b[0].toLowerCase();
+                
+                const getPriority = (name) => {
+                  if (name.includes('fruit')) return 1;
+                  if (name.includes('groc')) return 2;
+                  return 3;
+                };
+
+                const prioA = getPriority(nameA);
+                const prioB = getPriority(nameB);
+
+                if (prioA !== prioB) return prioA - prioB;
+                return nameA.localeCompare(nameB);
+              })
+              .map(([category, subcategories]) => (
+              <div key={category} className="break-inside-avoid mb-2">
+                {/* Category Header */}
+                <div className="bg-slate-200 print:bg-slate-200 border-b-2 border-slate-300 px-3 py-1 mb-2 rounded-t-sm">
+                  <h4 className="text-[12px] font-black text-slate-800 uppercase tracking-widest">
+                    {category}
+                  </h4>
                 </div>
+                
+                {Object.entries(subcategories)
+                  .sort((a, b) => {
+                    const hasOrderedA = a[1].some(p => orderedItemsMap[p.id]);
+                    const hasOrderedB = b[1].some(p => orderedItemsMap[p.id]);
+                    if (hasOrderedA && !hasOrderedB) return -1;
+                    if (!hasOrderedA && hasOrderedB) return 1;
+
+                    if (a[0] === "Others") return 1;
+                    if (b[0] === "Others") return -1;
+                    return a[0].localeCompare(b[0]);
+                  })
+                  .map(([subcat, prods]) => (
+                    <div key={subcat} className="mb-3">
+                      <div className="bg-slate-50 print:bg-slate-50 border border-b-0 border-slate-300 px-2 py-0.5 rounded-t-sm inline-block">
+                        <h5 className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">
+                          {subcat}
+                        </h5>
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 border-l border-t border-slate-300">
+                        {prods.sort((p1, p2) => {
+                          const o1 = orderedItemsMap[p1.id] ? 1 : 0;
+                          const o2 = orderedItemsMap[p2.id] ? 1 : 0;
+                          if (o1 !== o2) return o2 - o1;
+                          return p1.name.localeCompare(p2.name);
+                        }).map(p => {
+                          const ordered = orderedItemsMap[p.id];
+                          return (
+                            <div key={p.id} className={`flex border-r border-b border-slate-300 text-[10px] h-[36px] overflow-hidden ${ordered ? 'bg-slate-50 print:bg-slate-50' : 'bg-white'}`}>
+                              {/* Name (Left side) */}
+                              <div className="flex-1 px-1.5 py-0.5 flex flex-col justify-center min-w-0 border-r border-slate-300 border-dashed leading-tight">
+                                <span className={`uppercase truncate ${ordered ? "font-bold text-slate-900 text-[10px]" : "text-slate-700 text-[9px]"}`} title={p.name}>
+                                  {p.name}
+                                </span>
+                                {ordered && (
+                                  <div className="flex items-center gap-1 mt-[2px] whitespace-nowrap overflow-hidden">
+                                    {p.variant && (
+                                      <span className="bg-slate-800 text-white px-1 py-[1px] rounded-[2px] text-[7px] font-bold tracking-wide print:border print:border-slate-400 print:bg-white print:text-black shrink-0 truncate max-w-[50px]">
+                                        {p.variant}
+                                      </span>
+                                    )}
+                                    <span className="text-slate-900 font-bold text-[8px] truncate">
+                                      €{Number(ordered.unit_price || p.wholesale_price || p.price).toLocaleString()}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                              {/* Quantity Box (Right side partition) */}
+                              <div className={`w-14 shrink-0 flex items-center justify-center font-black text-[11px] text-center px-1 ${ordered ? 'text-slate-900 bg-slate-200/50 print:bg-slate-200/50' : 'text-slate-300'}`}>
+                                {ordered ? `${ordered.quantity} ${(p.wholesale_unit || p.unit || 'pcs').replace(/^per\s+/i, '')}` : ""}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
               </div>
             ))
           ) : (
@@ -420,14 +499,44 @@ export default function InvoicePage() {
         </div>
       </div>
 
+      {/* Print isolation styles to hide everything except the invoice */}
+      <style>{`
+        @media print {
+          html, body {
+            background-color: white !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          body * {
+            visibility: hidden !important;
+          }
+          #invoice-print-area, #invoice-print-area * {
+            visibility: visible !important;
+          }
+          #invoice-print-area {
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          @page {
+            margin: 10mm;
+          }
+        }
+      `}</style>
+
       {/* Invoice Content */}
-      {order.is_wholesale_order ? (
-        <WholesaleInvoice order={order} items={items} subtotal={subtotal} total={total} shipping={shipping} storeName={storeName} logoUrl={logoUrl} contactEmail={contactEmail} contactPhone={contactPhone} contactAddress={contactAddress} allProducts={allProducts} />
-      ) : invoiceType === "pos" ? (
-        <POSInvoice order={order} items={items} subtotal={subtotal} total={total} shipping={shipping} storeName={storeName} logoUrl={logoUrl} contactEmail={contactEmail} contactPhone={contactPhone} contactAddress={contactAddress} />
-      ) : (
-        <A4Invoice order={order} items={items} subtotal={subtotal} total={total} shipping={shipping} storeName={storeName} logoUrl={logoUrl} contactEmail={contactEmail} contactPhone={contactPhone} contactAddress={contactAddress} />
-      )}
+      <div id="invoice-print-area" className="w-full">
+        {order.is_wholesale_order ? (
+          <WholesaleInvoice order={order} items={items} subtotal={subtotal} total={total} shipping={shipping} storeName={storeName} logoUrl={logoUrl} contactEmail={contactEmail} contactPhone={contactPhone} contactAddress={contactAddress} allProducts={allProducts} />
+        ) : invoiceType === "pos" ? (
+          <POSInvoice order={order} items={items} subtotal={subtotal} total={total} shipping={shipping} storeName={storeName} logoUrl={logoUrl} contactEmail={contactEmail} contactPhone={contactPhone} contactAddress={contactAddress} />
+        ) : (
+          <A4Invoice order={order} items={items} subtotal={subtotal} total={total} shipping={shipping} storeName={storeName} logoUrl={logoUrl} contactEmail={contactEmail} contactPhone={contactPhone} contactAddress={contactAddress} />
+        )}
+      </div>
     </div>
   );
 }

@@ -168,7 +168,7 @@ export default function WholesaleProfileClient({ initialProfile, initialNotifica
             <AccountInfoTab profile={profile} onImageUpload={handleImageUpload} imageUploading={imageUploading} />
           )}
           {activeTab === 'orders' && (
-            <OrdersTab orders={orders} onDeleteOrder={handleDeleteOrder} setProfileActiveTab={setActiveTab} accessToken={accessToken} />
+            <OrdersTab orders={orders} onDeleteOrder={handleDeleteOrder} setProfileActiveTab={setActiveTab} accessToken={accessToken} profile={profile} />
           )}
           {activeTab === 'support_tickets' && (
             <WholesaleSupportTicketsTab accessToken={accessToken} />

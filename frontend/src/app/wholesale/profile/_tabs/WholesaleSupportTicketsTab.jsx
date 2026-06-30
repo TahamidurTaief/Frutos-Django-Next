@@ -393,7 +393,7 @@ export default function WholesaleSupportTicketsTab({ accessToken }) {
       )}
 
       {!showForm && tickets.length > 0 && (
-        <div className="space-y-3 sm:space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {tickets.map(ticket => (
             <div 
               key={ticket.id} 

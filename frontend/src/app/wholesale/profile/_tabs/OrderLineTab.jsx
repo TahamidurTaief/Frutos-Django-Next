@@ -424,7 +424,7 @@ export default function OrderLineTab({ accessToken }) {
 
       {/* Right Sidebar - Cart */}
       {cart.length > 0 && (
-        <div className="w-full lg:w-80 flex-shrink-0 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col h-[600px] lg:h-auto animate-in slide-in-from-right-8 fade-in duration-500">
+        <div className="w-full lg:w-80 flex-shrink-0 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col max-h-[600px] lg:max-h-full lg:h-auto lg:self-start animate-in slide-in-from-right-8 fade-in duration-500">
           <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-[#085041] text-white rounded-t-xl">
             <div>
               <h3 className="font-semibold text-lg">Current Order</h3>

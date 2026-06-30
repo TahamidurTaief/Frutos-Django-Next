@@ -362,6 +362,7 @@ import {
 import Container from "@/app/dashboard/_components/Container";
 import { TrendingUp, ShoppingCart, DollarSign, Users, Package, CheckCircle, Clock, XCircle, Loader2, BarChart2, Store, MapPin, Tag } from "lucide-react";
 import useSWR from "swr";
+import Link from "next/link";
 import { fetchAdminDashboardStats } from "@/app/dashboard/_lib/auth";
 import { ordersService, productsService, storesService, leftoverPacksService, offersService } from "@/app/dashboard/_lib/services";
 
@@ -373,27 +374,28 @@ const STATUS_COLORS = {
 };
 const PAYMENT_COLORS = { PAID: "#10b981", PENDING: "#f59e0b", FAILED: "#ef4444" };
 
-function KpiCard({ label, value, icon: Icon, sub, color = "gray" }) {
+function KpiCard({ label, value, icon: Icon, sub, color = "gray", href }) {
   const colors = {
-    indigo:  "bg-indigo-50 text-indigo-600",
+    indigo: "bg-indigo-50 text-indigo-600",
     emerald: "bg-emerald-50 text-emerald-600",
-    blue:    "bg-blue-50 text-blue-600",
-    amber:   "bg-amber-50 text-amber-600",
-    violet:  "bg-violet-50 text-violet-600",
-    red:     "bg-red-50 text-red-600",
-    gray:    "bg-slate-100 text-slate-500",
+    blue: "bg-blue-50 text-blue-600",
+    amber: "bg-amber-50 text-amber-600",
+    violet: "bg-violet-50 text-violet-600",
+    red: "bg-red-50 text-red-600",
+    gray: "bg-slate-100 text-slate-500",
   };
   const valColors = {
-    indigo:  "text-slate-800",
+    indigo: "text-slate-800",
     emerald: "text-emerald-600",
-    blue:    "text-slate-800",
-    amber:   "text-slate-800",
-    violet:  "text-slate-800",
-    red:     "text-slate-800",
-    gray:    "text-slate-800",
+    blue: "text-slate-800",
+    amber: "text-slate-800",
+    violet: "text-slate-800",
+    red: "text-slate-800",
+    gray: "text-slate-800",
   };
-  return (
-    <div className="bg-white border border-slate-100 rounded-xl p-5 shadow-sm hover:shadow-md transition-all">
+
+  const content = (
+    <>
       <div className="flex items-start justify-between mb-3">
         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${colors[color]}`}>
           <Icon className="w-5 h-5" size={20} />
@@ -402,6 +404,22 @@ function KpiCard({ label, value, icon: Icon, sub, color = "gray" }) {
       <p className={`text-2xl font-black leading-tight ${valColors[color]}`}>{value}</p>
       <p className="text-xs font-bold text-slate-400 mt-1 uppercase tracking-wider">{label}</p>
       {sub && <p className="text-xs text-slate-400 mt-0.5 font-semibold">{sub}</p>}
+    </>
+  );
+
+  const className = "bg-white border border-slate-100 rounded-xl p-5 shadow-sm hover:shadow-md transition-all block";
+
+  if (href) {
+    return (
+      <Link href={href} className={`${className} hover:-translate-y-1`}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <div className={className}>
+      {content}
     </div>
   );
 }
@@ -452,8 +470,8 @@ export default function AnalyticsPage() {
     () => storesService.list(),
     { revalidateOnFocus: false }
   );
-  const allStores      = Array.isArray(storesRaw) ? storesRaw : (storesRaw?.results || []);
-  const activeStores   = allStores.filter(s => s.is_active);
+  const allStores = Array.isArray(storesRaw) ? storesRaw : (storesRaw?.results || []);
+  const activeStores = allStores.filter(s => s.is_active);
   const inactiveStores = allStores.filter(s => !s.is_active);
 
   const { data: leftoverPacksData } = useSWR(
@@ -500,7 +518,7 @@ export default function AnalyticsPage() {
   const pendingCount = orders.filter(o => o.status === "PENDING").length;
 
   // â”€â”€â”€ Monthly Aggregations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  const MONTH_ORDER = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const MONTH_ORDER = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const monthlyMap = {};
   orders.forEach(o => {
     const d = new Date(o.ordered_at);
@@ -518,12 +536,12 @@ export default function AnalyticsPage() {
   const now = new Date();
   for (let i = 13; i >= 0; i--) {
     const d = new Date(now); d.setDate(d.getDate() - i);
-    const key = `${d.getMonth()+1}/${d.getDate()}`;
+    const key = `${d.getMonth() + 1}/${d.getDate()}`;
     dailyMap[key] = { day: key, orders: 0, revenue: 0 };
   }
   orders.forEach(o => {
     const d = new Date(o.ordered_at);
-    const key = `${d.getMonth()+1}/${d.getDate()}`;
+    const key = `${d.getMonth() + 1}/${d.getDate()}`;
     if (dailyMap[key]) {
       dailyMap[key].orders += 1;
       dailyMap[key].revenue += Number(o.total_amount || 0);
@@ -549,18 +567,18 @@ export default function AnalyticsPage() {
   let leftoverPackRevenue = 0;
 
   leftoverPacks.forEach(pack => {
-     totalLeftoverPacksAvailable += Number(pack.stock || 0);
+    totalLeftoverPacksAvailable += Number(pack.stock || 0);
   });
 
   const packsByStoreMap = {};
   const packIdToStore = {};
   leftoverPacks.forEach(pack => {
-     const storeName = pack.store?.name || pack.store || 'Unknown Store';
-     packIdToStore[pack.id] = storeName;
-     if (!packsByStoreMap[storeName]) {
-        packsByStoreMap[storeName] = { store: storeName, available: 0, sold: 0 };
-     }
-     packsByStoreMap[storeName].available += Number(pack.stock || 0);
+    const storeName = pack.store?.name || pack.store || 'Unknown Store';
+    packIdToStore[pack.id] = storeName;
+    if (!packsByStoreMap[storeName]) {
+      packsByStoreMap[storeName] = { store: storeName, available: 0, sold: 0 };
+    }
+    packsByStoreMap[storeName].available += Number(pack.stock || 0);
   });
 
   orders.forEach(o => {
@@ -571,11 +589,11 @@ export default function AnalyticsPage() {
         totalLeftoverPacksSold += qty;
         leftoverPackRevenue += Number(item.unit_price || 0) * qty;
         hasLeftoverPack = true;
-        
+
         const packId = typeof item.leftover_pack === 'object' ? item.leftover_pack.id : item.leftover_pack;
         const storeName = packIdToStore[packId];
         if (storeName && packsByStoreMap[storeName]) {
-           packsByStoreMap[storeName].sold += qty;
+          packsByStoreMap[storeName].sold += qty;
         }
       }
     });
@@ -599,12 +617,12 @@ export default function AnalyticsPage() {
 
       {/* KPI Row 1 */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        <KpiCard label="Total Revenue" value={`€${totalRevenue.toLocaleString()}`} icon={DollarSign} color="emerald" sub="all time" />
-        <KpiCard label="Total Orders" value={totalOrders.toLocaleString()} icon={ShoppingCart} color="blue" sub={`${pendingCount} pending`} />
+        <KpiCard label="Total Revenue" value={`€${totalRevenue.toLocaleString()}`} icon={DollarSign} color="emerald" sub="all time" href="/dashboard/analytics" />
+        <KpiCard label="Total Orders" value={totalOrders.toLocaleString()} icon={ShoppingCart} color="blue" sub={`${pendingCount} pending`} href="/dashboard/orders" />
         <KpiCard label="Avg Order Value" value={`€${avgOrderValue.toLocaleString()}`} icon={TrendingUp} color="indigo" sub="per order" />
         <KpiCard label="Delivery Rate" value={`${deliveryRate}%`} icon={CheckCircle} color="emerald" sub={`${deliveredCount} delivered`} />
-        <KpiCard label="Total Users" value={totalUsers.toLocaleString()} icon={Users} color="violet" sub={`${stats?.total_customers || 0} customers`} />
-        <KpiCard label="Products" value={totalProducts.toLocaleString()} icon={Package} color="amber" sub="listed" />
+        <KpiCard label="Total Users" value={totalUsers.toLocaleString()} icon={Users} color="violet" sub={`${stats?.total_customers || 0} customers`} href="/dashboard/users" />
+        <KpiCard label="Products" value={totalProducts.toLocaleString()} icon={Package} color="amber" sub="listed" href="/dashboard/products" />
       </div>
 
       {/* Charts Row 1: Revenue + Daily Orders */}
@@ -730,14 +748,13 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Summary Metric Boxes */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         {[
-          ["Customers",  stats?.total_customers || 0, "text-blue-600",    "bg-blue-50"],
-          ["Sellers",    stats?.total_sellers   || 0, "text-indigo-600",  "bg-indigo-50"],
-          ["Vendors",    stats?.total_vendors   || 0, "text-violet-600",  "bg-violet-50"],
-          ["Admins",     stats?.total_admins    || 0, "text-amber-600",   "bg-amber-50"],
-          ["Paid Orders",paidCount,                   "text-emerald-600", "bg-emerald-50"],
-          ["Cancelled",  statusMap.CANCELLED    || 0, "text-red-600",     "bg-red-50"],
+          ["Customers", stats?.total_customers || 0, "text-blue-600", "bg-blue-50"],
+          ["Sellers", stats?.total_sellers || 0, "text-indigo-600", "bg-indigo-50"],
+          ["Admins", stats?.total_admins || 0, "text-amber-600", "bg-amber-50"],
+          ["Paid Orders", paidCount, "text-emerald-600", "bg-emerald-50"],
+          ["Cancelled", statusMap.CANCELLED || 0, "text-red-600", "bg-red-50"],
         ].map(([label, val, textCls, bgCls]) => (
           <div key={label} className="bg-white border border-slate-100 rounded-xl px-5 py-4 shadow-sm hover:shadow-md transition-all">
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{label}</p>
@@ -757,9 +774,9 @@ export default function AnalyticsPage() {
           </div>
           <div className="space-y-2">
             {[
-              { label: 'Total Stores', value: allStores.length,   color: 'text-slate-800' },
-              { label: 'Active',       value: activeStores.length, color: 'text-emerald-600' },
-              { label: 'Inactive',     value: inactiveStores.length, color: 'text-slate-400' },
+              { label: 'Total Stores', value: allStores.length, color: 'text-slate-800' },
+              { label: 'Active', value: activeStores.length, color: 'text-emerald-600' },
+              { label: 'Inactive', value: inactiveStores.length, color: 'text-slate-400' },
             ].map(({ label, value, color }) => (
               <div key={label} className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
                 <span className="text-xs font-semibold text-slate-500">{label}</span>
@@ -819,85 +836,85 @@ export default function AnalyticsPage() {
           <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><Tag className="w-5 h-5" /></div>
           <h3 className="text-sm font-bold text-slate-800">Offers Analytics</h3>
         </div>
-        
+
         <div className="p-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Metrics summary */}
           <div className="lg:col-span-1 space-y-3">
-             <div className="grid grid-cols-2 gap-3">
-               <div className="bg-blue-50 border border-blue-100 rounded-lg p-3">
-                  <p className="text-xs text-blue-600 font-medium">Total Offers</p>
-                  <p className="text-2xl font-bold text-blue-700 mt-1">{allOffers.length}</p>
-               </div>
-               <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-3">
-                  <p className="text-xs text-emerald-600 font-medium">Active Offers</p>
-                  <p className="text-2xl font-bold text-emerald-700 mt-1">{activeOffersCount}</p>
-               </div>
-             </div>
-             
-             <div className="bg-slate-50 border border-slate-100 rounded-lg p-3">
-                <div className="flex justify-between items-center mb-2">
-                   <p className="text-xs text-slate-500">Active vs Inactive</p>
-                   <p className="text-xs font-medium text-slate-700">{allOffers.length} Total Offers</p>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2 mb-2 flex overflow-hidden">
-                   <div style={{ width: `${Math.max((activeOffersCount / (allOffers.length || 1)) * 100, 0)}%` }} className="bg-emerald-400"></div>
-                   <div style={{ width: `${Math.max((inactiveOffersCount / (allOffers.length || 1)) * 100, 0)}%` }} className="bg-gray-400"></div>
-                </div>
-                <div className="flex justify-between text-[11px]">
-                   <span className="flex items-center gap-1 text-emerald-600 font-medium">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400"></span> Active ({activeOffersCount})
-                   </span>
-                   <span className="flex items-center gap-1 text-slate-500 font-medium">
-                      <span className="w-2 h-2 rounded-full bg-gray-400"></span> Inactive ({inactiveOffersCount})
-                   </span>
-                </div>
-             </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-blue-50 border border-blue-100 rounded-lg p-3">
+                <p className="text-xs text-blue-600 font-medium">Total Offers</p>
+                <p className="text-2xl font-bold text-blue-700 mt-1">{allOffers.length}</p>
+              </div>
+              <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-3">
+                <p className="text-xs text-emerald-600 font-medium">Active Offers</p>
+                <p className="text-2xl font-bold text-emerald-700 mt-1">{activeOffersCount}</p>
+              </div>
+            </div>
+
+            <div className="bg-slate-50 border border-slate-100 rounded-lg p-3">
+              <div className="flex justify-between items-center mb-2">
+                <p className="text-xs text-slate-500">Active vs Inactive</p>
+                <p className="text-xs font-medium text-slate-700">{allOffers.length} Total Offers</p>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2 mb-2 flex overflow-hidden">
+                <div style={{ width: `${Math.max((activeOffersCount / (allOffers.length || 1)) * 100, 0)}%` }} className="bg-emerald-400"></div>
+                <div style={{ width: `${Math.max((inactiveOffersCount / (allOffers.length || 1)) * 100, 0)}%` }} className="bg-gray-400"></div>
+              </div>
+              <div className="flex justify-between text-[11px]">
+                <span className="flex items-center gap-1 text-emerald-600 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400"></span> Active ({activeOffersCount})
+                </span>
+                <span className="flex items-center gap-1 text-slate-500 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-gray-400"></span> Inactive ({inactiveOffersCount})
+                </span>
+              </div>
+            </div>
           </div>
-          
+
           {/* Chart by Status */}
           <div className="lg:col-span-1 min-w-0">
-             <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Offers by Status</h4>
-             <div className="h-40 w-full min-h-[160px]">
-               {offersStatusData.length > 0 ? (
-                 <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-                   <PieChart>
-                     <Pie data={offersStatusData} cx="50%" cy="50%" innerRadius={35} outerRadius={55} dataKey="value" stroke="none">
-                       {offersStatusData.map((entry, i) => (
-                         <Cell key={i} fill={entry.name === 'Active' ? '#10b981' : '#9ca3af'} />
-                       ))}
-                     </Pie>
-                     <Tooltip contentStyle={{ fontSize: "11px", borderRadius: "8px" }} />
-                   </PieChart>
-                 </ResponsiveContainer>
-               ) : (
-                 <div className="flex items-center justify-center h-full text-sm text-slate-400">No offers data found</div>
-               )}
-             </div>
+            <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Offers by Status</h4>
+            <div className="h-40 w-full min-h-[160px]">
+              {offersStatusData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+                  <PieChart>
+                    <Pie data={offersStatusData} cx="50%" cy="50%" innerRadius={35} outerRadius={55} dataKey="value" stroke="none">
+                      {offersStatusData.map((entry, i) => (
+                        <Cell key={i} fill={entry.name === 'Active' ? '#10b981' : '#9ca3af'} />
+                      ))}
+                    </Pie>
+                    <Tooltip contentStyle={{ fontSize: "11px", borderRadius: "8px" }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="flex items-center justify-center h-full text-sm text-slate-400">No offers data found</div>
+              )}
+            </div>
           </div>
 
           {/* Recent/Top Offers List */}
           <div className="lg:col-span-1">
-             <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Top Offers</h4>
-             <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
-               {allOffers.length === 0 ? (
-                 <p className="text-xs text-slate-400 py-4">No offers available</p>
-               ) : [...allOffers].sort((a, b) => (b.items?.length || 0) - (a.items?.length || 0)).slice(0, 4).map(offer => (
-                 <div key={offer.id || offer.slug} className="flex items-center gap-3 p-2 rounded-lg border border-slate-100 bg-slate-50/50">
-                   {offer.banner_image_url || offer.banner_image ? (
-                     <img src={offer.banner_image_url || offer.banner_image} alt={offer.title} className="w-8 h-8 rounded-md object-cover flex-shrink-0" />
-                   ) : (
-                     <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center flex-shrink-0">
-                       <Tag className="w-3 h-3 text-slate-400" />
-                     </div>
-                   )}
-                   <div className="flex-1 min-w-0">
-                     <p className="text-xs font-medium text-slate-800 truncate">{offer.title}</p>
-                     <p className="text-[10px] text-slate-500">{offer.items?.length || 0} Products</p>
-                   </div>
-                   <span className={`flex-shrink-0 w-2 h-2 rounded-full ${offer.is_active !== false ? 'bg-emerald-400' : 'bg-gray-400'}`} />
-                 </div>
-               ))}
-             </div>
+            <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Top Offers</h4>
+            <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
+              {allOffers.length === 0 ? (
+                <p className="text-xs text-slate-400 py-4">No offers available</p>
+              ) : [...allOffers].sort((a, b) => (b.items?.length || 0) - (a.items?.length || 0)).slice(0, 4).map(offer => (
+                <div key={offer.id || offer.slug} className="flex items-center gap-3 p-2 rounded-lg border border-slate-100 bg-slate-50/50">
+                  {offer.banner_image_url || offer.banner_image ? (
+                    <img src={offer.banner_image_url || offer.banner_image} alt={offer.title} className="w-8 h-8 rounded-md object-cover flex-shrink-0" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-md bg-gray-200 flex items-center justify-center flex-shrink-0">
+                      <Tag className="w-3 h-3 text-slate-400" />
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-slate-800 truncate">{offer.title}</p>
+                    <p className="text-[10px] text-slate-500">{offer.items?.length || 0} Products</p>
+                  </div>
+                  <span className={`flex-shrink-0 w-2 h-2 rounded-full ${offer.is_active !== false ? 'bg-emerald-400' : 'bg-gray-400'}`} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -908,66 +925,66 @@ export default function AnalyticsPage() {
           <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><Package className="w-5 h-5" /></div>
           <h3 className="text-sm font-bold text-slate-800">Leftover Packs Analytics</h3>
         </div>
-        
+
         <div className="p-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Metrics summary */}
           <div className="lg:col-span-1 space-y-3">
-             <div className="grid grid-cols-2 gap-3">
-               <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-3">
-                  <p className="text-xs text-emerald-600 font-medium">Total Packs</p>
-                  <p className="text-2xl font-bold text-emerald-700 mt-1">{totalLeftoverPacks}</p>
-               </div>
-               <div className="bg-blue-50 border border-blue-100 rounded-lg p-3">
-                  <p className="text-xs text-blue-600 font-medium">Pack Revenue</p>
-                  <p className="text-2xl font-bold text-blue-700 mt-1">€{leftoverPackRevenue.toLocaleString()}</p>
-               </div>
-             </div>
-             
-             <div className="bg-slate-50 border border-slate-100 rounded-lg p-3">
-                <div className="flex justify-between items-center mb-2">
-                   <p className="text-xs text-slate-500">Available vs Sold</p>
-                   <p className="text-xs font-medium text-slate-700">{totalLeftoverPacksAvailable + totalLeftoverPacksSold} Total Units</p>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2 mb-2 flex overflow-hidden">
-                   <div style={{ width: `${Math.max((totalLeftoverPacksAvailable / (totalLeftoverPacksAvailable + totalLeftoverPacksSold || 1)) * 100, 0)}%` }} className="bg-emerald-400"></div>
-                   <div style={{ width: `${Math.max((totalLeftoverPacksSold / (totalLeftoverPacksAvailable + totalLeftoverPacksSold || 1)) * 100, 0)}%` }} className="bg-amber-400"></div>
-                </div>
-                <div className="flex justify-between text-[11px]">
-                   <span className="flex items-center gap-1 text-emerald-600 font-medium">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400"></span> Available ({totalLeftoverPacksAvailable})
-                   </span>
-                   <span className="flex items-center gap-1 text-amber-600 font-medium">
-                      <span className="w-2 h-2 rounded-full bg-amber-400"></span> Sold ({totalLeftoverPacksSold})
-                   </span>
-                </div>
-             </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-3">
+                <p className="text-xs text-emerald-600 font-medium">Total Packs</p>
+                <p className="text-2xl font-bold text-emerald-700 mt-1">{totalLeftoverPacks}</p>
+              </div>
+              <div className="bg-blue-50 border border-blue-100 rounded-lg p-3">
+                <p className="text-xs text-blue-600 font-medium">Pack Revenue</p>
+                <p className="text-2xl font-bold text-blue-700 mt-1">€{leftoverPackRevenue.toLocaleString()}</p>
+              </div>
+            </div>
 
-             <div className="bg-slate-50 border border-slate-100 rounded-lg p-3">
-                  <p className="text-xs text-slate-500 mb-1">Orders with Packs</p>
-                  <p className="text-xl font-bold text-slate-800">{leftoverPackOrdersCount}</p>
-             </div>
+            <div className="bg-slate-50 border border-slate-100 rounded-lg p-3">
+              <div className="flex justify-between items-center mb-2">
+                <p className="text-xs text-slate-500">Available vs Sold</p>
+                <p className="text-xs font-medium text-slate-700">{totalLeftoverPacksAvailable + totalLeftoverPacksSold} Total Units</p>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2 mb-2 flex overflow-hidden">
+                <div style={{ width: `${Math.max((totalLeftoverPacksAvailable / (totalLeftoverPacksAvailable + totalLeftoverPacksSold || 1)) * 100, 0)}%` }} className="bg-emerald-400"></div>
+                <div style={{ width: `${Math.max((totalLeftoverPacksSold / (totalLeftoverPacksAvailable + totalLeftoverPacksSold || 1)) * 100, 0)}%` }} className="bg-amber-400"></div>
+              </div>
+              <div className="flex justify-between text-[11px]">
+                <span className="flex items-center gap-1 text-emerald-600 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400"></span> Available ({totalLeftoverPacksAvailable})
+                </span>
+                <span className="flex items-center gap-1 text-amber-600 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-amber-400"></span> Sold ({totalLeftoverPacksSold})
+                </span>
+              </div>
+            </div>
+
+            <div className="bg-slate-50 border border-slate-100 rounded-lg p-3">
+              <p className="text-xs text-slate-500 mb-1">Orders with Packs</p>
+              <p className="text-xl font-bold text-slate-800">{leftoverPackOrdersCount}</p>
+            </div>
           </div>
-          
+
           {/* Chart by Store */}
           <div className="lg:col-span-2">
-             <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Pack Units by Store</h4>
-             <div className="h-48 w-full">
-               {leftoverPacksByStore.length > 0 ? (
-                 <ResponsiveContainer width="100%" height="100%">
-                   <BarChart data={leftoverPacksByStore} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
-                     <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
-                     <XAxis dataKey="store" tick={{ fontSize: 10 }} stroke="#9ca3af" axisLine={false} tickLine={false} />
-                     <YAxis tick={{ fontSize: 10 }} stroke="#9ca3af" allowDecimals={false} axisLine={false} tickLine={false} />
-                     <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
-                     <Legend wrapperStyle={{ fontSize: '11px', marginTop: '10px' }} />
-                     <Bar dataKey="available" name="Available" stackId="a" fill="#10b981" radius={[0, 0, 0, 0]} />
-                     <Bar dataKey="sold" name="Sold" stackId="a" fill="#fbbf24" radius={[4, 4, 0, 0]} />
-                   </BarChart>
-                 </ResponsiveContainer>
-               ) : (
-                 <div className="flex items-center justify-center h-full text-sm text-slate-400">No leftover packs data found</div>
-               )}
-             </div>
+            <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Pack Units by Store</h4>
+            <div className="h-48 w-full">
+              {leftoverPacksByStore.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={leftoverPacksByStore} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
+                    <XAxis dataKey="store" tick={{ fontSize: 10 }} stroke="#9ca3af" axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 10 }} stroke="#9ca3af" allowDecimals={false} axisLine={false} tickLine={false} />
+                    <Tooltip content={<CustomTooltip />} cursor={{ fill: 'transparent' }} />
+                    <Legend wrapperStyle={{ fontSize: '11px', marginTop: '10px' }} />
+                    <Bar dataKey="available" name="Available" stackId="a" fill="#10b981" radius={[0, 0, 0, 0]} />
+                    <Bar dataKey="sold" name="Sold" stackId="a" fill="#fbbf24" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="flex items-center justify-center h-full text-sm text-slate-400">No leftover packs data found</div>
+              )}
+            </div>
           </div>
         </div>
       </div>

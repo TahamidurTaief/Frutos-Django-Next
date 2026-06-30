@@ -25,8 +25,8 @@ export default function CategoryFilter({ categories, selectedCategory, selectedS
 
   return (
     <div className="relative inline-block text-left" ref={containerRef}>
-      <button 
-        type="button" 
+      <button
+        type="button"
         style={{ cursor: 'pointer' }}
         onClick={() => setOpen(!open)}
         className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors shadow-sm cursor-pointer"
@@ -41,7 +41,7 @@ export default function CategoryFilter({ categories, selectedCategory, selectedS
         <div className="absolute z-50 mt-1 w-56 rounded-xl bg-white shadow-xl ring-1 ring-slate-200 divide-y divide-slate-100 animate-in fade-in zoom-in-95 duration-100">
           <div className="py-1">
             <button
-              style={{cursor: 'pointer'}}
+              style={{ cursor: 'pointer' }}
               onClick={() => { onChange(null, null); setOpen(false); }}
               className={`w-full text-left px-4 py-2 text-sm flex items-center justify-between hover:bg-slate-50 ${!selectedCategory ? "font-bold text-[#00694C] bg-emerald-50/50" : "text-slate-700"}`}
             >
@@ -55,14 +55,14 @@ export default function CategoryFilter({ categories, selectedCategory, selectedS
               const hasSub = cat.subcategories && cat.subcategories.length > 0;
               const isSelected = selectedCategory === cat.slug && !selectedSubCategory;
               return (
-                <div 
+                <div
                   key={cat.id}
                   className="relative group/item"
                   onMouseEnter={() => setHoveredCat(cat.id)}
                   onMouseLeave={() => setHoveredCat(null)}
                 >
                   <button
-                    style={{cursor: 'pointer'}}
+                    style={{ cursor: 'pointer' }}
                     onClick={() => {
                       onChange(cat.slug, null);
                       setOpen(false);
@@ -84,7 +84,7 @@ export default function CategoryFilter({ categories, selectedCategory, selectedS
                         return (
                           <button
                             key={sub.id}
-                            style={{cursor: 'pointer'}}
+                            style={{ cursor: 'pointer' }}
                             onClick={(e) => {
                               e.stopPropagation();
                               onChange(cat.slug, sub.slug);
