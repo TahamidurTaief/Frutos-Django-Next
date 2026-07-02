@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useStaffAuth } from "./_context/StaffAuthContext";
 import useSWR from "swr";
 import api from "@/app/dashboard/_lib/api";
-import { Bell, Calendar, Euro, FileText, LogOut, MessageSquare, Settings, Clock, Menu, ArrowRight, Search, HelpCircle, ChevronLeft, ChevronRight, Ban, ShoppingCart, Package, Megaphone, X as XIcon, Store as StoreIcon } from "lucide-react";
+import { Bell, Calendar, Euro, FileText, LogOut, MessageSquare, Settings, Clock, Menu, ArrowRight, Search, HelpCircle, ChevronLeft, ChevronRight, Ban, ShoppingCart, Package, Megaphone, X as XIcon, Store as StoreIcon, ClipboardCheck, MapPin } from "lucide-react";
 import StaffOrders from "./_components/StaffOrders";
 import StaffProducts from "./_components/StaffProducts";
 import StaffAnnouncements from "./_components/StaffAnnouncements";
@@ -12,11 +12,22 @@ import StaffNotifications from "./_components/StaffNotifications";
 import StaffRequestDayOff from "./_components/StaffRequestDayOff";
 import StaffStoreInfo from "./_components/StaffStoreInfo";
 import StaffProfileSettings from "./_components/StaffProfileSettings";
+import StaffAttendanceView from "./_components/StaffAttendanceView";
+import StaffAttendanceTab from "./_components/StaffAttendanceTab";
 
 export default function StaffDashboardPage() {
   const { user, logout } = useStaffAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("MY_SHIFTS");
+  const [showAttendanceModal, setShowAttendanceModal] = useState(false);
+  const [selectedStoreForCheckIn, setSelectedStoreForCheckIn] = useState("");
+  const [isCheckingIn, setIsCheckingIn] = useState(false);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [showCheckOutModal, setShowCheckOutModal] = useState(false);
+  const [showStoreSwitcherModal, setShowStoreSwitcherModal] = useState(false);
+  const [selectedViewStore, setSelectedViewStore] = useState(null);
+  const [sessionStartTime, setSessionStartTime] = useState(null);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   const { data: dashboardData, isLoading, mutate } = useSWR(
     "/api/staff/me/dashboard/",
@@ -32,6 +43,27 @@ export default function StaffDashboardPage() {
     window.addEventListener("new_announcement", handleNewAnnouncement);
     return () => window.removeEventListener("new_announcement", handleNewAnnouncement);
   }, [mutate]);
+
+  // Live clock
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const { profile, shifts = [], notifications = [], tasks = [], current_active_shift, active_stores = [], has_completed_shift_today } = dashboardData || {};
+
+  useEffect(() => {
+    if (dashboardData && !isLoading) {
+      if (!current_active_shift && !has_completed_shift_today) {
+        const timer = setTimeout(() => {
+          setShowAttendanceModal(true);
+        }, 3000);
+        return () => clearTimeout(timer);
+      } else {
+        setShowAttendanceModal(false);
+      }
+    }
+  }, [dashboardData, isLoading, current_active_shift, has_completed_shift_today]);
 
   if (isLoading || !user) {
     return (
@@ -53,7 +85,39 @@ export default function StaffDashboardPage() {
     );
   }
 
-  const { profile, shifts = [], notifications = [], tasks = [] } = dashboardData || {};
+
+  const handleCheckIn = async () => {
+    if (!selectedStoreForCheckIn) return;
+    setIsCheckingIn(true);
+    try {
+      await api.post("/api/staff/me/check-in/", { store_id: selectedStoreForCheckIn });
+      mutate();
+      setShowAttendanceModal(false);
+    } catch (err) {
+      console.error("Check-in failed", err);
+      alert(err.response?.data?.detail || "Failed to start shift");
+    } finally {
+      setIsCheckingIn(false);
+    }
+  };
+
+  const handleCheckOut = () => {
+    setShowCheckOutModal(true);
+  };
+
+  const confirmCheckOut = async () => {
+    setIsCheckingOut(true);
+    try {
+      await api.post("/api/staff/me/check-out/", {});
+      mutate();
+      setShowCheckOutModal(false);
+    } catch (err) {
+      console.error("Check-out failed", err);
+      alert(err.response?.data?.detail || "Failed to end shift");
+    } finally {
+      setIsCheckingOut(false);
+    }
+  };
 
   const getWeekDates = () => {
     const today = new Date();
@@ -78,16 +142,18 @@ export default function StaffDashboardPage() {
   const hasOrderPermissions = profile?.can_create_orders || profile?.can_update_orders || profile?.can_delete_orders;
 
   const sidebarMenuItems = [
-    { id: "MY_SHIFTS", name: "MY SHIFTS", icon: Calendar, badge: 0 },
-    ...(hasOrderPermissions ? [
-      { id: "ORDERS", name: "ORDER LINE", icon: ShoppingCart, badge: 0 },
-      { id: "PRODUCTS", name: "PRODUCTS", icon: Package, badge: 0 }
+    { id: "MY_SHIFTS",      name: "MY SHIFTS",       icon: Calendar,       badge: 0 },
+    { id: "ORDERS",         name: "ORDER LINE",      icon: ShoppingCart,   badge: 0 },
+    { id: "PRODUCTS",       name: "PRODUCTS",        icon: Package,        badge: 0 },
+    { id: "NOTIFICATIONS",  name: "NOTIFICATIONS",   icon: Bell,           badge: notifications?.filter(n => !n.is_read).length || 0 },
+    { id: "REQUEST_DAY_OFF",name: "REQUEST DAY OFF", icon: FileText,       badge: 0 },
+    { id: "ANNOUNCEMENTS",  name: "ANNOUNCEMENTS",   icon: Megaphone,      badge: 0 },
+    { id: "ATTENDANCE",     name: "ATTENDANCE",      icon: ClipboardCheck, badge: 0 },
+    // Dynamic store tab — appears only when a store is selected
+    ...(selectedViewStore ? [
+      { id: "STORE_SESSION", name: selectedViewStore.name.toUpperCase(), icon: StoreIcon, badge: 0, isStore: true }
     ] : []),
-    { id: "NOTIFICATIONS", name: "NOTIFICATIONS", icon: Bell, badge: notifications?.filter(n => !n.is_read).length || 0 },
-    { id: "REQUEST_DAY_OFF", name: "REQUEST DAY OFF", icon: FileText, badge: 0 },
-    { id: "ANNOUNCEMENTS", name: "ANNOUNCEMENTS", icon: Megaphone, badge: 0 },
-    { id: "MY_STORE", name: "MY STORE", icon: StoreIcon, badge: 0 },
-    { id: "SETTINGS", name: "PROFILE SETTINGS", icon: Settings, badge: 0 },
+    { id: "SETTINGS",       name: "PROFILE SETTINGS",icon: Settings,       badge: 0 },
   ];
 
   const staffActions = [
@@ -168,6 +234,11 @@ export default function StaffDashboardPage() {
           <span className="font-serif font-bold text-xl text-[#00694C]">El Árbol</span>
         </div>
         <div className="flex items-center gap-3">
+          {current_active_shift && (
+            <button onClick={handleCheckOut} disabled={isCheckingOut} className="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-full font-bold shadow-sm transition-colors cursor-pointer">
+              {isCheckingOut ? "Ending..." : "End Shift"}
+            </button>
+          )}
           <button onClick={logout} className="text-slate-400 hover:text-red-500 transition-colors p-1 cursor-pointer">
             <LogOut className="w-5 h-5" />
           </button>
@@ -207,27 +278,39 @@ export default function StaffDashboardPage() {
               {sidebarMenuItems.map((item, i) => {
                 const isActive = activeTab === item.id;
                 return (
-                  <button 
-                    key={i} 
-                    onClick={() => { setActiveTab(item.id); setMobileMenuOpen(false); }}
-                    className={`relative w-full flex items-center gap-3 px-3 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-300 cursor-pointer overflow-hidden group ${
-                      isActive 
-                        ? 'text-white shadow-md' 
-                        : 'text-white/60 hover:bg-white/5 hover:text-white'
-                    }`}
-                  >
-                    {isActive && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-[#008A65] to-[#007A63] border-l-4 border-white/80" />
+                  <div key={i}>
+                    {item.isStore && (
+                      <div className="flex items-center gap-2 px-3 pt-3 pb-1.5">
+                        <div className="flex-1 h-px bg-white/10" />
+                        <span className="text-[8px] font-bold text-white/30 uppercase tracking-widest">Store Session</span>
+                        <div className="flex-1 h-px bg-white/10" />
+                      </div>
                     )}
-                    {isActive && (
-                      <div className="absolute inset-0 w-full h-full bg-white/10 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
-                    )}
-                    <item.icon className={`relative z-10 w-4 h-4 transition-transform duration-300 ${isActive ? 'text-white scale-110 drop-shadow-sm' : 'text-white/60 group-hover:scale-110 group-hover:text-white'}`} />
-                    <span className="relative z-10 flex-1 text-left drop-shadow-sm">{item.name}</span>
-                    {item.badge > 0 && <span className="relative z-10 bg-[#E88C30] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full shadow-sm">{item.badge}</span>}
-                  </button>
+                    <button
+                      onClick={() => { setActiveTab(item.id); setMobileMenuOpen(false); }}
+                      className={`relative w-full flex items-center gap-3 px-3 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-300 cursor-pointer overflow-hidden group ${
+                        isActive
+                          ? 'text-white shadow-md'
+                          : item.isStore
+                            ? 'text-amber-200/80 hover:bg-white/5 hover:text-amber-100'
+                            : 'text-white/60 hover:bg-white/5 hover:text-white'
+                      }`}
+                    >
+                      {isActive && (
+                        <div className={`absolute inset-0 border-l-4 ${item.isStore ? 'bg-gradient-to-r from-amber-700/40 to-amber-600/30 border-amber-300/80' : 'bg-gradient-to-r from-[#008A65] to-[#007A63] border-white/80'}`} />
+                      )}
+                      {isActive && (
+                        <div className="absolute inset-0 w-full h-full bg-white/10 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
+                      )}
+                      <item.icon className={`relative z-10 w-4 h-4 transition-transform duration-300 ${isActive ? 'scale-110 drop-shadow-sm' : 'group-hover:scale-110'} ${item.isStore ? 'text-amber-300' : isActive ? 'text-white' : 'text-white/60 group-hover:text-white'}`} />
+                      <span className="relative z-10 flex-1 text-left drop-shadow-sm truncate">{item.name}</span>
+                      {item.isStore && <span className="relative z-10 w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0" />}
+                      {!item.isStore && item.badge > 0 && <span className="relative z-10 bg-[#E88C30] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full shadow-sm">{item.badge}</span>}
+                    </button>
+                  </div>
                 );
               })}
+
             </nav>
           </div>
         </div>
@@ -257,28 +340,45 @@ export default function StaffDashboardPage() {
           {sidebarMenuItems.map((item, i) => {
             const isActive = activeTab === item.id;
             return (
-              <button 
-                key={i} 
-                onClick={() => setActiveTab(item.id)}
-                className={`relative w-full flex items-center gap-3 px-3 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-300 cursor-pointer overflow-hidden group ${
-                  isActive 
-                    ? 'text-white shadow-md' 
-                    : 'text-white/60 hover:bg-white/5 hover:text-white'
-                }`}
-              >
-                {isActive && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#008A65] to-[#007A63] border-l-4 border-white/80" />
+              <div key={i}>
+                {/* Separator before dynamic store tab */}
+                {item.isStore && (
+                  <div className="flex items-center gap-2 px-3 pt-3 pb-1.5">
+                    <div className="flex-1 h-px bg-white/10" />
+                    <span className="text-[8px] font-bold text-white/30 uppercase tracking-widest">Store Session</span>
+                    <div className="flex-1 h-px bg-white/10" />
+                  </div>
                 )}
-                {isActive && (
-                  <div className="absolute inset-0 w-full h-full bg-white/10 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
-                )}
-                <item.icon className={`relative z-10 w-4 h-4 transition-transform duration-300 ${isActive ? 'text-white scale-110 drop-shadow-sm' : 'text-white/60 group-hover:scale-110 group-hover:text-white'}`} />
-                <span className="relative z-10 flex-1 text-left drop-shadow-sm">{item.name}</span>
-                {item.badge > 0 && <span className="relative z-10 bg-[#E88C30] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full shadow-sm">{item.badge}</span>}
-              </button>
+                <button
+                  onClick={() => setActiveTab(item.id)}
+                  className={`relative w-full flex items-center gap-3 px-3 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-300 cursor-pointer overflow-hidden group ${
+                    isActive
+                      ? 'text-white shadow-md'
+                      : item.isStore
+                        ? 'text-amber-200/80 hover:bg-white/5 hover:text-amber-100'
+                        : 'text-white/60 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  {isActive && (
+                    <div className={`absolute inset-0 border-l-4 ${item.isStore ? 'bg-gradient-to-r from-amber-700/40 to-amber-600/30 border-amber-300/80' : 'bg-gradient-to-r from-[#008A65] to-[#007A63] border-white/80'}`} />
+                  )}
+                  {isActive && (
+                    <div className="absolute inset-0 w-full h-full bg-white/10 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
+                  )}
+                  <item.icon className={`relative z-10 w-4 h-4 transition-transform duration-300 ${isActive ? 'scale-110 drop-shadow-sm' : 'group-hover:scale-110'} ${item.isStore ? 'text-amber-300' : isActive ? 'text-white' : 'text-white/60 group-hover:text-white'}`} />
+                  <span className="relative z-10 flex-1 text-left drop-shadow-sm truncate">{item.name}</span>
+                  {item.isStore && (
+                    <span className="relative z-10 w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0" />
+                  )}
+                  {!item.isStore && item.badge > 0 && (
+                    <span className="relative z-10 bg-[#E88C30] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full shadow-sm">{item.badge}</span>
+                  )}
+                </button>
+              </div>
             );
           })}
         </nav>
+
       </aside>
 
       {/* Main Content */}
@@ -286,12 +386,34 @@ export default function StaffDashboardPage() {
         <div className="max-w-6xl mx-auto">
           
           <header className="flex justify-between items-center mb-10 hidden md:flex">
-            <div className="flex items-center gap-3 text-sm font-semibold">
+            <div className="flex items-center gap-3 text-sm font-semibold flex-wrap">
               <span className="italic font-serif text-[#00694C] text-lg">El Árbol</span>
               <span className="text-slate-300">|</span>
               <span className="text-slate-500 font-medium">{profile?.store_name || "Unassigned Store"}</span>
+              {/* Live clock chip */}
+              <div className="flex items-center gap-1.5 bg-[#00694C]/8 border border-[#00694C]/15 text-[#00694C] px-3 py-1 rounded-full">
+                <Clock className="w-3 h-3" />
+                <span className="text-[11px] font-bold tabular-nums">
+                  {currentTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+                </span>
+              </div>
+              {/* Active shift store indicator */}
+              {current_active_shift && (
+                <div className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 px-3 py-1 rounded-full">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-[11px] font-bold uppercase tracking-wide">Active Shift</span>
+                </div>
+              )}
             </div>
             <div className="flex items-center gap-4">
+               {/* Attendance button */}
+               <button
+                 onClick={() => { setShowStoreSwitcherModal(true); }}
+                 className="flex items-center gap-2 px-4 py-2 rounded-full text-[#00694C] bg-[#E4EFDA] hover:bg-[#D9EFE5] font-bold text-xs transition-all cursor-pointer border border-[#BCE4D3]"
+               >
+                 <ClipboardCheck className="w-3.5 h-3.5" />
+                 Attendance
+               </button>
                {/* Search bar */}
                <div className="relative">
                  <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -300,6 +422,15 @@ export default function StaffDashboardPage() {
                <button className="w-9 h-9 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-600 hover:bg-white transition-colors cursor-pointer">
                  <HelpCircle className="w-5 h-5" />
                </button>
+               {current_active_shift && (
+                 <button 
+                   onClick={handleCheckOut}
+                   disabled={isCheckingOut}
+                   className="flex items-center gap-2 px-4 py-2 rounded-full text-white bg-red-600 font-semibold hover:bg-red-700 transition-all cursor-pointer shadow-sm text-sm"
+                 >
+                   {isCheckingOut ? "Ending..." : "End Shift"}
+                 </button>
+               )}
                <button 
                  onClick={logout} 
                  className="flex items-center gap-2 px-4 py-2 rounded-full text-slate-500 font-semibold hover:text-red-600 hover:bg-red-50 border border-transparent hover:border-red-100 transition-all cursor-pointer group"
@@ -309,7 +440,30 @@ export default function StaffDashboardPage() {
             </div>
           </header>
 
-          {activeTab === "ORDERS" ? (
+          {activeTab === "ATTENDANCE" ? (
+            <StaffAttendanceTab
+              profile={profile}
+              shifts={shifts}
+              currentActiveShift={current_active_shift}
+              active_stores={active_stores}
+              onSelectStore={(store) => {
+                setSelectedViewStore(store);
+                setSessionStartTime(Date.now());
+                setActiveTab("STORE_SESSION");
+              }}
+            />
+          ) : activeTab === "STORE_SESSION" && selectedViewStore ? (
+            <StaffAttendanceView
+              store={selectedViewStore}
+              currentActiveShift={current_active_shift}
+              sessionStartTime={sessionStartTime}
+              onSwitchStore={() => {
+                setSelectedViewStore(null);
+                setSessionStartTime(null);
+                setActiveTab("ATTENDANCE");
+              }}
+            />
+          ) : activeTab === "ORDERS" ? (
             <StaffOrders profile={profile} />
           ) : activeTab === "PRODUCTS" ? (
             <StaffProducts profile={profile} />
@@ -533,8 +687,6 @@ export default function StaffDashboardPage() {
             </>
           ) : activeTab === "REQUEST_DAY_OFF" ? (
             <StaffRequestDayOff />
-          ) : activeTab === "MY_STORE" ? (
-            <StaffStoreInfo storeSlug={profile?.store_slug} />
           ) : activeTab === "SETTINGS" ? (
             <StaffProfileSettings profile={profile} user={user} />
           ) : (
@@ -547,6 +699,171 @@ export default function StaffDashboardPage() {
           <div className="pb-10"></div>
         </div>
       </main>
+
+      {/* Store Switcher Modal (from navbar Attendance button) */}
+      {showStoreSwitcherModal && (
+        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm" onClick={() => setShowStoreSwitcherModal(false)}>
+          <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-[#00694C] to-[#00896A] p-6 flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-3 mb-1">
+                  <ClipboardCheck className="w-6 h-6 text-white/90" />
+                  <h2 className="text-xl font-serif font-bold text-white">Attendance — Select Store</h2>
+                </div>
+                <p className="text-[#BCE4D3] text-xs">Choose a store to view its products, orders, and details</p>
+              </div>
+              <div className="text-right">
+                <div className="flex items-center gap-2 bg-white/15 border border-white/20 px-3 py-2 rounded-xl">
+                  <Clock className="w-4 h-4 text-white/80" />
+                  <span className="text-white font-bold text-sm tabular-nums">
+                    {currentTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+                  </span>
+                </div>
+                {current_active_shift && (
+                  <div className="flex items-center gap-1.5 text-[#BCE4D3] text-[10px] font-bold mt-1.5 justify-end">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse" />
+                    Currently working at this store
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Store Grid */}
+            <div className="p-6 max-h-[70vh] overflow-y-auto db-scroll">
+              {!active_stores?.length ? (
+                <div className="py-8 text-center">
+                  <StoreIcon className="w-10 h-10 text-slate-200 mx-auto mb-3" />
+                  <p className="text-slate-400 text-sm font-medium">No active stores found</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {active_stores.map((store) => {
+                    const isMyShiftStore = String(current_active_shift?.store) === String(store.id) ||
+                      current_active_shift?.store_name === store.name;
+                    return (
+                      <button
+                        key={store.id}
+                        onClick={() => {
+                          setSelectedViewStore(store);
+                          setSessionStartTime(Date.now());
+                          setActiveTab("STORE_SESSION");
+                          setShowStoreSwitcherModal(false);
+                        }}
+                        className="group flex items-center gap-4 bg-slate-50 hover:bg-[#F1F6EB] border border-slate-200 hover:border-[#00694C]/30 rounded-xl p-4 text-left transition-all cursor-pointer"
+                      >
+                        <div className="w-11 h-11 rounded-lg bg-white flex items-center justify-center border border-slate-200 shrink-0 overflow-hidden">
+                          {store.image ? (
+                            <img src={store.image} alt={store.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <StoreIcon className="w-5 h-5 text-[#00694C]" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-[#004A3A] text-sm truncate group-hover:text-[#00694C] transition-colors">{store.name}</span>
+                            {isMyShiftStore && (
+                              <span className="flex items-center gap-1 bg-emerald-50 border border-emerald-200 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wide shrink-0">
+                                <span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
+                                Active
+                              </span>
+                            )}
+                          </div>
+                          {store.address && (
+                            <div className="flex items-center gap-1 text-slate-400 text-xs mt-0.5">
+                              <MapPin className="w-2.5 h-2.5 shrink-0" />
+                              <span className="truncate">{store.address}</span>
+                            </div>
+                          )}
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-[#00694C] group-hover:translate-x-0.5 transition-all shrink-0" />
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-4 border-t border-slate-100 flex justify-end">
+              <button
+                onClick={() => setShowStoreSwitcherModal(false)}
+                className="px-5 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold text-sm transition-colors cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Attendance Modal */}
+      {showAttendanceModal && (
+        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300">
+            <div className="bg-[#00694C] p-6 text-white text-center">
+              <StoreIcon className="w-12 h-12 mx-auto mb-3 opacity-90" />
+              <h2 className="text-2xl font-serif font-bold mb-1">Start Your Shift</h2>
+              <p className="text-[#BCE4D3] text-sm">Please select the store you are working at today.</p>
+            </div>
+            <div className="p-6">
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-[#004A3A] mb-2">Select Store</label>
+                <select 
+                  className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-slate-700 font-medium focus:outline-none focus:border-[#00694C] bg-slate-50 transition-colors"
+                  value={selectedStoreForCheckIn}
+                  onChange={(e) => setSelectedStoreForCheckIn(e.target.value)}
+                >
+                  <option value="">-- Select a store --</option>
+                  {active_stores?.map(store => (
+                    <option key={store.id} value={store.id}>{store.name}</option>
+                  ))}
+                </select>
+              </div>
+              <button 
+                onClick={handleCheckIn}
+                disabled={!selectedStoreForCheckIn || isCheckingIn}
+                className="w-full bg-[#E88C30] hover:bg-[#d47a25] disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold py-3.5 rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {isCheckingIn ? "Starting..." : "Start Shift Now"}
+                {!isCheckingIn && <ArrowRight className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Check Out Confirmation Modal */}
+      {showCheckOutModal && (
+        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 text-center pt-8">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <LogOut className="w-8 h-8 text-red-600" />
+              </div>
+              <h2 className="text-xl font-serif font-bold text-[#004A3A] mb-2">End Shift?</h2>
+              <p className="text-sm text-slate-500 mb-6 font-medium">Are you sure you want to end your shift for today? This action will record your checkout time.</p>
+              
+              <div className="flex gap-3">
+                <button 
+                  onClick={() => setShowCheckOutModal(false)}
+                  disabled={isCheckingOut}
+                  className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl transition-colors disabled:opacity-50 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={confirmCheckOut}
+                  disabled={isCheckingOut}
+                  className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl shadow-md transition-colors disabled:opacity-50 flex items-center justify-center cursor-pointer"
+                >
+                  {isCheckingOut ? "Ending..." : "End Shift"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

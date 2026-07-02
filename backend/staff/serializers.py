@@ -22,6 +22,10 @@ class StaffProfileSerializer(serializers.ModelSerializer):
                   'can_create_orders', 'can_update_orders', 'can_delete_orders', 'can_create_products', 'can_update_products', 'can_delete_products', 'secret_key', 'photo', 'store_slug', 'store_name']
 
 class StaffShiftSerializer(serializers.ModelSerializer):
+    store_name = serializers.CharField(source='store.name', read_only=True)
+    store_location = serializers.CharField(source='store.address', read_only=True)
+    store_map_link = serializers.CharField(source='store.map_link', read_only=True)
+
     class Meta:
         model = StaffShift
         fields = '__all__'

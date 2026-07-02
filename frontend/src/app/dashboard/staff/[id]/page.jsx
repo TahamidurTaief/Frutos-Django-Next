@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Trash2, Calendar, ClipboardList, Edit, Ban } from "lucide-react";
+import { Plus, Trash2, Calendar, ClipboardList, Edit, Ban, MapPin } from "lucide-react";
 import Container from "@/app/dashboard/_components/Container";
 import DataTable from "@/app/dashboard/_components/DataTable";
 import Modal from "@/app/dashboard/_components/Modal";
@@ -164,8 +164,28 @@ export default function StaffDetailsPage() {
 
   const shiftColumns = [
     { key: "date", label: "Date" },
-    { key: "time", label: "Time", render: (_, row) => row.start_time && row.end_time ? `${row.start_time.slice(0,5)} - ${row.end_time.slice(0,5)}` : "—" },
-    { key: "status", label: "Status", render: (v) => <span className={`px-2 py-0.5 text-xs rounded-full ${v === 'DAY_OFF' ? 'bg-slate-100 text-slate-600' : 'bg-emerald-100 text-emerald-700'}`}>{v}</span> },
+    { key: "time", label: "Time", render: (_, row) => row.start_time && row.end_time ? `${row.start_time.slice(0,5)} - ${row.end_time.slice(0,5)}` : (row.start_time ? `${row.start_time.slice(0,5)} - In Progress` : "—") },
+    { key: "location", label: "Location", render: (_, row) => row.store_name ? (
+      <div className="flex flex-col items-center text-center">
+        <span className="font-semibold text-slate-800">{row.store_name}</span>
+        {row.store_location && (
+          row.store_map_link ? (
+            <a href={row.store_map_link} target="_blank" rel="noopener noreferrer" className="text-[11px] text-blue-600 hover:text-blue-800 hover:underline mt-0.5 flex items-center justify-center gap-1 w-fit transition-colors">
+              <MapPin className="w-3 h-3 shrink-0" /> <span className="truncate max-w-[150px]">{row.store_location}</span>
+            </a>
+          ) : (
+            <span className="text-[11px] text-slate-500 mt-0.5 flex items-center justify-center gap-1 w-fit">
+              <MapPin className="w-3 h-3 text-slate-400 shrink-0" /> <span className="truncate max-w-[150px]">{row.store_location}</span>
+            </span>
+          )
+        )}
+      </div>
+    ) : <span className="text-slate-400 italic text-xs">Unassigned</span> },
+    { key: "status", label: "Status", render: (v) => {
+        if (v === 'IN_PROGRESS') return <span className="px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full bg-blue-100 text-blue-700 flex items-center w-fit gap-1.5 border border-blue-200 shadow-sm"><span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>ACTIVE NOW</span>;
+        if (v === 'DAY_OFF') return <span className="px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full bg-slate-100 text-slate-600 border border-slate-200">DAY OFF</span>;
+        return <span className="px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200">{v}</span>;
+    }},
   ];
 
   const taskColumns = [
@@ -184,26 +204,58 @@ export default function StaffDetailsPage() {
     { key: "status", label: "Status", render: () => <span className="px-2 py-0.5 text-xs rounded-full bg-slate-100 text-slate-600">DAY OFF</span> },
   ];
 
+  const activeShift = shifts.find(s => s.status === 'IN_PROGRESS');
+
   return (
     <Container title={`Staff: ${staffProfile.user?.name}`} description={`${staffProfile.role} • ${staffProfile.store_name || "Unassigned"}`}>
       
+      {/* Active Shift Banner */}
+      {activeShift && (
+        <div className="mb-6 bg-gradient-to-r from-[#00694C] to-[#004A3A] rounded-xl p-5 text-white shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between border border-[#009b72]/30 relative overflow-hidden gap-4">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+          <div className="flex items-center gap-4 relative z-10">
+             <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/20 shrink-0">
+               <MapPin className="w-6 h-6 text-[#BCE4D3]" />
+             </div>
+             <div>
+               <div className="text-[#BCE4D3] text-[10px] font-bold uppercase tracking-widest mb-1 flex items-center gap-2">
+                 <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.6)]"></span>
+                 CURRENTLY WORKING AT
+               </div>
+               <h3 className="text-xl font-serif font-bold text-white leading-tight">{activeShift.store_name || "Assigned Store"}</h3>
+               {activeShift.store_map_link ? (
+                 <a href={activeShift.store_map_link} target="_blank" rel="noopener noreferrer" className="text-[13px] text-white/70 font-medium mt-0.5 hover:text-white hover:underline transition-colors block w-fit">
+                   {activeShift.store_location || "Location not specified"}
+                 </a>
+               ) : (
+                 <p className="text-[13px] text-white/70 font-medium mt-0.5">{activeShift.store_location || "Location not specified"}</p>
+               )}
+             </div>
+          </div>
+          <div className="relative z-10 sm:text-right bg-white/10 px-4 py-2.5 rounded-lg border border-white/10 backdrop-blur-sm w-full sm:w-auto flex sm:block justify-between items-center">
+            <div className="text-white/60 text-[10px] font-bold uppercase tracking-widest mb-0.5">Checked In</div>
+            <div className="text-lg font-bold font-mono text-white">{activeShift.start_time?.slice(0,5) || "--:--"}</div>
+          </div>
+        </div>
+      )}
+
       {/* Tabs */}
-      <div className="flex bg-slate-100 p-1 rounded-xl w-fit mb-6">
+      <div className="flex border-b border-slate-200 mb-6 w-full">
         <button 
           onClick={() => setActiveTab("SHIFTS")}
-          className={`px-6 py-2.5 font-semibold text-sm flex items-center gap-2 rounded-lg transition-all cursor-pointer ${activeTab === "SHIFTS" ? 'bg-white text-[#00694C] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+          className={`px-5 py-3 font-semibold text-sm flex items-center gap-2 border-b-2 transition-all cursor-pointer ${activeTab === "SHIFTS" ? 'border-[#00694C] text-[#00694C]' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}`}
         >
           <Calendar size={16} /> Shifts
         </button>
         <button 
           onClick={() => setActiveTab("TASKS")}
-          className={`px-6 py-2.5 font-semibold text-sm flex items-center gap-2 rounded-lg transition-all cursor-pointer ${activeTab === "TASKS" ? 'bg-white text-[#00694C] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+          className={`px-5 py-3 font-semibold text-sm flex items-center gap-2 border-b-2 transition-all cursor-pointer ${activeTab === "TASKS" ? 'border-[#00694C] text-[#00694C]' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}`}
         >
           <ClipboardList size={16} /> Tasks
         </button>
         <button 
           onClick={() => setActiveTab("OFF_DAYS")}
-          className={`px-6 py-2.5 font-semibold text-sm flex items-center gap-2 rounded-lg transition-all cursor-pointer ${activeTab === "OFF_DAYS" ? 'bg-white text-[#00694C] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+          className={`px-5 py-3 font-semibold text-sm flex items-center gap-2 border-b-2 transition-all cursor-pointer ${activeTab === "OFF_DAYS" ? 'border-[#00694C] text-[#00694C]' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}`}
         >
           <Ban size={16} /> Off Days
         </button>
@@ -214,9 +266,9 @@ export default function StaffDetailsPage() {
         {/* Shifts Section */}
         {activeTab === "SHIFTS" && (
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-            <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-              <h3 className="font-bold flex items-center gap-2"><Calendar size={18} className="text-slate-500" /> Shifts</h3>
-              <button onClick={() => { setEditShift(null); setShiftOpen(true); }} className="text-xs bg-[#00694C] text-white px-4 py-2 rounded-lg hover:bg-[#085041] font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm">
+            <div className="px-5 py-4 border-b border-slate-100 flex justify-between items-center bg-white">
+              <h3 className="font-bold text-slate-800 flex items-center gap-2"><Calendar size={18} className="text-[#00694C]" /> Shift Schedule</h3>
+              <button onClick={() => { setEditShift(null); setShiftOpen(true); }} className="text-xs bg-[#00694C] text-white px-3.5 py-1.5 rounded-md hover:bg-[#085041] font-semibold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer">
                 <Plus size={14} /> Add Shift
               </button>
             </div>
@@ -238,9 +290,9 @@ export default function StaffDetailsPage() {
         {/* Tasks Section */}
         {activeTab === "TASKS" && (
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-            <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-              <h3 className="font-bold flex items-center gap-2"><ClipboardList size={18} className="text-slate-500" /> Tasks</h3>
-              <button onClick={() => { setEditTask(null); setTaskOpen(true); }} className="text-xs bg-[#00694C] text-white px-4 py-2 rounded-lg hover:bg-[#085041] font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm">
+            <div className="px-5 py-4 border-b border-slate-100 flex justify-between items-center bg-white">
+              <h3 className="font-bold text-slate-800 flex items-center gap-2"><ClipboardList size={18} className="text-[#00694C]" /> Assigned Tasks</h3>
+              <button onClick={() => { setEditTask(null); setTaskOpen(true); }} className="text-xs bg-[#00694C] text-white px-3.5 py-1.5 rounded-md hover:bg-[#085041] font-semibold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer">
                 <Plus size={14} /> Add Task
               </button>
             </div>
@@ -262,9 +314,9 @@ export default function StaffDetailsPage() {
         {/* Off Days Section */}
         {activeTab === "OFF_DAYS" && (
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-            <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-              <h3 className="font-bold flex items-center gap-2"><Ban size={18} className="text-slate-500" /> Off Days</h3>
-              <button onClick={() => { setEditOffDay(null); setOffDayOpen(true); }} className="text-xs bg-[#00694C] text-white px-4 py-2 rounded-lg hover:bg-[#085041] font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm">
+            <div className="px-5 py-4 border-b border-slate-100 flex justify-between items-center bg-white">
+              <h3 className="font-bold text-slate-800 flex items-center gap-2"><Ban size={18} className="text-red-500" /> Scheduled Off Days</h3>
+              <button onClick={() => { setEditOffDay(null); setOffDayOpen(true); }} className="text-xs bg-[#00694C] text-white px-3.5 py-1.5 rounded-md hover:bg-[#085041] font-semibold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer">
                 <Plus size={14} /> Add Off Day
               </button>
             </div>

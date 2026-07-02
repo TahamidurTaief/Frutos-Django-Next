@@ -32,6 +32,7 @@ const columns = [
   { key: "email", label: "Email", render: (v, row) => row.user?.email },
   { key: "role", label: "Role", render: (v) => <span className="px-2 py-0.5 text-xs rounded-full font-medium bg-emerald-100 text-emerald-700">{v || "Staff"}</span> },
   { key: "store_name", label: "Store", render: (v) => v || <span className="text-slate-400">—</span> },
+
   { key: "phone", label: "Phone", render: (v) => v || <span className="text-slate-400">—</span> },
   { key: "hire_date", label: "Hire Date", render: (v) => v ? new Date(v).toLocaleDateString() : "—" },
 ];
@@ -40,29 +41,15 @@ export default function StaffPage() {
   const router = useRouter();
   const toast = useToastContext();
   const [page, setPage] = useState(1);
-  const [storeFilter, setStoreFilter] = useState("");
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const filterRef = useRef(null);
-  
   const [createOpen, setCreateOpen] = useState(false);
   const [deleteItem, setDeleteItem] = useState(null);
   const [viewStaff, setViewStaff] = useState(null);
   const [editItem, setEditItem] = useState(null);
   const [permissionsItem, setPermissionsItem] = useState(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (filterRef.current && !filterRef.current.contains(event.target)) {
-        setIsFilterOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   const { data: rawData, isLoading, mutate, error } = useSWR(
-    ["admin-staff", page, storeFilter],
-    () => api.get(`/api/staff/admin/employees/?page=${page}&page_size=${PAGE_SIZE}${storeFilter ? `&store_id=${storeFilter}` : ""}`),
+    ["admin-staff", page],
+    () => api.get(`/api/staff/admin/employees/?page=${page}&page_size=${PAGE_SIZE}`),
     { revalidateOnFocus: false }
   );
 
@@ -74,26 +61,6 @@ export default function StaffPage() {
   
   const stores = Array.isArray(storesRaw) ? storesRaw : (storesRaw?.results || []);
   const storeOptions = stores.map(store => ({ value: store.id, label: store.name }));
-
-  const createFields = [
-    { key: "name", label: "Full Name", required: true, placeholder: "John Doe" },
-    { key: "email", label: "Email", required: true, placeholder: "staff@example.com" },
-    { key: "password", label: "Secret Key / Password", required: true, placeholder: "Min 8 characters", type: "password" },
-    { key: "role", label: "Role", required: true, placeholder: "e.g. Sales Associate, Packager" },
-    { key: "store_id", label: "Store", type: "select", options: storeOptions },
-    { key: "phone", label: "Phone Number", placeholder: "Optional" },
-    { key: "photo", label: "Profile Photo", type: "file" },
-  ];
-
-  const updateFields = [
-    { key: "name", label: "Full Name", required: true, placeholder: "John Doe" },
-    { key: "email", label: "Email", required: true, placeholder: "staff@example.com" },
-    { key: "password", label: "Secret Key / Password", required: true, placeholder: "Min 8 characters", type: "password" },
-    { key: "role", label: "Role", required: true, placeholder: "e.g. Sales Associate, Packager" },
-    { key: "store_id", label: "Store", type: "select", options: storeOptions },
-    { key: "phone", label: "Phone Number", placeholder: "Optional" },
-    { key: "photo", label: "Profile Photo", type: "file" },
-  ];
 
   const data = rawData?.results || (Array.isArray(rawData) ? rawData : []);
   const totalCount = rawData?.count || data.length;
@@ -183,41 +150,7 @@ export default function StaffPage() {
 
   return (
     <Container title="Staff Management" description="Manage your staff, their roles, and branch locations">
-      <div className="db-filter-bar flex justify-between items-center mb-4">
-        <div className="relative" ref={filterRef}>
-          <button
-            onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className="flex items-center justify-between min-w-[220px] pl-4 pr-3 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 shadow-sm hover:border-slate-300 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all cursor-pointer"
-          >
-            <div className="flex items-center gap-2.5">
-              <StoreIcon size={16} className="text-emerald-600" />
-              <span>{storeFilter ? stores.find(s => s.id.toString() === storeFilter)?.name : "All Stores"}</span>
-            </div>
-            <svg className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${isFilterOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-            </svg>
-          </button>
-
-          {isFilterOpen && (
-            <div className="absolute top-[calc(100%+8px)] left-0 w-full bg-white border border-slate-100 rounded-xl shadow-lg z-50 overflow-hidden py-1 animate-in fade-in slide-in-from-top-2">
-              <button
-                onClick={() => { setStoreFilter(""); setIsFilterOpen(false); }}
-                className={`w-full text-left px-4 py-2.5 text-sm font-medium transition-colors hover:bg-slate-50 cursor-pointer ${!storeFilter ? "text-emerald-600 bg-emerald-50/50" : "text-slate-600"}`}
-              >
-                All Stores
-              </button>
-              {stores.map(store => (
-                <button
-                  key={store.id}
-                  onClick={() => { setStoreFilter(store.id.toString()); setIsFilterOpen(false); }}
-                  className={`w-full text-left px-4 py-2.5 text-sm font-medium transition-colors hover:bg-slate-50 cursor-pointer ${storeFilter === store.id.toString() ? "text-emerald-600 bg-emerald-50/50" : "text-slate-600"}`}
-                >
-                  {store.name}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+      <div className="flex justify-end mb-4">
         <button onClick={() => setCreateOpen(true)} className="db-btn-primary">
           <Plus size={15} /> Add New Staff
         </button>
@@ -292,6 +225,36 @@ export default function StaffPage() {
                   <Briefcase className="h-4 w-4 text-slate-400" />
                 </div>
                 <input required name="role" className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all" placeholder="e.g. Sales Associate" />
+              </div>
+            </div>
+
+            {/* Store */}
+            <div className="space-y-2.5">
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Store</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <StoreIcon className="h-4 w-4 text-slate-400" />
+                </div>
+                <select name="store_id" className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all appearance-none cursor-pointer">
+                  <option value="">Select a Store</option>
+                  {stores.map(store => (
+                    <option key={store.id} value={store.id}>{store.name}</option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                  <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+              </div>
+            </div>
+
+            {/* Password */}
+            <div className="space-y-2.5">
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Password *</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-4 w-4 text-slate-400" />
+                </div>
+                <input required name="password" type="password" className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all" placeholder="Min 8 characters" />
               </div>
             </div>
 
@@ -377,6 +340,36 @@ export default function StaffPage() {
                     <Briefcase className="h-4 w-4 text-slate-400" />
                   </div>
                   <input required name="role" defaultValue={editItem.role} className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all" placeholder="e.g. Sales Associate" />
+                </div>
+              </div>
+
+              {/* Store */}
+              <div className="space-y-2.5">
+                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Store</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <StoreIcon className="h-4 w-4 text-slate-400" />
+                  </div>
+                  <select name="store_id" defaultValue={editItem.store_id || editItem.store?.id || ""} className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all appearance-none cursor-pointer">
+                    <option value="">Select a Store</option>
+                    {stores.map(store => (
+                      <option key={store.id} value={store.id}>{store.name}</option>
+                    ))}
+                  </select>
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                  </div>
+                </div>
+              </div>
+
+              {/* Password */}
+              <div className="space-y-2.5">
+                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider">Password</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Lock className="h-4 w-4 text-slate-400" />
+                  </div>
+                  <input name="password" type="password" className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all" placeholder="Leave blank to keep current" />
                 </div>
               </div>
 

@@ -138,12 +138,97 @@ class MyStaffDashboardView(APIView):
         # Get notifications
         notifications = StaffNotification.objects.filter(staff=staff_profile).order_by('-created_at')[:5]
 
+        # Get active stores for attendance modal
+        from stores.models import Store
+        from stores.serializers import StoreListSerializer
+        active_stores = Store.objects.filter(is_active=True).order_by('order', 'name')
+
+        from datetime import date
+        today = date.today()
+        current_active_shift = StaffShift.objects.filter(
+            staff=staff_profile, 
+            date=today, 
+            status='IN_PROGRESS'
+        ).first()
+
+        completed_shift_today = StaffShift.objects.filter(
+            staff=staff_profile,
+            date=today,
+            status='COMPLETED'
+        ).exists()
+
         return Response({
             'profile': StaffProfileSerializer(staff_profile, context={'request': request}).data,
             'shifts': StaffShiftSerializer(shifts, many=True, context={'request': request}).data,
             'tasks': StaffTaskSerializer(tasks, many=True, context={'request': request}).data,
-            'notifications': StaffNotificationSerializer(notifications, many=True, context={'request': request}).data
+            'notifications': StaffNotificationSerializer(notifications, many=True, context={'request': request}).data,
+            'active_stores': StoreListSerializer(active_stores, many=True, context={'request': request}).data,
+            'current_active_shift': StaffShiftSerializer(current_active_shift).data if current_active_shift else None,
+            'has_completed_shift_today': completed_shift_today
         })
+
+class MyStaffCheckInView(APIView):
+    permission_classes = [IsStaffUser]
+
+    def post(self, request):
+        staff_profile = get_object_or_404(StaffProfile, user=request.user)
+        store_id = request.data.get('store_id')
+        if not store_id:
+            return Response({"detail": "Store ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+            
+        from stores.models import Store
+        store = get_object_or_404(Store, id=store_id)
+        
+        from datetime import date
+        from django.utils import timezone
+        today = date.today()
+        
+        # Check if already checked in today
+        active_shift = StaffShift.objects.filter(staff=staff_profile, date=today, status='IN_PROGRESS').first()
+        if active_shift:
+            return Response({"detail": "Already checked in"}, status=status.HTTP_400_BAD_REQUEST)
+            
+        # Try to find a scheduled shift for today
+        shift = StaffShift.objects.filter(staff=staff_profile, date=today, status='SCHEDULED').first()
+        
+        if shift:
+            shift.status = 'IN_PROGRESS'
+            shift.start_time = timezone.now().time()
+            shift.store = store
+            shift.save()
+        else:
+            shift = StaffShift.objects.create(
+                staff=staff_profile,
+                date=today,
+                start_time=timezone.now().time(),
+                store=store,
+                status='IN_PROGRESS'
+            )
+            
+        # Update current active store for the profile
+        staff_profile.store = store
+        staff_profile.save()
+        
+        return Response(StaffShiftSerializer(shift).data)
+
+class MyStaffCheckOutView(APIView):
+    permission_classes = [IsStaffUser]
+
+    def post(self, request):
+        staff_profile = get_object_or_404(StaffProfile, user=request.user)
+        from datetime import date
+        from django.utils import timezone
+        today = date.today()
+        
+        active_shift = StaffShift.objects.filter(staff=staff_profile, date=today, status='IN_PROGRESS').first()
+        if not active_shift:
+            return Response({"detail": "No active shift found to check out"}, status=status.HTTP_400_BAD_REQUEST)
+            
+        active_shift.end_time = timezone.now().time()
+        active_shift.status = 'COMPLETED'
+        active_shift.save()
+        
+        return Response(StaffShiftSerializer(active_shift).data)
 
 class MyStaffProfileUpdateView(generics.UpdateAPIView):
     permission_classes = [IsStaffUser]
@@ -171,6 +256,16 @@ class MyStaffColleaguesView(generics.ListAPIView):
             return StaffProfile.objects.none()
         # Return all staff in the same store except the requesting user
         return StaffProfile.objects.filter(store=profile.store).exclude(id=profile.id).order_by('user__name')
+
+
+class StoreStaffListView(generics.ListAPIView):
+    """Return all staff assigned to a given store — available to any authenticated staff."""
+    permission_classes = [IsStaffUser]
+    serializer_class = StaffProfileSerializer
+
+    def get_queryset(self):
+        store_id = self.kwargs.get('store_id')
+        return StaffProfile.objects.filter(store_id=store_id).order_by('user__name')
 
 class MyStaffTaskUpdateView(generics.UpdateAPIView):
     permission_classes = [IsStaffUser]

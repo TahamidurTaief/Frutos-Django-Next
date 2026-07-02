@@ -58,6 +58,7 @@ class StaffShift(models.Model):
     break_end = models.TimeField(null=True, blank=True)
     break_duration_minutes = models.IntegerField(default=0, help_text="Break time in minutes")
     location = models.CharField(max_length=255, blank=True, null=True)
+    store = models.ForeignKey('stores.Store', on_delete=models.SET_NULL, null=True, blank=True, related_name='staff_shifts')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='SCHEDULED')
     
     created_at = models.DateTimeField(auto_now_add=True)
