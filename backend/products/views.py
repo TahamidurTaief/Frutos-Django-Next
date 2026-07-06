@@ -83,14 +83,20 @@ class ProductViewSet(viewsets.ModelViewSet):
             'shipping_category__allowed_shipping_methods__shipping_tiers'
         ).order_by('-created_at')
         
+        store_id = self.request.query_params.get('store')
+        if store_id:
+            qs = qs.filter(stores__id=store_id)
+        
         if self.request.user and self.request.user.is_authenticated:
             if getattr(self.request.user, 'user_type', '') == 'ADMIN' or self.request.user.is_superuser:
                 return qs
             if getattr(self.request.user, 'user_type', '') == 'STAFF':
-                profile = getattr(self.request.user, 'staff_profile', None)
-                if profile and profile.store:
-                    return qs.filter(stores=profile.store)
-                return qs.none()
+                if not store_id:
+                    profile = getattr(self.request.user, 'staff_profile', None)
+                    if profile and profile.store:
+                        return qs.filter(stores=profile.store)
+                    return qs.none()
+                return qs
                 
         return qs.filter(is_active=True)
 

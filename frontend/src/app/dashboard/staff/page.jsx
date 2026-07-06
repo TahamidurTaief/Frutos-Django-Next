@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Plus, Eye, Trash2, Edit, Store as StoreIcon, Shield, User, UserPlus, Mail, Lock, Briefcase, Phone, Image as ImageIcon, Calendar, Trophy, BarChart2 } from "lucide-react";
+import { Plus, Eye, Trash2, Edit, Store as StoreIcon, Shield, User, UserPlus, Mail, Lock, Briefcase, Phone, Image as ImageIcon, Calendar, Trophy, BarChart2, FileText } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Container from "@/app/dashboard/_components/Container";
@@ -14,6 +14,8 @@ import useSWR from "swr";
 import api from "@/app/dashboard/_lib/api";
 import StaffRankingTab from "./_components/StaffRankingTab";
 import StaffAttendanceTab from "./_components/StaffAttendanceTab";
+import AdminDayOffRequestsTab from "./_components/AdminDayOffRequestsTab";
+import { useSearchParams } from "next/navigation";
 const PAGE_SIZE = 20;
 
 const columns = [
@@ -40,7 +42,8 @@ export default function StaffPage() {
   const router = useRouter();
   const toast = useToastContext();
   const [page, setPage] = useState(1);
-  const [activeTab, setActiveTab] = useState("staff");
+  const searchParams = useSearchParams();
+  const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "staff");
   const [createOpen, setCreateOpen] = useState(false);
   const [deleteItem, setDeleteItem] = useState(null);
   const [viewStaff, setViewStaff] = useState(null);
@@ -151,7 +154,7 @@ export default function StaffPage() {
   return (
     <Container title="Staff Management" description="Manage your staff, their roles, and branch locations">
       {/* Tabs */}
-      <div className="flex gap-1 bg-slate-100 rounded-xl p-1 mb-6 max-w-md">
+      <div className="flex gap-1 bg-slate-100 rounded-xl p-1 mb-6 max-w-2xl">
         <button onClick={() => setActiveTab("staff")}
           className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${activeTab === "staff" ? "bg-white text-[#00694C] shadow-sm" : "text-slate-500 hover:text-slate-700"}`}>
           <User className="w-4 h-4" /> Staff
@@ -164,9 +167,15 @@ export default function StaffPage() {
           className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${activeTab === "attendance" ? "bg-white text-[#00694C] shadow-sm" : "text-slate-500 hover:text-slate-700"}`}>
           <Calendar className="w-4 h-4" /> Attendance
         </button>
+        <button onClick={() => setActiveTab("leave_requests")}
+          className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${activeTab === "leave_requests" ? "bg-white text-[#00694C] shadow-sm" : "text-slate-500 hover:text-slate-700"}`}>
+          <FileText className="w-4 h-4" /> Leave Requests
+        </button>
       </div>
 
-      {activeTab === "ranking" ? (
+      {activeTab === "leave_requests" ? (
+        <AdminDayOffRequestsTab />
+      ) : activeTab === "ranking" ? (
         <StaffRankingTab stores={stores} />
       ) : activeTab === "attendance" ? (
         <StaffAttendanceTab stores={stores} />

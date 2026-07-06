@@ -175,30 +175,44 @@ function StoreProductsTab({ storeId, storeName }) {
           <p className="text-slate-500 font-medium">No products found for {storeName}</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
           {filtered.map(p => (
-            <div key={p.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all overflow-hidden group">
-              <div className="aspect-square bg-slate-50 relative overflow-hidden">
+            <div key={p.id} className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-[#00694C]/30 transition-all overflow-hidden group flex items-stretch p-2.5 gap-3 cursor-pointer">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 bg-slate-50 rounded-lg relative overflow-hidden border border-slate-100">
                 {p.thumbnail_url
                   ? <img src={p.thumbnail_url} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                  : <div className="w-full h-full flex items-center justify-center"><Package className="w-8 h-8 text-slate-200" /></div>}
-                {p.stock <= 0 && (
-                  <div className="absolute top-2 right-2">
-                    <span className="text-[10px] font-bold bg-red-100 text-red-700 px-2 py-0.5 rounded-full border border-red-200">Out of Stock</span>
-                  </div>
-                )}
+                  : <div className="w-full h-full flex items-center justify-center"><Package className="w-6 h-6 text-slate-300" /></div>}
               </div>
-              <div className="p-3">
-                <h3 className="font-semibold text-slate-800 text-sm leading-tight line-clamp-2 mb-1">{p.name}</h3>
-                <p className="text-[11px] text-slate-400 mb-2">{p.category?.name || "—"}</p>
-                <div className="flex items-center justify-between">
-                  <div>
-                    {p.discount_price
-                      ? <div className="flex items-center gap-1.5"><span className="text-sm font-bold text-[#00694C]">€{Number(p.discount_price).toFixed(2)}</span><span className="text-[11px] text-slate-400 line-through">€{Number(p.price).toFixed(2)}</span></div>
-                      : <span className="text-sm font-bold text-[#004A3A]">€{Number(p.price).toFixed(2)}</span>}
+              
+              <div className="flex-1 min-w-0 flex flex-col py-0.5 justify-between">
+                <div>
+                  <div className="flex items-start justify-between gap-2 mb-0.5">
+                    <h3 className="font-bold text-slate-800 text-[13px] sm:text-sm truncate" title={p.name}>{p.name}</h3>
+                    {p.stock <= 0 && (
+                      <span className="shrink-0 text-[9px] font-bold bg-red-100 text-red-700 px-1.5 py-0.5 rounded uppercase tracking-wider border border-red-200">Out</span>
+                    )}
                   </div>
-                  <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${p.stock > 10 ? "bg-emerald-50 text-emerald-700" : p.stock > 0 ? "bg-amber-50 text-amber-700" : "bg-red-50 text-red-700"}`}>
-                    {p.stock > 0 ? `${p.stock}` : "Out"}
+                  
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <span className="text-[10px] text-slate-500 bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded-md font-semibold truncate max-w-[100px]">{p.category?.name || "Uncategorized"}</span>
+                    {p.variant && <span className="text-[9px] font-black text-[#00694C] bg-[#E4EFDA] px-1.5 py-0.5 rounded-md uppercase tracking-wider truncate">{p.variant}</span>}
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between mt-auto">
+                  <div className="flex items-baseline gap-1.5">
+                    {p.discount_price ? (
+                      <>
+                        <span className="text-[15px] font-black text-[#00694C]">€{Number(p.discount_price).toFixed(2)}</span>
+                        <span className="text-[11px] font-semibold text-slate-400 line-through">€{Number(p.price).toFixed(2)}</span>
+                      </>
+                    ) : (
+                      <span className="text-[15px] font-black text-slate-800">€{Number(p.price).toFixed(2)}</span>
+                    )}
+                  </div>
+                  
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${p.stock > 10 ? "bg-emerald-50 text-emerald-700 border-emerald-200" : p.stock > 0 ? "bg-amber-50 text-amber-700 border-amber-200" : "bg-red-50 text-red-700 border-red-200"}`}>
+                    {p.stock > 0 ? `${p.stock} In Stock` : "Empty"}
                   </span>
                 </div>
               </div>
@@ -211,14 +225,19 @@ function StoreProductsTab({ storeId, storeName }) {
 }
 
 // ─── Order History Tab ────────────────────────────────────────────────────────
-function StoreOrderHistoryTab({ profile }) {
+function StoreOrderHistoryTab({ profile, storeId }) {
   const [statusFilter, setStatusFilter] = useState("");
   const [showCreate, setShowCreate] = useState(false);
 
-  const { data, isLoading, mutate } = useSWR(
-    `/api/staff/me/orders/${statusFilter ? `?status=${statusFilter}` : ""}`,
+  const queryParams = new URLSearchParams();
+  if (statusFilter) queryParams.append("status", statusFilter);
+  if (storeId) queryParams.append("store_id", storeId);
+  const queryString = queryParams.toString();
+
+  const { data, isLoading, isValidating, mutate } = useSWR(
+    `/api/staff/me/orders/${queryString ? `?${queryString}` : ""}`,
     (url) => api.get(url),
-    { revalidateOnFocus: false }
+    { revalidateOnFocus: false, keepPreviousData: true }
   );
   const orders = data?.results || [];
   const stats = data?.stats || {};
@@ -259,17 +278,17 @@ function StoreOrderHistoryTab({ profile }) {
       {isLoading ? (
         <div className="flex justify-center py-12"><Loader2 className="w-7 h-7 text-[#00694C] animate-spin" /></div>
       ) : orders.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-2xl border border-slate-100">
+        <div className={`text-center py-16 bg-white rounded-2xl border border-slate-100 transition-opacity duration-300 ${isValidating ? 'opacity-50 pointer-events-none' : ''}`}>
           <ReceiptText className="w-12 h-12 text-slate-200 mx-auto mb-3" />
           <p className="text-slate-500 font-medium">No orders found</p>
           {statusFilter && <p className="text-slate-400 text-sm mt-1">Try clearing the status filter</p>}
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className={`bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden transition-opacity duration-300 ${isValidating ? 'opacity-50 pointer-events-none' : ''}`}>
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-100">
-                {["Order #","Customer","Total","Status","Payment","Date"].map(h => (
+                {["Order #","Customer","Products","Total","Status","Payment","Date"].map(h => (
                   <th key={h} className="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">{h}</th>
                 ))}
               </tr>
@@ -281,6 +300,15 @@ function StoreOrderHistoryTab({ profile }) {
                   <td className="px-4 py-3">
                     <div className="font-medium text-slate-700 text-xs">{order.customer_name || "—"}</div>
                     <div className="text-slate-400 text-[11px]">{order.customer_email}</div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-col gap-1 max-h-[80px] overflow-y-auto pr-2 custom-scrollbar">
+                      {order.items?.map(item => (
+                        <div key={item.id} className="text-[11px] text-slate-600 truncate max-w-[180px]" title={`${item.quantity}x ${item.product_name}`}>
+                          <span className="font-bold text-slate-700">{item.quantity}x</span> {item.product_name}
+                        </div>
+                      ))}
+                    </div>
                   </td>
                   <td className="px-4 py-3 font-semibold text-slate-700">€{Number(order.total_amount || 0).toFixed(2)}</td>
                   <td className="px-4 py-3"><OrderStatusBadge status={order.status} /></td>
@@ -303,7 +331,7 @@ function StoreOrderHistoryTab({ profile }) {
               <h2 className="text-lg font-bold text-slate-800">Create Manual Order</h2>
               <button onClick={() => setShowCreate(false)} className="text-2xl text-slate-400 hover:text-slate-600 cursor-pointer leading-none">×</button>
             </div>
-            <div className="p-6"><AdminCreateOrder onSuccess={() => { setShowCreate(false); mutate(); }} /></div>
+            <div className="p-6"><AdminCreateOrder storeId={storeId} onSuccess={() => { setShowCreate(false); mutate(); }} /></div>
           </div>
         </div>
       )}
@@ -405,7 +433,7 @@ export default function StaffStoreSession({ store, profile, sessionStartTime, cu
 
       {activeTab === "details" && <StoreDetailsTab store={store} currentActiveShift={currentActiveShift} onCheckIn={onCheckIn} isCheckingIn={isCheckingIn} />}
       {activeTab === "products" && <StoreProductsTab storeId={store?.id} storeName={store?.name} />}
-      {activeTab === "orders" && <StoreOrderHistoryTab profile={profile} />}
+      {activeTab === "orders" && <StoreOrderHistoryTab profile={profile} storeId={store?.id} />}
     </div>
   );
 }

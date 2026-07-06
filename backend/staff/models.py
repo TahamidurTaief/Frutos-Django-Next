@@ -125,19 +125,28 @@ class DayOffRequest(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-        # Check if status is changed to APPROVED
+        # Check if status is changed to APPROVED or REJECTED
         if self.pk:
             old = DayOffRequest.objects.get(pk=self.pk)
-            if old.status != 'APPROVED' and self.status == 'APPROVED':
-                # Create or update StaffShift to be DAY_OFF
-                shift, created = StaffShift.objects.get_or_create(
-                    staff=self.staff,
-                    date=self.date,
-                    defaults={'status': 'DAY_OFF'}
-                )
-                if not created:
-                    shift.status = 'DAY_OFF'
-                    shift.save()
+            if old.status != self.status:
+                if self.status == 'APPROVED':
+                    # Create or update StaffShift to be DAY_OFF
+                    shift, created = StaffShift.objects.get_or_create(
+                        staff=self.staff,
+                        date=self.date,
+                        defaults={'status': 'DAY_OFF'}
+                    )
+                    if not created:
+                        shift.status = 'DAY_OFF'
+                        shift.save()
+                
+                if self.status in ['APPROVED', 'REJECTED']:
+                    # Send notification to staff
+                    StaffNotification.objects.create(
+                        staff=self.staff,
+                        title=f"Day Off Request {self.status.capitalize()}",
+                        message=f"Your day off request for {self.date} has been {self.status.lower()}."
+                    )
         super().save(*args, **kwargs)
 
     def __str__(self):

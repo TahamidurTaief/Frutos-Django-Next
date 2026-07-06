@@ -3,14 +3,19 @@
 import { useState } from "react";
 import useSWR from "swr";
 import api from "@/app/dashboard/_lib/api";
-import { Loader2, Calendar, FileText, Send, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { Loader2, Calendar, FileText, Send, CheckCircle2, XCircle, Clock, Plus, ArrowRight } from "lucide-react";
 import { useToastContext } from "@/app/dashboard/_components/Toaster";
+import Modal from "@/app/dashboard/_components/Modal";
+import { useStaffAuth } from "@/app/staff/_context/StaffAuthContext";
 
 export default function StaffRequestDayOff() {
+  const { user, profile } = useStaffAuth();
   const toast = useToastContext();
   const [date, setDate] = useState("");
   const [reason, setReason] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [viewRequest, setViewRequest] = useState(null);
 
   const { data: rawData, isLoading, error, mutate } = useSWR(
     "/api/staff/me/day-off-requests/",
@@ -32,6 +37,7 @@ export default function StaffRequestDayOff() {
       toast.success("Day off request submitted successfully.");
       setDate("");
       setReason("");
+      setIsModalOpen(false);
       mutate();
     } catch (err) {
       toast.error(err?.message || "Failed to submit request.");
@@ -60,53 +66,20 @@ export default function StaffRequestDayOff() {
           </div>
           <p className="text-slate-500 text-[13px] italic font-serif">Submit and track your time off requests</p>
         </div>
+        <button 
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center gap-2 bg-[#00694C] hover:bg-[#004A3A] text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition-all hover:shadow-md cursor-pointer"
+        >
+          <Plus className="w-4 h-4" />
+          New Request
+        </button>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
-        {/* Form Section */}
-        <div className="md:col-span-1 bg-white rounded-xl p-6 shadow-sm border border-slate-100 h-fit">
-          <h2 className="text-lg font-semibold text-[#004A3A] mb-4 flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-[#00694C]" /> New Request
-          </h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Date</label>
-              <input 
-                type="date" 
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00694C]/30 focus:border-[#00694C] transition-all"
-                required
-                min={new Date().toISOString().split("T")[0]}
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Reason</label>
-              <textarea 
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                rows={4}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00694C]/30 focus:border-[#00694C] transition-all"
-                placeholder="Please explain why you need this day off..."
-                required
-              />
-            </div>
-            <button 
-              type="submit" 
-              disabled={isSubmitting}
-              className="w-full flex items-center justify-center gap-2 bg-[#00694C] hover:bg-[#004A3A] text-white py-2.5 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50"
-            >
-              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-              {isSubmitting ? "Submitting..." : "Submit Request"}
-            </button>
-          </form>
-        </div>
-
-        {/* History Section */}
-        <div className="md:col-span-2 bg-white rounded-xl p-6 shadow-sm border border-slate-100">
-          <h2 className="text-lg font-semibold text-[#004A3A] mb-4 flex items-center gap-2">
-            <FileText className="w-5 h-5 text-[#00694C]" /> Request History
-          </h2>
+      {/* History Section */}
+      <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100 flex-1">
+        <h2 className="text-lg font-semibold text-[#004A3A] mb-4 flex items-center gap-2">
+          <FileText className="w-5 h-5 text-[#00694C]" /> Request History
+        </h2>
           
           {isLoading ? (
             <div className="py-12 flex justify-center"><Loader2 className="w-8 h-8 text-[#00694C] animate-spin" /></div>
@@ -115,25 +88,147 @@ export default function StaffRequestDayOff() {
           ) : requests.length === 0 ? (
             <div className="py-12 text-center text-slate-400 text-sm italic">You haven't made any requests yet.</div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {requests.map(req => (
-                <div key={req.id} className="border border-slate-100 rounded-lg p-4 hover:border-slate-200 transition-colors">
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <div className="font-bold text-slate-800">{new Date(req.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
-                      <div className="text-xs text-slate-400 mt-0.5">Requested on {new Date(req.created_at).toLocaleDateString()}</div>
+                <div 
+                  key={req.id} 
+                  onClick={() => setViewRequest(req)}
+                  className="bg-white border border-slate-100 rounded-lg p-3.5 hover:border-[#00694C]/30 hover:shadow-sm transition-all cursor-pointer group flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                >
+                  <div>
+                    <div className="flex items-center gap-3 mb-1">
+                      <div className="font-bold text-slate-800 text-base">{new Date(req.date).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}</div>
+                      <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Req: {new Date(req.created_at).toLocaleDateString()}</span>
                     </div>
-                    {getStatusBadge(req.status)}
+                    <div className="text-xs text-slate-500 line-clamp-1 italic max-w-lg">
+                      "{req.reason}"
+                    </div>
                   </div>
-                  <div className="text-sm text-slate-600 bg-slate-50 p-3 rounded mt-3">
-                    {req.reason}
+                  <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between gap-2 shrink-0">
+                    {getStatusBadge(req.status)}
+                    <div className="opacity-0 group-hover:opacity-100 transition-all transform translate-y-1 group-hover:translate-y-0">
+                      <span className="flex items-center gap-1 text-[10px] font-bold text-white bg-[#00694C] px-2.5 py-1 rounded-md shadow-sm">
+                        View Details <ArrowRight className="w-3 h-3" />
+                      </span>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           )}
-        </div>
       </div>
+
+      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)} title="Submit Leave Request" maxWidth="max-w-2xl">
+        <form onSubmit={handleSubmit} className="flex flex-col">
+          <div className="p-8 bg-slate-50 border-b border-slate-100">
+            <div className="bg-white p-8 rounded-lg shadow-sm border border-slate-200 font-serif text-slate-700 leading-relaxed text-sm">
+              <div className="flex justify-between items-start mb-6">
+                <div>
+                  <p className="font-bold text-slate-800">{user?.name}</p>
+                  <p className="text-slate-500">{profile?.role || 'Employee'}</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-bold text-slate-800">Date: {new Date().toLocaleDateString()}</p>
+                </div>
+              </div>
+              
+              <p className="mb-4">Dear Admin,</p>
+              <p className="mb-4 flex flex-wrap items-center gap-2 leading-loose">
+                I am writing to formally request a day off on 
+                <input 
+                  type="date" 
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="px-2 py-1 border-b-2 border-slate-300 focus:border-[#00694C] bg-slate-50 rounded-t focus:outline-none transition-colors font-sans text-sm inline-block"
+                  required
+                  min={new Date().toISOString().split("T")[0]}
+                />
+                .
+              </p>
+              <div className="mb-4">
+                <strong>Reason:</strong><br />
+                <textarea 
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
+                  rows={4}
+                  className="w-full mt-2 p-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00694C]/20 focus:border-[#00694C] transition-all font-sans bg-slate-50"
+                  placeholder="Please state your reason for requesting this day off clearly..."
+                  required
+                />
+              </div>
+              <p className="mb-8">Thank you for your consideration.</p>
+              
+              <p>Sincerely,</p>
+              <p className="font-bold text-slate-800">{user?.name}</p>
+            </div>
+          </div>
+          <div className="p-5 flex justify-end gap-3 bg-white rounded-b-2xl">
+            <button 
+              type="button"
+              onClick={() => setIsModalOpen(false)}
+              className="px-6 py-2.5 text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit" 
+              disabled={isSubmitting}
+              className="px-6 py-2.5 text-sm font-bold text-white bg-[#00694C] hover:bg-[#004A3A] rounded-xl transition-colors cursor-pointer flex items-center gap-2"
+            >
+              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+              {isSubmitting ? "Submitting..." : "Send Request"}
+            </button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* View Request Modal */}
+      <Modal open={!!viewRequest} onClose={() => setViewRequest(null)} title="Leave Request Details" maxWidth="max-w-2xl">
+        {viewRequest && (
+          <div className="flex flex-col">
+            <div className="p-8 bg-slate-50 border-b border-slate-100">
+              <div className="bg-white p-8 rounded-lg shadow-sm border border-slate-200 font-serif text-slate-700 leading-relaxed text-sm relative">
+                <div className="absolute top-6 right-6">
+                  {getStatusBadge(viewRequest.status)}
+                </div>
+                <div className="flex justify-between items-start mb-5 pb-5 border-b border-slate-100">
+                  <div>
+                    <p className="font-bold text-slate-800 text-base">{user?.name}</p>
+                    <p className="text-slate-500 text-xs uppercase tracking-widest">{profile?.role || 'Employee'}</p>
+                  </div>
+                  <div className="text-right mr-20">
+                    <p className="font-bold text-slate-800 text-xs">Date: {new Date(viewRequest.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+                  </div>
+                </div>
+                
+                <p className="mb-3">Dear Admin,</p>
+                <p className="mb-4 leading-loose text-[13px]">
+                  I am writing to formally request a day off on 
+                  <strong className="px-1.5 py-0.5 ml-1 bg-slate-100 border border-slate-200 rounded text-slate-800">{new Date(viewRequest.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</strong>.
+                </p>
+                <div className="mb-5">
+                  <strong className="text-xs uppercase tracking-widest text-slate-400">Reason:</strong><br />
+                  <div className="w-full mt-2 p-3.5 bg-slate-50 rounded-lg text-[13px] text-slate-700 font-sans border border-slate-100/80 whitespace-pre-wrap min-h-[80px] shadow-[inset_0_1px_3px_rgba(0,0,0,0.02)] leading-relaxed">
+                    {viewRequest.reason}
+                  </div>
+                </div>
+                <p className="mb-6 text-[13px]">Thank you for your consideration.</p>
+                
+                <p className="text-[13px]">Sincerely,</p>
+                <p className="font-bold text-slate-800 italic mt-1">{user?.name}</p>
+              </div>
+            </div>
+            <div className="p-4 flex justify-end bg-white rounded-b-2xl border-t border-slate-100">
+              <button 
+                onClick={() => setViewRequest(null)}
+                className="px-6 py-2 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors cursor-pointer shadow-sm"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }

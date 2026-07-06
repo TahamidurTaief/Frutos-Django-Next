@@ -14,8 +14,17 @@ const STATUS_STYLE = {
   ABSENT: "bg-red-50 text-red-600 border border-red-200",
 };
 
-function fmt(timeStr) {
+function fmt(timeStr, dateStr = null) {
   if (!timeStr) return "—";
+  
+  if (dateStr) {
+    // Combine date and time, assuming UTC (Z), to auto-convert to local timezone
+    const d = new Date(`${dateStr}T${timeStr}Z`);
+    if (!isNaN(d.getTime())) {
+      return d.toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit', hour12: true });
+    }
+  }
+
   const [h, m] = timeStr.split(":");
   let hours = parseInt(h, 10);
   const ap = hours >= 12 ? "PM" : "AM";
@@ -46,12 +55,13 @@ export default function StaffHistoryTab() {
   );
 
   const shifts = data?.shifts || [];
-  const totalHours = data?.total_hours || 0;
-  const totalShifts = data?.total_shifts || 0;
+  const totalHours = shifts.reduce((acc, curr) => (curr.status !== 'DAY_OFF' && curr.status !== 'ABSENT') ? acc + (curr.hours || 0) : acc, 0);
+  const totalShifts = shifts.filter(s => s.status !== 'DAY_OFF' && s.status !== 'ABSENT').length;
 
   // Aggregate stores
   const storeStats = {};
   shifts.forEach(s => {
+    if (s.status === 'DAY_OFF' || s.status === 'ABSENT') return;
     const name = s.store_name || "Unassigned";
     if (!storeStats[name]) storeStats[name] = { days: 0, hours: 0 };
     storeStats[name].days++;
@@ -72,6 +82,7 @@ export default function StaffHistoryTab() {
   const uniqueStores = [...new Set(shifts.map(s => s.store_name).filter(Boolean))].sort();
 
   const filteredShiftsList = shifts.filter(shift => {
+    if (shift.status === 'DAY_OFF' || shift.status === 'ABSENT') return false;
     if (storeFilter !== 'all' && shift.store_name !== storeFilter) return false;
     if (historyFilter === 'all') return true;
 
@@ -297,7 +308,7 @@ export default function StaffHistoryTab() {
                       <div className="flex items-center gap-3 text-xs text-slate-500 font-medium bg-slate-100/50 px-2.5 py-1 rounded-md border border-slate-100 w-fit">
                         <span className="flex items-center gap-1.5">
                           <Clock className="w-3.5 h-3.5 text-slate-400" />
-                          {fmt(s.start_time)} <ArrowRight className="w-3 h-3 text-slate-300" /> {s.end_time ? fmt(s.end_time) : <span className="text-amber-500 font-bold">In Progress</span>}
+                          {fmt(s.start_time, s.date)} <ArrowRight className="w-3 h-3 text-slate-300" /> {s.end_time ? fmt(s.end_time, s.date) : <span className="text-amber-500 font-bold">In Progress</span>}
                         </span>
                       </div>
                     </div>

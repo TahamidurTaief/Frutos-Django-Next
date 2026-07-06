@@ -41,6 +41,19 @@ class StaffNotificationSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class DayOffRequestSerializer(serializers.ModelSerializer):
+    staff_name = serializers.CharField(source='staff.user.name', read_only=True)
+    staff_role = serializers.CharField(source='staff.role', read_only=True)
+    staff_custom_id = serializers.CharField(source='staff.staff_id', read_only=True)
+    staff_photo = serializers.SerializerMethodField()
+
+    def get_staff_photo(self, obj):
+        if obj.staff.photo:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.staff.photo.url)
+            return obj.staff.photo.url
+        return None
+
     class Meta:
         model = DayOffRequest
         fields = '__all__'

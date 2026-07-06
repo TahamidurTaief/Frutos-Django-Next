@@ -11,7 +11,7 @@ import { useToastContext } from "@/app/dashboard/_components/Toaster";
 import DeliverySection from "@/app/checkout/components/DeliverySection";
 import PaymentSection from "@/app/checkout/components/PaymentSection";
 
-export default function AdminCreateOrder({ onBack }) {
+export default function AdminCreateOrder({ onBack, storeId, onSuccess }) {
   const toast = useToastContext();
 
   // Step State (1 = Product Selection, 2 = Checkout Details)
@@ -86,8 +86,12 @@ export default function AdminCreateOrder({ onBack }) {
   };
 
   // Fetch Products
+  const url = storeId 
+    ? `/api/products/products/?store=${storeId}&page_size=500` 
+    : `/api/products/products/?page_size=500`;
+
   const { data: rawData, isLoading } = useSWR(
-    "/api/products/products/?page_size=500",
+    url,
     (url) => api.get(url),
     { revalidateOnFocus: false }
   );

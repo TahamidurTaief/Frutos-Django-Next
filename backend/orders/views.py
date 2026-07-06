@@ -997,6 +997,12 @@ class OrderViewSet(viewsets.ModelViewSet):
                 'customer_phone': request.data.get('customer_phone', ''),
             }
 
+            if request.user and request.user.is_authenticated and getattr(request.user, 'user_type', '') == 'STAFF':
+                from staff.models import StaffProfile
+                staff_profile = StaffProfile.objects.filter(user=request.user).first()
+                if staff_profile:
+                    order_data['created_by_staff'] = staff_profile
+
             # Create the order
             order = Order(**order_data)
             

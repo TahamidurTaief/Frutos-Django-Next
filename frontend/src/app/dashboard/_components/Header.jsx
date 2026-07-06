@@ -75,7 +75,7 @@ function NotificationDropdown({ onClose }) {
             } else if (notif.type === 'new_order' || notif.type === 'order_paid' || notif.title?.toLowerCase().includes('order')) {
               href = `/dashboard/orders`;
             } else if (notif.type === 'DAY_OFF_REQUEST' || notif.title?.toLowerCase().includes('day off')) {
-              href = `/dashboard/staff/request-days`;
+              href = `/dashboard/staff?tab=leave_requests`;
             }
 
             const itemClass = `flex gap-3 px-4 py-3 hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 cursor-pointer ${isUnread ? 'bg-indigo-50/30' : ''}`;

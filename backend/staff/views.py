@@ -526,14 +526,16 @@ class MyStaffOrderHistoryView(APIView):
         if status_filter:
             qs = qs.filter(status=status_filter.upper())
         if store_id:
-            # Filter by orders with items from this store's products
-            pass
+            qs = qs.filter(items__product__stores__id=store_id).distinct()
         
         orders = qs[:100]
         serializer = OrderReadSerializer(orders, many=True, context={'request': request})
         
         # Stats summary
         all_orders = Order.objects.filter(created_by_staff=staff_profile)
+        if store_id:
+            all_orders = all_orders.filter(items__product__stores__id=store_id).distinct()
+            
         stats = {
             'total': all_orders.count(),
             'pending': all_orders.filter(status='PENDING').count(),
