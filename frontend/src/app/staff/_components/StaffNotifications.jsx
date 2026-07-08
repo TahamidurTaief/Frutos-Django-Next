@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Bell, Loader2, ChevronDown, Trash2 } from "lucide-react";
 import api from "@/app/dashboard/_lib/api";
 
-export default function StaffNotifications({ notifications, mutate }) {
+export default function StaffNotifications({ notifications, mutate, setActiveTab }) {
   const [expandedId, setExpandedId] = useState(null);
   
   const formatTimeAgo = (dateString) => {
@@ -138,12 +138,26 @@ export default function StaffNotifications({ notifications, mutate }) {
                 >
                   <div className="overflow-hidden">
                     <div className="p-4 pt-0 sm:px-6 sm:pb-6">
-                      <div className="relative mt-2">
+                       <div className="relative mt-2">
                          {/* Subtle left border accent */}
                          <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#00694C]/40 to-transparent rounded-full"></div>
                          <p className="text-[13px] text-slate-600 whitespace-pre-wrap leading-relaxed pl-5 font-medium">
                            {n.message || n.msg}
                          </p>
+                         
+                         {n.title?.toLowerCase().includes('task') && setActiveTab && (
+                           <div className="pl-5 mt-4">
+                             <button
+                               onClick={(e) => {
+                                 e.stopPropagation();
+                                 setActiveTab('MY_SHIFTS');
+                               }}
+                               className="px-4 py-2 bg-[#00694C] hover:bg-[#004A3A] text-white text-[11px] font-bold rounded-lg transition-colors cursor-pointer uppercase tracking-wider shadow-sm"
+                             >
+                               View Tasks History
+                             </button>
+                           </div>
+                         )}
                       </div>
                     </div>
                   </div>

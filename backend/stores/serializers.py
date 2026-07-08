@@ -31,13 +31,15 @@ class LeftoverPackSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     gallery = LeftoverPackImageSerializer(source='images', many=True, read_only=True)
     discount_percentage = serializers.ReadOnlyField()
+    store_slug = serializers.CharField(source='store.slug', read_only=True)
+    store_name = serializers.CharField(source='store.name', read_only=True)
 
     class Meta:
         model  = LeftoverPack
         fields = [
             'id', 'name', 'description', 'original_price', 'price', 
             'shipping_charge', 'shipping_category', 'weight',
-            'package_type', 'weight_quantity', 
+            'package_type', 'weight_quantity', 'store_slug', 'store_name',
             'stock', 'estimated_delivery', 'image', 'gallery', 
             'discount_percentage', 'is_active', 'created_at', 'updated_at'
         ]
@@ -63,12 +65,13 @@ class StoreListSerializer(serializers.ModelSerializer):
     closeTime     = serializers.TimeField(source='close_time', format='%H:%M')
 
     mapLink       = serializers.CharField(source='map_link', allow_blank=True)
+    storeCode     = serializers.CharField(source='store_code', allow_blank=True, allow_null=True, required=False)
 
     class Meta:
         model  = Store
         fields = [
             'id', 'slug', 'name', 'shortName',
-            'address', 'city', 'fullAddress', 'phone',
+            'address', 'city', 'fullAddress', 'phone', 'storeCode',
             'openTime', 'closeTime', 'hours',
             'mapLink', 'lat', 'lng',
             'features', 'availability', 'provenance',

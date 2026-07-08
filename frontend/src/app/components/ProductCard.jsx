@@ -4,7 +4,6 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useSession } from 'next-auth/react'
 import AddToCartButton from '@/app/components/AddToCartButton'
 import { slugify } from '@/app/lib/slugify'
 import { useWishlist } from '@/app/context/WishlistContext'
@@ -95,10 +94,9 @@ function WishlistButton({ product }) {
 export default function ProductCard({ product, notified, onNotify }) {
   const [isNavigating, setIsNavigating] = useState(false)
   const [showMinQtyToast, setShowMinQtyToast] = useState(false)
-  const { data: session } = useSession()
-
-  const sessionUser = session?.user ?? null
-  const isApprovedWholesale = sessionUser?.isApproved === true
+  const { user } = useAuth()
+  
+  const isApprovedWholesale = user?.user_type === 'WHOLESALE' && (user?.isApproved === true || user?.is_approved_wholesale === true)
 
   const slug = product.slug || slugify(product.name)
   const { name, badge, badgeColor = '', origin, unit, price, oldPrice,
@@ -162,17 +160,12 @@ export default function ProductCard({ product, notified, onNotify }) {
 
           {/* ── Body ── */}
           <div className="flex flex-col flex-1 p-3 md:p-4 min-w-0">
-            <div className="flex items-start gap-1.5 mb-1 min-w-0 w-full">
+            <div className="flex items-start justify-between gap-1.5 mb-1 min-w-0 w-full">
               <h3 className="font-sans font-bold text-gray-900 text-[13px] md:text-[15px] leading-snug flex-1 min-w-0 group-hover:text-[#00694C] transition-colors line-clamp-2">
                 {name}
               </h3>
-              {variant && (
-                <span className="flex-shrink-0 text-[10px] md:text-[11px] font-bold text-[#00694C] bg-[#ECF7E4] px-1.5 py-0.5 rounded mt-0.5">
-                  {variant}
-                </span>
-              )}
               {cleanOrigin && (
-                <div className="flex-shrink-0 text-right" style={{ maxWidth: '72px' }}>
+                <div className="flex-shrink-0 text-right mt-0.5" style={{ maxWidth: '72px' }}>
                   <span className="font-serif italic text-[10px] md:text-[11px] text-gray-400 leading-tight block">from</span>
                   <span className="font-serif italic text-[10px] md:text-[11px] text-gray-400 leading-tight block"
                     style={{ overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
@@ -182,9 +175,16 @@ export default function ProductCard({ product, notified, onNotify }) {
               )}
             </div>
 
-            {unit && (
-              <div className="mb-2">
-                <p className="text-[11px] md:text-[12px] text-gray-400 leading-tight m-0">{unit}</p>
+            {(variant || unit) && (
+              <div className="flex items-center gap-2 mb-2">
+                {variant && (
+                  <span className="flex-shrink-0 text-[10px] md:text-[11px] font-bold text-[#00694C] bg-[#ECF7E4] px-2 py-0.5 rounded">
+                    {variant}
+                  </span>
+                )}
+                {unit && (
+                  <p className="text-[11px] md:text-[12px] text-gray-400 leading-tight m-0">{unit}</p>
+                )}
               </div>
             )}
 

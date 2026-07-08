@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useRef } from 'react'
 import {
-  Package, Plus, Search, Edit2, Trash2, X, Check,
+  Package, Plus, Search, Edit2, Trash2, X, Check, Eye,
   Image as ImageIcon, Loader2, AlertCircle, Store
 } from 'lucide-react'
 import api, { adminFetch } from '@/app/dashboard/_lib/api'
 import { useDashboardAuth } from '@/app/dashboard/_context/DashboardAuthContext'
 import { categoriesService } from '@/app/dashboard/_lib/services'
+import SearchableSelect from '@/app/dashboard/_components/SearchableSelect'
 
 function Input({ label, error, className = '', ...props }) {
   return (
@@ -22,16 +23,17 @@ function Input({ label, error, className = '', ...props }) {
   )
 }
 
-function Select({ label, error, children, className = '', ...props }) {
+function CustomSelect({ label, error, options, value, onChange, placeholder, required }) {
   return (
     <div className="flex flex-col gap-1">
       {label && <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{label}</label>}
-      <select
-        className={`bg-white border ${error ? 'border-red-500' : 'border-slate-200'} rounded-lg px-3 py-2 text-sm text-slate-800 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all ${className}`}
-        {...props}
-      >
-        {children}
-      </select>
+      <SearchableSelect
+        options={options}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        required={required}
+      />
       {error && <p className="text-xs text-red-500">{error}</p>}
     </div>
   )
@@ -152,12 +154,14 @@ function PackFormModal({ pack, stores, categories, storeSlug, onClose, onSave })
                     />
                 </div>
                 <div className="flex-1 space-y-4">
-                    <Select label="Select Store" value={form.store_slug} onChange={e => set('store_slug', e.target.value)} required disabled={isEdit}>
-                        <option value="">Select a store</option>
-                        {stores.map(s => (
-                            <option key={s.id} value={s.slug}>{s.name}</option>
-                        ))}
-                    </Select>
+                    <CustomSelect 
+                        label="Select Store" 
+                        value={form.store_slug} 
+                        onChange={val => set('store_slug', val)} 
+                        options={stores.map(s => ({ label: s.name, value: s.slug }))}
+                        placeholder="Select a store"
+                        required
+                    />
                     <Input label="Pack Name" value={form.name} onChange={e => set('name', e.target.value)} placeholder="e.g. Veggie Rescue Box" required />
                 </div>
             </div>
@@ -168,22 +172,25 @@ function PackFormModal({ pack, stores, categories, storeSlug, onClose, onSave })
             </div>
 
             <div className="grid grid-cols-3 gap-4">
-                <Select label="Package Type" value={form.package_type} onChange={e => set('package_type', e.target.value)} required>
-                    {['Box', 'Bag', 'Bundle', 'Carton', 'Piece', 'KG', 'Liter'].map(pt => (
-                        <option key={pt} value={pt}>{pt}</option>
-                    ))}
-                </Select>
+                <CustomSelect 
+                    label="Package Type" 
+                    value={form.package_type} 
+                    onChange={val => set('package_type', val)} 
+                    options={['Box', 'Bag', 'Bundle', 'Carton', 'Piece', 'KG', 'Liter'].map(pt => ({ label: pt, value: pt }))}
+                    required
+                />
                 <Input label="Weight/Qty" value={form.weight_quantity} onChange={e => set('weight_quantity', e.target.value)} placeholder="e.g. 2.5 KG" />
                 <Input label="Stock" type="number" value={form.stock} onChange={e => set('stock', e.target.value)} required />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-                <Select label="Shipping Category" value={form.shipping_category} onChange={e => set('shipping_category', e.target.value)}>
-                    <option value="">Select a category</option>
-                    {(categories || []).map(c => (
-                        <option key={c.id} value={c.id}>{c.name}</option>
-                    ))}
-                </Select>
+                <CustomSelect 
+                    label="Shipping Category" 
+                    value={form.shipping_category} 
+                    onChange={val => set('shipping_category', val)} 
+                    options={(categories || []).map(c => ({ label: c.name, value: c.id }))}
+                    placeholder="Select a category"
+                />
                 <Input label="Weight (kg)" type="number" step="0.01" value={form.weight} onChange={e => set('weight', e.target.value)} placeholder="(Optional) for shipping" />
             </div>
 
@@ -255,6 +262,90 @@ function DeleteConfirm({ pack, onClose, onConfirm, loading }) {
   )
 }
 
+function PackViewModal({ pack, stores, categories, onClose }) {
+  if (!pack) return null;
+  const store = stores.find(s => s.slug === (pack.store?.slug || pack.store_slug)) || pack.store;
+  const category = categories.find(c => c.id === (pack.shipping_category?.id || pack.shipping_category));
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}>
+      <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 flex-shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center">
+              <Eye size={17} className="text-blue-600" />
+            </div>
+            <div>
+              <p className="font-bold text-slate-800">Leftover Pack Details</p>
+            </div>
+          </div>
+          <button style={{cursor: 'pointer'}} onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-500 transition-colors">
+            <X size={16} />
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          <div className="flex flex-col md:flex-row gap-6">
+            <div className="w-full md:w-48 shrink-0">
+              {pack.image ? (
+                <img src={pack.image} alt={pack.name} className="w-full aspect-square object-cover rounded-xl border border-slate-200 shadow-sm" />
+              ) : (
+                <div className="w-full aspect-square rounded-xl bg-slate-100 flex items-center justify-center border border-slate-200">
+                  <Package size={32} className="text-slate-400" />
+                </div>
+              )}
+            </div>
+            
+            <div className="flex-1 flex flex-col justify-center">
+              <div className="flex items-center gap-2 mb-2">
+                <span className={`px-2 py-1 text-[10px] font-bold uppercase rounded-full tracking-wide ${pack.is_active ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}`}>
+                  {pack.is_active ? 'Active' : 'Hidden'}
+                </span>
+                {pack.discount_percentage > 0 && (
+                  <span className="px-2 py-1 text-[10px] font-bold uppercase rounded-full tracking-wide bg-red-100 text-red-600">
+                    -{pack.discount_percentage}% OFF
+                  </span>
+                )}
+              </div>
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">{pack.name}</h2>
+              <p className="text-sm text-slate-500 mb-4">{pack.description || "No description provided."}</p>
+              
+              <div className="flex items-end gap-3">
+                <div className="text-3xl font-black text-blue-600">€{pack.price}</div>
+                {pack.original_price && pack.original_price > pack.price && (
+                  <div className="text-sm font-bold text-slate-400 line-through mb-1">€{pack.original_price}</div>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Package Type & Qty</span>
+              <span className="text-sm font-semibold text-slate-800">{pack.package_type} {pack.weight_quantity ? `(${pack.weight_quantity})` : ''}</span>
+            </div>
+            <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Current Stock</span>
+              <span className="text-sm font-semibold text-slate-800">{pack.stock} units</span>
+            </div>
+            <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Store / Shop</span>
+              <span className="text-sm font-semibold text-slate-800">{pack.store_name || store?.name || pack.store_slug || 'Unknown'}</span>
+            </div>
+            <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Logistics</span>
+              <span className="text-sm font-semibold text-slate-800">
+                {category?.name ? `Category: ${category.name}` : 'No Category'} 
+                {pack.weight ? ` • ${pack.weight}kg` : ''}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function LeftoverPacksPage() {
@@ -269,6 +360,7 @@ export default function LeftoverPacksPage() {
   const [selectedStoreSlug, setSelectedStoreSlug] = useState('')
   
   const [editPack, setEditPack] = useState(null)
+  const [viewPack, setViewPack] = useState(null)
   const [showForm, setShowForm] = useState(false)
   const [deletePack, setDeletePack] = useState(null)
   const [deleting, setDeleting] = useState(false)
@@ -285,18 +377,14 @@ export default function LeftoverPacksPage() {
       setCategories(Array.isArray(catsData) ? catsData : (catsData.results || []))
       
       let initialStoreSlug = selectedStoreSlug
-      if (!initialStoreSlug && storesList.length > 0) {
-          initialStoreSlug = storesList[0].slug
-          setSelectedStoreSlug(initialStoreSlug)
-      }
-
+      
+      let url = '/api/fulfillment/dashboard/leftover-packs/'
       if (initialStoreSlug) {
-        // Fetch leftover packs for the selected store
-        const packsData = await adminFetch(`/api/fulfillment/dashboard/leftover-packs/?store_slug=${initialStoreSlug}`)
-        setPacks(Array.isArray(packsData) ? packsData : (packsData.results || []))
-      } else {
-          setPacks([])
+        url += `?store_slug=${initialStoreSlug}`
       }
+      
+      const packsData = await adminFetch(url)
+      setPacks(Array.isArray(packsData) ? packsData : (packsData.results || []))
     } catch (e) {
       console.error('Load error:', e)
       setError(e.message || 'Failed to load data')
@@ -354,18 +442,16 @@ export default function LeftoverPacksPage() {
         </div>
         
         {stores.length > 1 && (
-            <div className="flex items-center gap-2">
-                <Store size={18} className="text-slate-500" />
-                <select
-                    value={selectedStoreSlug}
-                    onChange={e => setSelectedStoreSlug(e.target.value)}
-                    className="bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm text-slate-800 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/40"
-                >
-                    <option value="">Select Store</option>
-                    {stores.map(s => (
-                        <option key={s.id} value={s.slug}>{s.name}</option>
-                    ))}
-                </select>
+            <div className="flex items-center gap-3 w-[250px]">
+                <Store size={18} className="text-slate-500 shrink-0" />
+                <div className="flex-1 min-w-0">
+                    <SearchableSelect
+                        value={selectedStoreSlug}
+                        onChange={val => setSelectedStoreSlug(val)}
+                        options={[{label: "All Stores", value: ""}, ...stores.map(s => ({ label: s.name, value: s.slug }))]}
+                        placeholder="Select Store"
+                    />
+                </div>
             </div>
         )}
       </div>
@@ -411,7 +497,7 @@ export default function LeftoverPacksPage() {
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {filteredPacks.map(pack => (
-                  <tr key={pack.id} className="hover:bg-slate-50 transition-colors">
+                  <tr key={pack.id} onClick={() => setViewPack(pack)} className="hover:bg-slate-50 transition-colors cursor-pointer">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         {pack.image ? (
@@ -456,10 +542,13 @@ export default function LeftoverPacksPage() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <button style={{cursor: 'pointer'}} onClick={() => handleEdit(pack)} className="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-md transition-colors">
+                        <button style={{cursor: 'pointer'}} onClick={(e) => { e.stopPropagation(); setViewPack(pack); }} className="p-1.5 text-slate-400 hover:text-indigo-500 hover:bg-indigo-50 rounded-md transition-colors">
+                          <Eye size={16} />
+                        </button>
+                        <button style={{cursor: 'pointer'}} onClick={(e) => { e.stopPropagation(); handleEdit(pack); }} className="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-md transition-colors">
                           <Edit2 size={16} />
                         </button>
-                        <button style={{cursor: 'pointer'}} onClick={() => setDeletePack(pack)} className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors">
+                        <button style={{cursor: 'pointer'}} onClick={(e) => { e.stopPropagation(); setDeletePack(pack); }} className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors">
                           <Trash2 size={16} />
                         </button>
                       </div>
@@ -489,6 +578,15 @@ export default function LeftoverPacksPage() {
           loading={deleting}
           onClose={() => setDeletePack(null)}
           onConfirm={handleDelete}
+        />
+      )}
+
+      {viewPack && (
+        <PackViewModal
+          pack={viewPack}
+          stores={stores}
+          categories={categories}
+          onClose={() => setViewPack(null)}
         />
       )}
     </div>

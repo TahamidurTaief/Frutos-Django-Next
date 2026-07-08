@@ -354,15 +354,31 @@ def login_view(request):
     """
     Custom login view that returns user data along with tokens
     """
-    email = request.data.get('email')
+    identifier = request.data.get('email')
     password = request.data.get('password')
     
-    if not email or not password:
+    if not identifier:
         return Response({
-            'error': 'Email and password are required'
+            'error': 'Email or Staff ID is required'
         }, status=status.HTTP_400_BAD_REQUEST)
     
-    user = authenticate(email=email, password=password)
+    from django.db.models import Q
+    user = None
+    
+    if not password:
+        # Passwordless login for STAFF
+        staff_query = User.objects.filter(staff_profile__staff_id=identifier, user_type='STAFF')
+        if staff_query.exists():
+            user = staff_query.first()
+        else:
+            return Response({'error': 'Invalid Staff ID or password required'}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        resolved_email = identifier
+        user_query = User.objects.filter(Q(email=identifier) | Q(staff_profile__staff_id=identifier))
+        if user_query.exists():
+            resolved_email = user_query.first().email
+            
+        user = authenticate(email=resolved_email, password=password)
     
     if user:
         if user.is_active:

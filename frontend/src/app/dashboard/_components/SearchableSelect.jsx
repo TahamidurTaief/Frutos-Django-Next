@@ -133,7 +133,7 @@ export default function SearchableSelect({
         />
       </button>
 
-      {required && (
+      {name && (
         <input
           tabIndex={-1}
           required={required}

@@ -47,7 +47,7 @@ function DashboardShell({ children }) {
             Your vendor account is <span className="font-bold">{user.vendorStatus.toLowerCase()}</span>. Some actions may be restricted until approval.
           </div>
         )}
-        <main className="flex-1 overflow-y-auto">{children}</main>
+        <main className="flex-1 overflow-y-auto" style={{ scrollbarGutter: "stable" }}>{children}</main>
       </div>
       <AnnouncementListener />
     </div>

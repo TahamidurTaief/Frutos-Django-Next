@@ -41,11 +41,11 @@ export function DashboardAuthProvider({ children }) {
     if (loading) return;
     if (pathname === "/dashboard/login") return;
     if (!user) {
-      router.push("/dashboard/login");
+      setTimeout(() => router.push("/dashboard/login"), 0);
       return;
     }
     if (!canAccessRoute(user.userType, pathname)) {
-      router.push("/dashboard");
+      setTimeout(() => router.push("/dashboard"), 0);
     }
   }, [loading, user, pathname, router]);
 

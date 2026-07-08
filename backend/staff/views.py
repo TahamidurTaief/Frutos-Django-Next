@@ -1,6 +1,7 @@
-from rest_framework import viewsets, generics, permissions, status
+from rest_framework import viewsets, generics, permissions, status, filters
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from django.db import models
@@ -8,7 +9,8 @@ from .models import StaffProfile, StaffShift, StaffTask, StaffNotification, Anno
 from .serializers import (
     StaffProfileSerializer, CreateStaffSerializer, StaffShiftSerializer, 
     StaffTaskSerializer, StaffNotificationSerializer, DayOffRequestSerializer,
-    AnnouncementSerializer, AnnouncementCreateSerializer, StoreStaffTreeSerializer
+    AnnouncementSerializer, AnnouncementCreateSerializer, StoreStaffTreeSerializer,
+    MyStaffProfileUpdateSerializer
 )
 from stores.models import Store
 from channels.layers import get_channel_layer
@@ -46,9 +48,18 @@ class AdminStaffViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = StaffProfile.objects.all().order_by('-created_at')
+        
         store_id = self.request.query_params.get('store_id')
         if store_id:
             queryset = queryset.filter(store_id=store_id)
+            
+        search_query = self.request.query_params.get('search')
+        if search_query:
+            queryset = queryset.filter(
+                models.Q(user__name__icontains=search_query) |
+                models.Q(user__email__icontains=search_query)
+            )
+            
         return queryset
 
     def create(self, request, *args, **kwargs):
@@ -78,10 +89,16 @@ class AdminStaffViewSet(viewsets.ModelViewSet):
             instance.secret_key = new_password
             instance.save()
             
+        if 'photo' in request.FILES:
+            user.profile_image = request.FILES['photo']
+            user_changed = True
+            
         if user_changed:
             user.save()
             
-        # Update StaffProfile fields
+        # Remove photo from request.data so StaffProfileSerializer doesn't try to save it
+        # Since it's a QueryDict, we might need to copy it if we want to mutate, but DRF update 
+        # ignores fields that are SerializerMethodFields anyway, so we can just let it be.
         return super().update(request, *args, **kwargs)
 
 class AdminStaffShiftViewSet(viewsets.ModelViewSet):
@@ -108,6 +125,53 @@ class AdminStaffTaskViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(staff_id=staff_id)
         return queryset
 
+    def perform_create(self, serializer):
+        task = serializer.save()
+        try:
+            StaffNotification.objects.create(
+                staff=task.staff,
+                title="New Task Assigned",
+                message=f"You have been assigned a new task: {task.title}"
+            )
+        except Exception as e:
+            logger.error(f"Error creating staff notification for task: {e}")
+
+class AdminLiveLocationsView(APIView):
+    """GET /api/staff/admin/live-locations/ — returns stores with their currently active staff"""
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        from stores.models import Store
+        from datetime import date
+        today = date.today()
+        
+        stores = Store.objects.filter(is_active=True)
+        active_shifts = StaffShift.objects.filter(date=today, status='IN_PROGRESS').select_related('staff__user')
+        
+        store_data = []
+        for store in stores:
+            store_shifts = [s for s in active_shifts if s.store_id == store.id]
+            staff_list = []
+            for s in store_shifts:
+                staff_list.append({
+                    'id': s.staff.id,
+                    'name': s.staff.user.name or s.staff.user.email,
+                    'role': s.staff.role,
+                    'photo': request.build_absolute_uri(s.staff.photo.url) if s.staff.photo else None,
+                    'start_time': str(s.start_time) if s.start_time else None,
+                })
+            
+            store_data.append({
+                'id': store.id,
+                'name': store.name,
+                'address': store.address,
+                'lat': store.lat,
+                'lng': store.lng,
+                'active_staff': staff_list,
+            })
+            
+        return Response({'stores': store_data})
+
 # ==========================================
 # STAFF APIs
 # ==========================================
@@ -127,19 +191,151 @@ class MyStaffDashboardView(APIView):
         # Get notifications
         notifications = StaffNotification.objects.filter(staff=staff_profile).order_by('-created_at')[:5]
 
+        # Get active stores for attendance modal
+        from stores.models import Store
+        from stores.serializers import StoreListSerializer
+        active_stores = Store.objects.filter(is_active=True).order_by('order', 'name')
+
+        from datetime import date
+        today = date.today()
+        current_active_shift = StaffShift.objects.filter(
+            staff=staff_profile, 
+            date=today, 
+            status='IN_PROGRESS'
+        ).first()
+
+        completed_shift_today = StaffShift.objects.filter(
+            staff=staff_profile,
+            date=today,
+            status='COMPLETED'
+        ).exists()
+
         return Response({
             'profile': StaffProfileSerializer(staff_profile, context={'request': request}).data,
             'shifts': StaffShiftSerializer(shifts, many=True, context={'request': request}).data,
             'tasks': StaffTaskSerializer(tasks, many=True, context={'request': request}).data,
-            'notifications': StaffNotificationSerializer(notifications, many=True, context={'request': request}).data
+            'notifications': StaffNotificationSerializer(notifications, many=True, context={'request': request}).data,
+            'active_stores': StoreListSerializer(active_stores, many=True, context={'request': request}).data,
+            'current_active_shift': StaffShiftSerializer(current_active_shift).data if current_active_shift else None,
+            'has_completed_shift_today': completed_shift_today
         })
+
+class MyStaffCheckInView(APIView):
+    permission_classes = [IsStaffUser]
+
+    def post(self, request):
+        staff_profile = get_object_or_404(StaffProfile, user=request.user)
+        store_id = request.data.get('store_id')
+        if not store_id:
+            return Response({"detail": "Store ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+            
+        from stores.models import Store
+        store = get_object_or_404(Store, id=store_id)
+        
+        from datetime import date
+        from django.utils import timezone
+        today = date.today()
+        
+        # Check if already checked in today
+        active_shift = StaffShift.objects.filter(staff=staff_profile, date=today, status='IN_PROGRESS').first()
+        if active_shift:
+            if str(active_shift.store_id) == str(store.id):
+                return Response({"detail": "Already checked in to this store"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                # Automatically check out of the previous store
+                active_shift.end_time = timezone.now().time()
+                active_shift.status = 'COMPLETED'
+                active_shift.save()
+            
+        # Try to find a scheduled shift for today
+        shift = StaffShift.objects.filter(staff=staff_profile, date=today, status='SCHEDULED').first()
+        
+        if shift:
+            shift.status = 'IN_PROGRESS'
+            shift.start_time = timezone.now().time()
+            shift.store = store
+            shift.save()
+        else:
+            shift = StaffShift.objects.create(
+                staff=staff_profile,
+                date=today,
+                start_time=timezone.now().time(),
+                store=store,
+                status='IN_PROGRESS'
+            )
+            
+        # Update current active store for the profile
+        staff_profile.store = store
+        staff_profile.save()
+        
+        return Response(StaffShiftSerializer(shift).data)
+
+class MyStaffCheckOutView(APIView):
+    permission_classes = [IsStaffUser]
+
+    def post(self, request):
+        staff_profile = get_object_or_404(StaffProfile, user=request.user)
+        from datetime import date
+        from django.utils import timezone
+        today = date.today()
+        
+        active_shift = StaffShift.objects.filter(staff=staff_profile, date=today, status='IN_PROGRESS').first()
+        if not active_shift:
+            return Response({"detail": "No active shift found to check out"}, status=status.HTTP_400_BAD_REQUEST)
+            
+        active_shift.end_time = timezone.now().time()
+        active_shift.status = 'COMPLETED'
+        active_shift.save()
+        
+        return Response(StaffShiftSerializer(active_shift).data)
+
+class MyStaffProfileUpdateView(generics.UpdateAPIView):
+    permission_classes = [IsStaffUser]
+    serializer_class = MyStaffProfileUpdateSerializer
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+    def get_object(self):
+        return get_object_or_404(StaffProfile, user=self.request.user)
 
 class MyStaffTasksView(generics.ListAPIView):
     permission_classes = [IsStaffUser]
     serializer_class = StaffTaskSerializer
 
     def get_queryset(self):
-        return StaffTask.objects.filter(staff__user=self.request.user).order_by('-created_at')
+        profile = get_object_or_404(StaffProfile, user=self.request.user)
+        return StaffTask.objects.filter(staff=profile).order_by('-created_at')
+
+class MyStaffColleaguesView(generics.ListAPIView):
+    permission_classes = [IsStaffUser]
+    serializer_class = StaffProfileSerializer
+
+    def get_queryset(self):
+        profile = get_object_or_404(StaffProfile, user=self.request.user)
+        if not profile.store:
+            return StaffProfile.objects.none()
+        # Return all staff in the same store except the requesting user
+        return StaffProfile.objects.filter(store=profile.store).exclude(id=profile.id).order_by('user__name')
+
+
+class StoreStaffListView(generics.ListAPIView):
+    """Return all staff assigned to a given store — available to any authenticated staff."""
+    permission_classes = [IsStaffUser]
+    serializer_class = StaffProfileSerializer
+
+    def get_queryset(self):
+        store_id = self.kwargs.get('store_id')
+        return StaffProfile.objects.filter(store_id=store_id).order_by('user__name')
+
+class MyStaffTasksView(generics.ListAPIView):
+    permission_classes = [IsStaffUser]
+    serializer_class = StaffTaskSerializer
+
+    def get_queryset(self):
+        queryset = StaffTask.objects.filter(staff__user=self.request.user).order_by('-created_at')
+        date_filter = self.request.query_params.get('date')
+        if date_filter:
+            queryset = queryset.filter(created_at__date=date_filter)
+        return queryset
 
 class MyStaffTaskUpdateView(generics.UpdateAPIView):
     permission_classes = [IsStaffUser]
@@ -147,6 +343,36 @@ class MyStaffTaskUpdateView(generics.UpdateAPIView):
     
     def get_queryset(self):
         return StaffTask.objects.filter(staff__user=self.request.user)
+
+    def perform_update(self, serializer):
+        instance = self.get_object()
+        old_status = instance.status
+        updated_task = serializer.save()
+
+        if old_status != 'COMPLETED' and updated_task.status == 'COMPLETED':
+            from users.models import Notification
+            try:
+                from datetime import date
+                from django.utils import timezone
+                
+                updated_task.completed_at = timezone.now()
+                updated_task.save(update_fields=['completed_at'])
+
+                today = date.today()
+                active_shift = StaffShift.objects.filter(staff=updated_task.staff, date=today, status='IN_PROGRESS').first()
+                store_name = active_shift.store.name if active_shift and active_shift.store else (updated_task.staff.store.name if updated_task.staff.store else "Unknown Store")
+
+                # Format time for message (e.g. "10:30 AM")
+                completed_time = updated_task.completed_at.strftime("%I:%M %p")
+
+                Notification.objects.create(
+                    type='TASK_COMPLETED',
+                    title=f"Task Completed: {updated_task.title}",
+                    message=f"Staff member {updated_task.staff.user.name} has completed the task at store: {store_name} at {completed_time}.",
+                    actor=self.request.user
+                )
+            except Exception as e:
+                logger.error(f"Error creating admin notification for task completion: {e}")
 
 class MyStaffNotificationDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsStaffUser]
@@ -246,3 +472,261 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
         stores = Store.objects.filter(is_active=True).prefetch_related('staff', 'staff__user')
         serializer = StoreStaffTreeSerializer(stores, many=True)
         return Response(serializer.data)
+
+
+# ==========================================
+# STAFF SHIFT HISTORY
+# ==========================================
+
+class MyStaffShiftHistoryView(APIView):
+    """GET /api/staff/me/shift-history/ — full shift history for logged-in staff"""
+    permission_classes = [IsStaffUser]
+
+    def get(self, request):
+        from datetime import datetime
+        staff_profile = get_object_or_404(StaffProfile, user=request.user)
+        shifts = StaffShift.objects.filter(
+            staff=staff_profile
+        ).select_related('store').order_by('-date', '-start_time')
+
+        result = []
+        total_hours = 0
+        for s in shifts:
+            hours = 0
+            if s.start_time and s.end_time:
+                from datetime import datetime as dt
+                start = dt.combine(s.date, s.start_time)
+                end = dt.combine(s.date, s.end_time)
+                diff = (end - start).total_seconds() / 3600
+                if s.break_start and s.break_end:
+                    bs = dt.combine(s.date, s.break_start)
+                    be = dt.combine(s.date, s.break_end)
+                    diff -= (be - bs).total_seconds() / 3600
+                hours = max(0, round(diff, 2))
+                if s.status in ('COMPLETED', 'IN_PROGRESS'):
+                    total_hours += hours
+            result.append({
+                'id': s.id,
+                'date': str(s.date),
+                'store_id': s.store_id,
+                'store_name': s.store.name if s.store else None,
+                'store_image': request.build_absolute_uri(s.store.image.url) if s.store and s.store.image else None,
+                'start_time': str(s.start_time) if s.start_time else None,
+                'end_time': str(s.end_time) if s.end_time else None,
+                'status': s.status,
+                'hours': hours,
+            })
+
+        return Response({
+            'shifts': result,
+            'total_shifts': len(result),
+            'total_hours': round(total_hours, 2),
+        })
+
+
+class AdminStaffShiftStatsView(APIView):
+    """GET /api/staff/admin/shift-stats/ — per-staff shift stats and ranking"""
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        from datetime import datetime as dt
+        store_id = request.query_params.get('store_id')
+        
+        qs = StaffProfile.objects.select_related('user').prefetch_related(
+            models.Prefetch(
+                'shifts',
+                queryset=StaffShift.objects.select_related('store').order_by('-date', '-start_time')
+            )
+        )
+        
+        if store_id:
+            qs = qs.filter(shifts__store_id=store_id).distinct()
+
+        results = []
+        for sp in qs:
+            shifts = sp.shifts.all()
+            if store_id:
+                shifts = [s for s in shifts if str(s.store_id) == str(store_id)]
+            
+            total_hours = 0
+            shift_details = []
+            stores_worked = {}
+            
+            for s in shifts:
+                is_working_shift = s.status in ['COMPLETED', 'IN_PROGRESS']
+                hours = 0
+                if s.start_time and s.end_time and is_working_shift:
+                    start = dt.combine(s.date, s.start_time)
+                    end = dt.combine(s.date, s.end_time)
+                    diff = (end - start).total_seconds() / 3600
+                    if s.break_start and s.break_end:
+                        bs = dt.combine(s.date, s.break_start)
+                        be = dt.combine(s.date, s.break_end)
+                        diff -= (be - bs).total_seconds() / 3600
+                    hours = max(0, round(diff, 2))
+                    total_hours += hours
+
+                sname = s.store.name if s.store else 'Unassigned'
+                
+                # Only add to stores_worked if it's a working shift
+                if is_working_shift:
+                    if sname not in stores_worked:
+                        stores_worked[sname] = {
+                            'days': 0, 
+                            'hours': 0,
+                            'image': request.build_absolute_uri(s.store.image.url) if s.store and s.store.image else None
+                        }
+                    stores_worked[sname]['days'] += 1
+                    stores_worked[sname]['hours'] += hours
+
+                shift_details.append({
+                    'id': s.id,
+                    'date': str(s.date),
+                    'store_name': sname,
+                    'start_time': str(s.start_time) if s.start_time else None,
+                    'end_time': str(s.end_time) if s.end_time else None,
+                    'hours': hours,
+                    'status': s.status,
+                })
+            
+            results.append({
+                'staff_id': sp.id,
+                'staff_code': sp.staff_id,
+                'name': sp.user.name or sp.user.email,
+                'photo': sp.photo.url if sp.photo else None,
+                'role': sp.role,
+                'total_shifts': len(shifts),
+                'total_hours': round(total_hours, 2),
+                'stores_worked': stores_worked,
+                'shifts': shift_details,
+            })
+
+        # Sort by total_hours descending (ranking)
+        results.sort(key=lambda x: x['total_hours'], reverse=True)
+        for i, r in enumerate(results):
+            r['rank'] = i + 1
+
+        return Response({'results': results, 'total_staff': len(results)})
+
+
+class MyStaffOrderHistoryView(APIView):
+    """GET /api/staff/me/orders/ — orders created by this staff member"""
+    permission_classes = [IsStaffUser]
+
+    def get(self, request):
+        from orders.models import Order
+        from orders.serializers import OrderReadSerializer
+        staff_profile = get_object_or_404(StaffProfile, user=request.user)
+        
+        status_filter = request.query_params.get('status')
+        store_id = request.query_params.get('store_id')
+        
+        qs = Order.objects.filter(created_by_staff=staff_profile).order_by('-ordered_at')
+        if status_filter:
+            qs = qs.filter(status=status_filter.upper())
+        if store_id:
+            qs = qs.filter(items__product__stores__id=store_id).distinct()
+        
+        orders = qs[:100]
+        serializer = OrderReadSerializer(orders, many=True, context={'request': request})
+        
+        # Stats summary
+        all_orders = Order.objects.filter(created_by_staff=staff_profile)
+        if store_id:
+            all_orders = all_orders.filter(items__product__stores__id=store_id).distinct()
+            
+        stats = {
+            'total': all_orders.count(),
+            'pending': all_orders.filter(status='PENDING').count(),
+            'processing': all_orders.filter(status='PROCESSING').count(),
+            'delivered': all_orders.filter(status='DELIVERED').count(),
+            'cancelled': all_orders.filter(status='CANCELLED').count(),
+        }
+        
+        return Response({
+            'results': serializer.data,
+            'stats': stats,
+        })
+
+class MyStaffDayOffRequestViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsStaffUser]
+    serializer_class = DayOffRequestSerializer
+
+    def get_queryset(self):
+        staff_profile = get_object_or_404(StaffProfile, user=self.request.user)
+        return DayOffRequest.objects.filter(staff=staff_profile).order_by('-created_at')
+
+    def perform_create(self, serializer):
+        from django.core.mail import send_mail
+        from django.conf import settings
+        from users.models import Notification
+
+        staff_profile = get_object_or_404(StaffProfile, user=self.request.user)
+        request_obj = serializer.save(staff=staff_profile, status='PENDING')
+
+        # Notify Admin via Email
+        subject = f"New Day Off Request from {staff_profile.user.name}"
+        message = f"Staff {staff_profile.user.name} has requested a day off on {request_obj.date}.\nReason: {request_obj.reason}"
+        try:
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [settings.DEFAULT_FROM_EMAIL], # Using default as admin email
+                fail_silently=True,
+            )
+        except Exception as e:
+            logger.error(f"Error sending day off request email: {e}")
+
+        # Notify Admin Dashboard
+        try:
+            Notification.objects.create(
+                type='DAY_OFF_REQUEST',
+                title=subject,
+                message=message,
+                actor=self.request.user
+            )
+        except Exception as e:
+            logger.error(f"Error creating admin notification: {e}")
+
+class AdminDayOffRequestViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminUser]
+    serializer_class = DayOffRequestSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['staff__user__name', 'staff__staff_id']
+
+    def get_queryset(self):
+        return DayOffRequest.objects.all().order_by('-created_at')
+
+    def perform_update(self, serializer):
+        from django.core.mail import send_mail
+        from django.conf import settings
+
+        instance = self.get_object()
+        old_status = instance.status
+        updated_obj = serializer.save()
+
+        if old_status != updated_obj.status:
+            # Send Email to Staff
+            subject = f"Day Off Request {updated_obj.status.capitalize()}"
+            message = f"Your day off request for {updated_obj.date} has been {updated_obj.status.lower()}."
+            try:
+                send_mail(
+                    subject,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [updated_obj.staff.user.email],
+                    fail_silently=True,
+                )
+            except Exception as e:
+                logger.error(f"Error sending day off approval email: {e}")
+
+            # Notify Staff Dashboard
+            try:
+                StaffNotification.objects.create(
+                    staff=updated_obj.staff,
+                    title=subject,
+                    message=message
+                )
+            except Exception as e:
+                logger.error(f"Error creating staff notification: {e}")

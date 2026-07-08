@@ -1,7 +1,7 @@
 "use client";
 
 import { useDashboardAuth } from "@/app/dashboard/_context/DashboardAuthContext";
-import { Bell, Search, ShoppingCart, Package, X, ExternalLink } from "lucide-react";
+import { Bell, Search, ShoppingCart, Package, X, ExternalLink, LogOut } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import useSWR from "swr";
@@ -69,18 +69,29 @@ function NotificationDropdown({ onClose }) {
               </>
             );
 
+            let href = null;
             if (notif.type === 'admin_ticket_reply' && notif.metadata?.ticket_id) {
+              href = `/dashboard/tickets?ticket_id=${notif.metadata.ticket_id}`;
+            } else if (notif.type === 'new_order' || notif.type === 'order_paid' || notif.title?.toLowerCase().includes('order')) {
+              href = `/dashboard/orders`;
+            } else if (notif.type === 'DAY_OFF_REQUEST' || notif.title?.toLowerCase().includes('day off')) {
+              href = `/dashboard/staff?tab=leave_requests`;
+            }
+
+            const itemClass = `flex gap-3 px-4 py-3 hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 cursor-pointer ${isUnread ? 'bg-indigo-50/30' : ''}`;
+
+            if (href) {
               return (
                 <Link 
                   key={notif.id}
-                  href={`/dashboard/tickets?ticket_id=${notif.metadata.ticket_id}`}
+                  href={href}
                   onClick={async () => {
                     if (isUnread) {
                       await api.post('/api/auth/notifications/mark-read/', { ids: [notif.id], context: 'dashboard' });
                     }
                     onClose();
                   }}
-                  className={`flex gap-3 px-4 py-3 hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 ${isUnread ? 'bg-indigo-50/30' : ''}`}
+                  className={itemClass}
                 >
                   {content}
                 </Link>
@@ -88,7 +99,7 @@ function NotificationDropdown({ onClose }) {
             }
 
             return (
-              <div key={notif.id} className={`flex gap-3 px-4 py-3 hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 ${isUnread ? 'bg-indigo-50/30' : ''}`}>
+              <div key={notif.id} className={itemClass}>
                 {content}
               </div>
             );
@@ -106,7 +117,7 @@ function NotificationDropdown({ onClose }) {
 }
 
 export default function Header({ onMenuClick }) {
-  const { user } = useDashboardAuth();
+  const { user, logout } = useDashboardAuth();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const notifRef = useRef(null);
@@ -174,7 +185,7 @@ export default function Header({ onMenuClick }) {
         <div className="relative" ref={notifRef}>
           <button
             onClick={() => setShowNotifications(!showNotifications)}
-            className="p-2 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 relative transition-colors"
+            className="p-2 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 relative transition-colors cursor-pointer"
             title="Notifications"
           >
             <Bell className="w-4 h-4" />
@@ -208,6 +219,19 @@ export default function Header({ onMenuClick }) {
             </p>
           </div>
         </div>
+
+        {/* Divider before logout */}
+        <div className="w-px h-6 bg-slate-200 mx-1" />
+
+        {/* Logout button */}
+        <button
+          onClick={logout}
+          className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+          title="Logout"
+        >
+          <LogOut className="w-4 h-4" />
+          <span className="hidden sm:inline">Logout</span>
+        </button>
       </div>
 
       {/* Mobile search bar (expandable) */}

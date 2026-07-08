@@ -78,7 +78,7 @@ export default async function RootLayout({ children }) {
           minHeight:  '100vh',
         }}
       >
-        <NextTopLoader color="#4f46e5" showSpinner={true} />
+        <NextTopLoader color="#00694C" height={2} showSpinner={false} />
         <Providers>
           <AuthProvider>
             <WishlistProvider>

@@ -11,6 +11,12 @@ class ProductStoreSerializer(serializers.ModelSerializer):
         model = Store
         fields = ['id', 'name', 'slug']
 
+class ProductStoreStockSerializer(serializers.ModelSerializer):
+    store_name = serializers.CharField(source='store.name', read_only=True)
+    class Meta:
+        model = ProductStoreStock
+        fields = ['id', 'store', 'store_name', 'stock']
+
 class BrandSerializer(serializers.ModelSerializer):
     logo_url = serializers.SerializerMethodField()
     
@@ -164,10 +170,16 @@ class ProductSerializer(serializers.ModelSerializer):
     reviews = ReviewSerializer(many=True, read_only=True)
     colors = ColorSerializer(many=True, read_only=True)
     sizes = SizeSerializer(many=True, read_only=True)
+    store_stocks = ProductStoreStockSerializer(many=True, read_only=True)
     thumbnail_url = serializers.SerializerMethodField()
     rating = serializers.SerializerMethodField()
     review_count = serializers.SerializerMethodField()
     user_can_review = serializers.SerializerMethodField()
+
+    created_by_name = serializers.CharField(source='created_by.name', read_only=True)
+    updated_by_name = serializers.CharField(source='updated_by.name', read_only=True)
+    created_by_role = serializers.CharField(source='created_by.user_type', read_only=True)
+    updated_by_role = serializers.CharField(source='updated_by.user_type', read_only=True)
 
     class Meta:
         model = Product
@@ -178,7 +190,9 @@ class ProductSerializer(serializers.ModelSerializer):
             'thumbnail_url', 'specifications', 'additional_images',
             'origin', 'unit', 'wholesale_unit', 'badge', 'badge_color', 'variant',
             'colors', 'sizes', 'reviews', 'rating', 'review_count', 'user_can_review',
-            'created_at', 'updated_at'
+            'store_stocks',
+            'created_at', 'updated_at', 'created_by_name', 'updated_by_name',
+            'created_by_role', 'updated_by_role'
         ]
         
     def get_thumbnail_url(self, obj):
@@ -216,7 +230,7 @@ class ProductSerializer(serializers.ModelSerializer):
             return {"can_review": True, "message": ""}
         else:
             has_purchased = OrderItem.objects.filter(
-                Q(order__user=user) | Q(order__wholesale_user=user) | Q(order__customer_email=user.email),
+                Q(order__user=user) | Q(order__customer_email=user.email),
                 order__status='DELIVERED',
                 product=obj
             ).exists()

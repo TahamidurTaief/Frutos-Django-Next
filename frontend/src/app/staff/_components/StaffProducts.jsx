@@ -8,13 +8,14 @@ import DataTable from "@/app/dashboard/_components/DataTable";
 import Modal from "@/app/dashboard/_components/Modal";
 import ConfirmDialog from "@/app/dashboard/_components/ConfirmDialog";
 import ProductForm from "@/app/dashboard/_components/ProductForm";
+import ProductView from "@/app/dashboard/_components/ProductView";
 import { useToastContext } from "@/app/dashboard/_components/Toaster";
 import {
   brandsService, colorsService, sizesService,
-  subcategoriesService, categoriesService, storesService,
+  subcategoriesService, categoriesService, storesService, siteSettingsService
 } from "@/app/dashboard/_lib/services";
 
-const columns = [
+const getColumns = (totalStores) => [
   { key: "thumbnail_url", label: "PHOTO", sortable: false, render: (v) => v ? (
     <img src={v} alt="" className="w-8 h-8 rounded object-cover" />
   ) : (
@@ -26,7 +27,7 @@ const columns = [
   { key: "price",          label: "Price",      render: (v) => `€${Number(v).toLocaleString()}` },
   { key: "discount_price", label: "Sale Price",  render: (v) => v ? `€${Number(v).toLocaleString()}` : "—" },
   { key: "stock",          label: "Stock" },
-  { key: "store",          label: "Store",      render: (v) => v?.name || "—" },
+  { key: "stores",         label: "Store",      render: (v) => (v && v.length > 0) ? (totalStores > 0 && v.length === totalStores ? "All" : `${v.length} store${v.length > 1 ? 's' : ''}`) : "—" },
   { key: "category",       label: "Category",   render: (v) => v?.name || "—" },
   { key: "is_active",      label: "Status",     render: (v) => v ? "active" : "inactive", type: "status" },
 ];
@@ -46,6 +47,7 @@ export default function StaffProducts({ profile }) {
   const { data: categoriesRaw }  = useSWR("ref-categories",  () => categoriesService.list({ page_size: 200 }),  { revalidateOnFocus: false });
   const { data: subcatsRaw }     = useSWR("ref-subcats",     () => subcategoriesService.list({ page_size: 200 }), { revalidateOnFocus: false });
   const { data: storesRaw }      = useSWR("ref-stores",      () => storesService.list({ page_size: 200 }),      { revalidateOnFocus: false });
+  const { data: catalogSettingsRaw } = useSWR("site-settings-catalog", () => siteSettingsService.list({ group: "catalog" }), { revalidateOnFocus: false });
 
   const brands       = brandsRaw?.results      || (Array.isArray(brandsRaw)      ? brandsRaw      : []);
   const colors       = colorsRaw?.results      || (Array.isArray(colorsRaw)      ? colorsRaw      : []);
@@ -53,10 +55,15 @@ export default function StaffProducts({ profile }) {
   const categories   = categoriesRaw?.results  || (Array.isArray(categoriesRaw)  ? categoriesRaw  : []);
   const subcategories= subcatsRaw?.results     || (Array.isArray(subcatsRaw)     ? subcatsRaw     : []);
   const stores       = storesRaw?.results      || (Array.isArray(storesRaw)      ? storesRaw      : []);
+  const catalogSettings = catalogSettingsRaw?.results || (Array.isArray(catalogSettingsRaw) ? catalogSettingsRaw : []);
+  
+  const productClassesStr = catalogSettings.find(s => s.key === 'product_classes')?.value || "";
+  const productClasses = productClassesStr.split(',').map(s => s.trim()).filter(Boolean);
 
   const [createOpen, setCreateOpen] = useState(false);
   const [editItem,   setEditItem]   = useState(null);
   const [deleteItem, setDeleteItem] = useState(null);
+  const [viewItem,   setViewItem]   = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const filterRef = useRef(null);
@@ -71,7 +78,7 @@ export default function StaffProducts({ profile }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const formProps = { categories, brands, colors, sizes, subcategories, stores };
+  const formProps = { categories, brands, colors, sizes, subcategories, stores, productClasses };
 
   let data = Array.isArray(rawData) ? rawData : (rawData?.results || []);
   if (selectedCategory) {
@@ -189,32 +196,41 @@ export default function StaffProducts({ profile }) {
           <div className="py-12 text-center text-red-500">Failed to load products.</div>
         ) : (
           <DataTable
-            columns={columns}
+            columns={getColumns(stores.length)}
             data={data}
             pageSize={20}
             searchable
             searchKeys={["name"]}
             extraFilters={categoryFilter}
+            onRowClick={(row) => setViewItem(row)}
             actions={(profile?.can_update_products || profile?.can_delete_products) ? ((row) => (
-              <div className="flex items-center justify-end gap-1">
+              <div className="flex items-center justify-end gap-2">
                 {profile?.can_update_products && (
                   <button 
                     style={{ cursor: 'pointer' }}
-                    onClick={() => setEditItem(row)} 
-                    className="db-icon-btn" 
-                    title="Edit"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditItem(row);
+                    }} 
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 hover:text-indigo-800 border border-indigo-100 hover:border-indigo-200 rounded-lg shadow-sm transition-all text-xs font-bold tracking-wide" 
+                    title="Edit Product"
                   >
                     <Pencil className="w-3.5 h-3.5" />
+                    Edit
                   </button>
                 )}
                 {profile?.can_delete_products && (
                   <button 
                     style={{ cursor: 'pointer' }}
-                    onClick={() => setDeleteItem(row)} 
-                    className="db-icon-btn danger" 
-                    title="Delete"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDeleteItem(row);
+                    }} 
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 text-rose-700 hover:bg-rose-100 hover:text-rose-800 border border-rose-100 hover:border-rose-200 rounded-lg shadow-sm transition-all text-xs font-bold tracking-wide" 
+                    title="Delete Product"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
+                    Delete
                   </button>
                 )}
               </div>
@@ -229,6 +245,10 @@ export default function StaffProducts({ profile }) {
 
       <Modal open={!!editItem} onClose={() => setEditItem(null)} title="Edit Product" maxWidth="max-w-4xl">
         {editItem && <ProductForm {...formProps} initialValues={editItem} onSubmit={handleEdit} submitLabel="Update Product" />}
+      </Modal>
+
+      <Modal open={!!viewItem} onClose={() => setViewItem(null)} title="Product Details" maxWidth="max-w-4xl">
+        <ProductView item={viewItem} stores={stores} />
       </Modal>
 
       <ConfirmDialog

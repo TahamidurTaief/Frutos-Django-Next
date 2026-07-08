@@ -21,8 +21,10 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Swap username field for email
-        self.fields['email'] = serializers.EmailField()
+        # Use CharField to allow both email and staff ID
+        self.fields['email'] = serializers.CharField(label="Email or Staff ID")
+        self.fields['password'].required = False
+        self.fields['password'].allow_blank = True
         self.fields.pop('username', None)
 
     @classmethod
@@ -39,20 +41,35 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
     def validate(self, attrs):
-        email    = attrs.pop('email', '').strip().lower()
+        email_or_id = attrs.pop('email', '').strip()
         password = attrs.get('password', '')
 
-        # Look up user by email
         try:
-            user_obj = User.objects.get(email__iexact=email)
+            if '@' in email_or_id:
+                user_obj = User.objects.get(email__iexact=email_or_id)
+                # Password is required for email login
+                from django.contrib.auth import authenticate
+                user = authenticate(username=user_obj.email, password=password)
+                if not user:
+                    raise serializers.ValidationError({'detail': 'Invalid email or password.'})
+                self.user = user
+            else:
+                user_obj = User.objects.get(staff_profile__staff_id__iexact=email_or_id)
+                # Passwordless login for staff ID
+                self.user = user_obj
         except User.DoesNotExist:
             raise serializers.ValidationError(
                 {'detail': 'No active account found with the given credentials.'}
             )
 
-        # Hand off to parent using the email username field
-        attrs[self.username_field] = email
-        data = super().validate(attrs)
+        if not getattr(self.user, 'is_active', False):
+            raise serializers.ValidationError({'detail': 'This account is inactive.'})
+
+        refresh = self.get_token(self.user)
+        data = {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }
 
         # Attach full user object to response body
         data['user'] = UserReadSerializer(self.user, context=self.context).data

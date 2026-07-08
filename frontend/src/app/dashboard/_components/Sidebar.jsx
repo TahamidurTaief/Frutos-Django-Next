@@ -32,6 +32,8 @@ import {
   Home,
   FileText,
   Megaphone,
+  CalendarDays,
+  Database,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -66,6 +68,7 @@ const navGroups = [
     items: [
       { name: "Users", href: "/dashboard/users", icon: Users },
       { name: "Staff", href: "/dashboard/staff", icon: Users },
+      { name: "Request Days", href: "/dashboard/staff/request-days", icon: CalendarDays },
       { name: 'Stores', href: '/dashboard/stores', icon: Store },
       { name: "Shops", href: "/dashboard/shops", icon: Store },
     ],
@@ -74,6 +77,7 @@ const navGroups = [
     label: "Support",
     items: [
       { name: "Tickets", href: "/dashboard/tickets", icon: MessageSquare, badgeKey: "openTickets" },
+      { name: "Message Data Store", href: "/dashboard/chat-history", icon: Database },
     ],
   },
   {
@@ -123,7 +127,10 @@ export default function Sidebar({ collapsed, onToggle }) {
 
   const isActive = (href) => {
     if (href === "/dashboard") return pathname === "/dashboard";
-    return pathname.startsWith(href);
+    if (href === "/dashboard/staff") {
+      return pathname === "/dashboard/staff" || (pathname.startsWith("/dashboard/staff/") && !pathname.startsWith("/dashboard/staff/request-days"));
+    }
+    return pathname === href || pathname.startsWith(href + "/");
   };
 
   const NavContent = () => (
@@ -198,17 +205,6 @@ export default function Sidebar({ collapsed, onToggle }) {
         ))}
       </nav>
 
-      {/* Logout */}
-      <div className="border-t border-slate-100 p-2.5 shrink-0 bg-white">
-        <button
-          onClick={logout}
-          className="flex items-center gap-2.5 w-full px-2.5 py-2 rounded-lg text-sm font-medium text-slate-500 hover:bg-red-50 hover:text-red-600 transition-all"
-          title={collapsed ? "Logout" : undefined}
-        >
-          <LogOut className="w-4 h-4 shrink-0" />
-          {!collapsed && <span>Logout</span>}
-        </button>
-      </div>
     </div>
   );
 

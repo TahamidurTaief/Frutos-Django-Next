@@ -34,7 +34,7 @@ export function StaffAuthProvider({ children }) {
     if (loading) return;
     if (pathname === "/staff/login") return;
     if (!user) {
-      router.push("/staff/login");
+      setTimeout(() => router.push("/staff/login"), 0);
     }
   }, [loading, user, pathname, router]);
 

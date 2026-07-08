@@ -818,6 +818,14 @@ class AdminUserListView(APIView):
 
         normal_data = []
         for u in qs:
+            photo_url = None
+            if getattr(u, 'profile_image', None) and getattr(u.profile_image, 'name', None):
+                photo_url = request.build_absolute_uri(u.profile_image.url)
+            elif getattr(u, 'user_type', None) == 'STAFF' and hasattr(u, 'staff_profile') and getattr(u.staff_profile, 'photo', None) and getattr(u.staff_profile.photo, 'name', None):
+                photo_url = request.build_absolute_uri(u.staff_profile.photo.url)
+            elif hasattr(u, 'profile') and getattr(u.profile, 'avatar', None) and getattr(u.profile.avatar, 'name', None):
+                photo_url = request.build_absolute_uri(u.profile.avatar.url)
+
             normal_data.append({
                 'id':               u.id,
                 'name':             getattr(u, 'name', '') or u.email,
@@ -828,9 +836,8 @@ class AdminUserListView(APIView):
                 'business_name':    None,
                 'wholesale_status': None,
                 'is_wholesale':     False,
-                'photo':            request.build_absolute_uri(u.profile_image.url) if getattr(u, 'profile_image', None) and getattr(u.profile_image, 'name', None) else (request.build_absolute_uri(u.profile.avatar.url) if (hasattr(u, 'profile') and getattr(u.profile, 'avatar', None) and getattr(u.profile.avatar, 'name', None)) else None),
+                'photo':            photo_url,
             })
-
         # ── Wholesale users ───────────────────────────────────────
         ws_data = []
         try:
@@ -1053,6 +1060,38 @@ class AdminDashboardStatsView(APIView):
         except Exception:
             total_wholesale = wholesale_pending = wholesale_approved = 0
 
+        # Staff performance
+        try:
+            from staff.models import StaffProfile
+            from django.db.models import Count, Q
+            
+            total_staff = StaffProfile.objects.count()
+            
+            # Top 3 staff based on completed tasks
+            top_staff_qs = StaffProfile.objects.annotate(
+                completed_tasks=Count('tasks', filter=Q(tasks__status='COMPLETED'))
+            ).order_by('-completed_tasks')[:3]
+            
+            top_staff = []
+            for staff in top_staff_qs:
+                photo_url = None
+                if staff.photo and staff.photo.name:
+                    photo_url = request.build_absolute_uri(staff.photo.url)
+                elif hasattr(staff.user, 'avatar') and staff.user.avatar and staff.user.avatar.name:
+                    photo_url = request.build_absolute_uri(staff.user.avatar.url)
+                
+                top_staff.append({
+                    'id': staff.staff_id,
+                    'name': staff.user.name,
+                    'role': staff.role,
+                    'photo': photo_url,
+                    'completed_tasks': staff.completed_tasks,
+                })
+        except Exception as e:
+            total_staff = 0
+            top_staff = []
+            print("Error fetching staff:", e)
+
         return Response({
             'statistics': {
                 # Top stats
@@ -1071,6 +1110,9 @@ class AdminDashboardStatsView(APIView):
                 'wholesale_approved':   wholesale_approved,
                 # Orders
                 'pending_orders': pending_orders,
+                # Staff
+                'total_staff': total_staff,
+                'top_staff': top_staff,
             }
         })
 

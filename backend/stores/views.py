@@ -105,6 +105,10 @@ class AdminStoreListCreateView(APIView):
         while Store.objects.filter(slug=slug).exists():
             slug = f'{base}-{n}'; n += 1
 
+        store_code = data.get('store_code') or data.get('storeCode') or None
+        if store_code and Store.objects.filter(store_code=store_code).exists():
+            return Response({'detail': f'Store ID "{store_code}" is already in use.'}, status=400)
+
         open_t  = _parse_time(data.get('open_time',  '08:00'))
         close_t = _parse_time(data.get('close_time', '21:00'))
 
@@ -118,6 +122,7 @@ class AdminStoreListCreateView(APIView):
             phone        = data.get('phone', ''),
             open_time    = open_t,
             close_time   = close_t,
+            store_code   = store_code,
             map_link     = data.get('map_link', ''),
             provenance   = data.get('provenance', ''),
             is_active    = _bool(data.get('is_active', True)),
@@ -157,7 +162,7 @@ class AdminStoreDetailView(APIView):
 
         # Scalar fields
         for f in ['name', 'short_name', 'address', 'city', 'full_address',
-                  'phone', 'map_link', 'provenance']:
+                  'phone', 'map_link', 'provenance', 'store_code']:
             if f in data:
                 val = data[f]
                 if isinstance(val, list): val = val[0]  # FormData quirk
@@ -181,6 +186,9 @@ class AdminStoreDetailView(APIView):
             val = data['order']
             if isinstance(val, list): val = val[0]
             store.order = int(val or 0)
+
+        if store.store_code and Store.objects.filter(store_code=store.store_code).exclude(pk=store.pk).exists():
+            return Response({'detail': f'Store ID "{store.store_code}" is already in use.'}, status=400)
 
         if 'image' in request.FILES:
             store.image = request.FILES['image']

@@ -14,8 +14,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields[self.username_field] = serializers.EmailField()
-        self.fields['password'] = serializers.CharField()
+        self.fields[self.username_field] = serializers.CharField()
+        self.fields['password'] = serializers.CharField(required=False, allow_blank=True)
 
     @classmethod
     def get_token(cls, user):
@@ -29,27 +29,35 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
     def validate(self, attrs):
-        email = attrs.get('email')
+        identifier = attrs.get('email')
         password = attrs.get('password')
 
-        if email and password:
-            user = authenticate(request=self.context.get('request'),
-                              email=email, password=password)
+        if identifier:
+            from django.db.models import Q
+            user = None
+            
+            if not password:
+                # Passwordless login using staff_id
+                staff_query = User.objects.filter(staff_profile__staff_id=identifier, user_type='STAFF')
+                if staff_query.exists():
+                    user = staff_query.first()
+                else:
+                    raise serializers.ValidationError('Invalid Staff ID or password required.')
+            else:
+                resolved_email = identifier
+                user_query = User.objects.filter(Q(email=identifier) | Q(staff_profile__staff_id=identifier))
+                if user_query.exists():
+                    resolved_email = user_query.first().email
+                    
+                user = authenticate(request=self.context.get('request'), email=resolved_email, password=password)
             
             if not user:
-                raise serializers.ValidationError(
-                    'No active account found with the given credentials'
-                )
+                raise serializers.ValidationError('No active account found with the given credentials')
             
             if not user.is_active:
-                raise serializers.ValidationError(
-                    'User account is disabled.'
-                )
-
+                raise serializers.ValidationError('User account is disabled.')
         else:
-            raise serializers.ValidationError(
-                'Must include "email" and "password".'
-            )
+            raise serializers.ValidationError('Must include "email" (or Staff ID).')
 
         refresh = self.get_token(user)
 
@@ -227,10 +235,22 @@ class UserSerializer(serializers.ModelSerializer):
     """
     Serializer for user details
     """
+    photo = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ('id', 'email', 'name', 'user_type', 'is_active', 'date_joined', 'profile_image')
+        fields = ('id', 'email', 'name', 'user_type', 'is_active', 'date_joined', 'profile_image', 'photo')
         read_only_fields = ('id', 'date_joined')
+
+    def get_photo(self, obj):
+        request = self.context.get('request')
+        if obj.user_type == 'STAFF' and hasattr(obj, 'staff_profile') and obj.staff_profile.photo:
+            photo_url = obj.staff_profile.photo.url
+            return request.build_absolute_uri(photo_url) if request else photo_url
+        if obj.profile_image:
+            photo_url = obj.profile_image.url
+            return request.build_absolute_uri(photo_url) if request else photo_url
+        return None
 
 
 class WholesalerRegistrationSerializer(serializers.ModelSerializer):
@@ -553,11 +573,21 @@ class VendorTicketAdminSerializer(serializers.ModelSerializer):
 
 class NotificationSerializer(serializers.ModelSerializer):
     actor_name = serializers.SerializerMethodField()
+    icon = serializers.SerializerMethodField()
 
     class Meta:
         model = Notification
-        fields = ['id', 'type', 'title', 'message', 'actor_name', 'is_read', 'created_at']
-        read_only_fields = ['id', 'type', 'title', 'message', 'actor_name', 'created_at']
+        fields = ['id', 'type', 'title', 'message', 'actor_name', 'icon', 'is_read', 'created_at']
+        read_only_fields = ['id', 'type', 'title', 'message', 'actor_name', 'icon', 'created_at']
 
     def get_actor_name(self, obj):
         return obj.actor.name if obj.actor else None
+
+    def get_icon(self, obj):
+        if obj.type == 'DAY_OFF_REQUEST':
+            return 'calendar_month'
+        elif obj.type == 'TICKET_CREATED':
+            return 'support_agent'
+        elif obj.type == 'ORDER_PLACED':
+            return 'shopping_cart'
+        return 'notifications'

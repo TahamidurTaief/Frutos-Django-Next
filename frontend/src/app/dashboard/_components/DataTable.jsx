@@ -156,18 +156,18 @@ export default function DataTable({
                 <th
                   key={col.key}
                   onClick={() => col.sortable !== false && handleSort(col.key)}
-                  className={`px-5 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap ${
+                  className={`px-5 py-3.5 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap ${col.align === 'left' ? 'text-left' : col.align === 'right' ? 'text-right' : 'text-center'} ${
                     col.sortable !== false ? "cursor-pointer select-none hover:text-slate-700" : ""
                   }`}
                 >
-                  <span className="flex items-center gap-1">
+                  <span className={`flex items-center gap-1 ${col.align === 'left' ? 'justify-start' : col.align === 'right' ? 'justify-end' : 'justify-center'}`}>
                     {col.label}
                     {col.sortable !== false && <SortIcon colKey={col.key} />}
                   </span>
                 </th>
               ))}
               {actions && (
-                <th className="px-5 py-3.5 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">
+                <th className="px-5 py-3.5 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">
                   Actions
                 </th>
               )}
@@ -190,7 +190,7 @@ export default function DataTable({
                   }`}
                 >
                   {columns.map((col) => (
-                    <td key={col.key} className="px-5 py-3.5 whitespace-nowrap text-slate-700">
+                    <td key={col.key} className={`px-5 py-3.5 whitespace-nowrap text-slate-700 ${col.align === 'left' ? 'text-left' : col.align === 'right' ? 'text-right' : 'text-center'}`}>
                       {col.render ? col.render(row[col.key], row) : (
                         col.type === "status" ? (
                           <span className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded-full ${statusColors[row[col.key]] || "bg-slate-100 text-slate-600"}`}>
@@ -205,7 +205,7 @@ export default function DataTable({
                     </td>
                   ))}
                   {actions && (
-                    <td className="px-5 py-3.5 text-right">
+                    <td className="px-5 py-3.5 text-center">
                       {actions(row)}
                     </td>
                   )}

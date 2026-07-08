@@ -3,6 +3,7 @@ from django.conf import settings
 
 class StaffProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='staff_profile')
+    staff_id = models.CharField(max_length=50, unique=True, blank=True, null=True)
     role = models.CharField(max_length=100, help_text="e.g., Sales Associate, Packager")
     store = models.ForeignKey('stores.Store', on_delete=models.SET_NULL, null=True, blank=True, related_name='staff')
     phone = models.CharField(max_length=20, blank=True, null=True)
@@ -25,6 +26,18 @@ class StaffProfile(models.Model):
     # Photo for staff dashboard
     photo = models.ImageField(upload_to='staff_photos/', blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        if not self.staff_id:
+            import random
+            import string
+            # Generate a unique STF-<6 digits> ID
+            while True:
+                new_id = f"STF-{''.join(random.choices(string.digits, k=6))}"
+                if not StaffProfile.objects.filter(staff_id=new_id).exists():
+                    self.staff_id = new_id
+                    break
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.user.name} - {self.role}"
 
@@ -45,6 +58,7 @@ class StaffShift(models.Model):
     break_end = models.TimeField(null=True, blank=True)
     break_duration_minutes = models.IntegerField(default=0, help_text="Break time in minutes")
     location = models.CharField(max_length=255, blank=True, null=True)
+    store = models.ForeignKey('stores.Store', on_delete=models.SET_NULL, null=True, blank=True, related_name='staff_shifts')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='SCHEDULED')
     
     created_at = models.DateTimeField(auto_now_add=True)
@@ -65,6 +79,7 @@ class StaffTask(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
     progress_percentage = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -111,19 +126,28 @@ class DayOffRequest(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-        # Check if status is changed to APPROVED
+        # Check if status is changed to APPROVED or REJECTED
         if self.pk:
             old = DayOffRequest.objects.get(pk=self.pk)
-            if old.status != 'APPROVED' and self.status == 'APPROVED':
-                # Create or update StaffShift to be DAY_OFF
-                shift, created = StaffShift.objects.get_or_create(
-                    staff=self.staff,
-                    date=self.date,
-                    defaults={'status': 'DAY_OFF'}
-                )
-                if not created:
-                    shift.status = 'DAY_OFF'
-                    shift.save()
+            if old.status != self.status:
+                if self.status == 'APPROVED':
+                    # Create or update StaffShift to be DAY_OFF
+                    shift, created = StaffShift.objects.get_or_create(
+                        staff=self.staff,
+                        date=self.date,
+                        defaults={'status': 'DAY_OFF'}
+                    )
+                    if not created:
+                        shift.status = 'DAY_OFF'
+                        shift.save()
+                
+                if self.status in ['APPROVED', 'REJECTED']:
+                    # Send notification to staff
+                    StaffNotification.objects.create(
+                        staff=self.staff,
+                        title=f"Day Off Request {self.status.capitalize()}",
+                        message=f"Your day off request for {self.date} has been {self.status.lower()}."
+                    )
         super().save(*args, **kwargs)
 
     def __str__(self):

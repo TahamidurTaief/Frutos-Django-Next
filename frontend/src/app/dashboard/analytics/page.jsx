@@ -166,7 +166,7 @@
 //         <ChartCard title="Monthly Revenue (à§³)">
 //           <div className="h-56">
 //             {monthlyData.length > 0 ? (
-//               <ResponsiveContainer width="100%" height="100%">
+//               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
 //                 <AreaChart data={monthlyData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
 //                   <defs>
 //                     <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
@@ -190,7 +190,7 @@
 //         <ChartCard title="Monthly Order Volume">
 //           <div className="h-56">
 //             {monthlyData.length > 0 ? (
-//               <ResponsiveContainer width="100%" height="100%">
+//               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
 //                 <BarChart data={monthlyData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
 //                   <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
 //                   <XAxis dataKey="month" tick={{ fontSize: 11 }} stroke="#9ca3af" />
@@ -210,7 +210,7 @@
 //       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 //         <ChartCard title="Last 14 Days â€” Daily Orders" className="lg:col-span-1">
 //           <div className="h-48">
-//             <ResponsiveContainer width="100%" height="100%">
+//             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
 //               <AreaChart data={dailyData} margin={{ top: 4, right: 4, left: -28, bottom: 0 }}>
 //                 <defs>
 //                   <linearGradient id="dayGrad" x1="0" y1="0" x2="0" y2="1">
@@ -231,7 +231,7 @@
 //         <ChartCard title="Orders by Status">
 //           <div className="h-36">
 //             {statusBreakdown.length > 0 ? (
-//               <ResponsiveContainer width="100%" height="100%">
+//               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
 //                 <PieChart>
 //                   <Pie data={statusBreakdown} cx="50%" cy="50%" innerRadius={35} outerRadius={58} dataKey="value" stroke="none">
 //                     {statusBreakdown.map((entry, i) => (
@@ -258,7 +258,7 @@
 //         <ChartCard title="Payment Status">
 //           <div className="h-36">
 //             {paymentBreakdown.length > 0 ? (
-//               <ResponsiveContainer width="100%" height="100%">
+//               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
 //                 <PieChart>
 //                   <Pie data={paymentBreakdown} cx="50%" cy="50%" innerRadius={35} outerRadius={58} dataKey="value" stroke="none">
 //                     {paymentBreakdown.map((entry, i) => (
@@ -354,6 +354,7 @@
 
 "use client";
 
+import React, { useState, useMemo } from "react";
 import {
   BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -365,14 +366,15 @@ import useSWR from "swr";
 import Link from "next/link";
 import { fetchAdminDashboardStats } from "@/app/dashboard/_lib/auth";
 import { ordersService, productsService, storesService, leftoverPacksService, offersService } from "@/app/dashboard/_lib/services";
+import CustomDatePicker from "@/app/dashboard/_components/CustomDatePicker";
 
 // Chart color palette
-const PALETTE = ["#18181b", "#4f46e5", "#0ea5e9", "#10b981", "#f59e0b", "#ef4444"];
+const PALETTE = ["#10b981", "#f97316"];
 const STATUS_COLORS = {
-  PENDING: "#f59e0b", PROCESSING: "#3b82f6", SHIPPED: "#8b5cf6",
-  DELIVERED: "#10b981", CANCELLED: "#ef4444",
+  PENDING: "#f97316", PROCESSING: "#10b981", SHIPPED: "#f97316",
+  DELIVERED: "#10b981", CANCELLED: "#f97316",
 };
-const PAYMENT_COLORS = { PAID: "#10b981", PENDING: "#f59e0b", FAILED: "#ef4444" };
+const PAYMENT_COLORS = { PAID: "#10b981", PENDING: "#f97316", FAILED: "#f97316" };
 
 function KpiCard({ label, value, icon: Icon, sub, color = "gray", href }) {
   const colors = {
@@ -396,9 +398,9 @@ function KpiCard({ label, value, icon: Icon, sub, color = "gray", href }) {
 
   const content = (
     <>
-      <div className="flex items-start justify-between mb-3">
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${colors[color]}`}>
-          <Icon className="w-5 h-5" size={20} />
+      <div className="flex items-start justify-between mb-2">
+        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${colors[color]}`}>
+          <Icon className="w-4 h-4" size={16} />
         </div>
       </div>
       <p className={`text-2xl font-black leading-tight ${valColors[color]}`}>{value}</p>
@@ -407,7 +409,7 @@ function KpiCard({ label, value, icon: Icon, sub, color = "gray", href }) {
     </>
   );
 
-  const className = "bg-white border border-slate-100 rounded-xl p-5 shadow-sm hover:shadow-md transition-all block";
+  const className = "bg-white border border-slate-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-all block";
 
   if (href) {
     return (
@@ -426,8 +428,8 @@ function KpiCard({ label, value, icon: Icon, sub, color = "gray", href }) {
 
 function ChartCard({ title, children, className = "", badge }) {
   return (
-    <div className={`bg-white border border-slate-100 rounded-xl p-6 shadow-sm ${className}`}>
-      <div className="flex items-center justify-between mb-5">
+    <div className={`bg-white border border-slate-100 rounded-xl p-4 shadow-sm ${className}`}>
+      <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-bold text-slate-800">{title}</h3>
         {badge && <span className="px-2.5 py-1 bg-indigo-50 text-indigo-600 text-xs font-bold rounded-full">{badge}</span>}
       </div>
@@ -451,6 +453,9 @@ const CustomTooltip = ({ active, payload, label, prefix = "" }) => {
 };
 
 export default function AnalyticsPage() {
+  const [filterType, setFilterType] = useState("ALL_TIME");
+  const [customRange, setCustomRange] = useState({ start: "", end: "" });
+
   const { data: rawStats, isLoading: statsLoading } = useSWR(
     "analytics-stats", fetchAdminDashboardStats, { revalidateOnFocus: false }
   );
@@ -481,6 +486,49 @@ export default function AnalyticsPage() {
   );
   const leftoverPacks = Array.isArray(leftoverPacksData) ? leftoverPacksData : (leftoverPacksData?.results || []);
 
+  const stats = rawStats?.statistics || rawStats || {};
+  const allOrders = recentOrders?.results || (Array.isArray(recentOrders) ? recentOrders : []);
+  
+  const orders = useMemo(() => {
+    if (!allOrders || allOrders.length === 0) return [];
+    if (filterType === "ALL_TIME") return allOrders;
+    
+    const nowDtMemo = new Date();
+    
+    return allOrders.filter(o => {
+      const d = new Date(o.ordered_at);
+      if (filterType === "THIS_WEEK") {
+        const oneWeekAgo = new Date(nowDtMemo);
+        oneWeekAgo.setDate(nowDtMemo.getDate() - 7);
+        return d >= oneWeekAgo;
+      }
+      if (filterType === "THIS_MONTH") {
+        const oneMonthAgo = new Date(nowDtMemo);
+        oneMonthAgo.setMonth(nowDtMemo.getMonth() - 1);
+        return d >= oneMonthAgo;
+      }
+      if (filterType === "CUSTOM") {
+        if (!customRange.start || !customRange.end) return true;
+        const start = new Date(customRange.start);
+        const end = new Date(customRange.end);
+        end.setHours(23, 59, 59, 999);
+        return d >= start && d <= end;
+      }
+      return true;
+    });
+  }, [allOrders, filterType, customRange.start, customRange.end]);
+
+  const topProducts = (topProductsRaw?.results || (Array.isArray(topProductsRaw) ? topProductsRaw : [])).slice(0, 10);
+
+  // ─── Computed Metrics ──────────────────────────────────────────────────────────
+  const totalRevenue = (filterType === "ALL_TIME" && Number(stats?.total_revenue)) 
+    ? Number(stats.total_revenue) 
+    : orders.reduce((s, o) => s + Number(o.total_amount || 0), 0);
+  
+  const totalOrders = (filterType === "ALL_TIME" && Number(stats?.total_orders))
+    ? Number(stats.total_orders)
+    : orders.length;
+
   const { data: offersRaw } = useSWR(
     "analytics-offers",
     () => offersService.list(),
@@ -502,13 +550,6 @@ export default function AnalyticsPage() {
   }));
   const featureBreakdown = Object.entries(featureMap).map(([name, value]) => ({ name, value }));
 
-  const stats = rawStats?.statistics || rawStats || {};
-  const orders = recentOrders?.results || (Array.isArray(recentOrders) ? recentOrders : []);
-  const topProducts = (topProductsRaw?.results || (Array.isArray(topProductsRaw) ? topProductsRaw : [])).slice(0, 10);
-
-  // â”€â”€â”€ Computed Metrics â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  const totalRevenue = Number(stats?.total_revenue || 0) || orders.reduce((s, o) => s + Number(o.total_amount || 0), 0);
-  const totalOrders = Number(stats?.total_orders || 0) || orders.length;
   const totalUsers = Number(stats?.total_users || 0);
   const totalProducts = Number(stats?.total_products || 0);
   const avgOrderValue = totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 0;
@@ -558,6 +599,48 @@ export default function AnalyticsPage() {
   });
   const statusBreakdown = Object.entries(statusMap).map(([name, value]) => ({ name, value }));
   const paymentBreakdown = Object.entries(paymentMap).map(([name, value]) => ({ name, value }));
+
+  // â”€â”€â”€ Store Performance Metrics â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  const storePerfMap = {};
+  allStores.forEach(s => {
+    storePerfMap[s.id] = { 
+      id: s.id, name: s.name, 
+      todayOrders: 0, todayRev: 0, 
+      weekOrders: 0, weekRev: 0, 
+      monthOrders: 0, monthRev: 0 
+    };
+  });
+
+  const nowDt = new Date();
+  const todayStr = nowDt.toDateString();
+  const oneWeekAgo = new Date(nowDt); oneWeekAgo.setDate(nowDt.getDate() - 7);
+  const oneMonthAgo = new Date(nowDt); oneMonthAgo.setMonth(nowDt.getMonth() - 1);
+
+  orders.forEach(o => {
+    const storeId = o.fulfillment_store; 
+    if (!storeId || !storePerfMap[storeId]) return;
+
+    const d = new Date(o.ordered_at);
+    const isToday = d.toDateString() === todayStr;
+    const isThisWeek = d >= oneWeekAgo;
+    const isThisMonth = d >= oneMonthAgo;
+    const rev = Number(o.total_amount || 0);
+
+    if (isToday) {
+      storePerfMap[storeId].todayOrders += 1;
+      storePerfMap[storeId].todayRev += rev;
+    }
+    if (isThisWeek) {
+      storePerfMap[storeId].weekOrders += 1;
+      storePerfMap[storeId].weekRev += rev;
+    }
+    if (isThisMonth) {
+      storePerfMap[storeId].monthOrders += 1;
+      storePerfMap[storeId].monthRev += rev;
+    }
+  });
+
+  const storePerformanceArray = Object.values(storePerfMap).sort((a,b) => b.monthOrders - a.monthOrders);
 
   // â”€â”€â”€ Leftover Packs Metrics â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const totalLeftoverPacks = leftoverPacks.length;
@@ -615,6 +698,49 @@ export default function AnalyticsPage() {
   return (
     <Container title="Analytics" description="Real-time store performance metrics and insights" >
 
+      {/* Date Filter Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+        <div className="flex items-center gap-2 p-1 bg-slate-50 rounded-lg border border-slate-100">
+          {[
+            { id: 'ALL_TIME', label: 'All Time' }, 
+            { id: 'THIS_MONTH', label: 'Monthly' }, 
+            { id: 'THIS_WEEK', label: 'Weekly' }, 
+            { id: 'CUSTOM', label: 'Custom Date' }
+          ].map(type => (
+            <button 
+              key={type.id}
+              onClick={() => setFilterType(type.id)}
+              className={`px-4 py-2 text-xs font-bold rounded-md transition-all cursor-pointer ${filterType === type.id ? 'bg-white text-emerald-600 shadow-sm border border-slate-200/60' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100/50'}`}
+            >
+              {type.label}
+            </button>
+          ))}
+        </div>
+        
+        {filterType === 'CUSTOM' && (
+          <div className="flex items-center gap-3 animate-in fade-in slide-in-from-right-4 duration-300">
+            <div className="flex items-center gap-2">
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Start</label>
+              <CustomDatePicker 
+                value={customRange.start} 
+                onChange={val => setCustomRange(prev => ({...prev, start: val}))}
+                placeholder="Start Date"
+              />
+            </div>
+            <span className="text-slate-300 font-medium">-</span>
+            <div className="flex items-center gap-2">
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">End</label>
+              <CustomDatePicker 
+                value={customRange.end} 
+                onChange={val => setCustomRange(prev => ({...prev, end: val}))}
+                placeholder="End Date"
+                align="right"
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* KPI Row 1 */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         <KpiCard label="Total Revenue" value={`€${totalRevenue.toLocaleString()}`} icon={DollarSign} color="emerald" sub="all time" href="/dashboard/analytics" />
@@ -626,23 +752,23 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Charts Row 1: Revenue + Daily Orders */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-4">
         <ChartCard title="Monthly Revenue (€)">
-          <div className="h-56">
+          <div className="h-40">
             {monthlyData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <AreaChart data={monthlyData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.2} />
-                      <stop offset="95%" stopColor="#4f46e5" stopOpacity={0} />
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.2} />
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
                   <XAxis dataKey="month" tick={{ fontSize: 11 }} stroke="#9ca3af" />
                   <YAxis tick={{ fontSize: 11 }} stroke="#9ca3af" />
                   <Tooltip content={<CustomTooltip prefix="€" />} />
-                  <Area type="monotone" dataKey="revenue" name="Revenue" stroke="#4f46e5" fill="url(#revGrad)" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+                  <Area type="monotone" dataKey="revenue" name="Revenue" stroke="#10b981" fill="url(#revGrad)" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
                 </AreaChart>
               </ResponsiveContainer>
             ) : (
@@ -652,15 +778,15 @@ export default function AnalyticsPage() {
         </ChartCard>
 
         <ChartCard title="Monthly Order Volume">
-          <div className="h-56">
+          <div className="h-40">
             {monthlyData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <BarChart data={monthlyData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
                   <XAxis dataKey="month" tick={{ fontSize: 11 }} stroke="#9ca3af" />
                   <YAxis tick={{ fontSize: 11 }} stroke="#9ca3af" allowDecimals={false} />
                   <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="orders" name="Orders" fill="#0ea5e9" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="orders" name="Orders" fill="#f97316" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
@@ -671,10 +797,10 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Charts Row 2: Daily trend + Status + Payment */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <ChartCard title="Last 14 Days â€” Daily Orders" className="lg:col-span-1">
-          <div className="h-48">
-            <ResponsiveContainer width="100%" height="100%">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mt-4">
+        <ChartCard title="Last 14 Days — Daily Orders" className="lg:col-span-1">
+          <div className="h-32">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <AreaChart data={dailyData} margin={{ top: 4, right: 4, left: -28, bottom: 0 }}>
                 <defs>
                   <linearGradient id="dayGrad" x1="0" y1="0" x2="0" y2="1">
@@ -693,9 +819,9 @@ export default function AnalyticsPage() {
         </ChartCard>
 
         <ChartCard title="Orders by Status">
-          <div className="h-36">
+          <div className="h-28">
             {statusBreakdown.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <PieChart>
                   <Pie data={statusBreakdown} cx="50%" cy="50%" innerRadius={35} outerRadius={58} dataKey="value" stroke="none">
                     {statusBreakdown.map((entry, i) => (
@@ -720,9 +846,9 @@ export default function AnalyticsPage() {
         </ChartCard>
 
         <ChartCard title="Payment Status">
-          <div className="h-36">
+          <div className="h-28">
             {paymentBreakdown.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <PieChart>
                   <Pie data={paymentBreakdown} cx="50%" cy="50%" innerRadius={35} outerRadius={58} dataKey="value" stroke="none">
                     {paymentBreakdown.map((entry, i) => (
@@ -747,28 +873,14 @@ export default function AnalyticsPage() {
         </ChartCard>
       </div>
 
-      {/* Summary Metric Boxes */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-        {[
-          ["Customers", stats?.total_customers || 0, "text-blue-600", "bg-blue-50"],
-          ["Sellers", stats?.total_sellers || 0, "text-indigo-600", "bg-indigo-50"],
-          ["Admins", stats?.total_admins || 0, "text-amber-600", "bg-amber-50"],
-          ["Paid Orders", paidCount, "text-emerald-600", "bg-emerald-50"],
-          ["Cancelled", statusMap.CANCELLED || 0, "text-red-600", "bg-red-50"],
-        ].map(([label, val, textCls, bgCls]) => (
-          <div key={label} className="bg-white border border-slate-100 rounded-xl px-5 py-4 shadow-sm hover:shadow-md transition-all">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{label}</p>
-            <p className={`text-2xl font-black mt-0.5 ${textCls}`}>{Number(val).toLocaleString()}</p>
-          </div>
-        ))}
-      </div>
+
 
       {/* Stores Overview */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
 
         {/* Store stats */}
-        <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm">
-          <div className="flex items-center gap-3 mb-5">
+        <div className="bg-white border border-slate-100 rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-3 mb-3">
             <div className="p-2 bg-teal-50 text-teal-600 rounded-lg"><Store className="w-5 h-5" /></div>
             <h3 className="text-sm font-bold text-slate-800">Store Summary</h3>
           </div>
@@ -790,7 +902,7 @@ export default function AnalyticsPage() {
         <ChartCard title="Store Features Distribution">
           <div className="h-36">
             {featureBreakdown.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <BarChart data={featureBreakdown} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
                   <XAxis dataKey="name" tick={{ fontSize: 9 }} stroke="#9ca3af" />
@@ -806,8 +918,8 @@ export default function AnalyticsPage() {
         </ChartCard>
 
         {/* Store list */}
-        <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm">
-          <div className="flex items-center gap-3 mb-4">
+        <div className="bg-white border border-slate-100 rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-3 mb-3">
             <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg"><MapPin className="w-5 h-5" /></div>
             <h3 className="text-sm font-bold text-slate-800">Store Locations</h3>
           </div>
@@ -830,14 +942,96 @@ export default function AnalyticsPage() {
         </div>
       </div>
 
+      {/* Store Performance Analytics */}
+      <div className="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden mb-3">
+        <div className="px-5 py-3 border-b border-slate-100 flex items-center gap-3 bg-white">
+          <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg"><BarChart2 className="w-5 h-5" /></div>
+          <h3 className="text-sm font-bold text-slate-800">Store Performance Analytics</h3>
+        </div>
+
+        <div className="p-3 grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <ChartCard title="Revenue by Store (Month)">
+            <div className="h-40">
+              {storePerformanceArray.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+                  <BarChart data={storePerformanceArray} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                    <XAxis dataKey="name" tick={{ fontSize: 10 }} stroke="#9ca3af" />
+                    <YAxis tick={{ fontSize: 10 }} stroke="#9ca3af" />
+                    <Tooltip content={<CustomTooltip prefix="€" />} />
+                    <Bar dataKey="monthRev" name="Monthly Revenue" fill="#10b981" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="flex items-center justify-center h-full text-xs text-slate-400">No data</div>
+              )}
+            </div>
+          </ChartCard>
+
+          <ChartCard title="Orders by Store (Month)">
+            <div className="h-40">
+              {storePerformanceArray.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+                  <BarChart data={storePerformanceArray} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                    <XAxis dataKey="name" tick={{ fontSize: 10 }} stroke="#9ca3af" />
+                    <YAxis tick={{ fontSize: 10 }} stroke="#9ca3af" allowDecimals={false} />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Bar dataKey="monthOrders" name="Monthly Orders" fill="#f97316" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="flex items-center justify-center h-full text-xs text-slate-400">No data</div>
+              )}
+            </div>
+          </ChartCard>
+        </div>
+
+        {/* Detailed Metrics Table */}
+        <div className="px-4 pb-6 overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-slate-100 bg-slate-50">
+                <th className="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider rounded-tl-lg rounded-bl-lg">Store Name</th>
+                <th className="px-4 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Today Orders</th>
+                <th className="px-4 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Week Orders</th>
+                <th className="px-4 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Month Orders</th>
+                <th className="px-4 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Today Revenue</th>
+                <th className="px-4 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Week Revenue</th>
+                <th className="px-4 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wider rounded-tr-lg rounded-br-lg">Month Revenue</th>
+              </tr>
+            </thead>
+            <tbody>
+              {storePerformanceArray.length > 0 ? (
+                storePerformanceArray.map((store, i) => (
+                  <tr key={store.id} className="border-b border-gray-50 last:border-0 hover:bg-slate-50 transition-colors">
+                    <td className="px-4 py-3 font-bold text-slate-800">{store.name}</td>
+                    <td className="px-4 py-3 text-right text-slate-600 font-medium">{store.todayOrders}</td>
+                    <td className="px-4 py-3 text-right text-slate-600 font-medium">{store.weekOrders}</td>
+                    <td className="px-4 py-3 text-right text-slate-600 font-medium">{store.monthOrders}</td>
+                    <td className="px-4 py-3 text-right text-emerald-600 font-bold">€{store.todayRev.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-right text-emerald-600 font-bold">€{store.weekRev.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-right text-emerald-600 font-bold">€{store.monthRev.toLocaleString()}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={7} className="px-4 py-6 text-center text-sm text-slate-400">No store performance data available</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       {/* Offers Analytics */}
       <div className="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden">
-        <div className="px-6 py-5 border-b border-slate-100 flex items-center gap-3 bg-white">
+        <div className="px-5 py-3 border-b border-slate-100 flex items-center gap-3 bg-white">
           <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><Tag className="w-5 h-5" /></div>
           <h3 className="text-sm font-bold text-slate-800">Offers Analytics</h3>
         </div>
 
-        <div className="p-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="p-3 grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Metrics summary */}
           <div className="lg:col-span-1 space-y-3">
             <div className="grid grid-cols-2 gap-3">
@@ -874,7 +1068,7 @@ export default function AnalyticsPage() {
           {/* Chart by Status */}
           <div className="lg:col-span-1 min-w-0">
             <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Offers by Status</h4>
-            <div className="h-40 w-full min-h-[160px]">
+            <div className="h-32 w-full min-h-[128px]">
               {offersStatusData.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                   <PieChart>
@@ -921,12 +1115,12 @@ export default function AnalyticsPage() {
 
       {/* Leftover Packs Analytics */}
       <div className="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden">
-        <div className="px-6 py-5 border-b border-slate-100 flex items-center gap-3 bg-white">
+        <div className="px-5 py-3 border-b border-slate-100 flex items-center gap-3 bg-white">
           <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><Package className="w-5 h-5" /></div>
           <h3 className="text-sm font-bold text-slate-800">Leftover Packs Analytics</h3>
         </div>
 
-        <div className="p-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="p-3 grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Metrics summary */}
           <div className="lg:col-span-1 space-y-3">
             <div className="grid grid-cols-2 gap-3">
@@ -970,7 +1164,7 @@ export default function AnalyticsPage() {
             <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Pack Units by Store</h4>
             <div className="h-48 w-full">
               {leftoverPacksByStore.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                   <BarChart data={leftoverPacksByStore} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
                     <XAxis dataKey="store" tick={{ fontSize: 10 }} stroke="#9ca3af" axisLine={false} tickLine={false} />

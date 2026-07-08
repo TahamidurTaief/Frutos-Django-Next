@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from orders.models import Order
-from .models import Product, Category, SubCategory, Color, Brand, Size, ProductSpecification, ProductAdditionalImage, Review, Offer
+from .models import Product, Category, SubCategory, Color, Brand, Size, ProductSpecification, ProductAdditionalImage, Review, Offer, ProductStoreStock
 from django.db.models import Count, ProtectedError, Prefetch
 from .serializers import (
     ProductSerializer, ProductWriteSerializer,
@@ -83,14 +83,20 @@ class ProductViewSet(viewsets.ModelViewSet):
             'shipping_category__allowed_shipping_methods__shipping_tiers'
         ).order_by('-created_at')
         
+        store_id = self.request.query_params.get('store')
+        if store_id:
+            qs = qs.filter(stores__id=store_id)
+        
         if self.request.user and self.request.user.is_authenticated:
             if getattr(self.request.user, 'user_type', '') == 'ADMIN' or self.request.user.is_superuser:
                 return qs
             if getattr(self.request.user, 'user_type', '') == 'STAFF':
-                profile = getattr(self.request.user, 'staff_profile', None)
-                if profile and profile.store:
-                    return qs.filter(stores=profile.store)
-                return qs.none()
+                if not store_id:
+                    profile = getattr(self.request.user, 'staff_profile', None)
+                    if profile and profile.store:
+                        return qs.filter(stores=profile.store)
+                    return qs.none()
+                return qs
                 
         return qs.filter(is_active=True)
 
@@ -179,7 +185,7 @@ class ProductViewSet(viewsets.ModelViewSet):
             if 'shop' not in serializer.validated_data:
                 from rest_framework.exceptions import ValidationError
                 raise ValidationError({"shop": "Please select a shop for this product."})
-            serializer.save()
+            serializer.save(created_by=user, updated_by=user)
             return
 
         # ── STAFF: check StaffProfile permission ──────────────────────────
@@ -191,12 +197,12 @@ class ProductViewSet(viewsets.ModelViewSet):
             if profile is None or not profile.can_create_products:
                 raise PermissionDenied("You do not have permission to create products.")
             # Staff with permission — they don't own a shop, so just save without shop
-            serializer.save()
+            serializer.save(created_by=user, updated_by=user)
             return
 
         # ── VENDOR / SELLER: must have a shop ─────────────────────────────
         if user.shops.exists():
-            serializer.save(shop=user.shops.first())
+            serializer.save(shop=user.shops.first(), created_by=user, updated_by=user)
         else:
             from rest_framework.exceptions import ValidationError
             raise ValidationError("You do not have a shop to add products to.")
@@ -206,6 +212,13 @@ class ProductViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         product = serializer.instance
+        
+        # Auto-assign product to staff's store
+        if getattr(request.user, 'user_type', '') == 'STAFF':
+            profile = getattr(request.user, 'staff_profile', None)
+            if profile and profile.store:
+                product.stores.add(profile.store)
+                
         # Handle specification JSON (sent as JSON string in FormData)
         specs_json = request.data.get('specifications_json')
         if specs_json:
@@ -228,6 +241,20 @@ class ProductViewSet(viewsets.ModelViewSet):
                 f'New product added to shop "{product.shop.name if product.shop else "N/A"}".',
                 actor=request.user,
             )
+
+        # Handle store stocks
+        stock_value = product.stock
+        if 'stock' in request.data:
+            try:
+                stock_value = int(request.data['stock'])
+            except ValueError:
+                pass
+        for store in product.stores.all():
+            ProductStoreStock.objects.get_or_create(
+                product=product, store=store,
+                defaults={'stock': stock_value}
+            )
+
         return Response(read_serializer.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
@@ -267,7 +294,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        serializer.save(updated_by=user)
 
         product = serializer.instance
 

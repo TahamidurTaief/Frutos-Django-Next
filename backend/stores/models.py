@@ -63,6 +63,7 @@ class Store(models.Model):
     city         = models.CharField(max_length=150)
     full_address = models.CharField(max_length=400)
     phone        = models.CharField(max_length=30)
+    store_code   = models.CharField(max_length=50, unique=True, blank=True, null=True, help_text='Unique Store ID')
 
     # ── Time fields (replaces CharField) ─────────────────────────────────────
     open_time    = models.TimeField(help_text='Opening time (use AM/PM picker)')

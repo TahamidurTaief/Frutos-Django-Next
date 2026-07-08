@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, AlertCircle, Eye, EyeOff } from "lucide-react";
+import { Loader2, AlertCircle, Eye, EyeOff, Image as ImageIcon } from "lucide-react";
+import SearchableSelect from "./SearchableSelect";
+// Trigger HMR
 
 export default function FormModal({ fields, initialValues = {}, onSubmit, submitLabel = "Save", loading: externalLoading }) {
   const [values, setValues] = useState(initialValues);
@@ -32,219 +34,127 @@ export default function FormModal({ fields, initialValues = {}, onSubmit, submit
     }
   };
 
-  const inputStyle = {
-    width: "100%",
-    padding: "12px 16px",
-    border: "1.5px solid #e2e8f0",
-    borderRadius: "12px",
-    fontSize: "14px",
-    color: "#1e293b",
-    background: "#f8fafc",
-    outline: "none",
-    boxSizing: "border-box",
-    transition: "all 0.2s ease",
-    fontFamily: "inherit",
-  };
-
-  const handleFocus = (e) => {
-    e.target.style.borderColor = "#6366f1";
-    e.target.style.boxShadow = "0 0 0 3px rgba(99,102,241,0.1)";
-  };
-
-  const handleBlur = (e) => {
-    e.target.style.borderColor = "#e2e8f0";
-    e.target.style.boxShadow = "none";
-  };
+  const inputClasses = "w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm";
+  const labelClasses = "block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5";
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       {error && (
-        <div style={{
-          display: "flex",
-          alignItems: "flex-start",
-          gap: "10px",
-          padding: "12px 16px",
-          background: "#fef2f2",
-          border: "1.5px solid #fecaca",
-          borderRadius: "10px",
-          color: "#dc2626",
-          fontSize: "13px",
-          fontWeight: "600",
-        }}>
-          <AlertCircle size={16} style={{ flexShrink: 0, marginTop: "1px" }} />
+        <div className="flex items-start gap-2.5 p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm font-semibold">
+          <AlertCircle size={16} className="mt-0.5 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
-      {fields.map((field) => (
-        <div key={field.key}>
-          <label style={{
-            display: "block",
-            fontSize: "11px",
-            fontWeight: "700",
-            color: "#64748b",
-            textTransform: "uppercase",
-            letterSpacing: "0.06em",
-            marginBottom: "7px",
-          }}>
-            {field.label}
-            {field.required && <span style={{ color: "#ef4444", marginLeft: "3px" }}>*</span>}
-          </label>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4">
+        {fields.map((field) => {
+          const isFullWidth = field.type === "textarea" || field.type === "file";
+          
+          return (
+            <div key={field.key} className={isFullWidth ? "sm:col-span-2" : ""}>
+              <label className={labelClasses}>
+                {field.label}
+                {field.required && <span className="text-red-500 ml-1">*</span>}
+              </label>
 
-          {field.type === "select" ? (
-            <div style={{ position: "relative" }}>
-              <select
-                value={values[field.key] ?? ""}
-                onChange={(e) => handleChange(field.key, e.target.value)}
-                required={field.required}
-                style={{ ...inputStyle, cursor: "pointer", appearance: "none", paddingRight: "36px" }}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-              >
-                <option value="" disabled>Select {field.label}...</option>
-                {field.options?.map((opt) => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
-                ))}
-              </select>
-              <div style={{
-                position: "absolute",
-                right: "14px",
-                top: "50%",
-                transform: "translateY(-50%)",
-                pointerEvents: "none",
-                display: "flex",
-                alignItems: "center",
-                color: "#64748b"
-              }}>
-                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-              </div>
-            </div>
-          ) : field.type === "textarea" ? (
-            <textarea
-              value={values[field.key] ?? ""}
-              onChange={(e) => handleChange(field.key, e.target.value)}
-              required={field.required}
-              rows={4}
-              placeholder={field.placeholder}
-              style={{ ...inputStyle, resize: "vertical", minHeight: "100px" }}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-            />
-          ) : field.type === "password" ? (
-            <div style={{ position: "relative" }}>
-              <input
-                type={showPassword[field.key] ? "text" : "password"}
-                value={values[field.key] ?? ""}
-                onChange={(e) => handleChange(field.key, e.target.value)}
-                required={field.required}
-                placeholder={field.placeholder}
-                style={{ ...inputStyle, paddingRight: "40px" }}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-              />
-              <button
-                type="button"
-                onClick={() => togglePassword(field.key)}
-                style={{
-                  position: "absolute",
-                  right: "12px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "#64748b",
-                  padding: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                {showPassword[field.key] ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            </div>
-          ) : field.type === "file" ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-              <label style={{ display: "flex", alignItems: "center", gap: "16px", cursor: "pointer", border: "2px dashed #cbd5e1", borderRadius: "12px", padding: "16px", background: "#f8fafc", transition: "all 0.2s" }} onMouseEnter={e => e.currentTarget.style.borderColor = "#00694C"} onMouseLeave={e => e.currentTarget.style.borderColor = "#cbd5e1"}>
-                <div style={{ position: "relative", width: "64px", height: "64px", borderRadius: "50%", overflow: "hidden", background: "#e2e8f0", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  {values[field.key] ? (
-                    <img
-                      src={typeof values[field.key] === "string" ? values[field.key] : URL.createObjectURL(values[field.key])}
-                      alt="Preview"
-                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              {field.type === "select" ? (
+                <SearchableSelect
+                  options={field.options || []}
+                  value={values[field.key] ?? ""}
+                  onChange={(val) => handleChange(field.key, val)}
+                  placeholder={`Select ${field.label}...`}
+                  required={field.required}
+                />
+              ) : field.type === "textarea" ? (
+                <textarea
+                  value={values[field.key] ?? ""}
+                  onChange={(e) => handleChange(field.key, e.target.value)}
+                  required={field.required}
+                  rows={3}
+                  placeholder={field.placeholder}
+                  className={`${inputClasses} resize-y min-h-[80px]`}
+                />
+              ) : field.type === "password" ? (
+                <div className="relative">
+                  <input
+                    type={showPassword[field.key] ? "text" : "password"}
+                    value={values[field.key] ?? ""}
+                    onChange={(e) => handleChange(field.key, e.target.value)}
+                    required={field.required}
+                    placeholder={field.placeholder}
+                    className={`${inputClasses} pr-10`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => togglePassword(field.key)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                  >
+                    {showPassword[field.key] ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+              ) : field.type === "file" ? (
+                <div className="flex flex-col gap-2">
+                  <label className="flex items-center gap-4 p-4 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50 cursor-pointer hover:border-emerald-500 hover:bg-emerald-50/30 transition-all group">
+                    <div className="relative w-14 h-14 rounded-full overflow-hidden bg-slate-200 flex items-center justify-center shrink-0 border border-slate-300 group-hover:border-emerald-300">
+                      {values[field.key] ? (
+                        <img
+                          src={typeof values[field.key] === "string" ? values[field.key] : URL.createObjectURL(values[field.key])}
+                          alt="Preview"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <ImageIcon className="w-6 h-6 text-slate-400 group-hover:text-emerald-500" />
+                      )}
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-bold text-slate-700 group-hover:text-emerald-700">
+                        {values[field.key] ? "Change File" : "Upload File"}
+                      </span>
+                      <span className="text-xs font-medium text-slate-500">Click to select a file</span>
+                    </div>
+                    <input
+                      type="file"
+                      accept={field.accept || "image/*"}
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files.length > 0) {
+                          handleChange(field.key, e.target.files[0]);
+                        }
+                      }}
+                      className="hidden"
                     />
-                  ) : (
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                  </label>
+                  {values[field.key] && (
+                    <button
+                      type="button"
+                      onClick={(e) => { e.preventDefault(); handleChange(field.key, null); }}
+                      className="text-xs font-bold text-red-500 hover:text-red-600 self-start"
+                    >
+                      Remove File
+                    </button>
                   )}
                 </div>
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <span style={{ fontSize: "14px", fontWeight: "600", color: "#334155" }}>
-                    {values[field.key] ? "Change Photo" : "Upload Photo"}
-                  </span>
-                  <span style={{ fontSize: "12px", color: "#64748b" }}>Click to select an image</span>
-                </div>
+              ) : (
                 <input
-                  type="file"
-                  accept={field.accept || "image/*"}
-                  onChange={(e) => {
-                    if (e.target.files && e.target.files.length > 0) {
-                      handleChange(field.key, e.target.files[0]);
-                    }
-                  }}
-                  style={{ display: "none" }}
+                  type={field.type || "text"}
+                  value={values[field.key] ?? ""}
+                  onChange={(e) => handleChange(field.key, e.target.value)}
+                  required={field.required}
+                  placeholder={field.placeholder}
+                  className={inputClasses}
                 />
-              </label>
-              {values[field.key] && (
-                <button
-                   type="button"
-                   onClick={(e) => { e.preventDefault(); handleChange(field.key, null); }}
-                   style={{ fontSize: "12px", color: "#ef4444", background: "none", border: "none", cursor: "pointer", alignSelf: "flex-start", fontWeight: "600" }}
-                >
-                  Remove Photo
-                </button>
               )}
             </div>
-          ) : (
-            <input
-              type={field.type || "text"}
-              value={values[field.key] ?? ""}
-              onChange={(e) => handleChange(field.key, e.target.value)}
-              required={field.required}
-              placeholder={field.placeholder}
-              style={inputStyle}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-            />
-          )}
-        </div>
-      ))}
+          );
+        })}
+      </div>
 
-      <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: "8px" }}>
+      <div className="flex justify-end pt-2 border-t border-slate-100">
         <button
           type="submit"
           disabled={isLoading}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "7px",
-            padding: "10px 22px",
-            fontSize: "13px",
-            fontWeight: "700",
-            background: "#00694C",
-            color: "#ffffff",
-            borderRadius: "10px",
-            border: "none",
-            cursor: isLoading ? "not-allowed" : "pointer",
-            opacity: isLoading ? 0.6 : 1,
-            transition: "all 0.15s",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-          }}
-          onMouseEnter={e => { if (!isLoading) e.currentTarget.style.background = "#085041"; }}
-          onMouseLeave={e => { e.currentTarget.style.background = "#00694C"; }}
+          className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold bg-[#00694C] text-white rounded-xl hover:bg-[#085041] disabled:opacity-60 disabled:cursor-not-allowed transition-all shadow-sm cursor-pointer"
         >
-          {isLoading && <Loader2 size={14} className="animate-spin" />}
+          {isLoading && <Loader2 size={16} className="animate-spin" />}
           {submitLabel}
         </button>
       </div>

@@ -10,7 +10,7 @@ import FormModal from "@/app/dashboard/_components/FormModal";
 import ConfirmDialog from "@/app/dashboard/_components/ConfirmDialog";
 import { useToastContext } from "@/app/dashboard/_components/Toaster";
 import useSWR from "swr";
-import { ordersService } from "@/app/dashboard/_lib/services";
+import { ordersService, storesService } from "@/app/dashboard/_lib/services";
 import api from "@/app/dashboard/_lib/api";
 import AdminCreateOrder from "./_components/AdminCreateOrder";
 import OrdersReportModal from "./_components/OrdersReportModal";
@@ -38,36 +38,6 @@ function StatusBadge({ value }) {
   );
 }
 
-const columns = [
-  { key: "order_number", label: "Order #" },
-  { key: "customer_name", label: "Customer" },
-  { key: "customer_email", label: "Email" },
-  { key: "total_amount", label: "Total", render: (v) => `€${Number(v || 0).toLocaleString()}` },
-  { key: "status", label: "Status", render: (v) => <StatusBadge value={v} /> },
-  { key: "payment_status", label: "Payment", render: (v) => <StatusBadge value={v} /> },
-  { key: "ordered_at", label: "Date", render: (v) => v ? new Date(v).toLocaleDateString() : "—" },
-];
-
-const statusFields = [
-  {
-    key: "status", label: "Order Status", type: "select", required: true, options: [
-      { value: "PENDING", label: "Pending" },
-      { value: "PROCESSING", label: "Processing" },
-      { value: "SHIPPED", label: "Shipped" },
-      { value: "DELIVERED", label: "Delivered" },
-      { value: "CANCELLED", label: "Cancelled" },
-    ]
-  },
-  {
-    key: "payment_status", label: "Payment Status", type: "select", required: true, options: [
-      { value: "UNPAID", label: "Unpaid" },
-      { value: "PAID", label: "Paid" },
-      { value: "REFUNDED", label: "Refunded" },
-    ]
-  },
-  { key: "tracking_number", label: "Tracking Number", placeholder: "Enter tracking number" },
-];
-
 const FILTERS = [
   { label: "All", value: "" },
   { label: "This Week", value: "THIS_WEEK" },
@@ -89,6 +59,52 @@ export default function OrdersPage() {
   const [editItem, setEditItem] = useState(null);
   const [deleteItem, setDeleteItem] = useState(null);
   const [showReport, setShowReport] = useState(false);
+
+  const { data: storesRaw } = useSWR("ref-stores", () => storesService.list());
+  const stores = storesRaw?.results || (Array.isArray(storesRaw) ? storesRaw : []);
+
+  const dynamicStatusFields = [
+    {
+      key: "status", label: "Order Status", type: "select", required: true, options: [
+        { value: "PENDING", label: "Pending" },
+        { value: "PROCESSING", label: "Processing" },
+        { value: "SHIPPED", label: "Shipped" },
+        { value: "DELIVERED", label: "Delivered" },
+        { value: "CANCELLED", label: "Cancelled" },
+      ]
+    },
+    {
+      key: "payment_status", label: "Payment Status", type: "select", required: true, options: [
+        { value: "UNPAID", label: "Unpaid" },
+        { value: "PAID", label: "Paid" },
+        { value: "REFUNDED", label: "Refunded" },
+      ]
+    },
+    { key: "tracking_number", label: "Tracking Number", placeholder: "Enter tracking number" },
+    {
+      key: "fulfillment_store", label: "Fulfillment Store", type: "select", required: false, options: [
+        { value: "", label: "-- None --" },
+        ...stores.map(s => ({ value: s.id, label: s.name }))
+      ]
+    }
+  ];
+
+  const columns = [
+    { key: "order_number", label: "Order #", render: (v, row) => (
+       <span 
+         className="font-bold text-[#00694C] cursor-pointer hover:underline"
+         onClick={(e) => { e.stopPropagation(); setViewItem(row); }}
+       >
+         {v}
+       </span>
+    )},
+    { key: "customer_name", label: "Customer" },
+    { key: "customer_email", label: "Email" },
+    { key: "total_amount", label: "Total", render: (v) => `€${Number(v || 0).toLocaleString()}` },
+    { key: "status", label: "Status", render: (v) => <StatusBadge value={v} /> },
+    { key: "payment_status", label: "Payment", render: (v) => <StatusBadge value={v} /> },
+    { key: "ordered_at", label: "Date", render: (v) => v ? new Date(v).toLocaleDateString() : "—" },
+  ];
 
   // Backend OrderViewSet.list returns a flat array (no pagination)
   const { data: rawData, isLoading, error, mutate } = useSWR(
@@ -218,19 +234,20 @@ export default function OrdersPage() {
             loading={isLoading}
             searchable
             searchKeys={["order_number", "customer_name", "customer_email"]}
+            onRowClick={(row) => setViewItem(row)}
             actions={(row) => (
               <div className="flex items-center justify-end gap-1">
-                <button onClick={() => setViewItem(row)} className="db-icon-btn" title="View"><Eye size={14} /></button>
-                <button onClick={() => setEditItem(row)} className="db-icon-btn" title="Update Status"><Pencil size={14} /></button>
-                <Link href={`/dashboard/orders/${row.order_number}/invoice`} className="db-icon-btn" title="Invoice"><FileText size={14} /></Link>
-                <button onClick={() => setDeleteItem(row)} className="db-icon-btn danger" title="Delete"><Trash2 size={14} /></button>
+                <button onClick={(e) => { e.stopPropagation(); setViewItem(row); }} className="db-icon-btn" title="View"><Eye size={14} /></button>
+                <button onClick={(e) => { e.stopPropagation(); setEditItem(row); }} className="db-icon-btn" title="Update Status"><Pencil size={14} /></button>
+                <Link onClick={(e) => e.stopPropagation()} href={`/dashboard/orders/${row.order_number}/invoice`} className="db-icon-btn" title="Invoice"><FileText size={14} /></Link>
+                <button onClick={(e) => { e.stopPropagation(); setDeleteItem(row); }} className="db-icon-btn danger" title="Delete"><Trash2 size={14} /></button>
               </div>
             )}
           />
 
           {/* Update Status */}
           <Modal open={!!editItem} onClose={() => setEditItem(null)} title="Update Order">
-            {editItem && <FormModal fields={statusFields} initialValues={{ status: editItem.status, payment_status: editItem.payment_status, tracking_number: editItem.tracking_number || "" }} onSubmit={handleStatusUpdate} submitLabel="Update" />}
+            {editItem && <FormModal fields={dynamicStatusFields} initialValues={{ status: editItem.status, payment_status: editItem.payment_status, tracking_number: editItem.tracking_number || "", fulfillment_store: editItem.fulfillment_store || "" }} onSubmit={handleStatusUpdate} submitLabel="Update" />}
           </Modal>
 
           {/* View Order */}

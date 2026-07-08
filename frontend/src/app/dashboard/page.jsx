@@ -18,8 +18,8 @@ const STATUS_COLORS = {
 };
 
 const BAR_COLORS = {
-  PENDING: "#f59e0b", PROCESSING: "#3b82f6",
-  SHIPPED: "#6366f1", DELIVERED: "#10b981", CANCELLED: "#ef4444",
+  PENDING: "#f97316", PROCESSING: "#10b981",
+  SHIPPED: "#f97316", DELIVERED: "#10b981", CANCELLED: "#f97316",
 };
 
 function UserSegmentGrid({ stats, loading }) {
@@ -99,6 +99,63 @@ function UserSegmentGrid({ stats, loading }) {
             )}
           </div>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function StaffPerformanceSection({ stats, loading }) {
+  if (loading) return (
+    <div className="h-32 rounded-2xl bg-white border border-slate-100 shadow-sm animate-pulse" />
+  );
+
+  const totalStaff = stats?.total_staff || 0;
+  const topStaff = stats?.top_staff || [];
+
+  return (
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-8">
+      <div className="px-6 py-5 border-b border-slate-50/80 bg-gradient-to-r from-slate-50/50 to-white flex justify-between items-center">
+        <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
+          <div className="p-1.5 bg-rose-50 text-rose-600 rounded-lg">
+            <BadgeCheck className="w-4 h-4" />
+          </div>
+          Staff Performance
+        </h3>
+        <div className="text-sm font-semibold text-slate-500">
+          Total Staff: <span className="text-slate-800 font-bold">{totalStaff}</span>
+        </div>
+      </div>
+      
+      <div className="p-6">
+        {topStaff.length === 0 ? (
+          <div className="text-center text-sm font-medium text-slate-400 py-4">No staff data available</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {topStaff.map((staff, index) => (
+              <div key={staff.id} className="flex items-center gap-4 bg-slate-50/50 p-4 rounded-xl border border-slate-100 hover:shadow-md transition-shadow relative overflow-hidden group">
+                {index === 0 && <div className="absolute top-0 right-0 bg-amber-400 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg">Top 1</div>}
+                {index === 1 && <div className="absolute top-0 right-0 bg-slate-300 text-slate-700 text-[10px] font-bold px-2 py-1 rounded-bl-lg">Top 2</div>}
+                {index === 2 && <div className="absolute top-0 right-0 bg-amber-700 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg">Top 3</div>}
+                
+                {staff.photo ? (
+                  <img src={staff.photo} alt={staff.name} className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm" />
+                ) : (
+                  <div className="w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg border-2 border-white shadow-sm">
+                    {(staff.name || 'S').charAt(0)}
+                  </div>
+                )}
+                <div>
+                  <p className="text-sm font-bold text-slate-800">{staff.name}</p>
+                  <p className="text-xs font-medium text-slate-500 mb-1">{staff.role}</p>
+                  <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full inline-flex">
+                    <BadgeCheck className="w-3 h-3" />
+                    {staff.completed_tasks} Tasks Completed
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -258,6 +315,9 @@ export default function DashboardHomePage() {
       <div className="mb-8">
         <UserSegmentGrid stats={stats} loading={statsLoading} />
       </div>
+      
+      {/* Staff Performance */}
+      <StaffPerformanceSection stats={stats} loading={statsLoading} />
 
       {/* Secondary Metrics Row */}
       <div className="flex flex-wrap gap-4 mb-8">
@@ -320,12 +380,12 @@ export default function DashboardHomePage() {
             <span className="px-3 py-1 bg-indigo-50 text-indigo-600 text-xs font-bold rounded-full">Analytics</span>
           </div>
           <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <AreaChart data={dailyTrend} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#4f46e5" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
@@ -335,7 +395,7 @@ export default function DashboardHomePage() {
                   contentStyle={{ fontSize: "12px", borderRadius: "12px", border: "none", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }}
                   formatter={(v, n) => [n === "revenue" ? `€${Number(v).toLocaleString()}` : v, n === "revenue" ? "Revenue" : "Orders"]}
                 />
-                <Area type="monotone" dataKey="revenue" stroke="#4f46e5" fill="url(#revGrad)" strokeWidth={3} dot={{ r: 3, fill: '#4f46e5', strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 6 }} />
+                <Area type="monotone" dataKey="revenue" stroke="#10b981" fill="url(#revGrad)" strokeWidth={3} dot={{ r: 3, fill: '#10b981', strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 6 }} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -349,7 +409,7 @@ export default function DashboardHomePage() {
           <div className="h-64">
             {statusCounts.length === 0
               ? <div className="flex items-center justify-center h-full text-sm font-medium text-slate-400">No orders yet</div>
-              : <ResponsiveContainer width="100%" height="100%">
+              : <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <BarChart data={statusCounts} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
                   <XAxis dataKey="status" tick={{ fontSize: 11, fill: '#64748b' }} stroke="#cbd5e1" axisLine={false} tickLine={false} dy={10} />

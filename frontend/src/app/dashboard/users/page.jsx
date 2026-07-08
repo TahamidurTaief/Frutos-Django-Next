@@ -10,7 +10,7 @@ import ConfirmDialog from "@/app/dashboard/_components/ConfirmDialog";
 import { useToastContext } from "@/app/dashboard/_components/Toaster";
 import useSWR from "swr";
 import { adminUsersApi } from "@/app/dashboard/_lib/auth";
-import api from "@/app/dashboard/_lib/api";
+import api, { API_BASE_URL } from "@/app/dashboard/_lib/api";
 
 const PAGE_SIZE = 20;
 
@@ -20,6 +20,7 @@ const FILTERS = [
   { label: "Wholesale",  value: "WHOLESALE" },
   { label: "Sellers",    value: "SELLER" },
   { label: "Admins",     value: "ADMIN" },
+  { label: "Staff",      value: "STAFF" },
 ];
 
 function RoleBadge({ value }) {
@@ -29,6 +30,7 @@ function RoleBadge({ value }) {
     WHOLESALE: "bg-emerald-100 text-emerald-700",
     VENDOR:    "bg-amber-100 text-amber-700",
     CUSTOMER:  "bg-slate-100 text-slate-600",
+    STAFF:     "bg-teal-100 text-teal-700",
   };
   return (
     <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${map[value] || map.CUSTOMER}`}>
@@ -53,33 +55,7 @@ function WholesaleStatusBadge({ value }) {
   );
 }
 
-const columns = [
-  { key: "id",               label: "ID",        render: (v) => <span className="text-xs text-slate-400">{String(v).startsWith('ws_') ? `WS-${v.replace('ws_','')}` : v}</span> },
-  { key: "photo",            label: "Profile Photo", render: (v, row) => (
-    <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center border border-slate-200 shrink-0">
-      {v ? (
-        <img src={v} alt={row.name || "User"} className="w-full h-full object-cover" />
-      ) : (
-        <span className="text-xs font-semibold text-slate-500">{(row.name || row.email || "U").charAt(0).toUpperCase()}</span>
-      )}
-    </div>
-  )},
-  { key: "name",             label: "Name" },
-  { key: "email",            label: "Email" },
-  { key: "user_type",        label: "Role",      render: (v) => <RoleBadge value={v} /> },
-  { key: "business_name",    label: "Business",  render: (v) => v || <span className="text-slate-400">—</span> },
-  { key: "is_active",        label: "Status",    render: (v, row) => {
-    if (row.user_type === 'WHOLESALE' || row.user_type === 'WHOLESALER') {
-      return <WholesaleStatusBadge value={row.wholesale_status || 'pending'} />;
-    }
-    return (
-      <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${v ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"}`}>
-        {v ? "Active" : "Inactive"}
-      </span>
-    );
-  }},
-  { key: "date_joined", label: "Joined", render: (v) => v ? new Date(v).toLocaleDateString() : "—" },
-];
+
 
 const editFields = [
   { key: "name", label: "Full Name", required: true, placeholder: "John Doe" },
@@ -138,6 +114,47 @@ export default function UsersPage() {
     }),
     { revalidateOnFocus: false, keepPreviousData: true }
   );
+
+  const columns = [
+    { key: "id", label: "ID", render: (v, row) => (
+      <span 
+        className="font-bold text-[#00694C] cursor-pointer hover:underline"
+        onClick={(e) => { e.stopPropagation(); setViewItem(row); }}
+      >
+        {String(v).startsWith('ws_') ? `WS-${v.replace('ws_','')}` : v}
+      </span>
+    )},
+    { key: "photo", label: "Photo", render: (v, row) => {
+      let imgUrl = row.profile_image || row.photo || v;
+      if (imgUrl && imgUrl.startsWith('/')) {
+        imgUrl = `${API_BASE_URL}${imgUrl}`;
+      }
+      return (
+      <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center border border-slate-200 shrink-0">
+        {imgUrl ? (
+          <img src={imgUrl} alt={row.name || "User"} className="w-full h-full object-cover" />
+        ) : (
+          <span className="text-xs font-semibold text-slate-500">{(row.name || row.email || "U").charAt(0).toUpperCase()}</span>
+        )}
+      </div>
+      );
+    }},
+    { key: "name", label: "Name" },
+    { key: "email", label: "Email" },
+    { key: "user_type", label: "Role", render: (v) => <RoleBadge value={v} /> },
+    { key: "business_name", label: "Business", render: (v) => v || <span className="text-slate-400">—</span> },
+    { key: "is_active", label: "Status", render: (v, row) => {
+      if (row.user_type === 'WHOLESALE' || row.user_type === 'WHOLESALER') {
+        return <WholesaleStatusBadge value={row.wholesale_status || 'pending'} />;
+      }
+      return (
+        <span className={`px-2 py-0.5 text-xs rounded-full font-bold tracking-wide ${v ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"}`}>
+          {v ? "Active" : "Inactive"}
+        </span>
+      );
+    }},
+    { key: "date_joined", label: "Joined", render: (v) => v ? new Date(v).toLocaleDateString() : "—" },
+  ];
 
   // Filter client-side too (since API may not support user_type param yet)
   const rawList = rawData?.results || rawData?.users || (Array.isArray(rawData) ? rawData : []);
@@ -252,55 +269,86 @@ export default function UsersPage() {
         onPageChange={setPage}
         loading={isLoading}
         searchable
+        onRowClick={(row) => setViewItem(row)}
         actions={(row) => (
         <div className="flex items-center justify-end gap-1">
-          <button onClick={() => setViewItem(row)} className="db-icon-btn" title="View"><Eye size={14} /></button>
-          <button onClick={() => setEditItem({ ...row, is_active: String(row.is_active), wholesale_status: row.wholesale_status || 'pending' })} className="db-icon-btn" title="Edit"><Pencil size={14} /></button>
+          <button onClick={(e) => { e.stopPropagation(); setViewItem(row); }} className="db-icon-btn" title="View"><Eye size={14} /></button>
+          <button onClick={(e) => { e.stopPropagation(); setEditItem({ ...row, is_active: String(row.is_active), wholesale_status: row.wholesale_status || 'pending' }); }} className="db-icon-btn" title="Edit"><Pencil size={14} /></button>
           {row.user_type === 'WHOLESALE' && row.wholesale_status === 'pending' && (
-            <button onClick={() => handleApproveWholesale(row)} style={{ padding: "5px 10px", fontSize: "11px", fontWeight: "700", borderRadius: "7px", background: "#22c55e", color: "white", border: "none", cursor: "pointer" }}>Approve</button>
+            <button onClick={(e) => { e.stopPropagation(); handleApproveWholesale(row); }} style={{ padding: "5px 10px", fontSize: "11px", fontWeight: "700", borderRadius: "7px", background: "#22c55e", color: "white", border: "none", cursor: "pointer" }}>Approve</button>
           )}
-          <button onClick={() => setDeleteItem(row)} className="db-icon-btn danger" title="Delete"><Trash2 size={14} /></button>
+          <button onClick={(e) => { e.stopPropagation(); setDeleteItem(row); }} className="db-icon-btn danger" title="Delete"><Trash2 size={14} /></button>
         </div>
       )}
       />
 
-      <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="Create User">
-        <FormModal fields={createFields} onSubmit={handleCreate} submitLabel="Create User" />
+      <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="Create User" maxWidth="max-w-2xl">
+        <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.target); handleCreate(Object.fromEntries(fd)); }} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Full Name *</label><input required name="name" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none" placeholder="John Doe" /></div>
+            <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Email *</label><input required name="email" type="email" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none" placeholder="user@example.com" /></div>
+            <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Password *</label><input required name="password" type="password" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none" placeholder="Min 8 chars" /></div>
+            <div>
+              <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Role *</label>
+              <select name="user_type" required className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none">
+                <option value="CUSTOMER">Customer</option>
+                <option value="SELLER">Seller</option>
+                <option value="VENDOR">Vendor</option>
+                <option value="ADMIN">Admin</option>
+              </select>
+            </div>
+          </div>
+          <div className="flex justify-end pt-2 border-t border-slate-100">
+            <button style={{cursor: 'pointer'}} type="submit" className="px-5 py-2 text-sm font-bold bg-[#00694C] text-white rounded-lg hover:bg-[#085041] transition-colors shadow-sm">CREATE USER</button>
+          </div>
+        </form>
       </Modal>
 
-      <Modal open={!!editItem} onClose={() => setEditItem(null)} title="Edit User">
-  {editItem && (
-    <FormModal
-      fields={editItem.user_type === 'WHOLESALE' ? wholesaleEditFields : editFields}
-      initialValues={editItem}
-      onSubmit={handleEdit}
-      submitLabel="Save Changes"
-    />
-  )}
-</Modal>
-
-      <Modal open={!!viewItem} onClose={() => setViewItem(null)} title="User Profile">
-        {viewItem && (
-          <div className="space-y-6">
-            <div className="flex flex-col items-center mb-6 relative">
-              <div 
-                className="w-24 h-24 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center border-4 border-white shadow-lg shrink-0 relative group cursor-pointer"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                {viewItem.profile_image || viewItem.photo ? (
-                  <img src={viewItem.profile_image || viewItem.photo} alt={viewItem.name || "User"} className="w-full h-full object-cover" />
-                ) : (
-                  <span className="text-3xl font-semibold text-slate-400">{(viewItem.name || viewItem.email || "U").charAt(0).toUpperCase()}</span>
-                )}
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Camera size={24} className="text-white" />
-                </div>
-                {isUploadingImage && (
-                  <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
-                    <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                  </div>
-                )}
+      <Modal open={!!editItem} onClose={() => setEditItem(null)} title="Edit User" maxWidth="max-w-2xl">
+        {editItem && (
+          <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.target); handleEdit(Object.fromEntries(fd)); }} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Full Name *</label><input required name="name" defaultValue={editItem.name} className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none" /></div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Role *</label>
+                <select name="user_type" defaultValue={editItem.user_type} required className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none">
+                  <option value="CUSTOMER">Customer</option>
+                  <option value="WHOLESALE">Wholesaler</option>
+                  <option value="SELLER">Seller</option>
+                  <option value="VENDOR">Vendor</option>
+                  <option value="ADMIN">Admin</option>
+                </select>
               </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Status *</label>
+                <select name="is_active" defaultValue={String(editItem.is_active)} required className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none">
+                  <option value="true">Active</option>
+                  <option value="false">Inactive</option>
+                </select>
+              </div>
+              {editItem.user_type === 'WHOLESALE' && (
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Wholesale Status *</label>
+                  <select name="wholesale_status" defaultValue={editItem.wholesale_status || 'pending'} required className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none">
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                  </select>
+                </div>
+              )}
+            </div>
+            <div className="flex justify-end pt-2 border-t border-slate-100">
+              <button style={{cursor: 'pointer'}} type="submit" className="px-5 py-2 text-sm font-bold bg-[#00694C] text-white rounded-lg hover:bg-[#085041] transition-colors shadow-sm">SAVE CHANGES</button>
+            </div>
+          </form>
+        )}
+      </Modal>
+
+      <Modal open={!!viewItem} onClose={() => setViewItem(null)} title="User Profile" maxWidth="max-w-md">
+        {viewItem && (
+          <div className="flex flex-col">
+            {/* Header / ID Section */}
+            <div className="flex items-start gap-4 p-4 bg-slate-50 border border-slate-100 rounded-xl mb-4 relative overflow-hidden">
               <input 
                 type="file" 
                 ref={fileInputRef} 
@@ -308,29 +356,64 @@ export default function UsersPage() {
                 accept="image/*" 
                 onChange={handleImageUpload} 
               />
-              <h3 className="mt-3 text-lg font-bold text-slate-800">{viewItem.name}</h3>
-              <p className="text-sm text-slate-500">{viewItem.email}</p>
-              <div className="mt-2 flex gap-2">
-                <RoleBadge value={viewItem.user_type} />
-                {viewItem.user_type === 'WHOLESALE' && <WholesaleStatusBadge value={viewItem.wholesale_status} />}
+              <div 
+                className="w-16 h-16 rounded-full overflow-hidden bg-white flex items-center justify-center border border-slate-200 shadow-sm shrink-0 relative group cursor-pointer"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                {(() => {
+                  let img = viewItem.profile_image || viewItem.photo;
+                  if (img && img.startsWith('/')) img = `${API_BASE_URL}${img}`;
+                  return img ? (
+                    <img src={img} alt={viewItem.name || "User"} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-2xl font-black text-slate-400">{(viewItem.name || viewItem.email || "U").charAt(0).toUpperCase()}</span>
+                  );
+                })()}
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Camera size={16} className="text-white" />
+                </div>
+                {isUploadingImage && (
+                  <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
+                    <div className="w-5 h-5 border-2 border-[#00694C] border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                )}
+              </div>
+              <div className="flex-1 min-w-0 pt-1">
+                <h3 className="text-lg font-black text-slate-800 truncate leading-tight">{viewItem.name}</h3>
+                <p className="text-sm font-medium text-slate-500 truncate mb-2">{viewItem.email}</p>
+                <div className="flex flex-wrap gap-2">
+                  <RoleBadge value={viewItem.user_type} />
+                  {viewItem.user_type === 'WHOLESALE' && <WholesaleStatusBadge value={viewItem.wholesale_status} />}
+                </div>
               </div>
             </div>
             
-            <div className="bg-slate-50 rounded-xl p-4 space-y-4 border border-slate-100">
-              <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Account Details</h4>
-              {[
-                { label: "Status", val: viewItem.is_active ? <span className="text-emerald-600 font-medium flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-500"></span>Active</span> : <span className="text-slate-500 font-medium flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-slate-400"></span>Inactive</span> },
-                { label: "Joined Date", val: viewItem.date_joined ? new Date(viewItem.date_joined).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : "—" },
-                ...(viewItem.user_type === 'WHOLESALE' ? [
-                  { label: "Business Name", val: viewItem.business_name || "—" },
-                  { label: "Business Type", val: viewItem.business_type || "—" }
-                ] : []),
-              ].map((item, idx) => (
-                <div key={idx} className="flex justify-between items-center py-1">
-                  <span className="text-sm text-slate-500">{item.label}</span>
-                  <span className="text-sm font-medium text-slate-800">{item.val}</span>
-                </div>
-              ))}
+            {/* Details Grid */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-white p-3.5 rounded-xl border border-slate-100 shadow-sm">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Status</p>
+                <p className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                  <span className={`w-2.5 h-2.5 rounded-full ${viewItem.is_active ? 'bg-emerald-500' : 'bg-slate-300'} shadow-sm`}></span>
+                  {viewItem.is_active ? 'Active' : 'Inactive'}
+                </p>
+              </div>
+              <div className="bg-white p-3.5 rounded-xl border border-slate-100 shadow-sm">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Joined Date</p>
+                <p className="text-sm font-bold text-slate-800">{viewItem.date_joined ? new Date(viewItem.date_joined).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : "—"}</p>
+              </div>
+              
+              {viewItem.user_type === 'WHOLESALE' && (
+                <>
+                  <div className="bg-white p-3.5 rounded-xl border border-slate-100 shadow-sm col-span-2 sm:col-span-1">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Business Name</p>
+                    <p className="text-sm font-bold text-slate-800 truncate">{viewItem.business_name || "—"}</p>
+                  </div>
+                  <div className="bg-white p-3.5 rounded-xl border border-slate-100 shadow-sm col-span-2 sm:col-span-1">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Business Type</p>
+                    <p className="text-sm font-bold text-slate-800 truncate">{viewItem.business_type || "—"}</p>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}
