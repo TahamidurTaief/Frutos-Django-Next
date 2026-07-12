@@ -415,24 +415,31 @@ class SendPasswordResetOTPView(APIView):
 
         # Send beautifully styled HTML email
         try:
-            html_content = render_to_string('accounts/email/password_reset.html', {'otp': otp})
+            html_content = render_to_string('emails/otp_email.html', {
+                'otp': otp,
+                'brand_name': 'El Árbol',
+                'logo_url': 'https://icommerce.com.bd/el-erbol-logo.png'
+            })
             text_content = strip_tags(html_content)
         except Exception:
             html_content = None
-            text_content = f'Your OTP is: {otp}\n\nValid for 10 minutes. Do not share this with anyone.'
+            text_content = f'Your Security Code is: {otp}\n\nValid for 10 minutes. Do not share this with anyone.'
 
+        from django.utils import timezone
         if html_content:
             msg = EmailMultiAlternatives(
-                subject='ICommerce — Password Reset OTP',
+                subject='Your Security Code for El Árbol',
                 body=text_content,
                 from_email=settings.DEFAULT_FROM_EMAIL,
-                to=[email]
+                to=[email],
+                reply_to=['no-reply@elarbol.com'],
+                headers={'Message-ID': f'<{otp}.{timezone.now().timestamp()}@elarbol.com>'}
             )
             msg.attach_alternative(html_content, "text/html")
             msg.send(fail_silently=False)
         else:
             send_mail(
-                subject='ICommerce — Password Reset OTP',
+                subject='Your Security Code for El Árbol',
                 message=text_content,
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[email],

@@ -30,24 +30,24 @@ export function DashboardAuthProvider({ children }) {
   useEffect(() => {
     const handler = () => {
       setUser(null);
-      router.push("/dashboard/login");
+      window.location.href = "/dashboard/login";
     };
     window.addEventListener("admin:session-expired", handler);
     return () => window.removeEventListener("admin:session-expired", handler);
-  }, [router]);
+  }, []);
 
   // Redirect unauthenticated or unauthorized users
   useEffect(() => {
     if (loading) return;
     if (pathname === "/dashboard/login") return;
     if (!user) {
-      setTimeout(() => router.push("/dashboard/login"), 0);
+      setTimeout(() => { window.location.href = "/dashboard/login"; }, 0);
       return;
     }
     if (!canAccessRoute(user.userType, pathname)) {
-      setTimeout(() => router.push("/dashboard"), 0);
+      setTimeout(() => { window.location.href = "/dashboard"; }, 0);
     }
-  }, [loading, user, pathname, router]);
+  }, [loading, user, pathname]);
 
   const login = useCallback(
     async (email, password) => {

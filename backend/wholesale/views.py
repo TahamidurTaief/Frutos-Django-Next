@@ -234,7 +234,9 @@ class WholesaleStatusView(APIView):
 
 
 import random
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from django.conf import settings
 from accounts.models import PasswordResetOTP
 
@@ -251,13 +253,30 @@ class WholesaleSendPasswordResetOTPView(APIView):
         otp = str(random.randint(100000, 999999))
         PasswordResetOTP.objects.filter(email=f'ws_{email}').delete()
         PasswordResetOTP.objects.create(email=f'ws_{email}', otp=otp)
-        send_mail(
-            subject='El Árbol Wholesale — Password Reset OTP',
-            message=f'Your OTP is: {otp}\n\nValid for 10 minutes. Do not share this with anyone.',
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email],
-            fail_silently=False,
+        
+        # Send OTP via HTML email
+        subject = 'Your Security Code for El Árbol'
+        context = {
+            'otp': otp,
+            'brand_name': 'El Árbol',
+            'logo_url': 'https://icommerce.com.bd/el-erbol-logo.png'
+        }
+        
+        html_content = render_to_string('emails/otp_email.html', context)
+        text_content = strip_tags(html_content)
+        
+        from django.utils import timezone
+        msg = EmailMultiAlternatives(
+            subject,
+            text_content,
+            settings.DEFAULT_FROM_EMAIL,
+            [email],
+            reply_to=['no-reply@elarbol.com'],
+            headers={'Message-ID': f'<{otp}.{timezone.now().timestamp()}@elarbol.com>'}
         )
+        msg.attach_alternative(html_content, "text/html")
+        msg.send(fail_silently=False)
+        
         return Response({'detail': 'OTP sent successfully.'})
 
 

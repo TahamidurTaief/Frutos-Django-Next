@@ -5,8 +5,6 @@ echo "Starting Django..."
 
 python manage.py migrate --noinput
 
-if [ "$DJANGO_SETTINGS_MODULE" = "core.settings.production" ]; then
-    python manage.py collectstatic --noinput
-fi
-
+# Always collectstatic in production containers
+python manage.py collectstatic --noinput
 exec "$@"

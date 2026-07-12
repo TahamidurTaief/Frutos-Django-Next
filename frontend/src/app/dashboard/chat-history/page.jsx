@@ -1,9 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { api } from "@/app/dashboard/_lib/api";
+import { api, API_BASE_URL } from "@/app/dashboard/_lib/api";
 import { Search, Calendar as CalendarIcon, Trash2, X, MessageSquare, AlertTriangle, RefreshCw, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+
+const getImageUrl = (url) => {
+  if (!url) return null;
+  if (url.startsWith('http')) return url;
+  return `${API_BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+};
 
 export default function ChatHistoryPage() {
   const [conversations, setConversations] = useState([]);
@@ -155,14 +161,14 @@ export default function ChatHistoryPage() {
                     <div className="relative flex items-center flex-shrink-0">
                        <div className="relative flex items-center justify-center w-10 h-10">
                           {chat.user1_image ? (
-                            <img src={chat.user1_image} alt={chat.user1_name} className="absolute left-0 w-7 h-7 rounded-full border-2 border-white object-cover bg-slate-100 z-10 shadow-sm" />
+                            <img src={getImageUrl(chat.user1_image)} alt={chat.user1_name} className="absolute left-0 w-7 h-7 rounded-full border-2 border-white object-cover bg-slate-100 z-10 shadow-sm" />
                           ) : (
                             <div className="absolute left-0 w-7 h-7 rounded-full border-2 border-white bg-[#00694C] text-white flex items-center justify-center text-[10px] font-bold z-10 shadow-sm">
                               {chat.user1_name?.charAt(0)?.toUpperCase()}
                             </div>
                           )}
                           {chat.user2_image ? (
-                            <img src={chat.user2_image} alt={chat.user2_name} className="absolute right-0 w-7 h-7 rounded-full border-2 border-white object-cover bg-slate-100 z-0 shadow-sm" />
+                            <img src={getImageUrl(chat.user2_image)} alt={chat.user2_name} className="absolute right-0 w-7 h-7 rounded-full border-2 border-white object-cover bg-slate-100 z-0 shadow-sm" />
                           ) : (
                             <div className="absolute right-0 w-7 h-7 rounded-full border-2 border-white bg-slate-600 text-white flex items-center justify-center text-[10px] font-bold z-0 shadow-sm">
                               {chat.user2_name?.charAt(0)?.toUpperCase()}
@@ -210,7 +216,7 @@ export default function ChatHistoryPage() {
                   </button>
                   <div className="flex items-center flex-shrink-0">
                     {selectedChat.user1_image ? (
-                      <img src={selectedChat.user1_image} alt={selectedChat.user1_name} className="w-7 h-7 md:w-8 md:h-8 rounded-full border-2 border-slate-100 object-cover bg-slate-100 shadow-sm" />
+                      <img src={getImageUrl(selectedChat.user1_image)} alt={selectedChat.user1_name} className="w-7 h-7 md:w-8 md:h-8 rounded-full border-2 border-slate-100 object-cover bg-slate-100 shadow-sm" />
                     ) : (
                       <div className="w-7 h-7 md:w-8 md:h-8 rounded-full border-2 border-slate-100 bg-[#00694C] text-white flex items-center justify-center text-xs font-bold shadow-sm">
                         {selectedChat.user1_name?.charAt(0)?.toUpperCase()}
@@ -218,7 +224,7 @@ export default function ChatHistoryPage() {
                     )}
                     <div className="w-3 h-[1.5px] bg-slate-300 mx-1 rounded-full"></div>
                     {selectedChat.user2_image ? (
-                      <img src={selectedChat.user2_image} alt={selectedChat.user2_name} className="w-7 h-7 md:w-8 md:h-8 rounded-full border-2 border-slate-100 object-cover bg-slate-100 shadow-sm" />
+                      <img src={getImageUrl(selectedChat.user2_image)} alt={selectedChat.user2_name} className="w-7 h-7 md:w-8 md:h-8 rounded-full border-2 border-slate-100 object-cover bg-slate-100 shadow-sm" />
                     ) : (
                       <div className="w-7 h-7 md:w-8 md:h-8 rounded-full border-2 border-slate-100 bg-slate-600 text-white flex items-center justify-center text-xs font-bold shadow-sm">
                         {selectedChat.user2_name?.charAt(0)?.toUpperCase()}

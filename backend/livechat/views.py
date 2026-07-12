@@ -137,6 +137,17 @@ class AdminChatConversationsView(APIView):
         
         conversations_dict = {}
         
+        def get_photo_url(u):
+            if not u: return None
+            photo = None
+            if hasattr(u, 'staff_profile') and u.staff_profile and u.staff_profile.photo:
+                photo = u.staff_profile.photo.url
+            elif hasattr(u, 'profile') and u.profile and getattr(u.profile, 'avatar', None):
+                photo = u.profile.avatar.url
+            elif getattr(u, 'profile_image', None):
+                photo = u.profile_image.url
+            return request.build_absolute_uri(photo) if photo else None
+        
         for msg in messages:
             pair_key = tuple(sorted([msg.sender_id, msg.receiver_id]))
             
@@ -149,11 +160,11 @@ class AdminChatConversationsView(APIView):
                     'user1_id': user1.id if user1 else None,
                     'user1_name': user1.name if user1 else 'Unknown',
                     'user1_email': user1.email if user1 else 'Unknown',
-                    'user1_image': request.build_absolute_uri(user1.profile_image.url) if user1 and getattr(user1, 'profile_image', None) else None,
+                    'user1_image': get_photo_url(user1),
                     'user2_id': user2.id if user2 else None,
                     'user2_name': user2.name if user2 else 'Unknown',
                     'user2_email': user2.email if user2 else 'Unknown',
-                    'user2_image': request.build_absolute_uri(user2.profile_image.url) if user2 and getattr(user2, 'profile_image', None) else None,
+                    'user2_image': get_photo_url(user2),
                     'last_message': msg.text,
                     'last_message_time': msg.created_at,
                     'total_messages': 0

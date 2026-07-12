@@ -23,7 +23,7 @@ const columns = [
   { key: "id", label: "ID" },
   {
     key: "name", label: "Name", render: (v, row) => (
-      <Link href={`/dashboard/staff/${row.id}`} className="flex items-center justify-center gap-3 group hover:opacity-80 transition-opacity">
+      <Link href={`/dashboard/staff/${row.id}`} className="flex items-center justify-start gap-3 group hover:opacity-80 transition-opacity">
         <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center shrink-0 border border-slate-200">
           {row.photo ? (
             <img src={row.photo} alt={row.user?.name || "Staff"} className="w-full h-full object-cover" />
@@ -41,11 +41,11 @@ const columns = [
     key: "status", label: "Status", render: (v, row) => {
       if (row.is_working) {
         return (
-          <div className="flex flex-col items-center justify-center w-full cursor-pointer group" onClick={(e) => {
+          <div className="flex flex-col items-start justify-center w-full cursor-pointer group" onClick={(e) => {
             e.stopPropagation();
             window.dispatchEvent(new CustomEvent('switch-to-live-map', { detail: { staffId: row.id }}));
           }}>
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 shadow-sm group-hover:bg-emerald-100 group-hover:shadow-md group-hover:border-emerald-300 transition-all duration-300">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 shadow-sm group-hover:bg-emerald-100 group-hover:shadow-md group-hover:border-emerald-300 transition-all duration-300 w-max">
               <div className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -61,7 +61,7 @@ const columns = [
         );
       }
       return (
-        <div className="flex items-center justify-center w-full">
+        <div className="flex items-center justify-start w-full">
           <span className="px-3 py-1 text-[11px] font-bold rounded-full bg-slate-100 text-slate-500 uppercase tracking-wider border border-slate-200/60 shadow-sm">
             Offline
           </span>

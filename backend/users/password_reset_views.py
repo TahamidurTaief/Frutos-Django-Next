@@ -1,4 +1,7 @@
-# users/password_reset_views.py
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.conf import settings
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -26,7 +29,6 @@ def send_password_reset_otp(request):
         user = User.objects.get(email=email)
     except User.DoesNotExist:
         # Don't reveal if email exists or not (security best practice)
-        # But for demo, we can return success to allow testing
         return Response({
             'detail': 'If this email exists, we will send an OTP'
         }, status=status.HTTP_200_OK)
@@ -34,9 +36,27 @@ def send_password_reset_otp(request):
     # Create OTP
     otp_obj = PasswordResetOTP.create_otp(email)
     
-    # In production, send OTP via email here
-    # For now, just return success
-    print(f"[Password Reset] OTP for {email}: {otp_obj.otp}")  # Debug logging
+    # Send OTP via HTML email
+    subject = 'Your Security Code for El Árbol'
+    context = {
+        'otp': otp_obj.otp,
+        'brand_name': 'El Árbol',
+        'logo_url': 'https://icommerce.com.bd/el-erbol-logo.png'
+    }
+    
+    html_content = render_to_string('emails/otp_email.html', context)
+    text_content = strip_tags(html_content)
+    
+    msg = EmailMultiAlternatives(
+        subject,
+        text_content,
+        settings.DEFAULT_FROM_EMAIL,
+        [email],
+        reply_to=['no-reply@elarbol.com'],
+        headers={'Message-ID': f'<{otp_obj.otp}.{timezone.now().timestamp()}@elarbol.com>'}
+    )
+    msg.attach_alternative(html_content, "text/html")
+    msg.send(fail_silently=False)
     
     return Response({
         'detail': 'OTP sent to your email',

@@ -34,9 +34,9 @@ export function StaffAuthProvider({ children }) {
     if (loading) return;
     if (pathname === "/staff/login") return;
     if (!user) {
-      setTimeout(() => router.push("/staff/login"), 0);
+      setTimeout(() => { window.location.href = "/staff/login"; }, 0);
     }
-  }, [loading, user, pathname, router]);
+  }, [loading, user, pathname]);
 
   const login = useCallback(async (email, password) => {
     try {
