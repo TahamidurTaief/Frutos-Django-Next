@@ -19,18 +19,22 @@ DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:3001",
-    "http://127.0.0.1:3001",
-    "http://192.168.1.6:3000",
-    "http://10.17.90.71:3000",
-    "https://icommerce-beta.vercel.app",
-    "https://icommerce.passmcq.com",
-    "https://icommerce.com.bd",
-    "https://www.icommerce.com.bd"
-]
+cors_origins_env = os.environ.get('CORS_ALLOWED_ORIGINS')
+if cors_origins_env:
+    CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_origins_env.split(',') if origin.strip()]
+else:
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:3001",
+        "http://127.0.0.1:3001",
+        "http://192.168.1.6:3000",
+        "http://10.17.90.71:3000",
+        "https://icommerce-beta.vercel.app",
+        "https://icommerce.passmcq.com",
+        "https://icommerce.com.bd",
+        "https://www.icommerce.com.bd"
+    ]
 
 
 AUTH_USER_MODEL = 'users.User'
