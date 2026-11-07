@@ -64,7 +64,7 @@ export default function ProductView({ item, stores }) {
                   ★ {item.rating ? `${Number(item.rating).toFixed(1)} (${item.review_count})` : "New"}
                 </span>
                 <span className="px-2 py-1 bg-white border border-slate-200 rounded-md shadow-sm text-slate-600 font-semibold">
-                  Stock: {item.stock || 0}
+                  Stock: {item.is_unlimited_stock ? "∞ Unlimited" : (item.stock || 0)}
                 </span>
               </div>
             </div>
@@ -92,7 +92,7 @@ export default function ProductView({ item, stores }) {
             <InfoBlock label="Internal Sale Price" value={item.wholesale_discount_price ? `€${Number(item.wholesale_discount_price).toLocaleString()}` : "N/A"} />
             <InfoBlock label="Internal Unit" value={item.wholesale_unit || "N/A"} />
             <InfoBlock label="Min Purchase Qty" value={item.minimum_purchase || "N/A"} />
-            <InfoBlock label="Stock" value={item.wholesale_stock ?? "N/A"} />
+            <InfoBlock label="Stock" value={item.is_unlimited_wholesale_stock ? "∞ Unlimited" : (item.wholesale_stock ?? "N/A")} />
           </div>
         </Section>
 
@@ -103,7 +103,7 @@ export default function ProductView({ item, stores }) {
             <InfoBlock label="External Sale Price" value={item.restaurant_discount_price ? `€${Number(item.restaurant_discount_price).toLocaleString()}` : "N/A"} />
             <InfoBlock label="External Unit" value={item.restaurant_unit || "N/A"} />
             <InfoBlock label="Min Purchase Qty" value={item.restaurant_minimum_purchase || "N/A"} />
-            <InfoBlock label="Stock" value={item.restaurant_stock ?? "N/A"} />
+            <InfoBlock label="Stock" value={item.is_unlimited_restaurant_stock ? "∞ Unlimited" : (item.restaurant_stock ?? "N/A")} />
           </div>
         </Section>
       </div>

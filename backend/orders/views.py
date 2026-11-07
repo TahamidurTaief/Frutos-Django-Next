@@ -1167,7 +1167,10 @@ class OrderViewSet(viewsets.ModelViewSet):
                     continue
 
             # Create payment record
-            payment_method_from_frontend = payment_data.get('payment_method', 'bkash')
+            payment_method_from_frontend = str(payment_data.get('payment_method') or 'card').lower()
+            if order.payment_method != payment_method_from_frontend:
+                order.payment_method = payment_method_from_frontend
+                order.save(update_fields=['payment_method'])
             payment_record_data = {
                 'order': order,
                 'sender_number': transaction_number,

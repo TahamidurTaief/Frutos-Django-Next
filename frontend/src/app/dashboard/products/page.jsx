@@ -87,7 +87,17 @@ export default function ProductsPage() {
     { key: "name", label: "Name", render: (v, row) => row.variant ? <span className="flex items-center gap-1.5">{v} <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500 uppercase">{row.variant}</span></span> : v },
     { key: "price", label: "Price", render: (v) => `€${Number(v).toLocaleString()}` },
     { key: "discount_price", label: "Sale Price", render: (v) => v ? `€${Number(v).toLocaleString()}` : "—" },
-    { key: "stock", label: "Stock" },
+    {
+      key: "stock",
+      label: "Stock",
+      render: (v, row) => row.is_unlimited_stock ? (
+        <span className="inline-flex items-center gap-1 font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full text-xs border border-emerald-200">
+          ∞ Unlimited
+        </span>
+      ) : (
+        <span>{v ?? 0}</span>
+      )
+    },
     { key: "stores", label: "Stores", render: (v) => Array.isArray(v) && v.length > 0 ? (stores.length > 0 && v.length === stores.length ? "All" : `${v.length} store${v.length > 1 ? 's' : ''}`) : "—" },
     { key: "category", label: "Category", render: (v) => v?.name || "—" },
     { key: "sub_category", label: "Sub Category", render: (v) => v?.name || "—" },

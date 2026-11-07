@@ -359,7 +359,8 @@ function TrackingCard({ order, onClose, onRemove }) {
             {
               icon: 'payments',
               label: 'Payment',
-              value: order.paymentMethod === 'card' ? 'Card'
+              value: order.paymentMethod === 'card' ? 'Debit / Credit Card'
+                   : order.paymentMethod === 'tpv' ? 'TPV (Virtual POS)'
                    : order.paymentMethod === 'paypal' ? 'PayPal'
                    : 'Cash',
             },

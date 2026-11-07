@@ -252,9 +252,10 @@ export default function CartSidebar() {
   }, [sidebarOpen])
 
   const violatingItems = items.filter(item => {
+    const isUnlimited = Boolean(item.is_unlimited_stock || item.isUnlimitedStock || item.is_unlimited_wholesale_stock || item.is_unlimited_restaurant_stock)
     const rawMin = parseInt(item.minimum_purchase) || parseInt(item.minWholesaleQty) || 1
-    const stock = (item.stock !== undefined && item.stock !== null) ? Number(item.stock) : (item.wholesale_stock !== undefined && item.wholesale_stock !== null ? Number(item.wholesale_stock) : (item.restaurant_stock !== undefined && item.restaurant_stock !== null ? Number(item.restaurant_stock) : Infinity))
-    const minReq = stock > 0 ? Math.min(rawMin, stock) : 1
+    const stock = isUnlimited ? Infinity : ((item.stock !== undefined && item.stock !== null) ? Number(item.stock) : (item.wholesale_stock !== undefined && item.wholesale_stock !== null ? Number(item.wholesale_stock) : (item.restaurant_stock !== undefined && item.restaurant_stock !== null ? Number(item.restaurant_stock) : Infinity)))
+    const minReq = stock > 0 && stock < Infinity ? Math.min(rawMin, stock) : rawMin
     return item.qty < minReq
   })
 
@@ -360,11 +361,12 @@ export default function CartSidebar() {
                         <div className="flex items-center justify-between mt-2 sm:mt-2.5">
                           <div className="flex items-center bg-[#f0f4f0] rounded-md p-0.5">
                             {(() => {
+                              const isUnlimited = Boolean(item.is_unlimited_stock || item.isUnlimitedStock || item.is_unlimited_wholesale_stock || item.is_unlimited_restaurant_stock);
                               const rawMin = parseInt(item.minimum_purchase) || parseInt(item.minWholesaleQty) || 1;
-                              const stock = (item.stock !== undefined && item.stock !== null) ? Number(item.stock) : (item.wholesale_stock !== undefined && item.wholesale_stock !== null ? Number(item.wholesale_stock) : (item.restaurant_stock !== undefined && item.restaurant_stock !== null ? Number(item.restaurant_stock) : Infinity));
-                              const minQty = stock > 0 ? Math.max(1, Math.min(rawMin, stock)) : 1;
+                              const stock = isUnlimited ? Infinity : ((item.stock !== undefined && item.stock !== null) ? Number(item.stock) : (item.wholesale_stock !== undefined && item.wholesale_stock !== null ? Number(item.wholesale_stock) : (item.restaurant_stock !== undefined && item.restaurant_stock !== null ? Number(item.restaurant_stock) : Infinity)));
+                              const minQty = (stock > 0 && stock < Infinity) ? Math.max(1, Math.min(rawMin, stock)) : 1;
                               const disabled = item.qty <= minQty;
-                              const canAddMore = stock > 0 ? item.qty < stock : true;
+                              const canAddMore = isUnlimited ? true : (stock > 0 ? item.qty < stock : true);
                               return (
                                 <>
                                   <button onClick={() => updateQty(item.id, Math.max(minQty, item.qty - 1), item.item_type || 'product')}
@@ -373,7 +375,7 @@ export default function CartSidebar() {
                                     <span className="material-symbols-outlined text-[14px]">remove</span>
                                   </button>
                                   <span className="w-6 text-center font-bold text-[13px]">{item.qty}</span>
-                                  <button onClick={() => updateQty(item.id, stock > 0 ? Math.min(stock, item.qty + 1) : item.qty + 1, item.item_type || 'product')}
+                                  <button onClick={() => updateQty(item.id, isUnlimited ? item.qty + 1 : (stock > 0 ? Math.min(stock, item.qty + 1) : item.qty + 1), item.item_type || 'product')}
                                     disabled={!canAddMore}
                                     className={`w-6 h-6 flex items-center justify-center rounded transition-colors ${!canAddMore ? 'text-gray-300 cursor-not-allowed' : 'cursor-pointer hover:bg-[#e2e8e2]'}`}>
                                     <span className="material-symbols-outlined text-[14px]">add</span>
@@ -480,8 +482,9 @@ export default function CartSidebar() {
           </div>
           <div className="space-y-3 mb-6">
             {violatingItems.map(item => {
+              const isUnlimited = Boolean(item.is_unlimited_stock || item.isUnlimitedStock || item.is_unlimited_wholesale_stock || item.is_unlimited_restaurant_stock)
               const rawMin = parseInt(item.minimum_purchase) || parseInt(item.minWholesaleQty) || 1
-              const stock = (item.stock !== undefined && item.stock !== null) ? Number(item.stock) : (item.wholesale_stock !== undefined && item.wholesale_stock !== null ? Number(item.wholesale_stock) : (item.restaurant_stock !== undefined && item.restaurant_stock !== null ? Number(item.restaurant_stock) : Infinity))
+              const stock = isUnlimited ? Infinity : ((item.stock !== undefined && item.stock !== null) ? Number(item.stock) : (item.wholesale_stock !== undefined && item.wholesale_stock !== null ? Number(item.wholesale_stock) : (item.restaurant_stock !== undefined && item.restaurant_stock !== null ? Number(item.restaurant_stock) : Infinity)))
               const minReq = stock > 0 && stock < Infinity ? Math.min(rawMin, stock) : rawMin
               return (
                 <div key={item.id} className="flex items-center justify-between rounded-xl px-4 py-3" style={{ background: '#FFF8EE', border: '1px solid #FFE4B2' }}>

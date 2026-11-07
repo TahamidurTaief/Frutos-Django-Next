@@ -82,6 +82,26 @@ const nextConfig = {
             },
         ],
     },
+
+    async redirects() {
+        return [
+            {
+                source: '/admin/dashboard',
+                destination: '/dashboard',
+                permanent: false,
+            },
+            {
+                source: '/admin/dashboard/:path*',
+                destination: '/dashboard/:path*',
+                permanent: false,
+            },
+            {
+                source: '/admin',
+                destination: '/dashboard',
+                permanent: false,
+            },
+        ]
+    },
 }
 
 export default nextConfig

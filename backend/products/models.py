@@ -238,6 +238,9 @@ class Product(models.Model):
     stock = models.PositiveIntegerField(default=0, help_text="Stock available for Normal Customers")
     wholesale_stock = models.PositiveIntegerField(default=0, help_text="Stock available for Internal Wholesale (Nijeder)")
     restaurant_stock = models.PositiveIntegerField(default=0, help_text="Stock available for External Wholesale (Bahirer)")
+    is_unlimited_stock = models.BooleanField(default=False, help_text="If enabled, stock for Normal Customers is unlimited")
+    is_unlimited_wholesale_stock = models.BooleanField(default=False, help_text="If enabled, stock for Internal Wholesale (Nijeder) is unlimited")
+    is_unlimited_restaurant_stock = models.BooleanField(default=False, help_text="If enabled, stock for External Wholesale (Bahirer) is unlimited")
     is_active = models.BooleanField(default=True, db_index=True)
     
     # Physical properties for shipping calculation - TEMPORARILY COMMENTED OUT

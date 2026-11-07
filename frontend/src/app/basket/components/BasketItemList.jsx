@@ -10,14 +10,15 @@ export default function BasketItemList({ items, updateQty, removeItem, isApprove
         const effectivePrice = item.effectivePrice ?? item.price
         const isWholesaleItem = item.effectivePrice && item.effectivePrice !== item.price
         const rawMinQty = parseInt(item.minimum_purchase) || parseInt(item.minWholesaleQty) || 1
-        const stock = (item.stock !== undefined && item.stock !== null)
+        const isUnlimited = Boolean(item.is_unlimited_stock || item.isUnlimitedStock || item.is_unlimited_wholesale_stock || item.is_unlimited_restaurant_stock)
+        const stock = isUnlimited ? Infinity : ((item.stock !== undefined && item.stock !== null)
           ? Number(item.stock)
           : (item.wholesale_stock !== undefined && item.wholesale_stock !== null
               ? Number(item.wholesale_stock)
               : (item.restaurant_stock !== undefined && item.restaurant_stock !== null
                   ? Number(item.restaurant_stock)
-                  : Infinity))
-        const maxStock = (stock !== null && !isNaN(stock)) ? stock : Infinity
+                  : Infinity)))
+        const maxStock = isUnlimited ? Infinity : ((stock !== null && !isNaN(stock)) ? stock : Infinity)
         const minQty = (maxStock > 0 && maxStock < Infinity) ? Math.max(1, Math.min(rawMinQty, maxStock)) : rawMinQty
         const belowMinQty = item.qty < minQty
 

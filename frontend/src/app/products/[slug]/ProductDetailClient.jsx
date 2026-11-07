@@ -437,15 +437,25 @@ export default function ProductDetailClient({ product: initialProduct, related }
   const { items, addItem, setSidebarOpen } = useCart()
   const rawMinQty = (product.wholesalePrice && product.minWholesaleQty) ? Math.max(1, parseInt(product.minWholesaleQty, 10) || 1) : 1;
   
+  const isUnlimited = Boolean(
+    product.is_unlimited_stock ||
+    product.isUnlimitedStock ||
+    product.is_unlimited_wholesale_stock ||
+    product.is_unlimited_restaurant_stock
+  );
+
   const getWholesaleOrRetailStock = (prod) => {
+    if (prod.is_unlimited_stock || prod.isUnlimitedStock) return Infinity;
     if (prod.wholesalePrice || prod.wholesale_price) {
+      if (prod.is_unlimited_wholesale_stock || prod.is_unlimited_restaurant_stock) return Infinity;
       if (prod.wholesale_stock !== undefined && prod.wholesale_stock !== null) return Math.max(0, Number(prod.wholesale_stock));
       if (prod.restaurant_stock !== undefined && prod.restaurant_stock !== null) return Math.max(0, Number(prod.restaurant_stock));
     }
     if (prod.stock !== undefined && prod.stock !== null) return Math.max(0, Number(prod.stock));
     return Infinity;
   };
-  const maxStock = getWholesaleOrRetailStock(product);
+  const maxStock = isUnlimited ? Infinity : getWholesaleOrRetailStock(product);
+  const effectiveInStock = isUnlimited || Boolean(product.inStock);
 
   const minAllowedQty = (maxStock > 0 && maxStock < Infinity) ? Math.max(1, Math.min(rawMinQty, maxStock)) : 1;
   const initialQty = (maxStock > 0 && maxStock < Infinity) ? Math.min(rawMinQty, maxStock) : (rawMinQty || 1);
@@ -918,7 +928,7 @@ export default function ProductDetailClient({ product: initialProduct, related }
                 </div>
               </div>
 
-              {product.inStock ? (
+              {effectiveInStock ? (
                 <button onClick={handleAddToCart}
                   className="w-full cursor-pointer flex items-center justify-center gap-3
                              rounded-xl py-3 transition-all duration-200 shadow-sm"
@@ -989,14 +999,14 @@ export default function ProductDetailClient({ product: initialProduct, related }
               €{(displayPrice * qty).toFixed(2)}
             </span>
           </div>
-          <button onClick={handleAddToCart} disabled={!product.inStock}
+          <button onClick={handleAddToCart} disabled={!effectiveInStock}
             className={`flex-1 h-[48px] flex items-center justify-center gap-2.5 rounded-full
-                       transition-all active:scale-[0.98] overflow-hidden relative group ${!product.inStock ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}`}
-            style={product.inStock ? {
+                       transition-all active:scale-[0.98] overflow-hidden relative group ${!effectiveInStock ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}`}
+            style={effectiveInStock ? {
               background: added ? '#085041' : 'linear-gradient(135deg, #00694C 0%, #008560 100%)',
               color: 'white', boxShadow: '0 4px 14px rgba(0,105,76,0.25)'
             } : {}}>
-            {product.inStock ? (
+            {effectiveInStock ? (
               <>
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                 <div className="relative flex items-center gap-2.5">

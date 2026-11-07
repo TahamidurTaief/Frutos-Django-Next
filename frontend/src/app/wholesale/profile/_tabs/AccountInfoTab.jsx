@@ -3,8 +3,12 @@ import { useRef } from 'react'
 import { Camera, Building2, Phone, Mail, FileText, MapPin, Briefcase, BarChart } from 'lucide-react'
 import StatusBadge from '../_shared/StatusBadge'
 
-export default function AccountInfoTab({ profile, onImageUpload, imageUploading }) {
+export default function AccountInfoTab({ profile, onImageUpload, imageUploading, isInternalWholesale }) {
   const fileInputRef = useRef(null)
+
+  const isInternal = isInternalWholesale !== undefined 
+    ? isInternalWholesale 
+    : (!profile?.user_type || profile?.user_type === 'WHOLESALER' || profile?.user_type === 'internal' || String(profile?.user_type).toUpperCase() === 'WHOLESALER')
 
   const InfoField = ({ icon: Icon, label, value }) => (
     <div className="flex gap-4 items-start p-3 rounded-xl hover:bg-gray-50/80 transition-colors border border-transparent hover:border-gray-100">
@@ -90,20 +94,22 @@ export default function AccountInfoTab({ profile, onImageUpload, imageUploading 
                 <InfoField icon={Briefcase} label="Business Type" value={profile.display_business_type || profile.business_type || 'N/A'} />
                 <InfoField icon={MapPin} label="Delivery Postcode" value={profile.postcode || 'N/A'} />
                 
-                <div className="sm:col-span-2 mt-2">
-                  <InfoField 
-                    icon={BarChart} 
-                    label="Estimated Monthly Volume" 
-                    value={
-                      profile.monthly_volume ? (
-                        profile.monthly_volume === '400_1000' ? '€400 – €1,000 / month' :
-                        profile.monthly_volume === '1000_3000' ? '€1,000 – €3,000 / month' :
-                        profile.monthly_volume === '3000_7000' ? '€3,000 – €7,000 / month' :
-                        profile.monthly_volume === '7000_plus' ? '€7,000+ / month' : profile.monthly_volume
-                      ) : 'N/A'
-                    } 
-                  />
-                </div>
+                {!isInternal && (
+                  <div className="sm:col-span-2 mt-2">
+                    <InfoField 
+                      icon={BarChart} 
+                      label="Estimated Monthly Volume" 
+                      value={
+                        profile.monthly_volume ? (
+                          profile.monthly_volume === '400_1000' ? '€400 – €1,000 / month' :
+                          profile.monthly_volume === '1000_3000' ? '€1,000 – €3,000 / month' :
+                          profile.monthly_volume === '3000_7000' ? '€3,000 – €7,000 / month' :
+                          profile.monthly_volume === '7000_plus' ? '€7,000+ / month' : profile.monthly_volume
+                        ) : 'N/A'
+                      } 
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>

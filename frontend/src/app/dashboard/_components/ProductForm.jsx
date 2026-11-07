@@ -30,6 +30,9 @@ export default function ProductForm({
     restaurant_price: "", restaurant_discount_price: "", restaurant_unit: "", restaurant_minimum_purchase: "",
     minimum_purchase: "", tax_rate: "",
     stock: "", wholesale_stock: "", restaurant_stock: "", is_active: "true",
+    is_unlimited_stock: Boolean(initialValues?.is_unlimited_stock),
+    is_unlimited_wholesale_stock: Boolean(initialValues?.is_unlimited_wholesale_stock),
+    is_unlimited_restaurant_stock: Boolean(initialValues?.is_unlimited_restaurant_stock),
     weight: "", length: "", width: "", height: "",
     shop: "", stores: [], brand: "", category: "", sub_category: "", shipping_category: "",
     colors: [], sizes: [],
@@ -129,9 +132,12 @@ export default function ProductForm({
         restaurant_minimum_purchase: form.restaurant_minimum_purchase || null,
         minimum_purchase:         form.minimum_purchase || null,
         tax_rate:                 form.tax_rate || "5.00",
-        stock:                    form.stock || 0,
-        wholesale_stock:          form.wholesale_stock || 0,
-        restaurant_stock:         form.restaurant_stock || 0,
+        stock:                    form.is_unlimited_stock ? 0 : (form.stock || 0),
+        wholesale_stock:          form.is_unlimited_wholesale_stock ? 0 : (form.wholesale_stock || 0),
+        restaurant_stock:         form.is_unlimited_restaurant_stock ? 0 : (form.restaurant_stock || 0),
+        is_unlimited_stock:       Boolean(form.is_unlimited_stock),
+        is_unlimited_wholesale_stock: Boolean(form.is_unlimited_wholesale_stock),
+        is_unlimited_restaurant_stock: Boolean(form.is_unlimited_restaurant_stock),
         is_active:                form.is_active === "true",
         weight:                   form.weight || null,
         length:                   form.length || null,
@@ -338,9 +344,28 @@ export default function ProductForm({
                 />
               </div>
               <div>
-                <label className={labelCls}>Stock <span className="text-red-500">*</span></label>
-                <input required type="number" min="0" className={inputCls}
-                  value={form.stock} onChange={e => handleChange("stock", e.target.value)} placeholder="0" />
+                <label className={labelCls}>Stock {!form.is_unlimited_stock && <span className="text-red-500">*</span>}</label>
+                <input
+                  required={!form.is_unlimited_stock}
+                  disabled={form.is_unlimited_stock}
+                  type="number"
+                  min="0"
+                  className={`${inputCls} ${form.is_unlimited_stock ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : ''}`}
+                  value={form.is_unlimited_stock ? "" : form.stock}
+                  onChange={e => handleChange("stock", e.target.value)}
+                  placeholder={form.is_unlimited_stock ? "∞ Unlimited" : "0"}
+                />
+                <label className="flex items-center gap-2 mt-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={!!form.is_unlimited_stock}
+                    onChange={e => handleChange("is_unlimited_stock", e.target.checked)}
+                    className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"
+                  />
+                  <span className="text-xs font-semibold text-slate-700 flex items-center gap-1">
+                    Unlimited Stock <span className="text-emerald-600 font-bold">(∞)</span>
+                  </span>
+                </label>
               </div>
               <div>
                 <label className={labelCls}>Tax Rate (%)</label>
@@ -383,8 +408,26 @@ export default function ProductForm({
               </div>
               <div>
                 <label className={labelCls}>Stock</label>
-                <input type="number" min="0" className={inputCls} value={form.wholesale_stock || ""}
-                  onChange={e => handleChange("wholesale_stock", e.target.value)} placeholder="0" />
+                <input
+                  disabled={form.is_unlimited_wholesale_stock}
+                  type="number"
+                  min="0"
+                  className={`${inputCls} ${form.is_unlimited_wholesale_stock ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : ''}`}
+                  value={form.is_unlimited_wholesale_stock ? "" : (form.wholesale_stock || "")}
+                  onChange={e => handleChange("wholesale_stock", e.target.value)}
+                  placeholder={form.is_unlimited_wholesale_stock ? "∞ Unlimited" : "0"}
+                />
+                <label className="flex items-center gap-2 mt-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={!!form.is_unlimited_wholesale_stock}
+                    onChange={e => handleChange("is_unlimited_wholesale_stock", e.target.checked)}
+                    className="w-4 h-4 text-amber-600 rounded border-slate-300 focus:ring-amber-500 cursor-pointer"
+                  />
+                  <span className="text-xs font-semibold text-slate-700 flex items-center gap-1">
+                    Unlimited Stock <span className="text-amber-600 font-bold">(∞)</span>
+                  </span>
+                </label>
               </div>
             </div>
           </div>
@@ -422,8 +465,26 @@ export default function ProductForm({
               </div>
               <div>
                 <label className={labelCls}>Stock</label>
-                <input type="number" min="0" className={inputCls} value={form.restaurant_stock || ""}
-                  onChange={e => handleChange("restaurant_stock", e.target.value)} placeholder="0" />
+                <input
+                  disabled={form.is_unlimited_restaurant_stock}
+                  type="number"
+                  min="0"
+                  className={`${inputCls} ${form.is_unlimited_restaurant_stock ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : ''}`}
+                  value={form.is_unlimited_restaurant_stock ? "" : (form.restaurant_stock || "")}
+                  onChange={e => handleChange("restaurant_stock", e.target.value)}
+                  placeholder={form.is_unlimited_restaurant_stock ? "∞ Unlimited" : "0"}
+                />
+                <label className="flex items-center gap-2 mt-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={!!form.is_unlimited_restaurant_stock}
+                    onChange={e => handleChange("is_unlimited_restaurant_stock", e.target.checked)}
+                    className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"
+                  />
+                  <span className="text-xs font-semibold text-slate-700 flex items-center gap-1">
+                    Unlimited Stock <span className="text-emerald-600 font-bold">(∞)</span>
+                  </span>
+                </label>
               </div>
             </div>
           </div>

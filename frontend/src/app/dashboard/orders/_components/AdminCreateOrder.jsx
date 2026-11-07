@@ -248,7 +248,7 @@ export default function AdminCreateOrder({ onBack, storeId, onSuccess }) {
         },
         payment: {
           transaction_id: "MANUAL_ORDER_" + Date.now(),
-          payment_method: paymentMethod.toUpperCase(),
+          payment_method: paymentMethod.toLowerCase(),
           sender_number: "POS_ADMIN"
         },
         delivery_date: dateObj?.date || dateObj?.full || dateObj?.label || '',

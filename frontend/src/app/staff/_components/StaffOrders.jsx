@@ -224,6 +224,25 @@ function TrackOrdersSection({ profile }) {
                   </div>
                 </div>
 
+                {/* TPV Info */}
+                {viewItem.payment_method === 'tpv' && (
+                  <div className="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm bg-gradient-to-r from-emerald-50/40 to-transparent">
+                    <h4 className="text-sm font-bold text-slate-800 mb-2 flex items-center gap-2 border-b border-emerald-100/60 pb-3">
+                      <div className="p-1.5 bg-emerald-100 rounded-lg"><Receipt className="w-4 h-4 text-emerald-700" /></div>
+                      TPV Virtual / Pasarela Bancaria
+                    </h4>
+                    <div className="flex items-center justify-between flex-wrap gap-2 text-xs">
+                      <div className="flex items-center gap-2 text-slate-600">
+                        <span className="font-semibold text-emerald-800">Método:</span>
+                        <span>TPV (Terminal Punto de Venta Redsys · 3D Secure)</span>
+                      </div>
+                      <span className="inline-flex px-2 py-0.5 text-[11px] font-bold rounded-full bg-emerald-100 text-emerald-800">
+                        Pasarela Segura
+                      </span>
+                    </div>
+                  </div>
+                )}
+
                 {/* Payment Info */}
                 {viewItem.payment && (
                   <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">

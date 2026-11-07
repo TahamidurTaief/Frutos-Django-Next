@@ -66,14 +66,15 @@ export default function CheckoutShell({ deliveryDates, deliverySlots, initialUse
     const hasViolation = items.some(
       item => {
         if (!item.wholesalePrice && !item.effectivePrice) return false
+        const isUnlimited = Boolean(item.is_unlimited_stock || item.isUnlimitedStock || item.is_unlimited_wholesale_stock || item.is_unlimited_restaurant_stock)
         const rawMin = parseInt(item.minimum_purchase) || parseInt(item.minWholesaleQty) || 1
-        const stock = (item.stock !== undefined && item.stock !== null)
+        const stock = isUnlimited ? Infinity : ((item.stock !== undefined && item.stock !== null)
           ? Number(item.stock)
           : (item.wholesale_stock !== undefined && item.wholesale_stock !== null
               ? Number(item.wholesale_stock)
               : (item.restaurant_stock !== undefined && item.restaurant_stock !== null
                   ? Number(item.restaurant_stock)
-                  : Infinity))
+                  : Infinity)))
         const minReq = stock > 0 && stock < Infinity ? Math.min(rawMin, stock) : rawMin
         return item.qty < minReq
       }
@@ -157,14 +158,15 @@ export default function CheckoutShell({ deliveryDates, deliverySlots, initialUse
     if (isWholesale) {
       for (const item of items) {
         if (item.wholesalePrice || item.effectivePrice) {
+          const isUnlimited = Boolean(item.is_unlimited_stock || item.isUnlimitedStock || item.is_unlimited_wholesale_stock || item.is_unlimited_restaurant_stock)
           const rawMin = parseInt(item.minimum_purchase) || parseInt(item.minWholesaleQty) || 1
-          const stock = (item.stock !== undefined && item.stock !== null)
+          const stock = isUnlimited ? Infinity : ((item.stock !== undefined && item.stock !== null)
             ? Number(item.stock)
             : (item.wholesale_stock !== undefined && item.wholesale_stock !== null
                 ? Number(item.wholesale_stock)
                 : (item.restaurant_stock !== undefined && item.restaurant_stock !== null
                     ? Number(item.restaurant_stock)
-                    : Infinity))
+                    : Infinity)))
           const minReq = stock > 0 && stock < Infinity ? Math.min(rawMin, stock) : rawMin
           if (item.qty < minReq) {
             return `"${item.name}" requires minimum ${minReq} ${item.wholesaleUnit || 'units'}.`

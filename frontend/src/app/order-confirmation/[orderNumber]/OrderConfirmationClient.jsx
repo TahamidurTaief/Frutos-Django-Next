@@ -164,9 +164,12 @@ export default function OrderConfirmationClient({ order }) {
                   <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#6d7a73' }}>
                     Payment Method
                   </p>
-                  <p className="text-sm mt-0.5 capitalize" style={{ color: '#151e13' }}>
-                    {order.paymentMethod === 'card'   ? 'Debit / Credit Card'  :
-                     order.paymentMethod === 'paypal' ? 'PayPal'               : 'Cash'}
+                  <p className="text-sm mt-0.5" style={{ color: '#151e13' }}>
+                    {order.paymentMethod === 'card'   ? 'Debit / Credit Card' :
+                     order.paymentMethod === 'tpv'    ? 'TPV (Virtual POS / Redsys)' :
+                     order.paymentMethod === 'paypal' ? 'PayPal' :
+                     order.paymentMethod === 'cash'   ? 'Cash on Delivery' :
+                     (order.paymentMethod ? String(order.paymentMethod).toUpperCase() : 'Cash')}
                   </p>
                 </div>
               </div>

@@ -241,7 +241,8 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'shop', 'stores', 'brand', 'name', 'slug', 'description', 'category', 'sub_category', 'shipping_category',
             'price', 'discount_price', 'wholesale_price', 'wholesale_discount_price', 'restaurant_price', 'restaurant_discount_price', 
-            'minimum_purchase', 'restaurant_minimum_purchase', 'tax_rate', 'stock', 'wholesale_stock', 'restaurant_stock', 'is_active',
+            'minimum_purchase', 'restaurant_minimum_purchase', 'tax_rate', 'stock', 'wholesale_stock', 'restaurant_stock',
+            'is_unlimited_stock', 'is_unlimited_wholesale_stock', 'is_unlimited_restaurant_stock', 'is_active',
             'weight', 'length', 'width', 'height',  # Added physical properties for shipping
             'thumbnail_url', 'specifications', 'additional_images',
             'origin', 'unit', 'wholesale_unit', 'restaurant_unit', 'badge', 'badge_color', 'variant',
@@ -254,7 +255,9 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_thumbnail_url(self, obj):
         request = self.context.get('request')
         if obj.thumbnail and hasattr(obj.thumbnail, 'url'):
-            return request.build_absolute_uri(obj.thumbnail.url)
+            if request:
+                return request.build_absolute_uri(obj.thumbnail.url)
+            return obj.thumbnail.url
         return None
         
     def get_rating(self, obj):
@@ -390,9 +393,14 @@ class ProductSerializer(serializers.ModelSerializer):
                 data['minimum_purchase'] = instance.restaurant_minimum_purchase or 1
                 if instance.restaurant_unit:
                     data['wholesale_unit'] = instance.restaurant_unit
-                if instance.restaurant_stock is not None:
+                if instance.is_unlimited_restaurant_stock:
+                    data['wholesale_stock'] = 999999
+                    data['stock'] = 999999
+                    data['is_unlimited_stock'] = True
+                elif instance.restaurant_stock is not None:
                     data['wholesale_stock'] = instance.restaurant_stock
                     data['stock'] = instance.restaurant_stock
+                    data['is_unlimited_stock'] = False
             else:
                 data.pop('wholesale_price', None)
                 data.pop('wholesale_discount_price', None)
@@ -403,6 +411,8 @@ class ProductSerializer(serializers.ModelSerializer):
             data.pop('restaurant_unit', None)
             data.pop('restaurant_stock', None)
             data.pop('restaurant_minimum_purchase', None)
+            data.pop('is_unlimited_wholesale_stock', None)
+            data.pop('is_unlimited_restaurant_stock', None)
         elif user_context['is_approved_wholesaler']:
             # For approved internal wholesalers: remove restaurant fields
             data.pop('restaurant_price', None)
@@ -410,6 +420,8 @@ class ProductSerializer(serializers.ModelSerializer):
             data.pop('restaurant_unit', None)
             data.pop('restaurant_stock', None)
             data.pop('restaurant_minimum_purchase', None)
+            data.pop('is_unlimited_wholesale_stock', None)
+            data.pop('is_unlimited_restaurant_stock', None)
             
             wholesale_price = instance.wholesale_price
             wholesale_discount = instance.wholesale_discount_price
@@ -439,12 +451,20 @@ class ProductSerializer(serializers.ModelSerializer):
                 data['minimum_purchase'] = instance.minimum_purchase or 1
                 if instance.wholesale_unit:
                     data['wholesale_unit'] = instance.wholesale_unit
-                if instance.wholesale_stock is not None:
+                if instance.is_unlimited_wholesale_stock:
+                    data['wholesale_stock'] = 999999
+                    data['stock'] = 999999
+                    data['is_unlimited_stock'] = True
+                elif instance.wholesale_stock is not None:
                     data['wholesale_stock'] = instance.wholesale_stock
                     data['stock'] = instance.wholesale_stock
+                    data['is_unlimited_stock'] = False
         else:
             # For non-approved wholesalers, non-approved restaurants, customers, and unauthenticated users: 
             # Remove wholesale and restaurant price fields for security
+            if instance.is_unlimited_stock:
+                data['stock'] = 999999
+                data['is_unlimited_stock'] = True
             data.pop('wholesale_price', None)
             data.pop('wholesale_discount_price', None)
             data.pop('wholesale_unit', None)
@@ -455,6 +475,8 @@ class ProductSerializer(serializers.ModelSerializer):
             data.pop('restaurant_unit', None)
             data.pop('restaurant_stock', None)
             data.pop('restaurant_minimum_purchase', None)
+            data.pop('is_unlimited_wholesale_stock', None)
+            data.pop('is_unlimited_restaurant_stock', None)
         
         return data
 
@@ -480,7 +502,8 @@ class ProductWriteSerializer(serializers.ModelSerializer):
             'restaurant_price', 'restaurant_discount_price',
             'minimum_purchase', 'restaurant_minimum_purchase', 'tax_rate',
             'origin', 'unit', 'wholesale_unit', 'restaurant_unit', 'badge', 'badge_color', 'variant',
-            'stock', 'wholesale_stock', 'restaurant_stock', 'is_active',
+            'stock', 'wholesale_stock', 'restaurant_stock',
+            'is_unlimited_stock', 'is_unlimited_wholesale_stock', 'is_unlimited_restaurant_stock', 'is_active',
             'weight', 'length', 'width', 'height',
             'thumbnail', 'colors', 'sizes',
         ]
@@ -500,6 +523,9 @@ class ProductWriteSerializer(serializers.ModelSerializer):
             'minimum_purchase':        {'required': False},
             'restaurant_minimum_purchase': {'required': False, 'allow_null': True},
             'tax_rate':                {'required': False},
+            'is_unlimited_stock':      {'required': False},
+            'is_unlimited_wholesale_stock': {'required': False},
+            'is_unlimited_restaurant_stock': {'required': False},
             'weight':                  {'allow_null': True, 'required': False},
             'length':                  {'allow_null': True, 'required': False},
             'width':                   {'allow_null': True, 'required': False},

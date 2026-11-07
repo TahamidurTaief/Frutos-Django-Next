@@ -149,23 +149,28 @@ class OrderCreateSerializer(serializers.Serializer):
                     except Product.DoesNotExist:
                         raise serializers.ValidationError(f"Product '{item_data['product']}' not found.")
                     
+                    is_unlimited = False
                     if user_type == 'WHOLESALER':
+                        is_unlimited = getattr(product, 'is_unlimited_wholesale_stock', False)
                         available_stock = product.wholesale_stock
                         stock_field = 'wholesale_stock'
                     elif user_type == 'RESTAURANT':
+                        is_unlimited = getattr(product, 'is_unlimited_restaurant_stock', False)
                         available_stock = product.restaurant_stock
                         stock_field = 'restaurant_stock'
                     else:
+                        is_unlimited = getattr(product, 'is_unlimited_stock', False)
                         available_stock = product.stock
                         stock_field = 'stock'
 
-                    if available_stock is not None and available_stock < qty:
-                        raise serializers.ValidationError(f"Not enough stock for '{product.name}'. Available: {available_stock}, Requested: {qty}")
-                    
-                    # Deduct stock
-                    if available_stock is not None:
-                        setattr(product, stock_field, available_stock - qty)
-                        product.save(update_fields=[stock_field])
+                    if not is_unlimited:
+                        if available_stock is not None and available_stock < qty:
+                            raise serializers.ValidationError(f"Not enough stock for '{product.name}'. Available: {available_stock}, Requested: {qty}")
+                        
+                        # Deduct stock
+                        if available_stock is not None:
+                            setattr(product, stock_field, max(0, available_stock - qty))
+                            product.save(update_fields=[stock_field])
                     
                     if item_data.get('unit_price') is not None:
                         try:
@@ -377,14 +382,18 @@ class OrderCreateSerializer(serializers.Serializer):
                 if item.get('item_type') == 'product':
                     product = item['product']
                     user_type = getattr(user, 'user_type', 'CUSTOMER') if user else 'CUSTOMER'
+                    is_unlimited = False
                     if user_type == 'WHOLESALER':
+                        is_unlimited = getattr(product, 'is_unlimited_wholesale_stock', False)
                         current_stock = product.wholesale_stock
                     elif user_type == 'RESTAURANT':
+                        is_unlimited = getattr(product, 'is_unlimited_restaurant_stock', False)
                         current_stock = product.restaurant_stock
                     else:
+                        is_unlimited = getattr(product, 'is_unlimited_stock', False)
                         current_stock = product.stock
 
-                    if current_stock is not None and current_stock <= 0:
+                    if not is_unlimited and current_stock is not None and current_stock <= 0:
                         try:
                             send_admin_notification(
                                 notification_type='out_of_stock',
@@ -823,7 +832,7 @@ class OrderSerializer(serializers.ModelSerializer):
         model  = Order
         fields = [
             'id', 'order_number', 'total_amount', 'cart_subtotal', 'refunded_amount', 'status', 'payment_status',
-            'shipping_address', 'shipping_method', 'tracking_number', 'fulfillment_store',
+            'payment_method', 'shipping_address', 'shipping_method', 'tracking_number', 'fulfillment_store',
             'ordered_at', 'items', 'updates', 'payment', 'is_wholesale_order', 'user_type'
         ]
 

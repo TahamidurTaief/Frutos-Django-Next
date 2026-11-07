@@ -110,7 +110,7 @@ class WholesaleUserPublicSerializer(serializers.ModelSerializer):
     class Meta:
         model = WholesaleUser
         fields = (
-            'id', 'email',
+            'id', 'email', 'user_type',
             'business_name', 'contact_name',
             'trade_license_number',
             'phone', 'postcode',
@@ -123,7 +123,7 @@ class WholesaleUserPublicSerializer(serializers.ModelSerializer):
             'profile_image_url',
         )
         read_only_fields = (
-            'id', 'status', 'is_approved', 'applied_at', 'approved_at',
+            'id', 'user_type', 'status', 'is_approved', 'applied_at', 'approved_at',
             'account_manager_name', 'account_manager_email',
             'total_orders', 'total_spent',
         )

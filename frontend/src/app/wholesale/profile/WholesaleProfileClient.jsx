@@ -139,7 +139,19 @@ export default function WholesaleProfileClient({ initialProfile, initialNotifica
     router.push('/wholesale')
   }
 
-  const tabs = [
+  const isInternalWholesale = 
+    !profile?.user_type || 
+    profile?.user_type === 'WHOLESALER' || 
+    profile?.user_type === 'internal' || 
+    String(profile?.user_type).toUpperCase() === 'WHOLESALER'
+
+  useEffect(() => {
+    if (isInternalWholesale && (activeTab === 'notifications' || activeTab === 'settings')) {
+      setActiveTab('overview')
+    }
+  }, [isInternalWholesale, activeTab])
+
+  const allTabs = [
     { id: 'overview',       label: 'Dashboard' },
     { id: 'order_line',     label: 'Order Line' },
     { id: 'account_info',   label: 'Account Info' },
@@ -148,6 +160,13 @@ export default function WholesaleProfileClient({ initialProfile, initialNotifica
     { id: 'notifications',  label: `Notification${unreadCount ? ` (${unreadCount})` : ''}` },
     { id: 'settings',       label: 'Settings' },
   ]
+
+  const tabs = allTabs.filter(tab => {
+    if (isInternalWholesale && (tab.id === 'notifications' || tab.id === 'settings')) {
+      return false
+    }
+    return true
+  })
 
   return (
     <div className="bg-[#f8fcfb] min-h-screen flex flex-col md:flex-row">
@@ -165,7 +184,12 @@ export default function WholesaleProfileClient({ initialProfile, initialNotifica
             <OrderLineTab accessToken={accessToken} />
           )}
           {activeTab === 'account_info' && (
-            <AccountInfoTab profile={profile} onImageUpload={handleImageUpload} imageUploading={imageUploading} />
+            <AccountInfoTab 
+              profile={profile} 
+              onImageUpload={handleImageUpload} 
+              imageUploading={imageUploading} 
+              isInternalWholesale={isInternalWholesale}
+            />
           )}
           {activeTab === 'orders' && (
             <OrdersTab orders={orders} onDeleteOrder={handleDeleteOrder} setProfileActiveTab={setActiveTab} accessToken={accessToken} profile={profile} />

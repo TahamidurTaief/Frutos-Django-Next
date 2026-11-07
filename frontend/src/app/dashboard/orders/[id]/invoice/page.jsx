@@ -78,10 +78,10 @@ function POSInvoice({ order, items, subtotal, total, shipping, storeName, logoUr
         </div>
 
         {/* Payment */}
-        {order.payment && (
+        {(order.payment || order.payment_method) && (
           <div className="text-left text-[10px] text-slate-500 mt-2 pt-2 border-t border-dashed border-gray-300">
-            <p>Payment: {order.payment.payment_method || "—"}</p>
-            {order.payment.transaction_id && <p>Txn: {order.payment.transaction_id}</p>}
+            <p>Payment: {order.payment?.payment_method?.toLowerCase() === 'tpv' || order.payment_method?.toLowerCase() === 'tpv' ? 'TPV (Virtual POS)' : (order.payment?.payment_method || order.payment_method || "—")}</p>
+            {order.payment?.transaction_id && <p>Txn: {order.payment.transaction_id}</p>}
           </div>
         )}
 
@@ -138,15 +138,13 @@ function A4Invoice({ order, items, subtotal, total, shipping, storeName, logoUrl
               </p>
             )}
           </div>
-          {order.payment && (
-            <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-1">Payment</p>
-              <p className="text-sm text-slate-700">Method: {order.payment.payment_method || "—"}</p>
-              {order.payment.transaction_id && <p className="text-sm text-slate-500">Txn: {order.payment.transaction_id}</p>}
-              {order.payment.sender_number && <p className="text-sm text-slate-500">Sender: {order.payment.sender_number}</p>}
-              <p className="text-sm text-slate-500">Payment: {order.payment_status_display || order.payment_status}</p>
-            </div>
-          )}
+          <div>
+            <p className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-1">Payment</p>
+            <p className="text-sm text-slate-700">Method: {order.payment?.payment_method?.toLowerCase() === 'tpv' || order.payment_method?.toLowerCase() === 'tpv' ? 'TPV (Virtual POS)' : (order.payment?.payment_method || order.payment_method || "—")}</p>
+            {order.payment?.transaction_id && <p className="text-sm text-slate-500">Txn: {order.payment.transaction_id}</p>}
+            {order.payment?.sender_number && <p className="text-sm text-slate-500">Sender: {order.payment.sender_number}</p>}
+            <p className="text-sm text-slate-500">Payment: {order.payment_status_display || order.payment_status || "Pending"}</p>
+          </div>
         </div>
 
         {/* Items */}

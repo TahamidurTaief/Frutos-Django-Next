@@ -826,6 +826,9 @@ class OrderPayment(models.Model):
         BKASH = 'bkash', 'bKash'
         NAGAD = 'nagad', 'Nagad'
         CARD = 'card', 'Card'
+        TPV = 'tpv', 'TPV'
+        PAYPAL = 'paypal', 'PayPal'
+        CASH = 'cash', 'Cash'
 
     order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='payment')
     admin_account_number = models.CharField(max_length=50, help_text="Required backend-set account number")
