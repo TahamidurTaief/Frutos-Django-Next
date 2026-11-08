@@ -622,7 +622,8 @@ function MetaConfigForm() {
       fetchData();
       router.refresh();
     } catch (e) {
-      toast.error("Failed to save meta config");
+      console.error("Save error:", e);
+      toast.error(e?.message || "Failed to save meta config");
     } finally {
       setSaving(false);
     }

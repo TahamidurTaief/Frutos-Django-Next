@@ -425,7 +425,11 @@ def admin_dashboard(request):
     active_products = Product.objects.filter(is_active=True).count()
     total_orders = Order.objects.count()
     pending_orders = Order.objects.filter(status='PENDING').count()
-    total_revenue = Order.objects.filter(payment_status='PAID').aggregate(
+    total_revenue = Order.objects.filter(status='DELIVERED').aggregate(
+        total=Sum('total_amount')
+    )['total'] or 0
+
+    total_pending_amount = Order.objects.filter(status='PENDING').aggregate(
         total=Sum('total_amount')
     )['total'] or 0
 
@@ -442,6 +446,7 @@ def admin_dashboard(request):
         'total_orders': total_orders,
         'pending_orders': pending_orders,
         'total_revenue': float(total_revenue),
+        'total_pending_amount': float(total_pending_amount),
     }
     
     return Response({
@@ -924,9 +929,8 @@ def vendor_products_list(request):
                 price=price,
                 discount_price=data.get('discount_price') or None,
                 wholesale_price=data.get('wholesale_price') or None,
-                minimum_purchase=data.get('minimum_purchase') or None,
-                affiliate_commission_rate=data.get('affiliate_commission_rate') or None,
-                stock=stock,
+                minimum_purchase=data.get('minimum_purchase') or 1,
+                stock=data.get('stock', 0),
                 is_active=is_active,
                 weight=data.get('weight') or None,
                 length=data.get('length') or None,
@@ -1035,8 +1039,6 @@ def vendor_product_detail(request, pk):
             product.wholesale_price = data['wholesale_price'] or None
         if 'minimum_purchase' in data:
             product.minimum_purchase = data['minimum_purchase'] or None
-        if 'affiliate_commission_rate' in data:
-            product.affiliate_commission_rate = data['affiliate_commission_rate'] or None
         if 'stock' in data:
             product.stock = data['stock']
         if 'is_active' in data:

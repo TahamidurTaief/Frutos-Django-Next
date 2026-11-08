@@ -98,7 +98,7 @@ export function isTokenExpired(token) {
 
 let refreshPromise = null;
 
-async function refreshAccessToken() {
+export async function refreshAccessToken() {
     const refresh = getRefreshToken();
     if (!refresh) throw new Error("No refresh token");
 
@@ -184,6 +184,8 @@ export async function adminFetch(path, options = {}) {
     const token = getAccessToken();
     if (token && !skipAuth) headers["Authorization"] = `Bearer ${token}`;
 
+    fetchOpts.credentials = "omit";
+
     // Don't set Content-Type for FormData (browser does it with boundary)
     if (!(fetchOpts.body instanceof FormData) && !headers["Content-Type"]) {
         headers["Content-Type"] = "application/json";
@@ -256,4 +258,9 @@ export const api = {
 };
 
 export { API_BASE_URL };
+export const getPhotoUrl = (url) => {
+    if (!url) return null;
+    if (url.startsWith('http')) return url;
+    return `${API_BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+};
 export default api;

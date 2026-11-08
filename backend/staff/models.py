@@ -23,6 +23,9 @@ class StaffProfile(models.Model):
     # Store plain-text password for admin viewing (requested by user)
     secret_key = models.CharField(max_length=255, blank=True, null=True)
 
+    # Restricted stores for this staff member
+    restricted_stores = models.ManyToManyField('stores.Store', blank=True, related_name='restricted_staff')
+
     # Photo for staff dashboard
     photo = models.ImageField(upload_to='staff_photos/', blank=True, null=True)
 
@@ -111,6 +114,22 @@ class Announcement(models.Model):
     def __str__(self):
         return self.title
 
+class AnnouncementFile(models.Model):
+    announcement = models.ForeignKey(Announcement, on_delete=models.CASCADE, related_name='files')
+    file = models.FileField(upload_to='announcement_files/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"File for {self.announcement.title}"
+
+class AnnouncementImage(models.Model):
+    announcement = models.ForeignKey(Announcement, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='announcement_images/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Image for {self.announcement.title}"
+
 class DayOffRequest(models.Model):
     STATUS_CHOICES = [
         ('PENDING', 'Pending'),
@@ -152,3 +171,22 @@ class DayOffRequest(models.Model):
 
     def __str__(self):
         return f"{self.staff.user.name} - {self.date} ({self.status})"
+
+class StaffAdminChat(models.Model):
+    SENDER_CHOICES = [
+        ('STAFF', 'Staff'),
+        ('ADMIN', 'Admin')
+    ]
+    staff = models.ForeignKey(StaffProfile, on_delete=models.CASCADE, related_name='admin_chats')
+    admin_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='staff_chats')
+    sender = models.CharField(max_length=10, choices=SENDER_CHOICES)
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f"{self.sender} to {'Admin' if self.sender == 'STAFF' else self.staff.user.name}: {self.message[:20]}"
+

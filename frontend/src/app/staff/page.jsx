@@ -25,6 +25,8 @@ export default function StaffDashboardPage() {
   const [showAttendanceModal, setShowAttendanceModal] = useState(false);
   const [hasDismissedAttendanceModal, setHasDismissedAttendanceModal] = useState(false);
   const [selectedStoreForCheckIn, setSelectedStoreForCheckIn] = useState("");
+  const [storeCodeInput, setStoreCodeInput] = useState("");
+  const [checkInError, setCheckInError] = useState("");
   const [isCheckingIn, setIsCheckingIn] = useState(false);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [showCheckOutModal, setShowCheckOutModal] = useState(false);
@@ -82,24 +84,45 @@ export default function StaffDashboardPage() {
               }}
             />
           </div>
-          <p className="text-[#00694C] font-semibold text-sm animate-pulse">Loading portal...</p>
+          <p className="text-[#00694C] font-semibold text-sm animate-pulse">Loading Staff Portal...</p>
         </div>
       </div>
     );
   }
 
 
-  const handleCheckIn = async (overrideStoreId) => {
-    const storeIdToUse = overrideStoreId || selectedStoreForCheckIn;
+  const handleCheckIn = async (overrideStoreId, overrideStoreCode) => {
+    // If called directly from onClick, overrideStoreId will be an event object
+    const passedId = (overrideStoreId && typeof overrideStoreId !== 'object') ? overrideStoreId : null;
+    const storeIdToUse = passedId || selectedStoreForCheckIn;
+    const passedCode = overrideStoreCode ? String(overrideStoreCode) : null;
+
     if (!storeIdToUse) return;
+    
+    // If we're using the Attendance Modal (not switching stores), require the PIN
+    const isSwitching = !!overrideStoreId && typeof overrideStoreId !== 'object';
+    const finalStoreCode = (isSwitching && passedCode) ? passedCode : storeCodeInput;
+
+    if (!finalStoreCode) {
+      setCheckInError("Please enter the Store PIN");
+      return { success: false, error: "Please enter the Store PIN" };
+    }
+
+    setCheckInError("");
     setIsCheckingIn(true);
     try {
-      await api.post("/api/staff/me/check-in/", { store_id: storeIdToUse });
+      await api.post("/api/staff/me/check-in/", { 
+        store_id: storeIdToUse,
+        store_code: finalStoreCode 
+      });
       mutate();
       setShowAttendanceModal(false);
+      setStoreCodeInput("");
+      return { success: true };
     } catch (err) {
-      console.error("Check-in failed", err);
-      alert(err.response?.data?.detail || "Failed to start shift");
+      const msg = err.message || "Failed to start shift";
+      setCheckInError(msg);
+      return { success: false, error: msg };
     } finally {
       setIsCheckingIn(false);
     }
@@ -117,7 +140,7 @@ export default function StaffDashboardPage() {
       setShowCheckOutModal(false);
     } catch (err) {
       console.error("Check-out failed", err);
-      alert(err.response?.data?.detail || "Failed to end shift");
+      alert(err.message || "Failed to end shift");
     } finally {
       setIsCheckingOut(false);
     }
@@ -135,7 +158,7 @@ export default function StaffDashboardPage() {
 
   const getWeekDates = () => {
     const today = new Date();
-    
+
     return Array.from({ length: 7 }).map((_, i) => {
       const d = new Date(today);
       d.setDate(today.getDate() + i);
@@ -164,20 +187,20 @@ export default function StaffDashboardPage() {
   const hasOrderPermissions = profile?.can_create_orders || profile?.can_update_orders || profile?.can_delete_orders;
 
   const sidebarMenuItems = [
-    { id: "MY_SHIFTS",      name: "MY SHIFTS",       icon: Calendar,       badge: 0 },
-    { id: "ORDERS",         name: "ORDER LINE",      icon: ShoppingCart,   badge: 0 },
-    { id: "PRODUCTS",       name: "PRODUCTS",        icon: Package,        badge: 0 },
-    { id: "NOTIFICATIONS",  name: "NOTIFICATIONS",   icon: Bell,           badge: notifications?.filter(n => !n.is_read).length || 0 },
-    { id: "REQUEST_DAY_OFF",name: "REQUEST DAY OFF", icon: FileText,       badge: 0 },
-    { id: "ANNOUNCEMENTS",  name: "ANNOUNCEMENTS",   icon: Megaphone,      badge: 0 },
-    { id: "ATTENDANCE",     name: "ATTENDANCE",      icon: ClipboardCheck, badge: 0 },
-    { id: "TASK_HISTORY",   name: "TASKS",           icon: ClipboardCheck, badge: 0 },
-    { id: "HISTORY",        name: "WORK HISTORY",    icon: History,        badge: 0 },
+    { id: "MY_SHIFTS", name: "MY SHIFTS", icon: Calendar, badge: 0 },
+    { id: "ORDERS", name: "ORDER LINE", icon: ShoppingCart, badge: 0 },
+    { id: "PRODUCTS", name: "PRODUCTS", icon: Package, badge: 0 },
+    { id: "NOTIFICATIONS", name: "NOTIFICATIONS", icon: Bell, badge: notifications?.filter(n => !n.is_read).length || 0 },
+    { id: "REQUEST_DAY_OFF", name: "REQUEST DAY OFF", icon: FileText, badge: 0 },
+    { id: "ANNOUNCEMENTS", name: "ANNOUNCEMENTS", icon: Megaphone, badge: 0 },
+    { id: "ATTENDANCE", name: "ATTENDANCE", icon: ClipboardCheck, badge: 0 },
+    { id: "TASK_HISTORY", name: "TASKS", icon: ClipboardCheck, badge: 0 },
+    { id: "HISTORY", name: "WORK HISTORY", icon: History, badge: 0 },
     // Dynamic store tab — appears only when a store is selected
     ...(selectedViewStore ? [
       { id: "STORE_SESSION", name: selectedViewStore.name.toUpperCase(), icon: StoreIcon, badge: 0, isStore: true }
     ] : []),
-    { id: "SETTINGS",       name: "PROFILE SETTINGS",icon: Settings,       badge: 0 },
+    { id: "SETTINGS", name: "PROFILE SETTINGS", icon: Settings, badge: 0 },
   ];
 
   const staffActions = [
@@ -211,14 +234,14 @@ export default function StaffDashboardPage() {
     if (d.getDay() === 5) { // Friday
       return acc;
     }
-    
+
     const effectiveShift = shift || defaultShift;
-    
+
     if (effectiveShift.start_time && effectiveShift.end_time) {
       const start = new Date(`2000-01-01T${effectiveShift.start_time}`);
       const end = new Date(`2000-01-01T${effectiveShift.end_time}`);
       let diff = (end - start) / (1000 * 60 * 60);
-      
+
       if (effectiveShift.break_start && effectiveShift.break_end) {
         const bStart = new Date(`2000-01-01T${effectiveShift.break_start}`);
         const bEnd = new Date(`2000-01-01T${effectiveShift.break_end}`);
@@ -245,12 +268,12 @@ export default function StaffDashboardPage() {
     const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
     if (diffHrs < 1) return "JUST NOW";
     if (diffHrs < 24) return `${diffHrs}H AGO`;
-    return `${Math.floor(diffHrs/24)}D AGO`;
+    return `${Math.floor(diffHrs / 24)}D AGO`;
   };
 
   return (
     <div className="min-h-screen bg-[#F1F6EB] flex font-sans text-slate-800 selection:bg-[#00694C] selection:text-white">
-      
+
       {/* Mobile Header & Menu Toggle */}
       <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 z-40">
         <div className="flex items-center gap-2">
@@ -277,14 +300,26 @@ export default function StaffDashboardPage() {
       </div>
 
       {/* Sidebar Overlay */}
-      {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 bg-black/40 z-50" onClick={() => setMobileMenuOpen(false)}>
-          <div className="w-64 h-full bg-[#00694C] text-white p-6 flex flex-col" onClick={e => e.stopPropagation()}>
-             <div className="p-6 pb-2">
-              <h2 className="font-serif font-bold text-xl tracking-tight mb-5">El Árbol Staff</h2>
-              
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-full bg-[#004238] flex items-center justify-center overflow-hidden border border-white/10 shrink-0">
+      <div 
+        className={`md:hidden fixed inset-0 bg-black/50 z-50 transition-opacity duration-700 ease-in-out ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`} 
+        onClick={() => setMobileMenuOpen(false)}
+      >
+        <div 
+          className={`w-56 h-full bg-[#005940] text-white flex flex-col shadow-2xl transform transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`} 
+          onClick={e => e.stopPropagation()}
+        >
+          <div className="p-5 pb-4 border-b border-white/10 bg-[#004A3A] relative">
+            <button 
+              onClick={() => setMobileMenuOpen(false)}
+              className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center rounded-full bg-white/15 hover:bg-white/25 text-white transition-all cursor-pointer shadow-sm"
+              title="Close Menu"
+            >
+              <XIcon className="w-4 h-4" />
+            </button>
+            <h2 className="font-serif font-bold text-xl tracking-tight mb-4 text-[#E4EFDA] pr-8">El Árbol Staff</h2>
+
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-[#00694C] flex items-center justify-center overflow-hidden border border-white/20 shrink-0 shadow-inner">
                   {profile?.photo ? (
                     <img src={profile.photo} alt={user?.name || "Staff"} className="w-full h-full object-cover" />
                   ) : (
@@ -292,39 +327,38 @@ export default function StaffDashboardPage() {
                   )}
                 </div>
                 <div>
-                  <div className="font-semibold text-sm leading-tight mb-0.5">{user?.name || user?.email}</div>
-                  <div className="text-[10px] text-white/50 uppercase tracking-widest font-medium">{profile?.role || 'SALES ASSOCIATE'}</div>
+                  <div className="font-semibold text-xs leading-tight text-white mb-0.5">{user?.name || user?.email}</div>
+                  <div className="text-[9px] text-[#BCE4D3] uppercase tracking-wider font-bold">{profile?.role || 'SALES ASSOCIATE'}</div>
                 </div>
               </div>
             </div>
 
-            <nav className="flex-1 px-4 space-y-1.5 overflow-y-auto min-h-0 py-2 db-scroll">
+            <nav className="flex-1 px-3 space-y-0.5 overflow-y-auto min-h-0 py-4 db-scroll">
               {sidebarMenuItems.map((item, i) => {
                 const isActive = activeTab === item.id;
                 return (
                   <div key={i}>
                     {item.isStore && (
                       <div className="flex items-center gap-2 px-3 pt-3 pb-1.5">
-                        <div className="flex-1 h-px bg-white/10" />
+                        <div className="flex-1 h-px bg-[#004A3A]" />
                         <span className="text-[8px] font-bold text-white/30 uppercase tracking-widest">Store Session</span>
-                        <div className="flex-1 h-px bg-white/10" />
+                        <div className="flex-1 h-px bg-[#004A3A]" />
                       </div>
                     )}
                     <button
                       onClick={() => { setActiveTab(item.id); setMobileMenuOpen(false); }}
-                      className={`relative w-full flex items-center gap-3 px-3 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-300 cursor-pointer overflow-hidden group ${
-                        isActive
-                          ? 'text-white shadow-md'
+                      className={`relative w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-[11px] font-bold tracking-wider transition-all duration-200 cursor-pointer overflow-hidden group ${isActive
+                          ? 'text-white bg-[#004A3A] shadow-sm'
                           : item.isStore
-                            ? 'text-amber-200/80 hover:bg-white/5 hover:text-amber-100'
-                            : 'text-white/60 hover:bg-white/5 hover:text-white'
-                      }`}
+                            ? 'text-amber-200/80 hover:bg-[#004A3A] hover:text-amber-100'
+                            : 'text-white/60 hover:bg-[#004A3A] hover:text-white'
+                        }`}
                     >
                       {isActive && (
-                        <div className={`absolute inset-0 border-l-4 ${item.isStore ? 'bg-gradient-to-r from-amber-700/40 to-amber-600/30 border-amber-300/80' : 'bg-gradient-to-r from-[#008A65] to-[#007A63] border-white/80'}`} />
+                        <div className={`absolute inset-0 border-l-2 ${item.isStore ? 'border-amber-400' : 'border-[#E4EFDA]'}`} />
                       )}
                       {isActive && (
-                        <div className="absolute inset-0 w-full h-full bg-white/10 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
+                        <div className="absolute inset-0 w-full h-full bg-[#004A3A] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
                       )}
                       <item.icon className={`relative z-10 w-4 h-4 transition-transform duration-300 ${isActive ? 'scale-110 drop-shadow-sm' : 'group-hover:scale-110'} ${item.isStore ? 'text-amber-300' : isActive ? 'text-white' : 'text-white/60 group-hover:text-white'}`} />
                       <span className="relative z-10 flex-1 text-left drop-shadow-sm truncate">{item.name}</span>
@@ -336,17 +370,25 @@ export default function StaffDashboardPage() {
               })}
 
             </nav>
+            <div className="p-4 border-t border-[#004A3A]">
+              <button
+                onClick={() => { setMobileMenuOpen(false); logout(); }}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-[11px] font-bold tracking-wider text-red-300 hover:bg-red-500/10 hover:text-red-200 transition-all cursor-pointer group"
+              >
+                <LogOut className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+                <span>LOGOUT</span>
+              </button>
+            </div>
           </div>
         </div>
-      )}
 
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex w-64 bg-[#00694C] text-white flex-col h-screen sticky top-0 shrink-0 shadow-2xl">
-        <div className="p-6 pb-2">
-          <h2 className="font-serif font-bold text-xl tracking-tight mb-5">El Árbol Staff</h2>
-          
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-full bg-[#004238] flex items-center justify-center overflow-hidden border border-white/10 shrink-0">
+      <aside className="hidden md:flex w-56 bg-[#005940] text-white flex-col h-screen sticky top-0 shrink-0 shadow-2xl border-r border-[#004238]">
+        <div className="p-5 pb-4 border-b border-white/10 bg-[#004A3A]">
+          <h2 className="font-serif font-bold text-xl tracking-tight mb-4 text-[#E4EFDA]">El Árbol Staff</h2>
+
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-[#00694C] flex items-center justify-center overflow-hidden border border-white/20 shrink-0 shadow-inner">
               {profile?.photo ? (
                 <img src={profile.photo} alt={user?.name || "Staff"} className="w-full h-full object-cover" />
               ) : (
@@ -354,13 +396,13 @@ export default function StaffDashboardPage() {
               )}
             </div>
             <div>
-              <div className="font-semibold text-sm leading-tight mb-0.5">{user?.name || user?.email}</div>
-              <div className="text-[10px] text-white/50 uppercase tracking-widest font-medium">{profile?.role || 'SALES ASSOCIATE'}</div>
+              <div className="font-semibold text-xs leading-tight text-white mb-0.5">{user?.name || user?.email}</div>
+              <div className="text-[9px] text-[#BCE4D3] uppercase tracking-wider font-bold">{profile?.role || 'SALES ASSOCIATE'}</div>
             </div>
           </div>
         </div>
 
-        <nav className="flex-1 px-4 space-y-1.5 overflow-y-auto min-h-0 py-2 staff-sidebar-scroll">
+        <nav className="flex-1 px-3 space-y-0.5 overflow-y-auto min-h-0 py-4 staff-sidebar-scroll">
           {sidebarMenuItems.map((item, i) => {
             const isActive = activeTab === item.id;
             return (
@@ -368,26 +410,25 @@ export default function StaffDashboardPage() {
                 {/* Separator before dynamic store tab */}
                 {item.isStore && (
                   <div className="flex items-center gap-2 px-3 pt-3 pb-1.5">
-                    <div className="flex-1 h-px bg-white/10" />
+                    <div className="flex-1 h-px bg-[#004A3A]" />
                     <span className="text-[8px] font-bold text-white/30 uppercase tracking-widest">Store Session</span>
-                    <div className="flex-1 h-px bg-white/10" />
+                    <div className="flex-1 h-px bg-[#004A3A]" />
                   </div>
                 )}
                 <button
                   onClick={() => setActiveTab(item.id)}
-                  className={`relative w-full flex items-center gap-3 px-3 py-3 rounded-lg text-xs font-semibold tracking-wide transition-all duration-300 cursor-pointer overflow-hidden group ${
-                    isActive
-                      ? 'text-white shadow-md'
+                  className={`relative w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-[11px] font-bold tracking-wider transition-all duration-200 cursor-pointer overflow-hidden group ${isActive
+                      ? 'text-white bg-[#004A3A] shadow-sm'
                       : item.isStore
-                        ? 'text-amber-200/80 hover:bg-white/5 hover:text-amber-100'
-                        : 'text-white/60 hover:bg-white/5 hover:text-white'
-                  }`}
+                        ? 'text-amber-200/80 hover:bg-[#004A3A] hover:text-amber-100'
+                        : 'text-white/70 hover:bg-[#004A3A] hover:text-white'
+                    }`}
                 >
                   {isActive && (
-                    <div className={`absolute inset-0 border-l-4 ${item.isStore ? 'bg-gradient-to-r from-amber-700/40 to-amber-600/30 border-amber-300/80' : 'bg-gradient-to-r from-[#008A65] to-[#007A63] border-white/80'}`} />
+                    <div className={`absolute inset-0 border-l-2 ${item.isStore ? 'border-amber-400' : 'border-[#E4EFDA]'}`} />
                   )}
                   {isActive && (
-                    <div className="absolute inset-0 w-full h-full bg-white/10 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
+                    <div className="absolute inset-0 w-full h-full bg-[#004A3A] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out" />
                   )}
                   <item.icon className={`relative z-10 w-4 h-4 transition-transform duration-300 ${isActive ? 'scale-110 drop-shadow-sm' : 'group-hover:scale-110'} ${item.isStore ? 'text-amber-300' : isActive ? 'text-white' : 'text-white/60 group-hover:text-white'}`} />
                   <span className="relative z-10 flex-1 text-left drop-shadow-sm truncate">{item.name}</span>
@@ -408,7 +449,7 @@ export default function StaffDashboardPage() {
       {/* Main Content */}
       <main className="flex-1 p-4 md:p-10 pt-20 md:pt-10 overflow-y-auto w-full">
         <div className="max-w-6xl mx-auto">
-          
+
           <header className="flex justify-between items-center mb-10 hidden md:flex">
             <div className="flex items-center gap-3 text-sm font-semibold flex-wrap">
               <span className="italic font-serif text-[#00694C] text-lg">El Árbol</span>
@@ -434,35 +475,35 @@ export default function StaffDashboardPage() {
               )}
             </div>
             <div className="flex items-center gap-4">
-               {/* Attendance button */}
-               {!current_active_shift && (
-                 <button
-                   onClick={() => { setShowAttendanceModal(true); }}
-                   className="flex items-center gap-2 px-4 py-2 rounded-full text-[#00694C] bg-[#E4EFDA] hover:bg-[#D9EFE5] font-bold text-xs transition-all cursor-pointer border border-[#BCE4D3]"
-                 >
-                   <ClipboardCheck className="w-3.5 h-3.5" />
-                   Attendance
-                 </button>
-               )}
+              {/* Attendance button */}
+              {!current_active_shift && (
+                <button
+                  onClick={() => { setShowAttendanceModal(true); }}
+                  className="flex items-center gap-2 px-4 py-2 rounded-full text-[#00694C] bg-[#E4EFDA] hover:bg-[#D9EFE5] font-bold text-xs transition-all cursor-pointer border border-[#BCE4D3]"
+                >
+                  <ClipboardCheck className="w-3.5 h-3.5" />
+                  Attendance
+                </button>
+              )}
 
-               <button className="w-9 h-9 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-600 hover:bg-white transition-colors cursor-pointer">
-                 <HelpCircle className="w-5 h-5" />
-               </button>
-               {current_active_shift && (
-                 <button 
-                   onClick={handleCheckOut}
-                   disabled={isCheckingOut}
-                   className="flex items-center gap-2 px-4 py-2 rounded-full text-white bg-red-600 font-semibold hover:bg-red-700 transition-all cursor-pointer shadow-sm text-sm"
-                 >
-                   {isCheckingOut ? "Leaving..." : "Leave"}
-                 </button>
-               )}
-               <button 
-                 onClick={logout} 
-                 className="flex items-center gap-2 px-4 py-2 rounded-full text-slate-500 font-semibold hover:text-red-600 hover:bg-red-50 border border-transparent hover:border-red-100 transition-all cursor-pointer group"
-               >
-                 <LogOut className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" /> Logout
-               </button>
+              <button className="w-9 h-9 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-600 hover:bg-white transition-colors cursor-pointer">
+                <HelpCircle className="w-5 h-5" />
+              </button>
+              {current_active_shift && (
+                <button
+                  onClick={handleCheckOut}
+                  disabled={isCheckingOut}
+                  className="flex items-center gap-2 px-4 py-2 rounded-full text-white bg-red-600 font-semibold hover:bg-red-700 transition-all cursor-pointer shadow-sm text-sm"
+                >
+                  {isCheckingOut ? "Leaving..." : "Leave"}
+                </button>
+              )}
+              <button
+                onClick={logout}
+                className="flex items-center gap-2 px-4 py-2 rounded-full text-slate-500 font-semibold hover:text-red-600 hover:bg-red-50 border border-transparent hover:border-red-100 transition-all cursor-pointer group"
+              >
+                <LogOut className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" /> Logout
+              </button>
             </div>
           </header>
 
@@ -506,35 +547,35 @@ export default function StaffDashboardPage() {
             <StaffNotifications notifications={notifications} mutate={mutate} setActiveTab={setActiveTab} />
           ) : activeTab === "MY_SHIFTS" ? (
             <>
-              <div className="flex justify-between items-end mb-6">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-6">
                 <div>
-                  <div className="flex items-center gap-3 mb-1">
-                    <h1 className="text-4xl font-serif text-[#004A3A] font-medium tracking-tight">My Shifts</h1>
-                    <span className="bg-[#BCE4D3] text-[#00694C] text-xs font-bold px-2.5 py-1 rounded-full mt-1">{totalHours > 0 ? `${totalHours.toFixed(1)} hours` : '0 hours'}</span>
+                  <div className="flex flex-wrap items-center gap-3 mb-1">
+                    <h1 className="text-3xl sm:text-4xl font-serif text-[#004A3A] font-medium tracking-tight">My Shifts</h1>
+                    <span className="bg-[#BCE4D3] text-[#00694C] text-[11px] sm:text-xs font-bold px-2.5 py-1 rounded-full mt-1 shrink-0">{totalHours > 0 ? `${totalHours.toFixed(1)} hours` : '0 hours'}</span>
                   </div>
-                  <p className="text-slate-500 text-[13px] italic font-serif">{getWeekLabel()}</p>
+                  <p className="text-slate-500 text-xs sm:text-[13px] italic font-serif">{getWeekLabel()}</p>
                 </div>
-                <div className="flex items-center gap-4 text-xs font-bold text-[#004A3A] bg-[#E4EFDA] px-4 py-2.5 rounded-full shadow-sm cursor-pointer hover:bg-[#dbe7d0] transition-colors">
-                   <ChevronLeft className="w-4 h-4" />
-                   <span className="tracking-widest">THIS WEEK</span>
-                   <ChevronRight className="w-4 h-4" />
+                <div className="inline-flex items-center gap-3 sm:gap-4 text-xs font-bold text-[#004A3A] bg-[#E4EFDA] px-4 py-2.5 rounded-full shadow-sm cursor-pointer hover:bg-[#dbe7d0] transition-colors w-fit">
+                  <ChevronLeft className="w-4 h-4 shrink-0" />
+                  <span className="tracking-widest whitespace-nowrap">THIS WEEK</span>
+                  <ChevronRight className="w-4 h-4 shrink-0" />
                 </div>
               </div>
 
               {/* Shifts Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-12 pt-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2.5 sm:gap-3 mb-12 pt-6">
                 {getWeekDates().map((dateObj, i) => {
                   const today = new Date();
                   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-                  
+
                   const yyyy = dateObj.getFullYear();
                   const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
                   const dd = String(dateObj.getDate()).padStart(2, '0');
                   const localDateStr = `${yyyy}-${mm}-${dd}`;
                   const isToday = localDateStr === todayStr;
-                  
+
                   const shift = shifts?.find(s => s.date === localDateStr);
-                  
+
                   const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
                   const dayNum = dateObj.toLocaleDateString('en-US', { day: '2-digit' });
 
@@ -550,20 +591,20 @@ export default function StaffDashboardPage() {
                             <span className="px-3 py-1 bg-[#00694C] text-white text-[9px] font-bold tracking-widest rounded-full uppercase shadow-sm">Today</span>
                           </div>
                         )}
-                        <div className={`bg-white border rounded-xl p-4 flex flex-col h-48 h-full ${isToday ? 'border-2 border-[#00694C] shadow-md' : 'border-slate-100 shadow-sm'}`}>
+                        <div className={`bg-white border rounded-xl p-3 sm:p-4 flex flex-col h-48 h-full ${isToday ? 'border-2 border-[#00694C] shadow-md' : 'border-slate-100 shadow-sm'}`}>
                           <div className="flex justify-between items-start mb-3">
-                             <div>
-                               <div className="flex items-center gap-1.5 mb-1">
-                                 <div className={`text-[11px] font-bold ${isToday ? 'text-[#00694C]' : 'text-slate-400'}`}>
-                                   {dayName}
-                                 </div>
-                               </div>
-                               <div className={`text-2xl font-bold leading-none ${isToday ? 'text-[#00694C]' : 'text-slate-400'}`}>{dayNum}</div>
-                             </div>
+                            <div>
+                              <div className="flex items-center gap-1.5 mb-1">
+                                <div className={`text-[11px] font-bold ${isToday ? 'text-[#00694C]' : 'text-slate-400'}`}>
+                                  {dayName}
+                                </div>
+                              </div>
+                              <div className={`text-2xl font-bold leading-none ${isToday ? 'text-[#00694C]' : 'text-slate-400'}`}>{dayNum}</div>
+                            </div>
                           </div>
                           <div className="flex-1 flex flex-col items-center justify-center gap-2 mt-2">
-                             <Ban className={`w-8 h-8 ${isToday ? 'text-[#00694C]/40' : 'text-slate-200'}`} strokeWidth={1} />
-                             <span className={`text-[13px] font-serif italic ${isToday ? 'text-[#00694C]/70' : 'text-slate-400'}`}>{isOff ? 'Day Off' : 'Absent'}</span>
+                            <Ban className={`w-8 h-8 ${isToday ? 'text-[#00694C]/40' : 'text-slate-200'}`} strokeWidth={1} />
+                            <span className={`text-[13px] font-serif italic ${isToday ? 'text-[#00694C]/70' : 'text-slate-400'}`}>{isOff ? 'Day Off' : 'Absent'}</span>
                           </div>
                         </div>
                       </div>
@@ -571,20 +612,20 @@ export default function StaffDashboardPage() {
                   }
 
                   const effectiveShift = shift || defaultShift;
-                  
+
                   const start = new Date(`2000-01-01T${effectiveShift.start_time}`);
                   const end = new Date(`2000-01-01T${effectiveShift.end_time}`);
                   let diff = (end - start) / (1000 * 60 * 60);
-                  
+
                   if (effectiveShift.break_start && effectiveShift.break_end) {
                     const bStart = new Date(`2000-01-01T${effectiveShift.break_start}`);
                     const bEnd = new Date(`2000-01-01T${effectiveShift.break_end}`);
                     const bDiff = (bEnd - bStart) / (1000 * 60 * 60);
                     if (bDiff > 0) diff -= bDiff;
                   }
-                  
+
                   const hrs = diff > 0 ? diff.toFixed(1) : 0;
-                  
+
                   return (
                     <div key={i} className={`relative transition-all ${isToday ? 'scale-[1.02]' : ''}`}>
                       {isToday && (
@@ -592,23 +633,23 @@ export default function StaffDashboardPage() {
                           <span className="px-3 py-1 bg-[#00694C] text-white text-[9px] font-bold tracking-widest rounded-full uppercase shadow-sm">Today</span>
                         </div>
                       )}
-                      <div className={`bg-[#D9EFE5] rounded-xl p-4 flex flex-col h-48 h-full ${isToday ? 'ring-2 ring-[#00694C] shadow-md' : ''}`}>
-                        <div className="flex justify-between items-start mb-3">
-                           <div>
-                             <div className="flex items-center gap-1.5 mb-1">
-                               <div className="text-[11px] font-bold text-[#00694C]/60">
-                                 {dayName}
-                               </div>
-                             </div>
-                             <div className="text-2xl font-bold text-[#00694C] leading-none">{dayNum}</div>
-                           </div>
-                           <span className="bg-[#C3E4D4] text-[#00694C] text-[9px] font-bold px-1.5 py-0.5 rounded shadow-sm">{hrs}h</span>
+                      <div className={`bg-[#D9EFE5] rounded-xl p-3 sm:p-4 flex flex-col h-48 h-full ${isToday ? 'ring-2 ring-[#00694C] shadow-md' : ''}`}>
+                        <div className="flex justify-between items-start mb-2 sm:mb-3">
+                          <div>
+                            <div className="flex items-center gap-1.5 mb-1">
+                              <div className="text-[11px] font-bold text-[#00694C]/60">
+                                {dayName}
+                              </div>
+                            </div>
+                            <div className="text-2xl font-bold text-[#00694C] leading-none">{dayNum}</div>
+                          </div>
+                          <span className="bg-[#C3E4D4] text-[#00694C] text-[9px] font-bold px-1.5 py-0.5 rounded shadow-sm">{hrs}h</span>
                         </div>
                         <div className="text-[11px] text-[#00694C]/70 font-semibold leading-[1.3] mb-3">{profile?.store_name || 'Unassigned Store'}</div>
                         <div className="text-[13px] font-bold text-[#009b72] leading-tight mb-1">
-                          {formatAMPM(effectiveShift.start_time, localDateStr)} -<br/>{formatAMPM(effectiveShift.end_time, localDateStr)}
+                          {formatAMPM(effectiveShift.start_time, localDateStr)} -<br />{formatAMPM(effectiveShift.end_time, localDateStr)}
                         </div>
-                        
+
                         {effectiveShift.break_start && effectiveShift.break_end && (
                           <div className="mt-auto pt-3 border-t border-[#00694C]/10 text-[9px] font-bold text-[#00694C]/50 uppercase tracking-wide">
                             Break: {formatAMPM(effectiveShift.break_start, localDateStr)} - {formatAMPM(effectiveShift.break_end, localDateStr)}
@@ -628,7 +669,7 @@ export default function StaffDashboardPage() {
                     <p className="text-xs text-slate-500 mt-1">Showing latest 3 tasks</p>
                   </div>
                   {tasks?.length > 3 && (
-                    <button 
+                    <button
                       onClick={() => setActiveTab('TASK_HISTORY')}
                       className="text-xs font-bold text-[#00694C] hover:underline cursor-pointer flex items-center gap-1"
                     >
@@ -706,32 +747,32 @@ export default function StaffDashboardPage() {
                   <div className="space-y-3">
                     {notifications?.length > 0 ? notifications.slice(0, 5).map((n, i) => (
                       <div key={n.id || i} className="bg-white rounded-xl p-5 shadow-sm flex gap-4 hover:shadow-md transition-shadow relative group">
-                         <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${!n.is_read ? 'bg-[#009b72]' : 'bg-transparent'}`}></div>
-                         <div className="flex-1">
-                           <div className="flex justify-between items-start mb-1">
-                             <h4 className="text-sm font-semibold text-[#004A3A] pr-4 leading-snug">{n.title}</h4>
-                             <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider shrink-0 mt-0.5">{formatTimeAgo(n.created_at)}</span>
-                           </div>
-                           <p className="text-xs text-slate-500 font-medium pr-6">{n.message || n.msg}</p>
-                         </div>
-                         <button 
-                           onClick={async (e) => {
-                             e.stopPropagation();
-                             try {
-                               await api.delete(`/api/staff/me/notifications/${n.id}/`);
-                               mutate(prev => ({
-                                 ...prev,
-                                 notifications: prev.notifications.filter(notif => notif.id !== n.id)
-                               }), false);
-                             } catch (err) {
-                               console.error(err);
-                             }
-                           }}
-                           className="absolute top-4 right-3 text-slate-300 hover:text-red-500 hover:bg-red-50 p-1 rounded-md opacity-0 group-hover:opacity-100 transition-all"
-                           title="Remove notification"
-                         >
-                           <XIcon className="w-4 h-4" />
-                         </button>
+                        <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${!n.is_read ? 'bg-[#009b72]' : 'bg-transparent'}`}></div>
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start mb-1">
+                            <h4 className="text-sm font-semibold text-[#004A3A] pr-4 leading-snug">{n.title}</h4>
+                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider shrink-0 mt-0.5">{formatTimeAgo(n.created_at)}</span>
+                          </div>
+                          <p className="text-xs text-slate-500 font-medium pr-6">{n.message || n.msg}</p>
+                        </div>
+                        <button
+                          onClick={async (e) => {
+                            e.stopPropagation();
+                            try {
+                              await api.delete(`/api/staff/me/notifications/${n.id}/`);
+                              mutate(prev => ({
+                                ...prev,
+                                notifications: prev.notifications.filter(notif => notif.id !== n.id)
+                              }), false);
+                            } catch (err) {
+                              console.error(err);
+                            }
+                          }}
+                          className="absolute top-4 right-3 text-slate-300 hover:text-red-500 hover:bg-red-50 p-1 rounded-md opacity-0 group-hover:opacity-100 transition-all"
+                          title="Remove notification"
+                        >
+                          <XIcon className="w-4 h-4" />
+                        </button>
                       </div>
                     )) : (
                       <div className="text-sm text-slate-500 p-4 bg-white rounded-xl shadow-sm border border-slate-100">No new notifications.</div>
@@ -746,15 +787,15 @@ export default function StaffDashboardPage() {
                   </div>
                   <div className="space-y-3">
                     {staffActions.map((action, i) => (
-                      <button key={i} onClick={() => { if(action.tab) setActiveTab(action.tab); }} className="w-full bg-white rounded-xl p-4 shadow-sm flex items-center gap-4 text-left hover:shadow-md transition-all group border border-transparent hover:border-[#00694C]/10 cursor-pointer">
-                         <div className="w-11 h-11 rounded-full bg-[#F1F6EB] flex items-center justify-center shrink-0 group-hover:bg-[#E4EFDA] transition-colors">
-                            <action.icon className="w-5 h-5 text-[#00694C]" />
-                         </div>
-                         <div className="flex-1">
-                            <div className="font-semibold text-sm text-[#004A3A] mb-0.5">{action.title}</div>
-                            <div className="text-xs text-slate-500 font-serif italic">{action.desc}</div>
-                         </div>
-                         <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-[#00694C] transition-colors transform group-hover:translate-x-1" />
+                      <button key={i} onClick={() => { if (action.tab) setActiveTab(action.tab); }} className="w-full bg-white rounded-xl p-4 shadow-sm flex items-center gap-4 text-left hover:shadow-md transition-all group border border-transparent hover:border-[#00694C]/10 cursor-pointer">
+                        <div className="w-11 h-11 rounded-full bg-[#F1F6EB] flex items-center justify-center shrink-0 group-hover:bg-[#E4EFDA] transition-colors">
+                          <action.icon className="w-5 h-5 text-[#00694C]" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="font-semibold text-sm text-[#004A3A] mb-0.5">{action.title}</div>
+                          <div className="text-xs text-slate-500 font-serif italic">{action.desc}</div>
+                        </div>
+                        <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-[#00694C] transition-colors transform group-hover:translate-x-1" />
                       </button>
                     ))}
                   </div>
@@ -778,7 +819,7 @@ export default function StaffDashboardPage() {
 
       {/* Store Switcher Modal (from navbar Attendance button) */}
       {showStoreSwitcherModal && (
-        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm" onClick={() => setShowStoreSwitcherModal(false)}>
+        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 " onClick={() => setShowStoreSwitcherModal(false)}>
           <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
             {/* Modal Header */}
             <div className="bg-gradient-to-r from-[#00694C] to-[#00896A] p-6 flex items-center justify-between">
@@ -875,9 +916,16 @@ export default function StaffDashboardPage() {
 
       {/* Attendance Modal */}
       {showAttendanceModal && (
-        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-700" onClick={() => { setShowAttendanceModal(false); setHasDismissedAttendanceModal(true); }}>
+        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4  animate-in fade-in duration-700" onClick={() => { setShowAttendanceModal(false); setHasDismissedAttendanceModal(true); }}>
           <div className="bg-white rounded-2xl w-[90%] max-w-xs md:max-w-sm shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-700 ease-out" onClick={(e) => e.stopPropagation()}>
             <div className="bg-[#00694C] pt-5 pb-4 px-4 text-white text-center relative">
+              <button
+                onClick={(e) => { e.stopPropagation(); setShowAttendanceModal(false); setHasDismissedAttendanceModal(true); }}
+                className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white/15 hover:bg-white/25 text-white transition-all cursor-pointer shadow-sm"
+                title="Close"
+              >
+                <XIcon className="w-4 h-4" />
+              </button>
               <div className="h-12 w-32 md:h-14 md:w-36 mx-auto mb-2.5 flex items-center justify-center">
                 <img src="/el-erbol-logo.png" alt="El Árbol Logo" className="w-full h-full object-contain brightness-0 invert" style={{ filter: 'brightness(0) invert(1)' }} />
               </div>
@@ -917,8 +965,11 @@ export default function StaffDashboardPage() {
                       const isOpen = isStoreCurrentlyOpen(store.openTime, store.closeTime);
                       return (
                         <div
-                          key={store.id} 
-                          onClick={() => setSelectedStoreForCheckIn(store.id)}
+                          key={store.id}
+                          onClick={() => {
+                            setSelectedStoreForCheckIn(store.id);
+                            setCheckInError("");
+                          }}
                           className={`flex items-center justify-between p-2 rounded-xl border-2 cursor-pointer transition-all ${selectedStoreForCheckIn === store.id ? 'border-[#00694C] bg-emerald-50' : 'border-slate-100 bg-white hover:border-[#00694C]/30 hover:bg-slate-50'}`}
                         >
                           <div className="flex items-center gap-2.5">
@@ -948,10 +999,34 @@ export default function StaffDashboardPage() {
                   )}
                 </div>
               </div>
-              <button 
+              
+              {/* Store PIN Input */}
+              {selectedStoreForCheckIn && (
+                <div className="mt-4 px-1">
+                  <label className="block text-[11px] font-bold text-[#004A3A] mb-1.5 uppercase tracking-wide">Store PIN</label>
+                  <input
+                    type="password"
+                    placeholder="Enter Store PIN"
+                    value={storeCodeInput}
+                    onChange={(e) => {
+                      setStoreCodeInput(e.target.value);
+                      setCheckInError("");
+                    }}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#00694C]/20 focus:border-[#00694C] transition-all text-center tracking-widest font-mono"
+                  />
+                  
+                  {checkInError && (
+                    <div className="mt-2 text-xs font-semibold text-rose-600 bg-rose-50 px-3 py-2 rounded-lg border border-rose-100 flex items-center justify-center text-center">
+                      {checkInError}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <button
                 onClick={handleCheckIn}
-                disabled={!selectedStoreForCheckIn || isCheckingIn}
-                className="w-full mt-3 bg-[#00694C] hover:bg-[#005940] disabled:bg-slate-200 text-white font-bold py-2.5 text-sm rounded-xl transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                disabled={!selectedStoreForCheckIn || !storeCodeInput || isCheckingIn}
+                className="w-full mt-4 bg-[#00694C] hover:bg-[#005940] disabled:bg-slate-200 text-white font-bold py-2.5 text-sm rounded-xl transition-colors flex items-center justify-center gap-2 cursor-pointer"
               >
                 {isCheckingIn ? "Starting..." : "Start Shift Now"}
               </button>
@@ -962,7 +1037,7 @@ export default function StaffDashboardPage() {
 
       {/* Check Out Confirmation Modal */}
       {showCheckOutModal && (
-        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm" onClick={() => setShowCheckOutModal(false)}>
+        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 " onClick={() => setShowCheckOutModal(false)}>
           <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200" onClick={(e) => e.stopPropagation()}>
             <div className="p-6 text-center pt-8">
               <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-5 border border-red-100 shadow-sm">
@@ -970,9 +1045,9 @@ export default function StaffDashboardPage() {
               </div>
               <h2 className="text-xl font-serif font-bold text-[#004A3A] mb-2">End Your Shift?</h2>
               <p className="text-sm text-slate-500 mb-8 font-medium">Are you sure you want to clock out for today? This will record your final checkout time.</p>
-              
+
               <div className="flex items-center gap-3">
-                <button 
+                <button
                   onClick={() => setShowCheckOutModal(false)}
                   disabled={isCheckingOut}
                   className="flex-1 bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 text-slate-700 font-bold py-2.5 rounded-xl transition-all disabled:opacity-50 cursor-pointer shadow-sm text-sm"

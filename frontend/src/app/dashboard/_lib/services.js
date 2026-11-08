@@ -42,7 +42,7 @@
 
 //         /** Full update */
 //         update(lookup, data) {
-//             return api.put(`${base}${lookup}/`, data);
+//             return api.patch(`${base}${lookup}/`, data);
 //         },
 
 //         /** Partial update */
@@ -347,7 +347,7 @@ export function createModelService(basePath, opts = {}) {
 
         /** Full update */
         update(lookup, data) {
-            return api.put(`${base}${lookup}/`, data);
+            return api.patch(`${base}${lookup}/`, data);
         },
 
         /** Partial update */
@@ -459,6 +459,12 @@ export const sizesService = createModelService("/api/products/sizes", {
     lookupField: "id",
     appLabel: "products",
     modelName: "size",
+});
+
+export const displayUnitsService = createModelService("/api/products/display-units", {
+    lookupField: "id",
+    appLabel: "products",
+    modelName: "displayunit",
 });
 
 export const offersService = createModelService("/api/products/offers", {
@@ -654,7 +660,8 @@ export const storesService = {
 
 export const announcementsService = {
     list: () => api.get("/api/staff/announcements/"),
+    get: (id) => api.get(`/api/staff/announcements/${id}/`),
     targets: () => api.get("/api/staff/announcements/targets/"),
-    create: (data) => api.post("/api/staff/announcements/", data),
+    create: (formData) => api.post("/api/staff/announcements/", formData),
     delete: (id) => api.delete(`/api/staff/announcements/${id}/`),
-};
+};

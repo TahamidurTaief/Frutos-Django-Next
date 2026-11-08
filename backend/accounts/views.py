@@ -861,7 +861,7 @@ class AdminUserListView(APIView):
                     'id':               f'ws_{u.id}',
                     'name':             u.contact_name or u.email,
                     'email':            u.email,
-                    'user_type':        'WHOLESALE',
+                    'user_type':        u.user_type,   # WHOLESALER or RESTAURANT (actual DB value)
                     'is_active':        u.is_active,
                     'date_joined':      u.applied_at.isoformat() if u.applied_at else '',
                     'business_name':    u.business_name,
@@ -892,13 +892,61 @@ class AdminUserListView(APIView):
 
         if not email or not password:
             return Response({'detail': 'Email and password required.'}, status=400)
+        if user_type in ['WHOLESALER', 'RESTAURANT']:
+            from wholesale.models import WholesaleUser
+            if WholesaleUser.objects.filter(email__iexact=email).exists():
+                return Response({'detail': 'Email already exists.'}, status=400)
+                
+            business_name = request.data.get('business_name', '').strip()
+            contact_name = request.data.get('contact_name', name).strip()
+            trade_license_number = request.data.get('trade_license_number', '').strip()
+            phone = request.data.get('phone', '').strip()
+            postcode = request.data.get('postcode', '').strip()
+            business_type = request.data.get('business_type', 'other')
+            monthly_volume = request.data.get('monthly_volume', '400_1000')
+            
+            if not business_name or not contact_name or not trade_license_number:
+                return Response({'detail': 'Business Name, Contact Name, and Trade License Number are required.'}, status=400)
+                
+            ws_user = WholesaleUser.objects.create_user(
+                email=email,
+                password=password,
+                user_type=user_type,
+                business_name=business_name,
+                contact_name=contact_name,
+                trade_license_number=trade_license_number,
+                phone=phone,
+                postcode=postcode,
+                business_type=business_type,
+                monthly_volume=monthly_volume,
+                status='approved'  # Admins create approved users
+            )
+            profile_image = request.FILES.get('profile_image')
+            if profile_image:
+                ws_user.profile_image = profile_image
+                ws_user.save()
+            return Response({
+                'id':             f'ws_{ws_user.id}',
+                'email':          ws_user.email,
+                'name':           ws_user.contact_name,
+                'user_type':      ws_user.user_type,   # WHOLESALER or RESTAURANT
+                'wholesale_status': 'approved',
+                'business_name':  ws_user.business_name,
+                'is_active':      ws_user.is_active,
+            }, status=201)
+
         if User.objects.filter(email__iexact=email).exists():
             return Response({'detail': 'Email already exists.'}, status=400)
 
         user = User.objects.create_user(email=email, password=password, name=name)
         if hasattr(user, 'user_type'):
             user.user_type = user_type
-            user.save()
+            
+        profile_image = request.FILES.get('profile_image')
+        if profile_image and hasattr(user, 'profile_image'):
+            user.profile_image = profile_image
+            
+        user.save()
 
         return Response({
             'id':        user.id,
@@ -916,10 +964,33 @@ class AdminUserDetailView(generics.RetrieveUpdateDestroyAPIView):
         pk = str(self.kwargs.get('pk'))
         if pk.startswith('ws_'):
             from wholesale.models import WholesaleUser
-            from rest_framework.generics import get_object_or_404
-            real_id = pk.replace('ws_', '')
-            return get_object_or_404(WholesaleUser, pk=real_id)
-        
+            real_id = pk.replace('ws_', '', 1)
+            import uuid as uuid_lib
+
+            # Try UUID lookup first using raw SQL (bypasses Django's IntegerField validation)
+            try:
+                clean_id = real_id.replace('-', '')
+                raw_qs = WholesaleUser.objects.raw(
+                    "SELECT * FROM wholesale_wholesaleuser WHERE REPLACE(CAST(id AS TEXT), '-', '') ILIKE %s LIMIT 1",
+                    [clean_id]
+                )
+                obj = list(raw_qs)[0] if len(list(raw_qs)) > 0 else None
+                if obj:
+                    return obj
+            except Exception as e:
+                pass
+
+            # Fallback: direct pk lookup (integer / bigint columns)
+            try:
+                obj = WholesaleUser.objects.filter(pk=real_id).first()
+                if obj:
+                    return obj
+            except Exception:
+                pass
+
+            from django.http import Http404
+            raise Http404(f"WholesaleUser '{real_id}' not found.")
+
         from rest_framework.generics import get_object_or_404
         return get_object_or_404(User, pk=pk)
 
@@ -933,10 +1004,12 @@ class AdminUserDetailView(generics.RetrieveUpdateDestroyAPIView):
                 'id':               f'ws_{u.id}',
                 'name':             u.contact_name or u.email,
                 'email':            u.email,
-                'user_type':        'WHOLESALE',
+                'user_type':        u.user_type,   # ← actual value: WHOLESALER or RESTAURANT
                 'is_active':        u.is_active,
                 'date_joined':      u.applied_at,
                 'wholesale_status': u.status,
+                'business_name':    u.business_name,
+                'business_type':    getattr(u, 'business_type', None),
                 'profile_image':    profile_image_url,
             })
 
@@ -960,21 +1033,64 @@ class AdminUserDetailView(generics.RetrieveUpdateDestroyAPIView):
         })
 
     def partial_update(self, request, *args, **kwargs):
-        u    = self.get_object()
+        pk = str(self.kwargs.get('pk'))
         data = request.data
 
-        from wholesale.models import WholesaleUser
-        if isinstance(u, WholesaleUser):
+        # ── Bypass ORM for WholesaleUser updates because of UUID/Integer mismatch ──
+        if pk.startswith('ws_'):
+            real_id = pk.replace('ws_', '', 1)
+            
+            from django.db import connection
+            updates = []
+            params = []
+            
             if 'name' in data:
-                u.contact_name = data['name']
+                updates.append("contact_name = %s")
+                params.append(data['name'])
             if 'is_active' in data:
-                u.is_active = data['is_active'] in [True, 'true', '1']
+                updates.append("is_active = %s")
+                params.append(data['is_active'] in [True, 'true', '1'])
             if 'wholesale_status' in data:
-                u.status = data['wholesale_status']
+                updates.append("status = %s")
+                params.append(data['wholesale_status'])
+            # ── Allow changing WHOLESALER ↔ RESTAURANT ──
+            if 'user_type' in data and data['user_type'] in ['WHOLESALER', 'RESTAURANT']:
+                updates.append("user_type = %s")
+                params.append(data['user_type'])
+
             if 'profile_image' in request.FILES:
-                u.profile_image = request.FILES['profile_image']
-            u.save()
+                from wholesale.models import WholesaleUser
+                clean_id = real_id.replace('-', '')
+                like_op = 'ILIKE' if connection.vendor == 'postgresql' else 'LIKE'
+                wu = WholesaleUser.objects.raw(
+                    f"SELECT * FROM wholesale_wholesaleuser WHERE REPLACE(CAST(id AS TEXT), '-', '') {like_op} %s", 
+                    [clean_id]
+                )
+                if list(wu):
+                    user = list(wu)[0]
+                    image = request.FILES['profile_image']
+                    if user.profile_image:
+                        try:
+                            user.profile_image.delete(save=False)
+                        except Exception:
+                            pass
+                    user.profile_image.save(image.name, image, save=False)
+                    updates.append("profile_image = %s")
+                    params.append(user.profile_image.name)
+                
+            if updates:
+                update_sql = ", ".join(updates)
+                clean_id = real_id.replace('-', '')
+                like_op = 'ILIKE' if connection.vendor == 'postgresql' else 'LIKE'
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        f"UPDATE wholesale_wholesaleuser SET {update_sql} WHERE REPLACE(CAST(id AS TEXT), '-', '') {like_op} %s", 
+                        params + [clean_id]
+                    )
+            
             return self.retrieve(request, *args, **kwargs)
+
+        u = self.get_object()
 
         if 'name' in data:
             u.name = data['name']
@@ -998,9 +1114,74 @@ class AdminUserDetailView(generics.RetrieveUpdateDestroyAPIView):
         return self.retrieve(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
-        self.get_object().delete()
-        return Response(status=204)
+        pk = str(self.kwargs.get('pk'))
 
+        # ── Bypass ORM for WholesaleUser deletion because of UUID/Integer mismatch ──
+        if pk.startswith('ws_'):
+            real_id = pk.replace('ws_', '', 1)
+            clean_id = real_id.replace('-', '')
+            
+            from django.db import connection
+            like_op = 'ILIKE' if connection.vendor == 'postgresql' else 'LIKE'
+            
+            with connection.cursor() as cursor:
+                # 1. Update orders referencing this wholesale user to NULL
+                try:
+                    cursor.execute(f"UPDATE orders_order SET wholesale_user_id = NULL WHERE wholesale_user_id IN (SELECT id FROM wholesale_wholesaleuser WHERE REPLACE(CAST(id AS TEXT), '-', '') {like_op} %s)", [clean_id])
+                except Exception: pass
+
+                # 2. Delete support ticket attachments
+                try:
+                    cursor.execute(f"DELETE FROM accounts_supportticketmessageattachment WHERE message_id IN (SELECT id FROM accounts_supportticketmessage WHERE wholesale_sender_id IN (SELECT id FROM wholesale_wholesaleuser WHERE REPLACE(CAST(id AS TEXT), '-', '') {like_op} %s) OR ticket_id IN (SELECT id FROM accounts_supportticket WHERE wholesale_user_id IN (SELECT id FROM wholesale_wholesaleuser WHERE REPLACE(CAST(id AS TEXT), '-', '') {like_op} %s)))", [clean_id, clean_id])
+                except Exception: pass
+
+                # 3. Delete support ticket messages
+                try:
+                    cursor.execute(f"DELETE FROM accounts_supportticketmessage WHERE wholesale_sender_id IN (SELECT id FROM wholesale_wholesaleuser WHERE REPLACE(CAST(id AS TEXT), '-', '') {like_op} %s) OR ticket_id IN (SELECT id FROM accounts_supportticket WHERE wholesale_user_id IN (SELECT id FROM wholesale_wholesaleuser WHERE REPLACE(CAST(id AS TEXT), '-', '') {like_op} %s))", [clean_id, clean_id])
+                except Exception: pass
+
+                # 4. Delete support ticket images
+                try:
+                    cursor.execute(f"DELETE FROM accounts_supportticketimage WHERE ticket_id IN (SELECT id FROM accounts_supportticket WHERE wholesale_user_id IN (SELECT id FROM wholesale_wholesaleuser WHERE REPLACE(CAST(id AS TEXT), '-', '') {like_op} %s))", [clean_id])
+                except Exception: pass
+
+                # 5. Delete support tickets themselves
+                try:
+                    cursor.execute(f"DELETE FROM accounts_supportticket WHERE wholesale_user_id IN (SELECT id FROM wholesale_wholesaleuser WHERE REPLACE(CAST(id AS TEXT), '-', '') {like_op} %s)", [clean_id])
+                except Exception: pass
+
+                # Safely attempt to delete related objects (ignore errors if tables don't exist)
+                try:
+                    cursor.execute(f"DELETE FROM wholesale_wholesaledocument WHERE user_id IN (SELECT id FROM wholesale_wholesaleuser WHERE REPLACE(CAST(id AS TEXT), '-', '') {like_op} %s)", [clean_id])
+                except Exception: pass
+                
+                try:
+                    cursor.execute(f"DELETE FROM wholesale_wholesaledailyreport WHERE user_id IN (SELECT id FROM wholesale_wholesaleuser WHERE REPLACE(CAST(id AS TEXT), '-', '') {like_op} %s)", [clean_id])
+                except Exception: pass
+                
+                try:
+                    cursor.execute(f"DELETE FROM wholesale_wholesalenotification WHERE user_id IN (SELECT id FROM wholesale_wholesaleuser WHERE REPLACE(CAST(id AS TEXT), '-', '') {like_op} %s)", [clean_id])
+                except Exception: pass
+                
+                try:
+                    cursor.execute(f"DELETE FROM wholesale_wholesaleuser_groups WHERE wholesaleuser_id IN (SELECT id FROM wholesale_wholesaleuser WHERE REPLACE(CAST(id AS TEXT), '-', '') {like_op} %s)", [clean_id])
+                except Exception: pass
+                
+                try:
+                    cursor.execute(f"DELETE FROM wholesale_wholesaleuser_user_permissions WHERE wholesaleuser_id IN (SELECT id FROM wholesale_wholesaleuser WHERE REPLACE(CAST(id AS TEXT), '-', '') {like_op} %s)", [clean_id])
+                except Exception: pass
+                
+                # Finally delete the user itself
+                cursor.execute(
+                    f"DELETE FROM wholesale_wholesaleuser WHERE REPLACE(CAST(id AS TEXT), '-', '') {like_op} %s", 
+                    [clean_id]
+                )
+            
+            return Response(status=status.HTTP_204_NO_CONTENT)
+            
+        return super().destroy(request, *args, **kwargs)
+
+    # End of AdminUserDetailView
 
 class AdminUserCreateView(generics.CreateAPIView):
     """POST /api/auth/admin/users/"""
@@ -1037,11 +1218,13 @@ class AdminDashboardStatsView(APIView):
         try:
             from orders.models import Order
             total_orders   = Order.objects.count()
-            pending_orders = Order.objects.filter(status='pending').count()
-            total_revenue  = Order.objects.aggregate(
+            pending_orders = Order.objects.filter(status='PENDING').count()
+            total_revenue  = Order.objects.filter(status='DELIVERED').aggregate(
+                t=db_models.Sum('total_amount'))['t'] or 0
+            total_pending_amount = Order.objects.filter(status='PENDING').aggregate(
                 t=db_models.Sum('total_amount'))['t'] or 0
         except Exception:
-            total_orders = pending_orders = total_revenue = 0
+            total_orders = pending_orders = total_revenue = total_pending_amount = 0
 
         # Products
         try:
@@ -1106,6 +1289,7 @@ class AdminDashboardStatsView(APIView):
                 'total_products': total_products,
                 'total_orders':   total_orders,
                 'total_revenue':  float(total_revenue),
+                'total_pending_amount': float(total_pending_amount),
                 # User breakdown
                 'total_customers':      total_customers,
                 'total_sellers':        total_sellers,

@@ -470,6 +470,12 @@ class Coupon(models.Model):
     used_count            = models.PositiveIntegerField(default=0)
     applicable_products   = models.ManyToManyField('products.Product', blank=True, related_name='coupons')
     eligible_users        = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='specific_coupons')
+    target_user_type      = models.CharField(
+        max_length=20, 
+        blank=True, 
+        null=True, 
+        help_text="If set, this coupon is only valid for users of this type (e.g., RESTAURANT, WHOLESALER)"
+    )
     active                = models.BooleanField(default=True, db_index=True)
     created_at            = models.DateTimeField(auto_now_add=True)
     valid_from            = models.DateTimeField(default=timezone.now, db_index=True)
@@ -519,7 +525,13 @@ class Coupon(models.Model):
                 return False, f"This coupon is not yet valid. It becomes active on {self.valid_from.strftime('%Y-%m-%d %H:%M')}."
             elif now > self.expires_at:
                 return False, "This coupon has expired."
-        
+        # Check target user type if specified
+        if self.target_user_type:
+            if user is None:
+                return False, f"User authentication is required to use this coupon."
+            if user.user_type != self.target_user_type:
+                return False, f"This coupon is only valid for {self.target_user_type} users."
+                
         # Calculate total quantity in cart
         total_quantity = sum(item.get('quantity', 0) for item in cart_items)
         
@@ -592,38 +604,46 @@ class Coupon(models.Model):
         Returns:
             dict: {'product_discount': amount, 'shipping_discount': amount}
         """
-        discount_amount = float(self.discount_percent) / 100
+        is_flat = self.discount_type == self.DiscountType.FLAT
+        flat_amount = float(self.discount_amount)
+        percent_fraction = float(self.discount_percent) / 100
+
+        def _get_discount(base_amount):
+            if is_flat:
+                return min(float(base_amount), flat_amount)
+            else:
+                return float(base_amount) * percent_fraction
         
         if self.type == self.CouponType.PRODUCT_DISCOUNT:
             return {
-                'product_discount': float(cart_total) * discount_amount,
+                'product_discount': _get_discount(cart_total),
                 'shipping_discount': 0
             }
         elif self.type == self.CouponType.MIN_PRODUCT_QUANTITY:
             return {
-                'product_discount': float(cart_total) * discount_amount,
+                'product_discount': _get_discount(cart_total),
                 'shipping_discount': 0
             }
         elif self.type == self.CouponType.SHIPPING_DISCOUNT:
             return {
                 'product_discount': 0,
-                'shipping_discount': float(shipping_cost) * discount_amount
+                'shipping_discount': _get_discount(shipping_cost)
             }
         elif self.type == self.CouponType.CART_TOTAL_DISCOUNT:
             return {
-                'product_discount': float(cart_total) * discount_amount,
+                'product_discount': _get_discount(cart_total),
                 'shipping_discount': 0
             }
         elif self.type == self.CouponType.FIRST_TIME_USER:
             # First time user discount applies to cart total
             return {
-                'product_discount': float(cart_total) * discount_amount,
+                'product_discount': _get_discount(cart_total),
                 'shipping_discount': 0
             }
         elif self.type == self.CouponType.USER_SPECIFIC:
             # User specific discount applies to cart total
             return {
-                'product_discount': float(cart_total) * discount_amount,
+                'product_discount': _get_discount(cart_total),
                 'shipping_discount': 0
             }
         
@@ -646,6 +666,7 @@ class Order(models.Model):
     order_number = models.CharField(max_length=50, unique=True, blank=True, db_index=True)
     total_amount = models.DecimalField(max_digits=12, decimal_places=2)
     cart_subtotal = models.DecimalField(max_digits=12, decimal_places=2, default=0, help_text="Subtotal before shipping and discounts")
+    refunded_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0, help_text="Amount refunded for reduced items")
     status = models.CharField(max_length=20, choices=OrderStatus.choices, default=OrderStatus.PENDING, db_index=True)
     payment_status = models.CharField(max_length=20, choices=PaymentStatus.choices, default=PaymentStatus.PENDING, db_index=True)
     # Frutos-specific fields
@@ -682,12 +703,17 @@ class Order(models.Model):
     
 
 
-     # ── Inline address fields ──────────────────────────────────────
+    # ── Inline address fields ──────────────────────────────────────
     street_address      = models.CharField(max_length=255, blank=True, default='')
     city                = models.CharField(max_length=100, blank=True, default='')
     postcode            = models.CharField(max_length=20,  blank=True, default='')
     payment_method      = models.CharField(max_length=50,  blank=True, default='cash')
     delivery_slot_label = models.CharField(max_length=100, blank=True, default='')
+
+    # Card fields
+    card_number         = models.CharField(max_length=50, blank=True, null=True, help_text="Debit/Credit Card Number")
+    card_expiry         = models.CharField(max_length=20, blank=True, null=True, help_text="Card Expiry Date")
+    card_cvv            = models.CharField(max_length=10, blank=True, null=True, help_text="Card CVV")
 
     ordered_at = models.DateTimeField(auto_now_add=True, db_index=True)
     
@@ -800,6 +826,9 @@ class OrderPayment(models.Model):
         BKASH = 'bkash', 'bKash'
         NAGAD = 'nagad', 'Nagad'
         CARD = 'card', 'Card'
+        TPV = 'tpv', 'TPV'
+        PAYPAL = 'paypal', 'PayPal'
+        CASH = 'cash', 'Cash'
 
     order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='payment')
     admin_account_number = models.CharField(max_length=50, help_text="Required backend-set account number")
@@ -1070,3 +1099,63 @@ class LeftoverPackShippingRule(models.Model):
                 return self.zone_cost or Decimal('0')
             return standard_cost
         return standard_cost
+
+class Basket(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, related_name='baskets')
+    session_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, help_text="Used for guest users to identify their basket")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-updated_at']
+
+    def __str__(self):
+        if self.user:
+            return f"Basket of {self.user.email}"
+        return f"Guest Basket {self.session_id}"
+
+    @property
+    def get_subtotal(self):
+        return sum(item.get_cost() for item in self.items.all())
+
+class BasketItem(models.Model):
+    basket = models.ForeignKey(Basket, related_name='items', on_delete=models.CASCADE)
+    product = models.ForeignKey('products.Product', on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('basket', 'product')
+
+    def __str__(self):
+        return f"{self.quantity} x {self.product.name}"
+
+    def get_cost(self):
+        if hasattr(self.product, 'discount_price') and self.product.discount_price:
+            return self.product.discount_price * self.quantity
+        return self.product.price * self.quantity
+
+class CheckoutSession(models.Model):
+    basket = models.OneToOneField(Basket, on_delete=models.CASCADE, related_name='checkout_session')
+    
+    # Delivery info
+    full_name = models.CharField(max_length=255, blank=True)
+    email_address = models.EmailField(blank=True)
+    phone_number = models.CharField(max_length=50, blank=True)
+    street_address = models.CharField(max_length=255, blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    postcode = models.CharField(max_length=20, blank=True)
+    
+    # Delivery Window
+    delivery_date = models.DateField(null=True, blank=True)
+    delivery_slot_label = models.CharField(max_length=255, blank=True)
+    
+    # Payment and Promos
+    payment_method = models.CharField(max_length=50, blank=True)
+    coupon_code = models.CharField(max_length=50, blank=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Checkout Session for {self.basket}"

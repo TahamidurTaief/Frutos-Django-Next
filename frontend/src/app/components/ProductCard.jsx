@@ -102,6 +102,14 @@ export default function ProductCard({ product, notified, onNotify }) {
   const { name, badge, badgeColor = '', origin, unit, price, oldPrice,
     wholesalePrice, minWholesaleQty = 1, inStock, image, onSale, variant } = product
 
+  const isUnlimited = Boolean(
+    product.is_unlimited_stock ||
+    product.isUnlimitedStock ||
+    product.is_unlimited_wholesale_stock ||
+    product.is_unlimited_restaurant_stock
+  )
+  const effectiveInStock = isUnlimited || inStock
+
   const displayPrice = wholesalePrice ? wholesalePrice : price
   const isWholesalePrice = !!wholesalePrice
   const cleanOrigin = origin?.replace(/^from\s+/i, '')
@@ -149,7 +157,7 @@ export default function ProductCard({ product, notified, onNotify }) {
             <WishlistButton product={product} />
 
             {/* Out of stock */}
-            {!inStock && (
+            {!effectiveInStock && (
               <div className="absolute inset-0 bg-white/40 backdrop-blur-[1px] flex items-center justify-center">
                 <span className="bg-white text-gray-800 text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
                   OUT OF STOCK
@@ -188,7 +196,7 @@ export default function ProductCard({ product, notified, onNotify }) {
               </div>
             )}
 
-            {inStock ? (
+            {effectiveInStock ? (
               <div className="flex flex-col gap-1.5 mt-auto">
                 <div className="flex items-center justify-between gap-1 min-w-0 flex-wrap">
                   <div className="flex items-baseline gap-1 min-w-0">
@@ -200,7 +208,7 @@ export default function ProductCard({ product, notified, onNotify }) {
                   </div>
                   <div onClick={e => e.preventDefault()} className="flex-shrink-0">
                     <AddToCartButton
-                      product={product} inStock={inStock}
+                      product={product} inStock={effectiveInStock}
                       isWholesale={isWholesalePrice}
                       minWholesaleQty={minWholesaleQty}
                       effectivePrice={displayPrice}

@@ -7,6 +7,7 @@ import DataTable from "@/app/dashboard/_components/DataTable";
 import Modal from "@/app/dashboard/_components/Modal";
 import FormModal from "@/app/dashboard/_components/FormModal";
 import ConfirmDialog from "@/app/dashboard/_components/ConfirmDialog";
+import SearchableSelect from "@/app/dashboard/_components/SearchableSelect";
 import { useToastContext } from "@/app/dashboard/_components/Toaster";
 import useSWR from "swr";
 import { adminUsersApi } from "@/app/dashboard/_lib/auth";
@@ -15,26 +16,40 @@ import api, { API_BASE_URL } from "@/app/dashboard/_lib/api";
 const PAGE_SIZE = 20;
 
 const FILTERS = [
-  { label: "All",        value: "" },
-  { label: "Customers",  value: "CUSTOMER" },
-  { label: "Wholesale",  value: "WHOLESALE" },
-  { label: "Sellers",    value: "SELLER" },
-  { label: "Admins",     value: "ADMIN" },
-  { label: "Staff",      value: "STAFF" },
+  { label: "All", value: "" },
+  { label: "Customers", value: "CUSTOMER" },
+  { label: "Internal Wholesale", value: "WHOLESALER" },
+  { label: "External Wholesale", value: "RESTAURANT" },
+  { label: "Admins", value: "ADMIN" },
 ];
 
+// Role display labels
+const ROLE_LABELS = {
+  CUSTOMER:   "Customer",
+  WHOLESALER: "Internal Wholesale",
+  RESTAURANT: "External Wholesale",
+  ADMIN:      "Admin",
+  STAFF:      "Staff",
+  SELLER:     "Seller",
+  VENDOR:     "Vendor",
+  WHOLESALE:  "Wholesale",  // legacy fallback
+};
+
 function RoleBadge({ value }) {
-  const map = {
-    ADMIN:     "bg-purple-100 text-purple-700",
-    SELLER:    "bg-blue-100 text-blue-700",
-    WHOLESALE: "bg-emerald-100 text-emerald-700",
-    VENDOR:    "bg-amber-100 text-amber-700",
-    CUSTOMER:  "bg-slate-100 text-slate-600",
-    STAFF:     "bg-teal-100 text-teal-700",
+  const styles = {
+    ADMIN:      "bg-purple-100 text-purple-700",
+    SELLER:     "bg-blue-100 text-blue-700",
+    WHOLESALE:  "bg-emerald-100 text-emerald-700",
+    WHOLESALER: "bg-emerald-100 text-emerald-800 ring-1 ring-emerald-300",
+    RESTAURANT: "bg-amber-100 text-amber-800 ring-1 ring-amber-300",
+    VENDOR:     "bg-amber-100 text-amber-700",
+    CUSTOMER:   "bg-slate-100 text-slate-600",
+    STAFF:      "bg-teal-100 text-teal-700",
   };
+  const label = ROLE_LABELS[value] || value || "Customer";
   return (
-    <span className={`px-2 py-0.5 text-xs rounded-full font-medium ${map[value] || map.CUSTOMER}`}>
-      {value || "CUSTOMER"}
+    <span className={`inline-flex items-center px-2 py-0.5 text-[11px] rounded-full font-semibold ${styles[value] || styles.CUSTOMER}`}>
+      {label}
     </span>
   );
 }
@@ -55,31 +70,8 @@ function WholesaleStatusBadge({ value }) {
   );
 }
 
-
-
-const editFields = [
-  { key: "name", label: "Full Name", required: true, placeholder: "John Doe" },
-  { key: "user_type", label: "Role", type: "select", required: true, options: [
-    { value: "CUSTOMER", label: "Customer" },
-    { value: "WHOLESALE", label: "Wholesaler" },
-    { value: "SELLER",   label: "Seller" },
-    { value: "VENDOR",   label: "Vendor" },
-    { value: "ADMIN",    label: "Admin" },
-  ]},
-  { key: "is_active", label: "Status", type: "select", required: true, options: [
-    { value: "true",  label: "Active" },
-    { value: "false", label: "Inactive" },
-  ]},
-];
-
-const wholesaleEditFields = [
-  ...editFields,
-  { key: "wholesale_status", label: "Wholesale Status", type: "select", options: [
-    { value: "pending",  label: "Pending" },
-    { value: "approved", label: "Approved" },
-    { value: "rejected", label: "Rejected" },
-  ]},
-]
+// Wholesale user types (both internal and external)
+const WHOLESALE_TYPES = ["WHOLESALER", "RESTAURANT", "WHOLESALE"];
 
 const createFields = [
   { key: "email",     label: "Email",     required: true, placeholder: "user@example.com" },
@@ -87,6 +79,8 @@ const createFields = [
   { key: "password",  label: "Password",  required: true, placeholder: "Min 8 characters", type: "password" },
   { key: "user_type", label: "Role", type: "select", required: true, options: [
     { value: "CUSTOMER", label: "Customer" },
+    { value: "WHOLESALE", label: "Wholesaler" },
+    { value: "RESTAURANT", label: "Restaurant" },
     { value: "SELLER",   label: "Seller" },
     { value: "VENDOR",   label: "Vendor" },
     { value: "ADMIN",    label: "Admin" },
@@ -102,6 +96,7 @@ export default function UsersPage() {
   const [viewItem, setViewItem]     = useState(null);
   const [editItem, setEditItem]     = useState(null);
   const [createOpen, setCreateOpen] = useState(false);
+  const [createUserType, setCreateUserType] = useState('CUSTOMER');
   const [deleteItem, setDeleteItem] = useState(null);
 
   const { data: rawData, isLoading, mutate } = useSWR(
@@ -116,14 +111,6 @@ export default function UsersPage() {
   );
 
   const columns = [
-    { key: "id", label: "ID", render: (v, row) => (
-      <span 
-        className="font-bold text-[#00694C] cursor-pointer hover:underline"
-        onClick={(e) => { e.stopPropagation(); setViewItem(row); }}
-      >
-        {String(v).startsWith('ws_') ? `WS-${v.replace('ws_','')}` : v}
-      </span>
-    )},
     { key: "photo", label: "Photo", render: (v, row) => {
       let imgUrl = row.profile_image || row.photo || v;
       if (imgUrl && imgUrl.startsWith('/')) {
@@ -144,7 +131,7 @@ export default function UsersPage() {
     { key: "user_type", label: "Role", render: (v) => <RoleBadge value={v} /> },
     { key: "business_name", label: "Business", render: (v) => v || <span className="text-slate-400">—</span> },
     { key: "is_active", label: "Status", render: (v, row) => {
-      if (row.user_type === 'WHOLESALE' || row.user_type === 'WHOLESALER') {
+      if (WHOLESALE_TYPES.includes(row.user_type)) {
         return <WholesaleStatusBadge value={row.wholesale_status || 'pending'} />;
       }
       return (
@@ -156,10 +143,13 @@ export default function UsersPage() {
     { key: "date_joined", label: "Joined", render: (v) => v ? new Date(v).toLocaleDateString() : "—" },
   ];
 
-  // Filter client-side too (since API may not support user_type param yet)
+  // Filter client-side: handle both legacy WHOLESALE and new WHOLESALER/RESTAURANT
   const rawList = rawData?.results || rawData?.users || (Array.isArray(rawData) ? rawData : []);
   const data = activeFilter
-    ? rawList.filter(u => u.user_type === activeFilter)
+    ? rawList.filter(u => {
+        if (activeFilter === "WHOLESALER") return u.user_type === "WHOLESALER" || u.user_type === "WHOLESALE";
+        return u.user_type === activeFilter;
+      })
     : rawList;
   const totalCount = data.length;
 
@@ -274,7 +264,7 @@ export default function UsersPage() {
         <div className="flex items-center justify-end gap-1">
           <button onClick={(e) => { e.stopPropagation(); setViewItem(row); }} className="db-icon-btn" title="View"><Eye size={14} /></button>
           <button onClick={(e) => { e.stopPropagation(); setEditItem({ ...row, is_active: String(row.is_active), wholesale_status: row.wholesale_status || 'pending' }); }} className="db-icon-btn" title="Edit"><Pencil size={14} /></button>
-          {row.user_type === 'WHOLESALE' && row.wholesale_status === 'pending' && (
+          {WHOLESALE_TYPES.includes(row.user_type) && row.wholesale_status === 'pending' && (
             <button onClick={(e) => { e.stopPropagation(); handleApproveWholesale(row); }} style={{ padding: "5px 10px", fontSize: "11px", fontWeight: "700", borderRadius: "7px", background: "#22c55e", color: "white", border: "none", cursor: "pointer" }}>Approve</button>
           )}
           <button onClick={(e) => { e.stopPropagation(); setDeleteItem(row); }} className="db-icon-btn danger" title="Delete"><Trash2 size={14} /></button>
@@ -282,22 +272,68 @@ export default function UsersPage() {
       )}
       />
 
-      <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="Create User" maxWidth="max-w-2xl">
-        <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.target); handleCreate(Object.fromEntries(fd)); }} className="space-y-4">
+      <Modal open={createOpen} onClose={() => { setCreateOpen(false); setCreateUserType('CUSTOMER'); }} title="Create User" maxWidth="max-w-2xl">
+        <form onSubmit={(e) => { 
+          e.preventDefault(); 
+          const fd = new FormData(e.target); 
+          fd.append('name', `${fd.get('first_name')} ${fd.get('last_name')}`.trim());
+          fd.delete('first_name');
+          fd.delete('last_name');
+          handleCreate(fd); 
+        }} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Full Name *</label><input required name="name" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none" placeholder="John Doe" /></div>
+            <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">First Name *</label><input required name="first_name" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none" placeholder="John" /></div>
+            <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Last Name *</label><input required name="last_name" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none" placeholder="Doe" /></div>
             <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Email *</label><input required name="email" type="email" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none" placeholder="user@example.com" /></div>
             <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Password *</label><input required name="password" type="password" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none" placeholder="Min 8 chars" /></div>
             <div>
               <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Role *</label>
-              <select name="user_type" required className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none">
-                <option value="CUSTOMER">Customer</option>
-                <option value="SELLER">Seller</option>
-                <option value="VENDOR">Vendor</option>
-                <option value="ADMIN">Admin</option>
-              </select>
+              <SearchableSelect 
+                name="user_type" 
+                value={createUserType} 
+                onChange={setCreateUserType} 
+                required 
+                options={[
+                  { label: "Customer", value: "CUSTOMER" },
+                  { label: "Internal Wholesale", value: "WHOLESALER" },
+                  { label: "External Wholesale", value: "RESTAURANT" }
+                ]}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Profile Image</label>
+              <input type="file" name="profile_image" accept="image/*" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none cursor-pointer hover:bg-white transition-colors shadow-sm text-slate-500 file:mr-4 file:py-1.5 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-[#00694C]/10 file:text-[#00694C] hover:file:bg-[#00694C]/20 file:cursor-pointer file:transition-colors" />
             </div>
           </div>
+          {(createUserType === 'WHOLESALER' || createUserType === 'RESTAURANT') && (
+            <div className="grid grid-cols-2 gap-4 mt-2">
+              <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Business Name *</label><input required name="business_name" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none" placeholder="El Arbol S.L." /></div>
+              <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Trade License Number *</label><input required name="trade_license_number" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none" placeholder="12345678" /></div>
+              <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Contact Phone</label><input name="phone" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none" placeholder="+34 600 000 000" /></div>
+              <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Postcode</label><input name="postcode" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none" placeholder="28001" /></div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Business Type</label>
+                <select name="business_type" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none cursor-pointer hover:bg-white transition-colors shadow-sm text-slate-700">
+                  <option value="restaurant">Restaurant / Bistro</option>
+                  <option value="hotel">Hotel / Resort</option>
+                  <option value="catering">Catering Company</option>
+                  <option value="food_retail">Food Retail / Grocery</option>
+                  <option value="dark_kitchen">Dark Kitchen</option>
+                  <option value="cafe">Café / Bakery</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Monthly Volume</label>
+                <select name="monthly_volume" className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none cursor-pointer hover:bg-white transition-colors shadow-sm text-slate-700">
+                  <option value="400_1000">€400 – €1,000</option>
+                  <option value="1000_3000">€1,000 – €3,000</option>
+                  <option value="3000_7000">€3,000 – €7,000</option>
+                  <option value="7000_plus">€7,000+</option>
+                </select>
+              </div>
+            </div>
+          )}
           <div className="flex justify-end pt-2 border-t border-slate-100">
             <button style={{cursor: 'pointer'}} type="submit" className="px-5 py-2 text-sm font-bold bg-[#00694C] text-white rounded-lg hover:bg-[#085041] transition-colors shadow-sm">CREATE USER</button>
           </div>
@@ -306,18 +342,32 @@ export default function UsersPage() {
 
       <Modal open={!!editItem} onClose={() => setEditItem(null)} title="Edit User" maxWidth="max-w-2xl">
         {editItem && (
-          <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.target); handleEdit(Object.fromEntries(fd)); }} className="space-y-4">
+          <form onSubmit={(e) => { 
+            e.preventDefault(); 
+            const fd = new FormData(e.target); 
+            const vals = Object.fromEntries(fd);
+            vals.name = `${vals.first_name} ${vals.last_name}`.trim();
+            delete vals.first_name;
+            delete vals.last_name;
+            handleEdit(vals); 
+          }} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Full Name *</label><input required name="name" defaultValue={editItem.name} className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none" /></div>
+              <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">First Name *</label><input required name="first_name" defaultValue={editItem.name?.split(' ')[0] || ''} className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none" /></div>
+              <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Last Name *</label><input required name="last_name" defaultValue={editItem.name?.split(' ').slice(1).join(' ') || ''} className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none" /></div>
               <div>
                 <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Role *</label>
-                <select name="user_type" defaultValue={editItem.user_type} required className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none">
-                  <option value="CUSTOMER">Customer</option>
-                  <option value="WHOLESALE">Wholesaler</option>
-                  <option value="SELLER">Seller</option>
-                  <option value="VENDOR">Vendor</option>
-                  <option value="ADMIN">Admin</option>
-                </select>
+                <SearchableSelect 
+                  name="user_type" 
+                  value={editItem.user_type} 
+                  onChange={(val) => setEditItem({...editItem, user_type: val})} 
+                  required 
+                  options={[
+                    { label: "Customer", value: "CUSTOMER" },
+                    { label: "Internal Wholesale", value: "WHOLESALER" },
+                    { label: "External Wholesale", value: "RESTAURANT" },
+                    { label: "Admin", value: "ADMIN" }
+                  ]}
+                />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Status *</label>
@@ -326,7 +376,7 @@ export default function UsersPage() {
                   <option value="false">Inactive</option>
                 </select>
               </div>
-              {editItem.user_type === 'WHOLESALE' && (
+              {WHOLESALE_TYPES.includes(editItem.user_type) && (
                 <div>
                   <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Wholesale Status *</label>
                   <select name="wholesale_status" defaultValue={editItem.wholesale_status || 'pending'} required className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00694C]/40 outline-none">
@@ -383,7 +433,7 @@ export default function UsersPage() {
                 <p className="text-sm font-medium text-slate-500 truncate mb-2">{viewItem.email}</p>
                 <div className="flex flex-wrap gap-2">
                   <RoleBadge value={viewItem.user_type} />
-                  {viewItem.user_type === 'WHOLESALE' && <WholesaleStatusBadge value={viewItem.wholesale_status} />}
+                  {WHOLESALE_TYPES.includes(viewItem.user_type) && <WholesaleStatusBadge value={viewItem.wholesale_status} />}
                 </div>
               </div>
             </div>
@@ -401,8 +451,8 @@ export default function UsersPage() {
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Joined Date</p>
                 <p className="text-sm font-bold text-slate-800">{viewItem.date_joined ? new Date(viewItem.date_joined).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : "—"}</p>
               </div>
-              
-              {viewItem.user_type === 'WHOLESALE' && (
+
+              {WHOLESALE_TYPES.includes(viewItem.user_type) && (
                 <>
                   <div className="bg-white p-3.5 rounded-xl border border-slate-100 shadow-sm col-span-2 sm:col-span-1">
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Business Name</p>
@@ -411,6 +461,15 @@ export default function UsersPage() {
                   <div className="bg-white p-3.5 rounded-xl border border-slate-100 shadow-sm col-span-2 sm:col-span-1">
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Business Type</p>
                     <p className="text-sm font-bold text-slate-800 truncate">{viewItem.business_type || "—"}</p>
+                  </div>
+                  <div className="bg-white p-3.5 rounded-xl border border-slate-100 shadow-sm col-span-2">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Wholesale Type</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <RoleBadge value={viewItem.user_type} />
+                      <span className="text-xs text-slate-500">
+                        {viewItem.user_type === 'WHOLESALER' ? 'Created by Admin (Internal)' : 'Self-registered from website (External)'}
+                      </span>
+                    </div>
                   </div>
                 </>
               )}

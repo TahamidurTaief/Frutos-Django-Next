@@ -15,6 +15,7 @@ import SessionGuard         from '@/app/components/SessionGuard'
 import LiveChatWidget       from '@/app/components/livechat/LiveChatWidget'
 import { getSiteConfig }    from '@/lib/api_site_config'
 import NextTopLoader        from 'nextjs-toploader'
+import FaviconUpdater       from '@/app/components/FaviconUpdater'
 
 //  force-dynamic সরিয়ে দাও — tag revalidation-এর সাথে conflict করে
 // export const dynamic = 'force-dynamic'   ← এটা DELETE করো
@@ -78,6 +79,7 @@ export default async function RootLayout({ children }) {
           minHeight:  '100vh',
         }}
       >
+        <FaviconUpdater />
         <NextTopLoader color="#00694C" height={2} showSpinner={false} />
         <Providers>
           <AuthProvider>

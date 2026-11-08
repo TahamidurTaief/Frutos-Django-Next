@@ -93,7 +93,7 @@ export default function StaffProducts({ profile }) {
     <div className="relative" ref={filterRef}>
       <button
         onClick={() => setIsFilterOpen(!isFilterOpen)}
-        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#00694C]/20 focus:border-[#00694C] transition-all cursor-pointer min-w-[160px] justify-between"
+        className="w-full sm:w-auto flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#00694C]/20 focus:border-[#00694C] transition-all cursor-pointer sm:min-w-[160px] justify-between"
       >
         <div className="flex items-center gap-2">
           <Filter className="w-3.5 h-3.5 text-slate-400" />
@@ -104,7 +104,7 @@ export default function StaffProducts({ profile }) {
 
       {isFilterOpen && (
         <div className="absolute left-0 z-50 w-56 mt-2 origin-top-left bg-white border border-slate-100 rounded-xl shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none animate-in fade-in slide-in-from-top-2 duration-200">
-          <div className="p-1.5 max-h-60 overflow-y-auto">
+          <div className="p-1.5 max-h-60 overflow-y-auto db-scroll">
             <button
               onClick={() => {
                 setSelectedCategory("");
@@ -173,23 +173,23 @@ export default function StaffProducts({ profile }) {
 
   return (
     <div className="flex flex-col h-full animate-in fade-in duration-300">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <Package className="w-8 h-8 text-[#00694C]" />
-          <h1 className="text-3xl font-serif text-[#004A3A] font-medium tracking-tight">Product Catalog</h1>
+      <div className="flex flex-row items-center justify-between mb-4 sm:mb-6">
+        <div className="flex items-center gap-2 sm:gap-3 overflow-hidden">
+          <Package className="w-6 h-6 sm:w-8 sm:h-8 text-[#00694C] shrink-0" />
+          <h1 className="text-xl sm:text-3xl font-serif text-[#004A3A] font-medium tracking-tight truncate">Product Catalog</h1>
         </div>
         {profile?.can_create_products && (
           <button 
             onClick={() => setCreateOpen(true)} 
-            className="flex items-center gap-2 cursor-pointer bg-[#00694C] hover:bg-[#004A3A] text-white px-5 py-2.5 rounded-xl font-medium shadow-md transition-colors"
+            className="shrink-0 flex items-center justify-center gap-1.5 cursor-pointer bg-[#00694C] hover:bg-[#004A3A] text-white px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl font-bold sm:font-medium text-xs sm:text-base shadow-md transition-colors ml-2"
           >
-            <Plus size={18} /> 
+            <Plus size={16} className="sm:w-[18px] sm:h-[18px]" /> 
             <span>Add Product</span>
           </button>
         )}
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+      <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-3 sm:p-6">
         {isLoading ? (
           <div className="py-12 flex justify-center"><Loader2 className="w-8 h-8 text-[#00694C] animate-spin" /></div>
         ) : error ? (

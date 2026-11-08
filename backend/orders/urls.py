@@ -54,6 +54,15 @@ from .views import (
     debug_orders_api, order_invoice,
 )
 
+from .basket_views import (
+    BasketAPIView, BasketItemAPIView, BasketItemDetailAPIView
+)
+from .checkout_views import (
+    CheckoutDeliveryAddressAPIView, CheckoutDeliveryWindowAPIView,
+    CheckoutApplyCouponAPIView, CheckoutPaymentMethodAPIView,
+    CheckoutSummaryAPIView, CheckoutConfirmAPIView, CheckoutCancelAPIView
+)
+
 router = DefaultRouter()
 
 # ← Order last এ register করো — নইলে সব route capture করে
@@ -85,7 +94,6 @@ app_name = 'orders'
 from .shipping_views import calculate_shipping_v2, detect_zone_api, free_shipping_check
 
 urlpatterns = [
-    path('', include(router.urls)),
     path('shipping-methods-list/',          ShippingMethodListAPIView.as_view(),    name='shipping-methods-list'),
     path('payment/accounts/',               PaymentAccountsAPIView.as_view(),       name='payment-accounts'),
     path('analyze-cart-shipping/',          analyze_cart_shipping,                  name='analyze-cart-shipping'),
@@ -96,6 +104,23 @@ urlpatterns = [
     path('shipping/detect-zone/',           detect_zone_api,                        name='shipping-detect-zone'),
     path('shipping/free-shipping-check/',   free_shipping_check,                    name='shipping-free-check'),
 
+    # Basket endpoints
+    path('basket/', BasketAPIView.as_view(), name='basket'),
+    path('basket/items/', BasketItemAPIView.as_view(), name='basket-items'),
+    path('basket/items/<int:item_id>/', BasketItemDetailAPIView.as_view(), name='basket-item-detail'),
+    
+    # Checkout endpoints
+    path('checkout/delivery-address/', CheckoutDeliveryAddressAPIView.as_view(), name='checkout-delivery-address'),
+    path('checkout/delivery-window/', CheckoutDeliveryWindowAPIView.as_view(), name='checkout-delivery-window'),
+    path('checkout/apply-coupon/', CheckoutApplyCouponAPIView.as_view(), name='checkout-apply-coupon'),
+    path('checkout/payment-method/', CheckoutPaymentMethodAPIView.as_view(), name='checkout-payment-method'),
+    path('checkout/summary/', CheckoutSummaryAPIView.as_view(), name='checkout-summary'),
+    path('checkout/confirm/', CheckoutConfirmAPIView.as_view(), name='checkout-confirm'),
+    path('checkout/cancel/', CheckoutCancelAPIView.as_view(), name='checkout-cancel'),
+
     path('debug/',                          debug_orders_api,                       name='debug-orders'),
     path('invoice/<str:order_number>/',     order_invoice,                          name='order-invoice'),
+    
+    # Include router urls at the very end to prevent the empty prefix (r'') from catching other valid paths
+    path('', include(router.urls)),
 ]

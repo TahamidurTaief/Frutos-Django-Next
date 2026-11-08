@@ -5,12 +5,12 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from django.db import models
-from .models import StaffProfile, StaffShift, StaffTask, StaffNotification, Announcement, DayOffRequest
+from .models import StaffProfile, StaffShift, StaffTask, StaffNotification, Announcement, AnnouncementImage, DayOffRequest, StaffAdminChat
 from .serializers import (
     StaffProfileSerializer, CreateStaffSerializer, StaffShiftSerializer, 
     StaffTaskSerializer, StaffNotificationSerializer, DayOffRequestSerializer,
     AnnouncementSerializer, AnnouncementCreateSerializer, StoreStaffTreeSerializer,
-    MyStaffProfileUpdateSerializer
+    MyStaffProfileUpdateSerializer, StaffAdminChatSerializer
 )
 from stores.models import Store
 from channels.layers import get_channel_layer
@@ -194,7 +194,7 @@ class MyStaffDashboardView(APIView):
         # Get active stores for attendance modal
         from stores.models import Store
         from stores.serializers import StoreListSerializer
-        active_stores = Store.objects.filter(is_active=True).order_by('order', 'name')
+        active_stores = Store.objects.filter(is_active=True).exclude(restricted_staff=staff_profile).order_by('order', 'name')
 
         from datetime import date
         today = date.today()
@@ -231,6 +231,13 @@ class MyStaffCheckInView(APIView):
             
         from stores.models import Store
         store = get_object_or_404(Store, id=store_id)
+        
+        # Validate Store Code (PIN)
+        store_code_input = request.data.get('store_code')
+        if not store_code_input:
+            return Response({"detail": "Store ID (PIN) is required for check-in"}, status=status.HTTP_400_BAD_REQUEST)
+        if store.store_code and store.store_code != store_code_input:
+            return Response({"detail": "Invalid Store ID (PIN)"}, status=status.HTTP_400_BAD_REQUEST)
         
         from datetime import date
         from django.utils import timezone
@@ -374,6 +381,13 @@ class MyStaffTaskUpdateView(generics.UpdateAPIView):
             except Exception as e:
                 logger.error(f"Error creating admin notification for task completion: {e}")
 
+class MyStaffNotificationListView(generics.ListAPIView):
+    permission_classes = [IsStaffUser]
+    serializer_class = StaffNotificationSerializer
+    
+    def get_queryset(self):
+        return StaffNotification.objects.filter(staff__user=self.request.user).order_by('-created_at')
+
 class MyStaffNotificationDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsStaffUser]
     serializer_class = StaffNotificationSerializer
@@ -420,26 +434,54 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
             staff_profile = user.staff_profile
             return Announcement.objects.filter(
                 models.Q(target_all_stores=True) |
-                models.Q(target_stores=staff_profile.store) |
                 models.Q(target_staff=staff_profile)
             ).distinct().order_by('-created_at')
         except StaffProfile.DoesNotExist:
             return Announcement.objects.none()
 
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
     def perform_create(self, serializer):
         announcement = serializer.save(created_by=self.request.user)
         
+        # Save multiple uploaded images
+        images = self.request.FILES.getlist('images')
+        for img in images:
+            AnnouncementImage.objects.create(announcement=announcement, image=img)
+            
+        # Save multiple uploaded files
+        from .models import AnnouncementFile
+        files = self.request.FILES.getlist('files')
+        for f in files:
+            AnnouncementFile.objects.create(announcement=announcement, file=f)
+        
+        from datetime import date
+        today = date.today()
+        
         # Create StaffNotification records
         target_staff_set = set()
+        
         if announcement.target_all_stores:
+            # Send to ALL staff regardless of working status
             for staff in StaffProfile.objects.all():
                 target_staff_set.add(staff)
         else:
+            # Store-based or staff-based: Only send to staff who are CURRENTLY IN ATTENDANCE
+            potential_staff = set()
             for store in announcement.target_stores.all():
                 for staff in store.staff.all():
-                    target_staff_set.add(staff)
+                    potential_staff.add(staff)
             for staff in announcement.target_staff.all():
-                target_staff_set.add(staff)
+                potential_staff.add(staff)
+                
+            for staff in potential_staff:
+                if StaffShift.objects.filter(staff=staff, date=today, status='IN_PROGRESS').exists():
+                    target_staff_set.add(staff)
+                    
+            # Explicitly add these working staff to the target_staff ManyToMany
+            # so they can see the announcement in their dashboard
+            for staff in target_staff_set:
+                announcement.target_staff.add(staff)
                 
         notifications = []
         for staff in target_staff_set:
@@ -461,10 +503,7 @@ class AnnouncementViewSet(viewsets.ModelViewSet):
         if announcement.target_all_stores:
             async_to_sync(channel_layer.group_send)('staff_all', message_data)
         else:
-            for store in announcement.target_stores.all():
-                async_to_sync(channel_layer.group_send)(f'store_{store.id}', message_data)
-            
-            for staff in announcement.target_staff.all():
+            for staff in target_staff_set:
                 async_to_sync(channel_layer.group_send)(f'user_{staff.user.id}', message_data)
 
     @action(detail=False, methods=['get'])
@@ -730,3 +769,101 @@ class AdminDayOffRequestViewSet(viewsets.ModelViewSet):
                 )
             except Exception as e:
                 logger.error(f"Error creating staff notification: {e}")
+
+# ==========================================
+# STAFF-ADMIN CHAT APIs
+# ==========================================
+
+class MyStaffAdminChatViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsStaffUser]
+    serializer_class = StaffAdminChatSerializer
+
+    def get_queryset(self):
+        staff_profile = get_object_or_404(StaffProfile, user=self.request.user)
+        # Mark all messages from ADMIN as read when staff fetches them
+        StaffAdminChat.objects.filter(staff=staff_profile, sender='ADMIN', is_read=False).update(is_read=True)
+        return StaffAdminChat.objects.filter(staff=staff_profile).order_by('created_at')
+
+    def perform_create(self, serializer):
+        staff_profile = get_object_or_404(StaffProfile, user=self.request.user)
+        instance = serializer.save(staff=staff_profile, sender='STAFF')
+
+        # Sync to ChatMessage (LiveChat model consumed by Dashboard UI)
+        from django.contrib.auth import get_user_model
+        from livechat.models import ChatMessage
+        User = get_user_model()
+
+        admin_user = User.objects.filter(models.Q(user_type='ADMIN') | models.Q(is_superuser=True)).first()
+        if admin_user:
+            chat_msg = ChatMessage.objects.create(
+                sender=self.request.user,
+                receiver=admin_user,
+                text=instance.message
+            )
+            # Broadcast via channels layer for real-time dashboard update
+            try:
+                channel_layer = get_channel_layer()
+                if channel_layer:
+                    payload = {
+                        'type': 'chat_message',
+                        'message_id': chat_msg.id,
+                        'sender_id': self.request.user.id,
+                        'receiver_id': admin_user.id,
+                        'text': instance.message,
+                        'created_at': instance.created_at.isoformat(),
+                    }
+                    async_to_sync(channel_layer.group_send)(f'chat_{admin_user.id}', payload)
+                    async_to_sync(channel_layer.group_send)(f'chat_{self.request.user.id}', payload)
+            except Exception as e:
+                logger.error(f"Error sending chat websocket message: {e}")
+
+class AdminStaffAdminChatViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminUser]
+    serializer_class = StaffAdminChatSerializer
+
+    def get_queryset(self):
+        staff_id = self.request.query_params.get('staff_id')
+        if not staff_id:
+            return StaffAdminChat.objects.none()
+        
+        # Mark all messages from STAFF as read
+        StaffAdminChat.objects.filter(staff_id=staff_id, sender='STAFF', is_read=False).update(is_read=True)
+        return StaffAdminChat.objects.filter(staff_id=staff_id).order_by('created_at')
+
+    def perform_create(self, serializer):
+        staff_id = self.request.data.get('staff_id')
+        if not staff_id:
+            from rest_framework.exceptions import ValidationError
+            raise ValidationError({'staff_id': 'staff_id is required'})
+        staff_profile = get_object_or_404(StaffProfile, id=staff_id)
+        instance = serializer.save(staff=staff_profile, admin_user=self.request.user, sender='ADMIN')
+
+        # Sync to ChatMessage
+        from django.contrib.auth import get_user_model
+        from livechat.models import ChatMessage
+        User = get_user_model()
+
+        if staff_profile.user:
+            chat_msg = ChatMessage.objects.create(
+                sender=self.request.user,
+                receiver=staff_profile.user,
+                text=instance.message
+            )
+            # Broadcast via channels layer
+            try:
+                channel_layer = get_channel_layer()
+                if channel_layer:
+                    payload = {
+                        'type': 'chat_message',
+                        'message_id': chat_msg.id,
+                        'sender_id': self.request.user.id,
+                        'receiver_id': staff_profile.user.id,
+                        'text': instance.message,
+                        'created_at': instance.created_at.isoformat(),
+                    }
+                    async_to_sync(channel_layer.group_send)(f'chat_{staff_profile.user.id}', payload)
+                    async_to_sync(channel_layer.group_send)(f'chat_{self.request.user.id}', payload)
+            except Exception as e:
+                logger.error(f"Error sending chat websocket message: {e}")
+
+

@@ -262,9 +262,10 @@ export default function ChatHistoryPage() {
 
                     {isDatePickerOpen && (
                       <>
-                        <div className="fixed inset-0 z-40" onClick={() => setIsDatePickerOpen(false)} />
-                        <div className="absolute right-0 top-full mt-2 w-[calc(100vw-32px)] sm:w-56 bg-white rounded-xl shadow-xl border border-slate-200 p-4 z-50 animate-in fade-in zoom-in-95 duration-200 origin-top-right">
-                          <h4 className="text-xs font-bold text-slate-800 mb-3 uppercase tracking-wider border-b border-slate-100 pb-2">Filter by Date</h4>
+                        <div className="fixed inset-0 z-40 bg-slate-900/20 sm:bg-transparent" onClick={() => setIsDatePickerOpen(false)} />
+                        <div className="fixed sm:absolute bottom-0 sm:bottom-auto left-0 sm:left-auto right-0 sm:right-0 top-auto sm:top-full mt-0 sm:mt-2 w-full sm:w-56 bg-white rounded-t-3xl sm:rounded-xl shadow-[0_-20px_40px_-15px_rgba(0,0,0,0.1)] sm:shadow-xl border-t sm:border border-slate-200 p-6 sm:p-4 z-50 animate-in slide-in-from-bottom-full sm:slide-in-from-top-2 sm:fade-in duration-300 sm:duration-200 sm:origin-top-right pb-10 sm:pb-4">
+                          <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-5 sm:hidden"></div>
+                          <h4 className="text-sm sm:text-xs font-bold text-slate-800 mb-4 sm:mb-3 uppercase tracking-wider border-b border-slate-100 pb-2 sm:pb-2">Filter by Date</h4>
                           <div className="space-y-3">
                             <label className="block cursor-pointer group">
                               <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1 group-hover:text-slate-700 transition-colors">Start Date</span>

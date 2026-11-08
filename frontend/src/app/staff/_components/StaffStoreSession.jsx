@@ -54,7 +54,26 @@ function OrderStatusBadge({ status }) {
 
 // ─── Store Details Tab ─────────────────────────────────────────────────────────
 function StoreDetailsTab({ store, currentActiveShift, onCheckIn, isCheckingIn }) {
+  const [showPinModal, setShowPinModal] = useState(false);
+  const [pinInput, setPinInput] = useState("");
+  const [pinError, setPinError] = useState("");
+
   const isCheckedIntoThisStore = String(currentActiveShift?.store) === String(store?.id) || currentActiveShift?.store_name === store?.name;
+
+  const handleConfirmPin = async () => {
+    if (!pinInput) {
+      setPinError("Please enter the store PIN");
+      return;
+    }
+    setPinError("");
+    const result = await onCheckIn(store.id, pinInput);
+    if (result && result.success === false) {
+      setPinError(result.error);
+    } else {
+      setShowPinModal(false);
+      setPinInput("");
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -70,6 +89,12 @@ function StoreDetailsTab({ store, currentActiveShift, onCheckIn, isCheckingIn })
               <span className="text-slate-500">Name</span>
               <span className="font-bold text-slate-800">{store?.name}</span>
             </div>
+            {store?.storeCode && (
+              <div className="flex justify-between border-b border-slate-50 pb-3">
+                <span className="text-slate-500">Store Code</span>
+                <span className="font-mono font-bold text-slate-800 uppercase bg-slate-100 px-2 py-0.5 rounded text-xs">{store.storeCode}</span>
+              </div>
+            )}
             <div className="flex justify-between border-b border-slate-50 pb-3">
               <span className="text-slate-500">Location</span>
               <span className="font-semibold text-slate-700 text-right max-w-[200px]">{store?.address || "—"}</span>
@@ -98,7 +123,7 @@ function StoreDetailsTab({ store, currentActiveShift, onCheckIn, isCheckingIn })
           </p>
           
           <button
-            onClick={() => onCheckIn(store.id)}
+            onClick={() => setShowPinModal(true)}
             disabled={isCheckingIn || currentActiveShift}
             className={`w-full max-w-[250px] py-3 px-6 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${
               isCheckedIntoThisStore
@@ -117,6 +142,39 @@ function StoreDetailsTab({ store, currentActiveShift, onCheckIn, isCheckingIn })
           </button>
         </div>
       </div>
+
+      {showPinModal && (
+        <div className="fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm" onClick={() => setShowPinModal(false)}>
+          <div className="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl" onClick={e => e.stopPropagation()}>
+            <h2 className="text-xl font-bold text-slate-800 mb-2">Enter Store PIN</h2>
+            <p className="text-slate-500 text-sm mb-6">Please enter the PIN for {store?.name} to start your shift.</p>
+            {pinError && <p className="text-red-500 text-sm font-semibold mb-4 text-center">{pinError}</p>}
+            <input 
+              type="text" 
+              value={pinInput} 
+              onChange={e => setPinInput(e.target.value)} 
+              placeholder="Store PIN" 
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00694C] focus:border-transparent mb-6 text-center font-mono text-lg tracking-widest"
+              autoFocus
+              onKeyDown={e => { if (e.key === 'Enter') handleConfirmPin(); }}
+            />
+            <div className="flex gap-3">
+              <button 
+                onClick={() => setShowPinModal(false)} 
+                className="flex-1 py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleConfirmPin}
+                className="flex-1 py-3 px-4 bg-[#00694C] hover:bg-[#00593E] text-white font-bold rounded-xl shadow-md transition-colors cursor-pointer"
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -126,8 +184,9 @@ function StoreProductsTab({ storeId, storeName }) {
   const [search, setSearch] = useState("");
   const [selectedCat, setSelectedCat] = useState("");
 
+  // Fetch ALL products, not just for the specific store
   const { data: rawData, isLoading, mutate } = useSWR(
-    storeId ? `/api/products/products/?store=${storeId}&page_size=200` : null,
+    "/api/products/products/?page_size=500",
     (url) => api.get(url),
     { revalidateOnFocus: false }
   );
@@ -147,7 +206,15 @@ function StoreProductsTab({ storeId, storeName }) {
   );
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
+      {/* Header section to clarify they are viewing the full catalog */}
+      <div className="bg-gradient-to-r from-[#00694C]/5 to-transparent p-4 rounded-2xl border border-[#00694C]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h3 className="text-[#004A3A] font-serif text-lg font-bold">Global Product Catalog</h3>
+          <p className="text-slate-500 text-xs mt-0.5">Showing all available products across the entire network.</p>
+        </div>
+      </div>
+      
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
         <div className="relative flex-1">
           <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -252,23 +319,23 @@ function StoreOrderHistoryTab({ profile, storeId }) {
 
   return (
     <div className="space-y-5">
-      <div className="grid grid-cols-5 gap-3">
+      <div className="flex flex-wrap gap-2.5">
         {statCards.map(card => (
           <button key={card.label} onClick={() => setStatusFilter(card.key)}
-            className={`${card.bg} border ${card.border} rounded-xl p-3 text-center cursor-pointer transition-all hover:shadow-sm ${statusFilter === card.key ? "ring-2 ring-[#00694C]/30 shadow-sm" : ""}`}>
-            <div className={`text-xl font-bold ${card.color}`}>{card.value}</div>
-            <div className="text-[10px] font-semibold text-slate-500 mt-0.5">{card.label}</div>
+            className={`flex-1 min-w-[100px] sm:min-w-[120px] ${card.bg} border ${card.border} rounded-xl p-2.5 sm:p-3 text-center cursor-pointer transition-all hover:shadow-sm ${statusFilter === card.key ? "ring-2 ring-[#00694C]/30 shadow-sm" : ""}`}>
+            <div className={`text-lg sm:text-xl font-bold ${card.color}`}>{card.value}</div>
+            <div className="text-[10px] font-semibold text-slate-500 mt-1">{card.label}</div>
           </button>
         ))}
       </div>
 
-      <div className="flex justify-between items-center">
-        <p className="text-sm text-slate-500">Orders created by you{statusFilter ? ` · ${statusFilter.toLowerCase()}` : ""}</p>
-        <div className="flex items-center gap-2">
-          <button onClick={() => mutate()} className="p-2 rounded-xl hover:bg-slate-100 text-slate-500 transition-colors cursor-pointer"><RefreshCw className="w-4 h-4" /></button>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
+        <p className="text-xs sm:text-sm text-slate-500">Orders created by you{statusFilter ? ` · ${statusFilter.toLowerCase()}` : ""}</p>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <button onClick={() => mutate()} className="p-2 rounded-xl hover:bg-slate-100 text-slate-500 transition-colors cursor-pointer shrink-0"><RefreshCw className="w-4 h-4" /></button>
           {profile?.can_create_orders && (
             <button onClick={() => setShowCreate(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-[#00694C] hover:bg-[#00593E] text-white text-sm font-semibold rounded-xl transition-all cursor-pointer shadow-sm">
+              className="flex-1 sm:flex-none justify-center flex items-center gap-2 px-4 py-2 bg-[#00694C] hover:bg-[#00593E] text-white text-sm font-semibold rounded-xl transition-all cursor-pointer shadow-sm">
               <ShoppingCart className="w-4 h-4" /> Create Order
             </button>
           )}
@@ -285,8 +352,9 @@ function StoreOrderHistoryTab({ profile, storeId }) {
         </div>
       ) : (
         <div className={`bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden transition-opacity duration-300 ${isValidating ? 'opacity-50 pointer-events-none' : ''}`}>
-          <table className="w-full text-sm">
-            <thead>
+          <div className="overflow-x-auto w-full db-scroll">
+            <table className="w-full text-sm min-w-[700px]">
+              <thead>
               <tr className="bg-slate-50 border-b border-slate-100">
                 {["Order #","Customer","Products","Total","Status","Payment","Date"].map(h => (
                   <th key={h} className="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">{h}</th>
@@ -302,7 +370,7 @@ function StoreOrderHistoryTab({ profile, storeId }) {
                     <div className="text-slate-400 text-[11px]">{order.customer_email}</div>
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex flex-col gap-1 max-h-[80px] overflow-y-auto pr-2 custom-scrollbar">
+                    <div className="flex flex-col gap-1 max-h-[80px] overflow-y-auto pr-2 db-scroll">
                       {order.items?.map(item => (
                         <div key={item.id} className="text-[11px] text-slate-600 truncate max-w-[180px]" title={`${item.quantity}x ${item.product_name}`}>
                           <span className="font-bold text-slate-700">{item.quantity}x</span> {item.product_name}
@@ -317,7 +385,8 @@ function StoreOrderHistoryTab({ profile, storeId }) {
                 </tr>
               ))}
             </tbody>
-          </table>
+            </table>
+          </div>
           <div className="px-4 py-3 border-t border-slate-100 text-xs text-slate-400">
             {orders.length} order{orders.length !== 1 ? "s" : ""}
           </div>
@@ -326,12 +395,14 @@ function StoreOrderHistoryTab({ profile, storeId }) {
 
       {showCreate && (
         <div className="fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm" onClick={() => setShowCreate(false)}>
-          <div className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl" onClick={e => e.stopPropagation()}>
+          <div className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto db-scroll shadow-2xl" onClick={e => e.stopPropagation()}>
             <div className="p-6 border-b border-slate-100 flex justify-between items-center">
               <h2 className="text-lg font-bold text-slate-800">Create Manual Order</h2>
-              <button onClick={() => setShowCreate(false)} className="text-2xl text-slate-400 hover:text-slate-600 cursor-pointer leading-none">×</button>
+              <button onClick={() => setShowCreate(false)} className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 transition-colors cursor-pointer border border-slate-200/50 shadow-sm leading-none text-xl font-medium pb-0.5">
+                ×
+              </button>
             </div>
-            <div className="p-6"><AdminCreateOrder storeId={storeId} onSuccess={() => { setShowCreate(false); mutate(); }} /></div>
+            <div className="p-6"><AdminCreateOrder storeId={storeId} onBack={() => setShowCreate(false)} onSuccess={() => { setShowCreate(false); mutate(); }} /></div>
           </div>
         </div>
       )}
@@ -423,9 +494,9 @@ export default function StaffStoreSession({ store, profile, sessionStartTime, cu
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-all cursor-pointer ${activeTab === tab.id ? 'bg-[#00694C] text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200 hover:border-[#00694C]/30'}`}
+            className={`flex items-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all cursor-pointer shrink-0 ${activeTab === tab.id ? 'bg-[#00694C] text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200 hover:border-[#00694C]/30'}`}
           >
-            <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? 'text-white' : 'text-slate-400'}`} />
+            <tab.icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${activeTab === tab.id ? 'text-white' : 'text-slate-400'}`} />
             {tab.label}
           </button>
         ))}

@@ -142,6 +142,12 @@ export default function Navbar({ navbarLogoUrl = '', brandName = 'El Árbol' }) 
   const { data: session } = useSession()
     // Wholesale user detect করুন
   const isWholesaleUser = !!session?.user?.accessToken
+  const isInternalWholesale = isWholesaleUser && (
+    !session?.user?.userType || 
+    session?.user?.userType === 'WHOLESALER' || 
+    session?.user?.user_type === 'WHOLESALER' ||
+    session?.user?.userType === 'internal'
+  )
   const wholesaleName = session?.user?.businessName 
   || session?.user?.contactName 
   || session?.user?.name 
@@ -204,7 +210,7 @@ useEffect(() => {
 }, [])
   // ── Fetch unread notification count when authenticated ──────────────────
   useEffect(() => {
-    if (!isAuthenticated && !isWholesaleUser) { setUnreadCount(0); return }
+    if (!isAuthenticated && (!isWholesaleUser || isInternalWholesale)) { setUnreadCount(0); return }
 
     async function fetchCount() {
       try {
@@ -333,6 +339,7 @@ useEffect(() => {
                   height={50}
                   priority
                   className="object-contain w-[35px] md:w-[45px] h-auto"
+                  style={{ height: 'auto' }}
               />
               <span className="text-[18px] md:text-[22px]" style={{
                   fontFamily: '"Playfair Display", Georgia, serif',
@@ -465,19 +472,21 @@ useEffect(() => {
             </button>
 
             {/* ── Bell with unread badge ── */}
-            <button onClick={handleBellClick}
-              className="w-9 cursor-pointer h-9 flex items-center justify-center rounded-full hover:bg-[#BCCAC1]/25 transition-colors relative">
-              <svg width="19" height="19" fill="none" stroke="#3D4943" strokeWidth="1.75" viewBox="0 0 24 24">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-              </svg>
-              {unreadCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 min-w-[17px] h-[17px] px-[3px] bg-[#C84040] text-white rounded-full flex items-center justify-center"
-                  style={{ fontSize: '10px', fontWeight: 700, lineHeight: 1 }}>
-                  {unreadCount > 99 ? '99+' : unreadCount}
-                </span>
-              )}
-            </button>
+            {!isInternalWholesale && (
+              <button onClick={handleBellClick}
+                className="w-9 cursor-pointer h-9 flex items-center justify-center rounded-full hover:bg-[#BCCAC1]/25 transition-colors relative">
+                <svg width="19" height="19" fill="none" stroke="#3D4943" strokeWidth="1.75" viewBox="0 0 24 24">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+                {unreadCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 min-w-[17px] h-[17px] px-[3px] bg-[#C84040] text-white rounded-full flex items-center justify-center"
+                    style={{ fontSize: '10px', fontWeight: 700, lineHeight: 1 }}>
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </span>
+                )}
+              </button>
+            )}
 
 
 

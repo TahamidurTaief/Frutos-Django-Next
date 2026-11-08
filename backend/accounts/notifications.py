@@ -112,10 +112,10 @@ def send_admin_notification(notification_type, title, message, metadata=None):
     from .models import Notification
 
     User = get_user_model()
-    # Filter for active users who are either superusers OR have user_type='ADMIN'
+    # Filter for active users who are superusers, ADMIN, or STAFF
     from django.db.models import Q
     admins = User.objects.filter(
-        Q(is_superuser=True) | Q(user_type='ADMIN'),
+        Q(is_superuser=True) | Q(user_type='ADMIN') | Q(user_type='STAFF'),
         is_active=True
     ).distinct()
     

@@ -47,6 +47,9 @@ class ApplicationStatus(models.TextChoices):
 
 
 class WholesaleUser(AbstractBaseUser, PermissionsMixin):
+    # UUID primary key to match production database
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    
     # Override PermissionsMixin fields to avoid reverse accessor clash with auth.User
     groups = models.ManyToManyField(
         'auth.Group',
@@ -62,10 +65,18 @@ class WholesaleUser(AbstractBaseUser, PermissionsMixin):
         related_query_name='wholesale_user',
         verbose_name='user permissions',
     )
-    profile_image = models.ImageField(upload_to='wholesale/profiles/', blank=True, null=True)
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    # serial_number = models.IntegerField( null=True, blank=True)  
     email = models.EmailField(unique=True, db_index=True)
+
+    USER_TYPE_CHOICES = [
+        ('WHOLESALER', 'Internal Wholesale (Nijeder)'),
+        ('RESTAURANT', 'External Wholesale (Bahirer)'),
+    ]
+    user_type = models.CharField(
+        max_length=20,
+        choices=USER_TYPE_CHOICES,
+        default='WHOLESALER',
+        db_index=True
+    )
 
     # Business info
     business_name = models.CharField(max_length=200)
@@ -322,4 +333,4 @@ class WholesalePageContent(models.Model):
         verbose_name_plural = "Wholesale Page Content"
 
     def __str__(self):
-        return "Wholesale Page Content"
+        return "Wholesale Page Content"

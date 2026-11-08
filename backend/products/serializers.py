@@ -23,6 +23,9 @@ class BrandSerializer(serializers.ModelSerializer):
     class Meta:
         model = Brand
         fields = ['id', 'name', 'slug', 'logo', 'logo_url', 'description', 'website', 'is_active']
+        extra_kwargs = {
+            'slug': {'required': False, 'allow_blank': True, 'validators': []},
+        }
     
     def get_logo_url(self, obj):
         request = self.context.get('request')
@@ -42,6 +45,11 @@ class SizeSerializer(serializers.ModelSerializer):
         model = Size
         fields = ['id', 'name']
 
+class DisplayUnitSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DisplayUnit
+        fields = ['id', 'name', 'abbreviation', 'created_at']
+
 class SubCategorySerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
     category_name = serializers.CharField(source='category.name', read_only=True)
@@ -50,6 +58,32 @@ class SubCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SubCategory
         fields = ['id','name','slug','image','image_url','category', 'category_name', 'total_products']
+        validators = []
+        extra_kwargs = {
+            'slug': {'required': False, 'allow_blank': True, 'validators': []},
+            'image': {'required': False, 'allow_null': True},
+        }
+
+    def validate(self, attrs):
+        name = attrs.get('name', getattr(self.instance, 'name', None))
+        category = attrs.get('category', getattr(self.instance, 'category', None))
+        slug = attrs.get('slug', getattr(self.instance, 'slug', None))
+        
+        if name and category:
+            qs = SubCategory.objects.filter(name__iexact=name, category=category)
+            if self.instance:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
+                raise serializers.ValidationError({"name": "this name is already exist"})
+                
+        if slug:
+            qs = SubCategory.objects.filter(slug__iexact=slug)
+            if self.instance:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
+                raise serializers.ValidationError({"name": "this name is already exist"})
+                
+        return super().validate(attrs)
 
     def get_total_products(self, obj):
         return getattr(obj, 'total_products', obj.products.count())
@@ -75,9 +109,30 @@ class CategorySerializer(serializers.ModelSerializer):
             'subcategories', 'total_products', 'sub_category_count'
         ]
         extra_kwargs = {
+            'name': {'validators': []},
             'slug': {'required': False, 'allow_blank': True, 'validators': []},
             'image': {'required': False, 'allow_null': True},
         }
+
+    def validate(self, attrs):
+        name = attrs.get('name', getattr(self.instance, 'name', None))
+        slug = attrs.get('slug', getattr(self.instance, 'slug', None))
+
+        if name:
+            qs = Category.objects.filter(name__iexact=name)
+            if self.instance:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
+                raise serializers.ValidationError({"name": "this name is already exist"})
+
+        if slug:
+            qs = Category.objects.filter(slug__iexact=slug)
+            if self.instance:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
+                raise serializers.ValidationError({"name": "this name is already exist"})
+
+        return super().validate(attrs)
 
     def get_image_url(self, obj):
         request = self.context.get('request')
@@ -185,10 +240,12 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = [
             'id', 'shop', 'stores', 'brand', 'name', 'slug', 'description', 'category', 'sub_category', 'shipping_category',
-            'price', 'discount_price', 'wholesale_price', 'minimum_purchase', 'tax_rate', 'stock', 'is_active',
+            'price', 'discount_price', 'wholesale_price', 'wholesale_discount_price', 'restaurant_price', 'restaurant_discount_price', 
+            'minimum_purchase', 'restaurant_minimum_purchase', 'tax_rate', 'stock', 'wholesale_stock', 'restaurant_stock',
+            'is_unlimited_stock', 'is_unlimited_wholesale_stock', 'is_unlimited_restaurant_stock', 'is_active',
             'weight', 'length', 'width', 'height',  # Added physical properties for shipping
             'thumbnail_url', 'specifications', 'additional_images',
-            'origin', 'unit', 'wholesale_unit', 'badge', 'badge_color', 'variant',
+            'origin', 'unit', 'wholesale_unit', 'restaurant_unit', 'badge', 'badge_color', 'variant',
             'colors', 'sizes', 'reviews', 'rating', 'review_count', 'user_can_review',
             'store_stocks',
             'created_at', 'updated_at', 'created_by_name', 'updated_by_name',
@@ -198,7 +255,9 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_thumbnail_url(self, obj):
         request = self.context.get('request')
         if obj.thumbnail and hasattr(obj.thumbnail, 'url'):
-            return request.build_absolute_uri(obj.thumbnail.url)
+            if request:
+                return request.build_absolute_uri(obj.thumbnail.url)
+            return obj.thumbnail.url
         return None
         
     def get_rating(self, obj):
@@ -255,31 +314,50 @@ class ProductSerializer(serializers.ModelSerializer):
             'is_wholesaler': False,
             'is_approved_wholesaler': False,
             'wholesaler_status': None,
+            'is_restaurant': False,
+            'is_approved_restaurant': False,
+            'restaurant_status': None,
             'is_admin': False
         }
         
         # Check if user is authenticated and get wholesaler info
         if (request and hasattr(request, 'user') and request.user and request.user.is_authenticated):
+            user = request.user
+            user_type = getattr(user, 'user_type', '')
+            if not user_type and user.__class__.__name__ == 'WholesaleUser':
+                user_type = 'WHOLESALER'
+
+            # Helper to check approval status
+            is_approved = False
+            status_str = 'PENDING'
+            try:
+                if hasattr(user, 'wholesaler_profile'):
+                    profile = user.wholesaler_profile
+                    status_str = str(getattr(profile, 'approval_status', 'PENDING')).upper()
+                    if status_str == 'APPROVED':
+                        is_approved = True
+                if not is_approved and hasattr(user, 'status'):
+                    status_str = str(user.status).upper()
+                    if status_str in ['APPROVED', 'APPLICATIONSTATUS.APPROVED']:
+                        is_approved = True
+                if not is_approved and hasattr(user, 'is_approved'):
+                    is_approved = bool(user.is_approved)
+            except Exception:
+                status_str = 'PENDING'
+
             # Only superusers and ADMIN user_type are treated as admin
-            # NOTE: STAFF users are NOT admin
-            if request.user.is_superuser or getattr(request.user, 'user_type', '') == 'ADMIN':
+            if user.is_superuser or user_type == 'ADMIN':
                 user_context['is_admin'] = True
-            elif getattr(request.user, 'user_type', '') == 'WHOLESALER' or request.user.__class__.__name__ == 'WholesaleUser':
+            elif user_type in ['WHOLESALER', 'INTERNAL_WHOLESALE']:
                 user_context['is_wholesaler'] = True
-                # Check wholesaler approval status
-                try:
-                    if hasattr(request.user, 'wholesaler_profile'):
-                        profile = request.user.wholesaler_profile
-                        user_context['wholesaler_status'] = profile.approval_status
-                        if profile.approval_status == 'APPROVED':
-                            user_context['is_approved_wholesaler'] = True
-                    elif hasattr(request.user, 'is_approved'):
-                        user_context['wholesaler_status'] = getattr(request.user, 'status', 'PENDING').upper()
-                        if request.user.is_approved:
-                            user_context['is_approved_wholesaler'] = True
-                except:
-                    # If wholesaler_profile doesn't exist, user is not approved
-                    user_context['wholesaler_status'] = 'PENDING'
+                user_context['wholesaler_status'] = status_str
+                if is_approved:
+                    user_context['is_approved_wholesaler'] = True
+            elif user_type in ['RESTAURANT', 'EXTERNAL_WHOLESALE']:
+                user_context['is_restaurant'] = True
+                user_context['restaurant_status'] = status_str
+                if is_approved:
+                    user_context['is_approved_restaurant'] = True
         
         # Add user context to response for frontend logic
         data['_user_context'] = user_context
@@ -288,18 +366,117 @@ class ProductSerializer(serializers.ModelSerializer):
         if user_context['is_admin']:
             # Admins see everything, do nothing
             pass
-        elif user_context['is_approved_wholesaler']:
-            # For approved wholesalers: only include wholesale_price if it exists and >= 1
-            wholesale_price = instance.wholesale_price
-            if not wholesale_price or wholesale_price < 1:
-                # Remove wholesale pricing if not available
+        elif user_context['is_approved_restaurant']:
+            # For approved restaurant / external wholesale users:
+            # Map external wholesale (restaurant) pricing & min purchase & unit & stock into wholesale fields
+            res_price = instance.restaurant_price
+            res_discount = instance.restaurant_discount_price
+            
+            effective_res_price = None
+            effective_res_discount = None
+
+            if res_discount and res_discount >= 1:
+                if res_price and res_price > res_discount:
+                    effective_res_price = res_price
+                    effective_res_discount = res_discount
+                else:
+                    effective_res_price = res_discount
+            elif res_price and res_price >= 1:
+                effective_res_price = res_price
+
+            if effective_res_price:
+                data['wholesale_price'] = effective_res_price
+                if effective_res_discount:
+                    data['wholesale_discount_price'] = effective_res_discount
+                else:
+                    data.pop('wholesale_discount_price', None)
+                data['minimum_purchase'] = instance.restaurant_minimum_purchase or 1
+                if instance.restaurant_unit:
+                    data['wholesale_unit'] = instance.restaurant_unit
+                if instance.is_unlimited_restaurant_stock:
+                    data['wholesale_stock'] = 999999
+                    data['stock'] = 999999
+                    data['is_unlimited_stock'] = True
+                elif instance.restaurant_stock is not None:
+                    data['wholesale_stock'] = instance.restaurant_stock
+                    data['stock'] = instance.restaurant_stock
+                    data['is_unlimited_stock'] = False
+            else:
                 data.pop('wholesale_price', None)
-            # Always keep minimum_purchase for approved wholesalers
+                data.pop('wholesale_discount_price', None)
+                data.pop('minimum_purchase', None)
+                
+            data.pop('restaurant_price', None)
+            data.pop('restaurant_discount_price', None)
+            data.pop('restaurant_unit', None)
+            data.pop('restaurant_stock', None)
+            data.pop('restaurant_minimum_purchase', None)
+            data.pop('is_unlimited_wholesale_stock', None)
+            data.pop('is_unlimited_restaurant_stock', None)
+        elif user_context['is_approved_wholesaler']:
+            # For approved internal wholesalers: remove restaurant fields
+            data.pop('restaurant_price', None)
+            data.pop('restaurant_discount_price', None)
+            data.pop('restaurant_unit', None)
+            data.pop('restaurant_stock', None)
+            data.pop('restaurant_minimum_purchase', None)
+            data.pop('is_unlimited_wholesale_stock', None)
+            data.pop('is_unlimited_restaurant_stock', None)
+            
+            wholesale_price = instance.wholesale_price
+            wholesale_discount = instance.wholesale_discount_price
+
+            effective_ws_price = None
+            effective_ws_discount = None
+
+            if wholesale_discount and wholesale_discount >= 1:
+                if wholesale_price and wholesale_price > wholesale_discount:
+                    effective_ws_price = wholesale_price
+                    effective_ws_discount = wholesale_discount
+                else:
+                    effective_ws_price = wholesale_discount
+            elif wholesale_price and wholesale_price >= 1:
+                effective_ws_price = wholesale_price
+
+            if not effective_ws_price:
+                data.pop('wholesale_price', None)
+                data.pop('wholesale_discount_price', None)
+                data.pop('minimum_purchase', None)
+            else:
+                data['wholesale_price'] = effective_ws_price
+                if effective_ws_discount:
+                    data['wholesale_discount_price'] = effective_ws_discount
+                else:
+                    data.pop('wholesale_discount_price', None)
+                data['minimum_purchase'] = instance.minimum_purchase or 1
+                if instance.wholesale_unit:
+                    data['wholesale_unit'] = instance.wholesale_unit
+                if instance.is_unlimited_wholesale_stock:
+                    data['wholesale_stock'] = 999999
+                    data['stock'] = 999999
+                    data['is_unlimited_stock'] = True
+                elif instance.wholesale_stock is not None:
+                    data['wholesale_stock'] = instance.wholesale_stock
+                    data['stock'] = instance.wholesale_stock
+                    data['is_unlimited_stock'] = False
         else:
-            # For non-approved wholesalers, customers, and unauthenticated users: 
-            # Remove wholesale_price and minimum_purchase for security
+            # For non-approved wholesalers, non-approved restaurants, customers, and unauthenticated users: 
+            # Remove wholesale and restaurant price fields for security
+            if instance.is_unlimited_stock:
+                data['stock'] = 999999
+                data['is_unlimited_stock'] = True
             data.pop('wholesale_price', None)
+            data.pop('wholesale_discount_price', None)
+            data.pop('wholesale_unit', None)
+            data.pop('wholesale_stock', None)
             data.pop('minimum_purchase', None)
+            data.pop('restaurant_price', None)
+            data.pop('restaurant_discount_price', None)
+            data.pop('restaurant_unit', None)
+            data.pop('restaurant_stock', None)
+            data.pop('restaurant_minimum_purchase', None)
+            data.pop('is_unlimited_wholesale_stock', None)
+            data.pop('is_unlimited_restaurant_stock', None)
         
         return data
 
@@ -321,10 +498,12 @@ class ProductWriteSerializer(serializers.ModelSerializer):
         fields = [
             'shop', 'stores', 'brand', 'name', 'slug', 'description',
             'category', 'sub_category', 'shipping_category',
-            'price', 'discount_price', 'wholesale_price',
-            'minimum_purchase', 'tax_rate',
-            'origin', 'unit', 'wholesale_unit', 'badge', 'badge_color', 'variant',
-            'stock', 'is_active',
+            'price', 'discount_price', 'wholesale_price', 'wholesale_discount_price',
+            'restaurant_price', 'restaurant_discount_price',
+            'minimum_purchase', 'restaurant_minimum_purchase', 'tax_rate',
+            'origin', 'unit', 'wholesale_unit', 'restaurant_unit', 'badge', 'badge_color', 'variant',
+            'stock', 'wholesale_stock', 'restaurant_stock',
+            'is_unlimited_stock', 'is_unlimited_wholesale_stock', 'is_unlimited_restaurant_stock', 'is_active',
             'weight', 'length', 'width', 'height',
             'thumbnail', 'colors', 'sizes',
         ]
@@ -338,8 +517,15 @@ class ProductWriteSerializer(serializers.ModelSerializer):
             'thumbnail':               {'allow_null': True, 'required': False},
             'discount_price':          {'allow_null': True, 'required': False},
             'wholesale_price':         {'allow_null': True, 'required': False},
+            'wholesale_discount_price':{'allow_null': True, 'required': False},
+            'restaurant_price':        {'allow_null': True, 'required': False},
+            'restaurant_discount_price':{'allow_null': True, 'required': False},
             'minimum_purchase':        {'required': False},
+            'restaurant_minimum_purchase': {'required': False, 'allow_null': True},
             'tax_rate':                {'required': False},
+            'is_unlimited_stock':      {'required': False},
+            'is_unlimited_wholesale_stock': {'required': False},
+            'is_unlimited_restaurant_stock': {'required': False},
             'weight':                  {'allow_null': True, 'required': False},
             'length':                  {'allow_null': True, 'required': False},
             'width':                   {'allow_null': True, 'required': False},

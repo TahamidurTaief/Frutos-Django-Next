@@ -22,7 +22,7 @@ class WholesaleRegisterSerializer(serializers.ModelSerializer):
             'business_name', 'contact_name',
             'trade_license_number',
             'phone', 'postcode',
-            'business_type', 'monthly_volume',
+            'business_type', 'monthly_volume', 'user_type',
         )
 
     def validate_email(self, value):
@@ -49,6 +49,8 @@ class WholesaleRegisterSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
+        # Force all frontend signups to be External Wholesale
+        validated_data['user_type'] = 'RESTAURANT'
         password = validated_data.pop('password')
         user = WholesaleUser(**validated_data)
         user.set_password(password)
@@ -57,7 +59,7 @@ class WholesaleRegisterSerializer(serializers.ModelSerializer):
         from accounts.notifications import send_admin_notification
         send_admin_notification(
             notification_type='wholesale_pending',
-            title='New Wholesale Application 📝',
+            title='New Wholesale Application',
             message=f'Business "{user.business_name}" applied for a wholesale account and is pending approval.',
             metadata={'wholesaleUserId': user.id, 'email': user.email, 'icon': 'storefront'}
         )
@@ -108,7 +110,7 @@ class WholesaleUserPublicSerializer(serializers.ModelSerializer):
     class Meta:
         model = WholesaleUser
         fields = (
-            'id', 'email',
+            'id', 'email', 'user_type',
             'business_name', 'contact_name',
             'trade_license_number',
             'phone', 'postcode',
@@ -121,7 +123,7 @@ class WholesaleUserPublicSerializer(serializers.ModelSerializer):
             'profile_image_url',
         )
         read_only_fields = (
-            'id', 'status', 'is_approved', 'applied_at', 'approved_at',
+            'id', 'user_type', 'status', 'is_approved', 'applied_at', 'approved_at',
             'account_manager_name', 'account_manager_email',
             'total_orders', 'total_spent',
         )

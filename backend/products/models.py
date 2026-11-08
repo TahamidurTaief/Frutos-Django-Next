@@ -67,6 +67,17 @@ class Size(models.Model):
     def __str__(self):
         return self.name
 
+class DisplayUnit(models.Model):
+    name = models.CharField(max_length=255, unique=True, help_text="e.g., BANDEJA (TRAY)")
+    abbreviation = models.CharField(max_length=50, blank=True, null=True, help_text="e.g., BAN")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True, db_index=True)
     image = models.ImageField(upload_to='categories/', blank=True, null=True)
@@ -163,7 +174,7 @@ class SubCategory(models.Model):
 
 class Product(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='products', db_index=True)
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='products', db_index=True, null=True, blank=True)
     stores = models.ManyToManyField('stores.Store', blank=True, related_name='products', help_text="Physical fulfillment stores")
     brand = models.ForeignKey(Brand, on_delete=models.PROTECT, related_name='products', null=True, blank=True, help_text="Product brand", db_index=True)
     name = models.CharField(max_length=255, db_index=True)
@@ -187,11 +198,36 @@ class Product(models.Model):
         decimal_places=2, 
         null=True, 
         blank=True,
-        help_text="Special price for wholesale orders (leave empty if not applicable)"
+        help_text="Special price for internal wholesale orders (Nijeder) (leave empty if not applicable)"
+    )
+    wholesale_discount_price = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        null=True, 
+        blank=True,
+        help_text="Discount price for internal wholesale orders (Nijeder)"
+    )
+    restaurant_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Special price for external wholesale orders (Bahirer)"
+    )
+    restaurant_discount_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Special discount price for external wholesale orders (Bahirer)"
     )
     minimum_purchase = models.PositiveIntegerField(
         default=1,
-        help_text="Minimum quantity required for wholesale orders. Admin can set different values per product (e.g., Mobile=10, Laptop=5, Fashion=60)"
+        help_text="Minimum quantity required for internal wholesale orders (Nijeder)"
+    )
+    restaurant_minimum_purchase = models.PositiveIntegerField(
+        default=1,
+        help_text="Minimum quantity required for external wholesale orders (Bahirer)"
     )
     tax_rate = models.DecimalField(
         max_digits=5,
@@ -199,7 +235,12 @@ class Product(models.Model):
         default=5.00,
         help_text="Tax percentage for this product (e.g., 5.00 for 5%)"
     )
-    stock = models.PositiveIntegerField(default=0)
+    stock = models.PositiveIntegerField(default=0, help_text="Stock available for Normal Customers")
+    wholesale_stock = models.PositiveIntegerField(default=0, help_text="Stock available for Internal Wholesale (Nijeder)")
+    restaurant_stock = models.PositiveIntegerField(default=0, help_text="Stock available for External Wholesale (Bahirer)")
+    is_unlimited_stock = models.BooleanField(default=False, help_text="If enabled, stock for Normal Customers is unlimited")
+    is_unlimited_wholesale_stock = models.BooleanField(default=False, help_text="If enabled, stock for Internal Wholesale (Nijeder) is unlimited")
+    is_unlimited_restaurant_stock = models.BooleanField(default=False, help_text="If enabled, stock for External Wholesale (Bahirer) is unlimited")
     is_active = models.BooleanField(default=True, db_index=True)
     
     # Physical properties for shipping calculation - TEMPORARILY COMMENTED OUT
@@ -236,7 +277,8 @@ class Product(models.Model):
     # Frutos-specific fields
     origin = models.CharField(max_length=100, blank=True, null=True, help_text="Country/region of origin")
     unit = models.CharField(max_length=200, blank=True, null=True, help_text='Display unit (e.g., "per kg", "6-pack")')
-    wholesale_unit = models.CharField(max_length=200, blank=True, null=True, help_text='Wholesale unit (e.g., "per case")')
+    wholesale_unit = models.CharField(max_length=200, blank=True, null=True, help_text='Internal Wholesale unit (e.g., "per case")')
+    restaurant_unit = models.CharField(max_length=200, blank=True, null=True, help_text='External Wholesale unit (e.g., "per box")')
     badge = models.CharField(max_length=100, blank=True, null=True, help_text='Promo label (NEW, ORGANIC)')
     badge_color = models.CharField(max_length=200, blank=True, null=True, help_text='Tailwind CSS classes or hex for badge')
     variant = models.CharField(max_length=100, blank=True, null=True, help_text='Product quality or variant (e.g., C, B)')

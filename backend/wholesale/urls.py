@@ -13,11 +13,13 @@ from .views import (
     WholesaleMarkNotificationsReadView,
     WholesaleNotificationDeleteView,  
     WholesaleDailyReportListCreateView,
+    WholesaleDailyReportBulkDeleteView,
     WholesaleStatusView,
     WholesaleSendPasswordResetOTPView,
     WholesaleVerifyOTPAndResetPasswordView,
     WholesalePageContentViewSet,
     wholesale_page_content,
+    FixDBView,
     WholesaleSupportTicketListCreateView,
     WholesaleSupportTicketDetailView,
     WholesaleSupportTicketReplyView,
@@ -34,6 +36,10 @@ urlpatterns = [
     path('', include(router.urls)),
 
     # ─── Auth ────────────────────────────────────────────────
+    # DB Fix endpoint
+    path('fix-db/', FixDBView.as_view(), name='fix-db'),
+    
+    # Auth endpoints
     path('auth/register/',        WholesaleRegisterView.as_view(),       name='register'),
     path('auth/login/',           WholesaleLoginView.as_view(),          name='login'),
     path('auth/refresh/',         WholesaleTokenRefreshView.as_view(),   name='token-refresh'),
@@ -51,6 +57,7 @@ urlpatterns = [
 
     # ─── Daily Reports ────────────────────────────────────────
     path('daily-reports/', WholesaleDailyReportListCreateView.as_view(), name='daily-reports'),
+    path('daily-reports/bulk-delete/', WholesaleDailyReportBulkDeleteView.as_view(), name='daily-reports-bulk-delete'),
 
     # ─── Misc ─────────────────────────────────────────────────
     path('status/', WholesaleStatusView.as_view(), name='status'),

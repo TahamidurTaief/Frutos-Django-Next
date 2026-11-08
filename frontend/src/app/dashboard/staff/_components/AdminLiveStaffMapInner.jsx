@@ -95,14 +95,14 @@ export default function AdminLiveStaffMapInner() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+      <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
             <MapPin className="text-[#00694C]" /> Live Staff Locations
           </h2>
           <p className="text-sm text-slate-500">See where your staff are currently working in real-time.</p>
         </div>
-        <button onClick={() => mutate()} disabled={isValidating} className="db-btn-primary flex items-center gap-2">
+        <button onClick={() => mutate()} disabled={isValidating} className="db-btn-primary flex items-center justify-center gap-2 w-full sm:w-auto shrink-0">
           <RefreshCw className={`w-4 h-4 ${isValidating ? "animate-spin" : ""}`} /> Refresh Map
         </button>
       </div>
@@ -118,8 +118,8 @@ export default function AdminLiveStaffMapInner() {
         <MapContainer center={defaultCenter} zoom={defaultZoom} style={{ height: "100%", width: "100%" }}>
           <MapController stores={activeStoresWithCoords} />
           <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           
           {activeStoresWithCoords.map((store) => {

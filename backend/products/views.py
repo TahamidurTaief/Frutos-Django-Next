@@ -8,12 +8,12 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from orders.models import Order
-from .models import Product, Category, SubCategory, Color, Brand, Size, ProductSpecification, ProductAdditionalImage, Review, Offer, ProductStoreStock
+from .models import Product, Category, SubCategory, Color, Brand, Size, DisplayUnit, ProductSpecification, ProductAdditionalImage, Review, Offer, ProductStoreStock
 from django.db.models import Count, ProtectedError, Prefetch
 from .serializers import (
     ProductSerializer, ProductWriteSerializer,
     CategorySerializer, SubCategorySerializer,
-    ColorSerializer, BrandSerializer, SizeSerializer,
+    ColorSerializer, BrandSerializer, SizeSerializer, DisplayUnitSerializer,
     ReviewSerializer, ReviewCreateSerializer,
     OfferSerializer, OfferDetailSerializer
 )
@@ -86,16 +86,15 @@ class ProductViewSet(viewsets.ModelViewSet):
         store_id = self.request.query_params.get('store')
         if store_id:
             qs = qs.filter(stores__id=store_id)
+            
+        store_slug = self.request.query_params.get('store_slug')
+        if store_slug:
+            qs = qs.filter(stores__slug=store_slug)
         
         if self.request.user and self.request.user.is_authenticated:
             if getattr(self.request.user, 'user_type', '') == 'ADMIN' or self.request.user.is_superuser:
                 return qs
             if getattr(self.request.user, 'user_type', '') == 'STAFF':
-                if not store_id:
-                    profile = getattr(self.request.user, 'staff_profile', None)
-                    if profile and profile.store:
-                        return qs.filter(stores=profile.store)
-                    return qs.none()
                 return qs
                 
         return qs.filter(is_active=True)
@@ -182,9 +181,6 @@ class ProductViewSet(viewsets.ModelViewSet):
 
         # ── ADMIN: always allowed, skip all staff checks ──────────────────
         if self._is_admin(user):
-            if 'shop' not in serializer.validated_data:
-                from rest_framework.exceptions import ValidationError
-                raise ValidationError({"shop": "Please select a shop for this product."})
             serializer.save(created_by=user, updated_by=user)
             return
 
@@ -397,6 +393,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
     lookup_field = 'slug'
     permission_classes = [permissions.AllowAny]
+    pagination_class = None
     filter_backends = [DjangoFilterBackend, SearchFilter]
     search_fields = ['name', 'slug']
 
@@ -448,6 +445,7 @@ class SubCategoryViewSet(viewsets.ModelViewSet):
     serializer_class = SubCategorySerializer
     lookup_field = 'slug'
     permission_classes = [permissions.AllowAny]
+    pagination_class = None
     filter_backends = [DjangoFilterBackend, SearchFilter]
     search_fields = ['name', 'slug', 'category__name']
 
@@ -496,6 +494,7 @@ class ColorViewSet(viewsets.ModelViewSet):
     queryset = Color.objects.all().order_by('name')
     serializer_class = ColorSerializer
     permission_classes = [IsAdminOrReadOnly]
+    pagination_class = None
     filter_backends = [DjangoFilterBackend, SearchFilter]
     search_fields = ['name', 'hex_code']
 
@@ -578,6 +577,7 @@ class SizeViewSet(viewsets.ModelViewSet):
     queryset = Size.objects.all().order_by('name')
     serializer_class = SizeSerializer
     permission_classes = [IsAdminOrReadOnly]
+    pagination_class = None
     filter_backends = [DjangoFilterBackend, SearchFilter]
     search_fields = ['name']
 
@@ -601,11 +601,29 @@ class SizeViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_409_CONFLICT
             )
 
+class DisplayUnitViewSet(viewsets.ModelViewSet):
+    queryset = DisplayUnit.objects.all().order_by('name')
+    serializer_class = DisplayUnitSerializer
+    permission_classes = [IsAdminOrReadOnly]
+    pagination_class = None
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    search_fields = ['name', 'abbreviation']
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            return super().destroy(request, *args, **kwargs)
+        except ProtectedError:
+            return Response(
+                {'detail': 'Cannot delete this display unit because it is used by one or more products.'},
+                status=status.HTTP_409_CONFLICT
+            )
+
 class BrandViewSet(viewsets.ModelViewSet):
     queryset = Brand.objects.all().order_by('name')
     serializer_class = BrandSerializer
     permission_classes = [IsAdminOrReadOnly]
     lookup_field = 'slug'
+    pagination_class = None
     filter_backends = [DjangoFilterBackend, SearchFilter]
     search_fields = ['name', 'slug']
 

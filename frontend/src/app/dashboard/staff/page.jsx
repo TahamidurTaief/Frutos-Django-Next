@@ -11,7 +11,7 @@ import FormModal from "@/app/dashboard/_components/FormModal";
 import ConfirmDialog from "@/app/dashboard/_components/ConfirmDialog";
 import { useToastContext } from "@/app/dashboard/_components/Toaster";
 import useSWR from "swr";
-import api from "@/app/dashboard/_lib/api";
+import api, { getPhotoUrl } from "@/app/dashboard/_lib/api";
 import StaffRankingTab from "./_components/StaffRankingTab";
 import StaffAttendanceTab from "./_components/StaffAttendanceTab";
 import AdminDayOffRequestsTab from "./_components/AdminDayOffRequestsTab";
@@ -26,7 +26,7 @@ const columns = [
       <Link href={`/dashboard/staff/${row.id}`} className="flex items-center justify-start gap-3 group hover:opacity-80 transition-opacity">
         <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center shrink-0 border border-slate-200">
           {row.photo ? (
-            <img src={row.photo} alt={row.user?.name || "Staff"} className="w-full h-full object-cover" />
+            <img src={getPhotoUrl(row.photo)} alt={row.user?.name || "Staff"} className="w-full h-full object-cover" />
           ) : (
             <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(row.user?.name || row.user?.email || 'S')}&background=0f172a&color=fff&size=64&bold=true`} alt="Default" className="w-full h-full object-cover" />
           )}
@@ -43,7 +43,7 @@ const columns = [
         return (
           <div className="flex flex-col items-start justify-center w-full cursor-pointer group" onClick={(e) => {
             e.stopPropagation();
-            window.dispatchEvent(new CustomEvent('switch-to-live-map', { detail: { staffId: row.id }}));
+            window.dispatchEvent(new CustomEvent('switch-to-live-map', { detail: { staffId: row.id } }));
           }}>
             <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 shadow-sm group-hover:bg-emerald-100 group-hover:shadow-md group-hover:border-emerald-300 transition-all duration-300 w-max">
               <div className="relative flex h-2 w-2">
@@ -176,6 +176,7 @@ export default function StaffPage() {
         can_create_products: permissionsItem.can_create_products || false,
         can_update_products: permissionsItem.can_update_products || false,
         can_delete_products: permissionsItem.can_delete_products || false,
+        restricted_stores: permissionsItem.restricted_stores || [],
       };
       await api.patch(`/api/staff/admin/employees/${permissionsItem.id}/`, payload);
       toast.success("Permissions updated successfully");
@@ -457,7 +458,7 @@ export default function StaffPage() {
             <div className="flex items-center gap-5 p-2 pt-4">
               <div className="w-16 h-16 rounded-full overflow-hidden border border-slate-200 shrink-0 bg-slate-100">
                 {viewStaff.photo ? (
-                  <img src={viewStaff.photo} alt={viewStaff.user?.name || "Staff"} className="w-full h-full object-cover" />
+                  <img src={getPhotoUrl(viewStaff.photo)} alt={viewStaff.user?.name || "Staff"} className="w-full h-full object-cover" />
                 ) : (
                   <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(viewStaff.user?.name || viewStaff.user?.email || 'S')}&background=0f172a&color=fff&size=128&bold=true`} alt="Default" className="w-full h-full object-cover" />
                 )}
@@ -575,6 +576,31 @@ export default function StaffPage() {
               <span className="text-sm font-medium text-slate-700">Can delete products</span>
             </label>
           </div>
+
+          <div className="flex flex-col gap-3 p-4 bg-slate-50 border border-slate-100 rounded-xl mt-2">
+            <p className="text-sm font-bold text-slate-700 mb-1">Restricted Stores</p>
+            <p className="text-xs text-slate-500 mb-2">Check the stores where this staff member is NOT allowed to check in.</p>
+            <div className="grid grid-cols-2 gap-3">
+              {stores.map(store => (
+                <label key={store.id} className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={(permissionsItem?.restricted_stores || []).includes(store.id)}
+                    onChange={e => {
+                      const current = permissionsItem?.restricted_stores || [];
+                      const updated = e.target.checked
+                        ? [...current, store.id]
+                        : current.filter(id => id !== store.id);
+                      setPermissionsItem({ ...permissionsItem, restricted_stores: updated });
+                    }}
+                    className="w-4 h-4 text-rose-600 rounded border-slate-300 focus:ring-rose-500"
+                  />
+                  <span className="text-sm font-medium text-slate-700">{store.name}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
           <div className="flex justify-end pt-2">
             <button type="submit" className="db-btn-primary">
               Save Permissions

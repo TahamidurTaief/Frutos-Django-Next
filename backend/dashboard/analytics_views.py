@@ -47,9 +47,9 @@ def enhanced_dashboard(request):
     processing_orders = Order.objects.filter(status=Order.OrderStatus.PROCESSING).count()
     completed_orders = Order.objects.filter(status=Order.OrderStatus.DELIVERED).count()
     
-    # Revenue calculation - using Order total_amount for paid orders
+    # Revenue calculation - using Order total_amount for delivered orders
     total_revenue = Order.objects.filter(
-        payment_status=Order.PaymentStatus.PAID
+        status=Order.OrderStatus.DELIVERED
     ).aggregate(
         total=Sum('total_amount')
     )['total'] or Decimal('0.00')

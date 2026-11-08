@@ -224,6 +224,25 @@ function TrackOrdersSection({ profile }) {
                   </div>
                 </div>
 
+                {/* TPV Info */}
+                {viewItem.payment_method === 'tpv' && (
+                  <div className="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm bg-gradient-to-r from-emerald-50/40 to-transparent">
+                    <h4 className="text-sm font-bold text-slate-800 mb-2 flex items-center gap-2 border-b border-emerald-100/60 pb-3">
+                      <div className="p-1.5 bg-emerald-100 rounded-lg"><Receipt className="w-4 h-4 text-emerald-700" /></div>
+                      TPV Virtual / Pasarela Bancaria
+                    </h4>
+                    <div className="flex items-center justify-between flex-wrap gap-2 text-xs">
+                      <div className="flex items-center gap-2 text-slate-600">
+                        <span className="font-semibold text-emerald-800">Método:</span>
+                        <span>TPV (Terminal Punto de Venta Redsys · 3D Secure)</span>
+                      </div>
+                      <span className="inline-flex px-2 py-0.5 text-[11px] font-bold rounded-full bg-emerald-100 text-emerald-800">
+                        Pasarela Segura
+                      </span>
+                    </div>
+                  </div>
+                )}
+
                 {/* Payment Info */}
                 {viewItem.payment && (
                   <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
@@ -344,18 +363,18 @@ export default function StaffOrders({ profile }) {
         <h1 className="text-2xl font-serif text-[#004A3A] font-medium tracking-tight">Order Line</h1>
       </div>
 
-      <div className="flex gap-3 mb-4">
+      <div className="flex flex-wrap gap-2 sm:gap-3 mb-4 w-full">
         {canCreate && (
           <button
             onClick={() => setActiveTab("CREATE_ORDER")}
-            className={`cursor-pointer px-4 py-2 rounded-lg font-bold text-sm transition-all ${activeTab === "CREATE_ORDER" ? "bg-[#00694C] text-white shadow-md" : "bg-white text-slate-600 shadow-sm hover:bg-slate-50"}`}
+            className={`cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-bold text-xs sm:text-sm transition-all flex-1 sm:flex-none text-center justify-center ${activeTab === "CREATE_ORDER" ? "bg-[#00694C] text-white shadow-md" : "bg-white text-slate-600 shadow-sm hover:bg-slate-50"}`}
           >
             Create Manual Order
           </button>
         )}
         <button
           onClick={() => setActiveTab("TRACK_ORDERS")}
-          className={`cursor-pointer px-4 py-2 rounded-lg font-bold text-sm transition-all ${activeTab === "TRACK_ORDERS" ? "bg-[#00694C] text-white shadow-md" : "bg-white text-slate-600 shadow-sm hover:bg-slate-50"}`}
+          className={`cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-bold text-xs sm:text-sm transition-all flex-1 sm:flex-none text-center justify-center ${activeTab === "TRACK_ORDERS" ? "bg-[#00694C] text-white shadow-md" : "bg-white text-slate-600 shadow-sm hover:bg-slate-50"}`}
         >
           Track Orders
         </button>

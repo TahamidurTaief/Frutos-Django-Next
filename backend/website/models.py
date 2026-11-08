@@ -374,7 +374,7 @@ class SiteSettings(BaseModel):
     
     key = models.CharField(max_length=100, unique=True)
     value = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='settings/', blank=True, null=True)
+    image = models.FileField(upload_to='settings/', blank=True, null=True)
     setting_type = models.CharField(max_length=20, choices=SETTING_TYPES, default='text')
     description = models.TextField(blank=True, null=True)
     group = models.CharField(max_length=50, default='general', help_text="Group settings together")

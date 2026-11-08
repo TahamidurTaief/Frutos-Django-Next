@@ -92,6 +92,14 @@ function CategoryForm({ initial = {}, onSubmit, submitLabel = "Save" }) {
   const [preview, setPreview] = useState(initial.image_url || "");
   const [submitting, setSubmitting] = useState(false);
 
+  const handleNameChange = (e) => {
+    const val = e.target.value;
+    setName(val);
+    if (!initial.slug) {
+      setSlug(val.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''));
+    }
+  };
+
   const handleImage = (e) => {
     const f = e.target.files?.[0];
     if (f) { setImage(f); setPreview(URL.createObjectURL(f)); }
@@ -112,7 +120,7 @@ function CategoryForm({ initial = {}, onSubmit, submitLabel = "Save" }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div><label className={lbl}>Category Name *</label><input required className={inp} value={name} onChange={e => setName(e.target.value)} placeholder="e.g., Electronics" /></div>
+        <div><label className={lbl}>Category Name *</label><input required className={inp} value={name} onChange={handleNameChange} placeholder="e.g., Electronics" /></div>
         <div><label className={lbl}>Slug (Optional)</label><input className={inp} value={slug} onChange={e => setSlug(e.target.value)} placeholder="auto-generated" /></div>
       </div>
       <div>
@@ -142,12 +150,21 @@ function CategoryForm({ initial = {}, onSubmit, submitLabel = "Save" }) {
 
 /* ─── SubCategory Form ───────────────────────────────────────── */
 function SubCategoryForm({ initial = {}, categories = [], onSubmit, submitLabel = "Save" }) {
+  const toast = useToastContext();
   const [name, setName] = useState(initial.name || "");
   const [slug, setSlug] = useState(initial.slug || "");
   const [category, setCategory] = useState(initial.category?.id || initial.category || "");
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(initial.image_url || "");
   const [submitting, setSubmitting] = useState(false);
+
+  const handleNameChange = (e) => {
+    const val = e.target.value;
+    setName(val);
+    if (!initial.slug) {
+      setSlug(val.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''));
+    }
+  };
 
   const handleImage = (e) => {
     const f = e.target.files?.[0];
@@ -156,6 +173,10 @@ function SubCategoryForm({ initial = {}, categories = [], onSubmit, submitLabel 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!category) {
+      toast.error("Please select a parent category");
+      return;
+    }
     setSubmitting(true);
     try {
       const fd = new FormData();
@@ -170,7 +191,7 @@ function SubCategoryForm({ initial = {}, categories = [], onSubmit, submitLabel 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div><label className={lbl}>SubCategory Name *</label><input required className={inp} value={name} onChange={e => setName(e.target.value)} placeholder="e.g., Smartphones" /></div>
+        <div><label className={lbl}>SubCategory Name *</label><input required className={inp} value={name} onChange={handleNameChange} placeholder="e.g., Smartphones" /></div>
         <div>
           <label className={lbl}>Parent Category *</label>
           <SearchableSelect
@@ -281,13 +302,13 @@ export default function CategoriesPage() {
 
   return (
     <Container title="Categories" description="Manage product categories and sub-categories">
-      <div className="flex items-center justify-between">
-        <div className="flex gap-2 bg-slate-100 p-1 rounded-xl">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-2 sm:mb-4">
+        <div className="flex gap-1.5 sm:gap-2 bg-slate-100 p-1 rounded-xl">
           {TABS.map(t => (
-            <button key={t.id} style={{cursor: 'pointer'}} onClick={() => setTab(t.id)} className={`px-4 py-2 text-sm rounded-lg transition-all font-semibold ${tab === t.id ? "bg-white text-slate-800 shadow-sm" : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"}`}>{t.label}</button>
+            <button key={t.id} style={{cursor: 'pointer'}} onClick={() => setTab(t.id)} className={`flex-1 sm:flex-none px-2 sm:px-4 py-2 text-[11px] sm:text-sm rounded-lg transition-all font-semibold whitespace-nowrap text-center ${tab === t.id ? "bg-white text-slate-800 shadow-sm" : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"}`}>{t.label}</button>
           ))}
         </div>
-        <button style={{cursor: 'pointer'}} onClick={() => setModal({ open: true, mode: "create", item: null })} className="flex items-center gap-2 px-4 py-2 text-sm font-bold bg-[#00694C] text-white rounded-xl hover:bg-[#085041] shadow-sm transition-colors">
+        <button style={{cursor: 'pointer'}} onClick={() => setModal({ open: true, mode: "create", item: null })} className="flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 text-sm font-bold bg-[#00694C] text-white rounded-xl hover:bg-[#085041] shadow-sm transition-colors whitespace-nowrap w-full sm:w-auto">
           <Plus className="w-4 h-4" /> Add {tab === "categories" ? "Category" : "SubCategory"}
         </button>
       </div>

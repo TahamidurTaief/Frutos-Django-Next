@@ -34,16 +34,20 @@ class WholesaleJWTAuthentication(BaseAuthentication):
         # IS a wholesale token — now validate properly
         try:
             token   = UntypedToken(token_str)
-            user_id = payload.get('user_id')
-            user    = WholesaleUser.objects.get(pk=user_id)
+            email = payload.get('email')
+            if email:
+                user = WholesaleUser.objects.get(email=email)
+            else:
+                user_id = payload.get('user_id')
+                user    = WholesaleUser.objects.get(pk=user_id)
             if not user.is_active:
                 raise AuthenticationFailed('Account is disabled.')
             return (user, token)
 
         except (InvalidToken, TokenError):
-            raise AuthenticationFailed('Token expired. Please log in again.')  # ← was: return None
-        except WholesaleUser.DoesNotExist:
-            raise AuthenticationFailed('User not found.')  # ← was: return None
+            raise AuthenticationFailed('Token expired. Please log in again.')
+        except (WholesaleUser.DoesNotExist, ValueError, AttributeError, TypeError):
+            raise AuthenticationFailed('User not found or invalid token format.')
 
     def authenticate_header(self, request):
         return 'Bearer realm="api"'

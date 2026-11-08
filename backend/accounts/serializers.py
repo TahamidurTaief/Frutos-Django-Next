@@ -295,14 +295,36 @@ class SupportTicketMessageSerializer(serializers.ModelSerializer):
         fields = ['id', 'senderName', 'senderEmail', 'isAdmin', 'message', 'attachments', 'is_edited', 'is_deleted', 'delivery_status', 'created_at']
         
     def get_senderName(self, obj):
-        if obj.wholesale_sender:
-            return obj.wholesale_sender.contact_name or obj.wholesale_sender.business_name
-        return obj.sender.name if obj.sender else 'Unknown'
+        if obj.wholesale_sender_id:
+            try:
+                from django.db import connection
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT contact_name, business_name FROM wholesale_wholesaleuser WHERE CAST(id AS TEXT) = CAST(%s AS TEXT)", [obj.wholesale_sender_id])
+                    row = cursor.fetchone()
+                    if row:
+                        return row[0] or row[1]
+            except Exception:
+                pass
+        try:
+            return obj.sender.name if obj.sender else 'Unknown'
+        except Exception:
+            return 'Unknown'
 
     def get_senderEmail(self, obj):
-        if obj.wholesale_sender:
-            return obj.wholesale_sender.email
-        return obj.sender.email if obj.sender else 'Unknown'
+        if obj.wholesale_sender_id:
+            try:
+                from django.db import connection
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT email FROM wholesale_wholesaleuser WHERE CAST(id AS TEXT) = CAST(%s AS TEXT)", [obj.wholesale_sender_id])
+                    row = cursor.fetchone()
+                    if row:
+                        return row[0]
+            except Exception:
+                pass
+        try:
+            return obj.sender.email if obj.sender else 'Unknown'
+        except Exception:
+            return 'Unknown'
         
     def get_isAdmin(self, obj):
         return obj.is_admin_reply
@@ -335,14 +357,36 @@ class SupportTicketSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'status', 'admin_response', 'created_at', 'updated_at']
 
     def get_userName(self, obj):
-        if obj.wholesale_user:
-            return obj.wholesale_user.contact_name or obj.wholesale_user.business_name
-        return obj.user.name if obj.user else 'Unknown'
+        if obj.wholesale_user_id:
+            try:
+                from django.db import connection
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT contact_name, business_name FROM wholesale_wholesaleuser WHERE CAST(id AS TEXT) = CAST(%s AS TEXT)", [obj.wholesale_user_id])
+                    row = cursor.fetchone()
+                    if row:
+                        return row[0] or row[1]
+            except Exception:
+                pass
+        try:
+            return obj.user.name if obj.user else 'Unknown'
+        except Exception:
+            return 'Unknown'
 
     def get_userEmail(self, obj):
-        if obj.wholesale_user:
-            return obj.wholesale_user.email
-        return obj.user.email if obj.user else 'Unknown'
+        if obj.wholesale_user_id:
+            try:
+                from django.db import connection
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT email FROM wholesale_wholesaleuser WHERE CAST(id AS TEXT) = CAST(%s AS TEXT)", [obj.wholesale_user_id])
+                    row = cursor.fetchone()
+                    if row:
+                        return row[0]
+            except Exception:
+                pass
+        try:
+            return obj.user.email if obj.user else 'Unknown'
+        except Exception:
+            return 'Unknown'
 
     def get_is_user_typing(self, obj):
         if not obj.user_typing_at: return False
@@ -354,18 +398,71 @@ class SupportTicketSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         request = self.context.get('request')
-        if hasattr(request.user, 'business_name'):
-            validated_data['wholesale_user'] = request.user
-        else:
-            validated_data['user'] = request.user
-        ticket = super().create(validated_data)
+        is_wholesale_user = False
         
-        # Handle multiple images
-        request = self.context.get('request')
+        if request and request.user:
+            if hasattr(request.user, 'business_name') or request.user.__class__.__name__ == 'WholesaleUser':
+                is_wholesale_user = True
+
+        subject = validated_data.get('subject', '')
+        description = validated_data.get('description', '')
+        category = validated_data.get('category', 'GENERAL')
+        priority = validated_data.get('priority', 'MEDIUM')
+        status = 'OPEN'
+        created_at = timezone.now()
+        updated_at = timezone.now()
+
+        from django.db import connection
+        if is_wholesale_user:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT id FROM wholesale_wholesaleuser WHERE email = %s", [request.user.email])
+                row = cursor.fetchone()
+                db_user_id = row[0] if row else None
+            
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """
+                    INSERT INTO accounts_supportticket 
+                    (subject, description, category, priority, status, wholesale_user_id, created_at, updated_at) 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s) 
+                    RETURNING id
+                    """,
+                    [subject, description, category, priority, status, db_user_id, created_at, updated_at]
+                )
+                ticket_id = cursor.fetchone()[0]
+        else:
+            user_id = request.user.id
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """
+                    INSERT INTO accounts_supportticket 
+                    (subject, description, category, priority, status, user_id, created_at, updated_at) 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s) 
+                    RETURNING id
+                    """,
+                    [subject, description, category, priority, status, user_id, created_at, updated_at]
+                )
+                ticket_id = cursor.fetchone()[0]
+
+        ticket = SupportTicket.objects.raw("SELECT * FROM accounts_supportticket WHERE id = %s", [ticket_id])[0]
+        
         if request and request.FILES:
             images = request.FILES.getlist('images')
             for image in images:
                 SupportTicketImage.objects.create(ticket=ticket, image=image)
+
+        # Send admin notification for the new ticket
+        from accounts.notifications import send_admin_notification
+        sender_name = request.user.get_full_name() if hasattr(request.user, 'get_full_name') and request.user.get_full_name().strip() else request.user.email
+        try:
+            send_admin_notification(
+                notification_type='ticket_created',
+                title='New Support Ticket',
+                message=f'User {sender_name} submitted a new support ticket: "{ticket.subject}".',
+                metadata={'ticket_id': ticket.id, 'icon': 'support_agent'}
+            )
+        except Exception:
+            pass
                 
         return ticket
 
@@ -378,4 +475,4 @@ class AdminSupportTicketSerializer(SupportTicketSerializer):
         read_only_fields = ['id', 'created_at', 'updated_at']
 
     def get_is_wholesale(self, obj):
-        return obj.wholesale_user is not None
+        return obj.wholesale_user_id is not None

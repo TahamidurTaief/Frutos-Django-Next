@@ -38,6 +38,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     return {
                         id: u.id,
                         email: u.email,
+                        userType: u.user_type || 'WHOLESALER',
                         name: u.contact_name,
                         businessName: u.business_name,
                         contactName: u.contact_name,
@@ -72,6 +73,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             if (user) {
                 token.id = user.id
                 token.email = user.email
+                token.userType = user.userType || user.user_type || 'WHOLESALER'
                 token.businessName = user.businessName
                 token.contactName = user.contactName
                 token.phone = user.phone
@@ -113,6 +115,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             session.user = {
                 id: token.id,
                 email: token.email,
+                userType: token.userType || 'WHOLESALER',
+                user_type: token.userType || 'WHOLESALER',
                 businessName: token.businessName,
                 contactName: token.contactName,
                 phone: token.phone,

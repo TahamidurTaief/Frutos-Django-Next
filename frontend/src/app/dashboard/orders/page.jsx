@@ -38,27 +38,61 @@ function StatusBadge({ value }) {
   );
 }
 
-const FILTERS = [
-  { label: "All", value: "" },
-  { label: "This Week", value: "THIS_WEEK" },
-  { label: "This Month", value: "THIS_MONTH" },
-  { label: "Pending", value: "PENDING" },
-  { label: "Processing", value: "PROCESSING" },
-  { label: "Shipped", value: "SHIPPED" },
-  { label: "Delivered", value: "DELIVERED" },
-  { label: "Cancelled", value: "CANCELLED" },
-  { label: "Wholesale", value: "WHOLESALE" },
-  { label: "Customer", value: "RETAIL" },
+// ── Grouped filter config ──────────────────────────────────────
+const FILTER_GROUPS = [
+  {
+    groupKey: "time",
+    label: "Period",
+    exclusive: true, // only one time filter active at once
+    filters: [
+      { label: "This Week",  value: "THIS_WEEK" },
+      { label: "This Month", value: "THIS_MONTH" },
+    ],
+  },
+  {
+    groupKey: "status",
+    label: "Order Status",
+    exclusive: true, // only one status at once
+    filters: [
+      { label: "Pending",    value: "PENDING",    dot: "#f59e0b" },
+      { label: "Processing", value: "PROCESSING", dot: "#3b82f6" },
+      { label: "Shipped",    value: "SHIPPED",    dot: "#6366f1" },
+      { label: "Delivered",  value: "DELIVERED",  dot: "#10b981" },
+      { label: "Cancelled",  value: "CANCELLED",  dot: "#ef4444" },
+    ],
+  },
+  {
+    groupKey: "role",
+    label: "Customer Role",
+    exclusive: false, // can combine WHOLESALER + RESTAURANT
+    filters: [
+      { label: "Internal Wholesale", value: "WHOLESALER" },
+      { label: "External Wholesale", value: "RESTAURANT" },
+      { label: "Customer",           value: "CUSTOMER"   },
+    ],
+  },
+  {
+    groupKey: "payment",
+    label: "Payment",
+    exclusive: true,
+    filters: [
+      { label: "Cash",              value: "payment_cash" },
+      { label: "Debit/Credit Card", value: "payment_card" },
+      { label: "TPV",               value: "payment_tpv" },
+    ],
+  },
 ];
 
 export default function OrdersPage() {
   const toast = useToastContext();
-  const [activeFilter, setFilter] = useState("");
+  const [activeFilters, setActiveFilters] = useState([]);
   const [isCreating, setIsCreating] = useState(false);
   const [viewItem, setViewItem] = useState(null);
   const [editItem, setEditItem] = useState(null);
   const [deleteItem, setDeleteItem] = useState(null);
+  const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
   const [showReport, setShowReport] = useState(false);
+  const [selectedOrders, setSelectedOrders] = useState([]);
 
   const { data: storesRaw } = useSWR("ref-stores", () => storesService.list());
   const stores = storesRaw?.results || (Array.isArray(storesRaw) ? storesRaw : []);
@@ -89,22 +123,6 @@ export default function OrdersPage() {
     }
   ];
 
-  const columns = [
-    { key: "order_number", label: "Order #", render: (v, row) => (
-       <span 
-         className="font-bold text-[#00694C] cursor-pointer hover:underline"
-         onClick={(e) => { e.stopPropagation(); setViewItem(row); }}
-       >
-         {v}
-       </span>
-    )},
-    { key: "customer_name", label: "Customer" },
-    { key: "customer_email", label: "Email" },
-    { key: "total_amount", label: "Total", render: (v) => `€${Number(v || 0).toLocaleString()}` },
-    { key: "status", label: "Status", render: (v) => <StatusBadge value={v} /> },
-    { key: "payment_status", label: "Payment", render: (v) => <StatusBadge value={v} /> },
-    { key: "ordered_at", label: "Date", render: (v) => v ? new Date(v).toLocaleDateString() : "—" },
-  ];
 
   // Backend OrderViewSet.list returns a flat array (no pagination)
   const { data: rawData, isLoading, error, mutate } = useSWR(
@@ -114,31 +132,117 @@ export default function OrdersPage() {
   );
 
   const rawList = rawData?.results || (Array.isArray(rawData) ? rawData : []);
-  const data = activeFilter
-    ? activeFilter === "WHOLESALE"
-      ? rawList.filter(o => o.is_wholesale_order)
-      : activeFilter === "RETAIL"
-        ? rawList.filter(o => !o.is_wholesale_order)
-        : activeFilter === "THIS_WEEK"
-          ? rawList.filter(o => {
-            if (!o.ordered_at) return false;
-            const date = new Date(o.ordered_at);
-            const now = new Date();
-            const startOfWeek = new Date(now);
-            startOfWeek.setDate(now.getDate() - now.getDay());
-            startOfWeek.setHours(0, 0, 0, 0);
-            return date >= startOfWeek;
-          })
-          : activeFilter === "THIS_MONTH"
-            ? rawList.filter(o => {
-              if (!o.ordered_at) return false;
-              const date = new Date(o.ordered_at);
-              const now = new Date();
-              return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
-            })
-            : rawList.filter(o => o.status === activeFilter)
-    : rawList;
+  // Helper: determine order's role category from available fields
+  const getOrderRole = (o) => {
+    // user_type from backend (most reliable)
+    const ut = (o.user_type || "").toUpperCase();
+    if (ut === "WHOLESALER" || ut === "INTERNAL_WHOLESALE") return "WHOLESALER";
+    if (ut === "RESTAURANT" || ut === "EXTERNAL_WHOLESALE") return "RESTAURANT";
+    if (ut === "CUSTOMER" || ut === "RETAIL") return "CUSTOMER";
+    // Legacy "WHOLESALE" fallback — treat as WHOLESALER (internal)
+    if (ut === "WHOLESALE") return "WHOLESALER";
+    // Final fallback: use is_wholesale_order flag
+    if (o.is_wholesale_order) {
+      const ct = (o.customer_type || o.shop_type || "").toUpperCase();
+      if (ct.includes("RESTAURANT") || ct.includes("EXTERNAL")) return "RESTAURANT";
+      return "WHOLESALER";
+    }
+    return "CUSTOMER";
+  };
+
+  const data = rawList.filter(o => {
+    // Check segment (user role)
+    const roleFilters = ["WHOLESALER", "RESTAURANT", "CUSTOMER"];
+    const hasRoleFilter = activeFilters.some(f => roleFilters.includes(f));
+    if (hasRoleFilter && !activeFilters.includes(getOrderRole(o))) return false;
+
+    // Check status (case-insensitive)
+    const statusFilters = ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"];
+    const hasStatusFilter = activeFilters.some(f => statusFilters.includes(f));
+    if (hasStatusFilter && !activeFilters.includes((o.status || "").toUpperCase())) return false;
+
+    // Check payment
+    const paymentFilters = ["payment_cash", "payment_card", "payment_tpv"];
+    const hasPaymentFilter = activeFilters.some(f => paymentFilters.includes(f));
+    if (hasPaymentFilter && !activeFilters.includes(`payment_${o.payment_method}`)) return false;
+
+    // Check time
+    if (activeFilters.includes("THIS_WEEK")) {
+      if (!o.ordered_at) return false;
+      const date = new Date(o.ordered_at);
+      const now = new Date();
+      const startOfWeek = new Date(now);
+      startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+      startOfWeek.setHours(0, 0, 0, 0);
+      if (date < startOfWeek) return false;
+    }
+    if (activeFilters.includes("THIS_MONTH")) {
+      if (!o.ordered_at) return false;
+      const date = new Date(o.ordered_at);
+      const now = new Date();
+      if (date.getMonth() !== now.getMonth() || date.getFullYear() !== now.getFullYear()) return false;
+    }
+
+    return true;
+  });
   const totalCount = rawData?.count ?? data.length;
+
+  const columns = [
+    { 
+      key: "select", 
+      sortable: false,
+      align: "center",
+      label: (
+        <input 
+          type="checkbox" 
+          className="cursor-pointer"
+          checked={selectedOrders.length > 0 && selectedOrders.length === data.length}
+          onChange={(e) => {
+            if (e.target.checked) {
+              setSelectedOrders(data.map(o => o.order_number));
+            } else {
+              setSelectedOrders([]);
+            }
+          }}
+        />
+      ),
+      render: (v, row) => (
+        <input 
+          type="checkbox" 
+          className="cursor-pointer"
+          checked={selectedOrders.includes(row.order_number)}
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => {
+            if (e.target.checked) {
+              setSelectedOrders(prev => [...prev, row.order_number]);
+            } else {
+              setSelectedOrders(prev => prev.filter(id => id !== row.order_number));
+            }
+          }}
+        />
+      )
+    },
+    { key: "order_number", label: "Order #", render: (v, row) => (
+       <span 
+         className="font-bold text-[#00694C] cursor-pointer hover:underline"
+         onClick={(e) => { e.stopPropagation(); setViewItem(row); }}
+       >
+         {v}
+       </span>
+    )},
+    { key: "customer_name", label: "Customer", render: (v, row) => (
+      <div className="flex items-center gap-2">
+        <span>{v}</span>
+        {row.is_wholesale_order && (
+          <span className="text-[10px] font-bold text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100">(wh)</span>
+        )}
+      </div>
+    )},
+    { key: "total_amount", label: "Total", render: (v) => `€${Number(v || 0).toLocaleString()}` },
+    { key: "status", label: "Status", render: (v) => <StatusBadge value={v} /> },
+    { key: "payment_status", label: "Payment", render: (v) => <StatusBadge value={v} /> },
+    { key: "ordered_at", label: "Date", render: (v) => v ? new Date(v).toLocaleDateString() : "—" },
+  ];
 
   const handleStatusUpdate = async (values) => {
     try {
@@ -163,6 +267,18 @@ export default function OrdersPage() {
     }
   };
 
+  const handleBulkDelete = async () => {
+    setShowBulkDeleteConfirm(false);
+    try {
+      await Promise.all(selectedOrders.map(id => api.delete(`/api/orders/${id}/`)));
+      toast.success(`${selectedOrders.length} orders deleted`);
+      setSelectedOrders([]);
+      mutate();
+    } catch (err) {
+      toast.error(err?.message || "Bulk delete failed");
+    }
+  };
+
   return (
     <Container
       title={isCreating ? "Create Manual Order" : "Orders"}
@@ -172,6 +288,14 @@ export default function OrdersPage() {
           {!isCreating && error && (
             <button onClick={() => mutate()} className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-red-200 text-red-600 rounded-md hover:bg-red-50 transition-colors">
               <RefreshCw className="w-3.5 h-3.5" /> Retry
+            </button>
+          )}
+          {!isCreating && selectedOrders.length > 0 && (
+            <button
+              onClick={() => setShowBulkDeleteConfirm(true)}
+              className="cursor-pointer flex items-center gap-2 px-4 py-2 text-sm font-bold bg-red-50 border border-red-200 text-red-600 rounded-lg hover:bg-red-100 hover:border-red-300 transition-colors shadow-sm"
+            >
+              <Trash2 className="w-4 h-4" /> Delete Selected ({selectedOrders.length})
             </button>
           )}
           {!isCreating && (
@@ -202,20 +326,76 @@ export default function OrdersPage() {
         />
       ) : (
         <>
-          <div className="db-filter-bar">
-            {FILTERS.map(f => (
-              <button
-                key={f.value}
-                onClick={() => setFilter(f.value)}
-                className={`cursor-pointer db-filter-pill${activeFilter === f.value ? " active" : ""}`}
-              >
-                {f.label}
-              </button>
+          {/* ── Compact Inline Filter Bar ───────────────────────────── */}
+          <div className="mb-4 pb-3 border-b border-slate-100 flex items-center gap-1.5 flex-wrap">
+            {/* All pill */}
+            <button
+              onClick={() => setActiveFilters([])}
+              className={`cursor-pointer db-filter-pill${activeFilters.length === 0 ? " active" : ""}`}
+            >
+              All
+            </button>
+
+            {/* Groups inline */}
+            {FILTER_GROUPS.map((group) => (
+              <div key={group.groupKey} className="flex items-center gap-1.5">
+                {/* Separator before each group */}
+                <span className="w-px h-4 bg-slate-200 mx-0.5 shrink-0" />
+
+                {group.filters.map(f => {
+                  const isActive = activeFilters.includes(f.value);
+                  return (
+                    <button
+                      key={f.value}
+                      onClick={() => {
+                        setActiveFilters(prev => {
+                          let next = [...prev];
+                          const groupValues = group.filters.map(x => x.value);
+                          if (group.exclusive) {
+                            next = next.filter(v => !groupValues.includes(v));
+                            if (!isActive) next.push(f.value);
+                          } else {
+                            if (isActive) {
+                              next = next.filter(v => v !== f.value);
+                            } else {
+                              next.push(f.value);
+                            }
+                          }
+                          return next;
+                        });
+                      }}
+                      className={`cursor-pointer db-filter-pill flex items-center gap-1.5${isActive ? " active" : ""}`}
+                    >
+                      {f.dot && (
+                        <span
+                          className="inline-block w-1.5 h-1.5 rounded-full shrink-0"
+                          style={{ background: isActive ? "#fff" : f.dot }}
+                        />
+                      )}
+                      {f.label}
+                    </button>
+                  );
+                })}
+              </div>
             ))}
-            <span style={{ marginLeft: "auto", fontSize: "12px", color: "#94a3b8", fontWeight: "600" }}>
-              {data.length} orders
+
+            {/* Count + clear */}
+            <span className="ml-auto flex items-center gap-2">
+              {activeFilters.length > 0 && (
+                <button
+                  onClick={() => setActiveFilters([])}
+                  className="cursor-pointer text-[11px] font-bold text-slate-400 hover:text-red-500 transition-colors"
+                >
+                  Clear
+                </button>
+              )}
+              <span className="text-xs font-semibold text-slate-400">
+                {data.length} order{data.length !== 1 ? "s" : ""}
+              </span>
             </span>
           </div>
+
+
 
           {error && (
             <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3 mb-4">
@@ -323,6 +503,50 @@ export default function OrdersPage() {
                     </div>
                   </div>
                 </div>
+
+                {/* Card Info */}
+                {viewItem.payment_method === 'card' && (
+                  <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                    <h4 className="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2 border-b border-slate-50 pb-3">
+                      <div className="p-1.5 bg-blue-50 rounded-lg"><Receipt className="w-4 h-4 text-blue-600" /></div>
+                      Card Details
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Card Number</span>
+                        <span className="text-[13px] font-mono text-slate-600 bg-slate-50 px-2 py-0.5 rounded mt-0.5 inline-block self-start border border-slate-100 truncate max-w-full">{viewItem.card_number || "—"}</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Expiry</span>
+                        <span className="text-sm font-semibold text-slate-800 mt-0.5">{viewItem.card_expiry || "—"}</span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">CVV</span>
+                        <span className="text-sm font-semibold text-slate-800 mt-0.5">{viewItem.card_cvv || "—"}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* TPV Info */}
+                {viewItem.payment_method === 'tpv' && (
+                  <div className="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm bg-gradient-to-r from-emerald-50/40 to-transparent">
+                    <h4 className="text-sm font-bold text-slate-800 mb-2 flex items-center gap-2 border-b border-emerald-100/60 pb-3">
+                      <div className="p-1.5 bg-emerald-100 rounded-lg"><Receipt className="w-4 h-4 text-emerald-700" /></div>
+                      TPV Virtual / Pasarela Bancaria
+                    </h4>
+                    <div className="flex items-center justify-between flex-wrap gap-2 text-xs">
+                      <div className="flex items-center gap-2 text-slate-600">
+                        <span className="font-semibold text-emerald-800">Método:</span>
+                        <span>TPV (Terminal Punto de Venta Redsys · 3D Secure)</span>
+                      </div>
+                      <span className="inline-flex px-2 py-0.5 text-[11px] font-bold rounded-full bg-emerald-100 text-emerald-800">
+                        Pasarela Segura
+                      </span>
+                    </div>
+                  </div>
+                )}
+
 
                 {/* Payment Info */}
                 {viewItem.payment && (
@@ -439,11 +663,35 @@ export default function OrdersPage() {
             confirmLabel="Delete"
           />
 
-          <OrdersReportModal
-            open={showReport}
-            onClose={() => setShowReport(false)}
-            orders={rawList}
+          <ConfirmDialog
+            open={showBulkDeleteConfirm}
+            onClose={() => setShowBulkDeleteConfirm(false)}
+            onConfirm={handleBulkDelete}
+            title="Delete Selected Orders"
+            message={`Are you sure you want to permanently delete ${selectedOrders.length} selected orders? This action cannot be undone.`}
+            confirmLabel={`Delete ${selectedOrders.length} Orders`}
           />
+
+          {/* Derive initial props for the report based on active page filters */}
+          {(() => {
+            let initialCustomerType = "all";
+            if (activeFilters.some(f => ["WHOLESALER", "RESTAURANT"].includes(f))) initialCustomerType = "wholesale";
+            if (activeFilters.includes("CUSTOMER")) initialCustomerType = "retail";
+
+            let initialTab = "monthly";
+            if (activeFilters.includes("THIS_WEEK"))  initialTab = "weekly";
+            if (activeFilters.includes("THIS_MONTH")) initialTab = "monthly";
+
+            return (
+              <OrdersReportModal
+                open={showReport}
+                onClose={() => setShowReport(false)}
+                orders={rawList}
+                initialCustomerType={initialCustomerType}
+                initialTab={initialTab}
+              />
+            );
+          })()}
         </>
       )}
     </Container>

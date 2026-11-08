@@ -29,6 +29,7 @@ export default async function WholesaleProfilePage() {
   const sessionFallback = {
     id:                    session.user.id,
     email:                 session.user.email,
+    user_type:             session.user.userType || session.user.user_type || 'WHOLESALER',
     business_name:         session.user.businessName,
     contact_name:          session.user.contactName,
     phone:                 session.user.phone,
@@ -48,9 +49,14 @@ export default async function WholesaleProfilePage() {
     profile_image_url:     session.user.profileImage,
   }
 
-  const profileData = profile.status === 'fulfilled'
+  const rawProfile = profile.status === 'fulfilled' && profile.value
     ? profile.value
-    : sessionFallback     // ← now uses snake_case keys
+    : sessionFallback
+
+  const profileData = {
+    ...rawProfile,
+    user_type: rawProfile.user_type || session.user.userType || session.user.user_type || 'WHOLESALER',
+  }
 
   const notificationsData = notifications.status === 'fulfilled'
     ? (Array.isArray(notifications.value) ? notifications.value : notifications.value.results || [])

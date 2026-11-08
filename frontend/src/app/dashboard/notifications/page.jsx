@@ -4,9 +4,26 @@ import { useState } from "react";
 import useSWR from "swr";
 import Link from "next/link";
 import api from "@/app/dashboard/_lib/api";
-import { Bell, CheckCircle2, Trash2, FileText, Eye, Receipt } from "lucide-react";
+import { Bell, CheckCircle2, Trash2, FileText, Eye, Receipt, Store, ShoppingBag, Package, AlertTriangle, AlertCircle } from "lucide-react";
 import Modal from "@/app/dashboard/_components/Modal";
 import { ordersService } from "@/app/dashboard/_lib/services";
+
+const getIcon = (name, className = "w-5 h-5 sm:w-6 sm:h-6") => {
+  switch (name?.toLowerCase()) {
+    case 'store':
+    case 'storefront': return <Store className={className} />;
+    case 'shopping_cart':
+    case 'shopping_bag':
+    case 'order': return <ShoppingBag className={className} />;
+    case 'package':
+    case 'inventory': return <Package className={className} />;
+    case 'warning': return <AlertTriangle className={className} />;
+    case 'error': return <AlertCircle className={className} />;
+    case 'receipt':
+    case 'invoice': return <Receipt className={className} />;
+    default: return <Bell className={className} />;
+  }
+};
 
 function StatusBadge({ value }) {
   const colors = {
@@ -149,13 +166,13 @@ export default function NotificationsPage() {
               return (
                 <div 
                   key={notif.id} 
-                  className={`p-4 sm:p-5 flex gap-4 transition-all cursor-pointer border-b border-slate-100 last:border-0 hover:shadow-sm ${isUnread ? 'bg-[#f8fafc] hover:bg-[#f1f5f9]' : 'bg-white hover:bg-slate-50'}`}
+                  className={`p-3 sm:p-5 flex gap-3 sm:gap-4 transition-all cursor-pointer border-b border-slate-100 last:border-0 hover:shadow-sm ${isUnread ? 'bg-[#f8fafc] hover:bg-[#f1f5f9]' : 'bg-white hover:bg-slate-50'}`}
                   onClick={() => {
                     setViewNotif(notif);
                     if (isUnread) handleMarkAsRead(notif.id);
                   }}
                 >
-                  <div className="shrink-0 flex items-center pt-2" onClick={(e) => e.stopPropagation()}>
+                  <div className="shrink-0 flex items-center pt-1.5 sm:pt-2" onClick={(e) => e.stopPropagation()}>
                     <input
                       type="checkbox"
                       className="w-4 h-4 rounded border-slate-300 text-[#085041] focus:ring-[#085041] cursor-pointer"
@@ -163,20 +180,20 @@ export default function NotificationsPage() {
                       onChange={() => handleToggleSelect(notif.id)}
                     />
                   </div>
-                  <div className={`mt-1 p-3 rounded-2xl shrink-0 h-fit shadow-sm border ${isUnread ? 'bg-white text-[#085041] border-[#085041]/20' : 'bg-slate-50 text-slate-500 border-slate-200'}`}>
-                    <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>{iconName}</span>
+                  <div className={`mt-0.5 sm:mt-1 p-2 sm:p-3 rounded-xl sm:rounded-2xl shrink-0 h-fit shadow-sm border ${isUnread ? 'bg-white text-[#085041] border-[#085041]/20' : 'bg-slate-50 text-slate-500 border-slate-200'}`}>
+                    {getIcon(iconName)}
                   </div>
                   
                   <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-start gap-4">
-                      <h4 className={`text-base ${isUnread ? 'font-bold text-slate-900' : 'font-semibold text-slate-800'}`}>
-                        {notif.title}
+                    <div className="flex flex-col sm:flex-row sm:justify-between items-start gap-1 sm:gap-4">
+                      <h4 className={`text-sm sm:text-base leading-snug sm:leading-normal pr-4 sm:pr-0 ${isUnread ? 'font-bold text-slate-900' : 'font-semibold text-slate-800'}`}>
+                        {notif.title.replace(/[\u{1F300}-\u{1F6FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{1F1E6}-\u{1F1FF}\u{2300}-\u{23FF}\u{2B50}\u{2B06}]/gu, '').trim()}
                       </h4>
-                      <span className="text-xs font-semibold text-slate-400 whitespace-nowrap bg-slate-50 px-2.5 py-1 rounded-md border border-slate-100">
+                      <span className="text-[10px] sm:text-xs font-medium sm:font-semibold text-slate-400 sm:whitespace-nowrap sm:bg-slate-50 sm:px-2.5 sm:py-1 sm:rounded-md sm:border border-slate-100 shrink-0">
                         {new Date(notif.created_at).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}
                       </span>
                     </div>
-                    <p className="text-sm text-slate-600 mt-2 leading-relaxed line-clamp-2">
+                    <p className="text-[13px] sm:text-sm text-slate-600 mt-1 sm:mt-2 leading-relaxed line-clamp-2">
                       {notif.message}
                     </p>
                   </div>
@@ -228,10 +245,10 @@ export default function NotificationsPage() {
               <>
                 <div className="flex items-start gap-4 p-5 bg-slate-50 border border-slate-100 rounded-2xl shadow-sm">
                   <div className={`p-3 rounded-2xl shrink-0 shadow-sm border bg-white text-[#085041] border-[#085041]/20`}>
-                    <span className="material-symbols-outlined" style={{ fontSize: '28px' }}>{viewNotif.icon || viewNotif.metadata?.icon || 'notifications'}</span>
+                    {getIcon(viewNotif.icon || viewNotif.metadata?.icon, "w-7 h-7")}
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-slate-800">{viewNotif.title}</h3>
+                    <h3 className="text-lg font-bold text-slate-800">{viewNotif.title.replace(/[\u{1F300}-\u{1F6FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{1F1E6}-\u{1F1FF}\u{2300}-\u{23FF}\u{2B50}\u{2B06}]/gu, '').trim()}</h3>
                     <p className="text-xs font-semibold text-slate-500 mt-1">
                       {new Date(viewNotif.created_at).toLocaleString([], { dateStyle: 'full', timeStyle: 'short' })}
                     </p>

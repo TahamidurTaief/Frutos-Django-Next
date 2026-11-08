@@ -118,13 +118,13 @@ export default function DataTable({
   };
 
   return (
-    <div className="bg-white border border-slate-100 rounded-xl shadow-sm overflow-hidden">
+    <div className="bg-white border border-slate-100 rounded-xl shadow-sm">
       {/* Search & Filters */}
       {(searchable || extraFilters) && (
-        <div className="p-4 border-b border-slate-100 bg-slate-50/50 flex flex-wrap gap-4 items-center">
+        <div className="p-3 sm:p-4 border-b border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center rounded-t-xl z-20 relative">
           {searchable && (
-            <div className="relative max-w-xs flex-1 sm:flex-none">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <div className="relative w-full sm:max-w-xs flex-none">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
                 type="text"
                 placeholder="Search..."
@@ -135,8 +135,8 @@ export default function DataTable({
             </div>
           )}
           {extraFilters && (
-            <div className="flex items-center gap-2">
-              {extraFilters}
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <div className="w-full sm:w-auto">{extraFilters}</div>
             </div>
           )}
         </div>
@@ -217,7 +217,7 @@ export default function DataTable({
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between px-5 py-3.5 border-t border-slate-100 bg-slate-50/50 text-sm text-slate-500">
+      <div className="flex items-center justify-between px-5 py-3.5 border-t border-slate-100 bg-slate-50/50 text-sm text-slate-500 rounded-b-xl">
         <span className="text-xs font-medium">
           {total === 0 ? "0 results" : `${(activePage - 1) * pageSize + 1}–${Math.min(activePage * pageSize, total)} of ${total}`}
         </span>

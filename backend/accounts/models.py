@@ -191,7 +191,19 @@ class SupportTicket(models.Model):
         verbose_name_plural = "Support Tickets"
 
     def __str__(self):
-        email = self.user.email if self.user else self.wholesale_user.email if self.wholesale_user else 'Unknown'
+        email = 'Unknown'
+        try:
+            if self.user:
+                email = self.user.email
+            elif self.wholesale_user_id:
+                from django.db import connection
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT email FROM wholesale_wholesaleuser WHERE CAST(id AS TEXT) = CAST(%s AS TEXT)", [self.wholesale_user_id])
+                    row = cursor.fetchone()
+                    if row:
+                        email = row[0]
+        except Exception:
+            pass
         return f"Ticket #{self.id} by {email} - {self.subject}"
 
 
@@ -240,13 +252,13 @@ def notify_on_ticket_message(sender, instance, created, **kwargs):
     if created:
         ticket = instance.ticket
         # If the message is an admin reply, notify the user (even if admin is testing their own ticket)
-        if instance.is_admin_reply or (instance.sender and instance.sender != ticket.user) or (instance.wholesale_sender and instance.wholesale_sender != ticket.wholesale_user):
+        if instance.is_admin_reply or (instance.sender and instance.sender != ticket.user) or (instance.wholesale_sender_id and instance.wholesale_sender_id != ticket.wholesale_user_id):
             from django.utils import timezone
             
-            if ticket.wholesale_user:
+            if ticket.wholesale_user_id:
                 from wholesale.models import WholesaleNotification
                 existing_notif = WholesaleNotification.objects.filter(
-                    user=ticket.wholesale_user,
+                    user_id=ticket.wholesale_user_id,
                     type=WholesaleNotification.Type.GENERAL,
                     is_read=False,
                     metadata__ticket_id=ticket.id
@@ -257,7 +269,7 @@ def notify_on_ticket_message(sender, instance, created, **kwargs):
                     count = meta.get('message_count', 1) + 1
                     existing_notif.delete()
                     WholesaleNotification.objects.create(
-                        user=ticket.wholesale_user,
+                        user_id=ticket.wholesale_user_id,
                         type=WholesaleNotification.Type.GENERAL,
                         title=f'New reply on Ticket #{ticket.id}',
                         message=f'You received {count} new responses regarding: {ticket.subject}',
@@ -265,7 +277,7 @@ def notify_on_ticket_message(sender, instance, created, **kwargs):
                     )
                 else:
                     WholesaleNotification.objects.create(
-                        user=ticket.wholesale_user,
+                        user_id=ticket.wholesale_user_id,
                         type=WholesaleNotification.Type.GENERAL,
                         title=f'New reply on Ticket #{ticket.id}',
                         message=f'You received a new response regarding: {ticket.subject}',
@@ -309,7 +321,19 @@ def notify_on_ticket_message(sender, instance, created, **kwargs):
             from django.contrib.auth import get_user_model
             User = get_user_model()
             admins = User.objects.filter(is_staff=True)
-            user_email = ticket.user.email if ticket.user else ticket.wholesale_user.email
+            user_email = 'Unknown'
+            try:
+                if ticket.user:
+                    user_email = ticket.user.email
+                elif ticket.wholesale_user_id:
+                    from django.db import connection
+                    with connection.cursor() as cursor:
+                        cursor.execute("SELECT email FROM wholesale_wholesaleuser WHERE CAST(id AS TEXT) = CAST(%s AS TEXT)", [ticket.wholesale_user_id])
+                        row = cursor.fetchone()
+                        if row:
+                            user_email = row[0]
+            except Exception:
+                pass
             for admin_user in admins:
                 existing_notif = Notification.objects.filter(
                     user=admin_user,

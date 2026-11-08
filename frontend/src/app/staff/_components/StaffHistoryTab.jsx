@@ -209,18 +209,18 @@ export default function StaffHistoryTab() {
       </div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-gradient-to-br from-[#00694C] to-[#00896A] rounded-2xl p-5 text-white shadow-md">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="col-span-2 sm:col-span-1 bg-gradient-to-br from-[#00694C] to-[#00896A] rounded-2xl p-5 text-white shadow-md">
           <div className="text-3xl font-bold mb-1">{formatHours(totalHours)}</div>
           <div className="text-white/70 text-xs font-semibold uppercase tracking-widest">Total Time</div>
         </div>
-        <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm">
-          <div className="text-3xl font-bold text-[#004A3A] mb-1">{totalShifts}</div>
-          <div className="text-slate-500 text-xs font-semibold uppercase tracking-widest">Total Shifts</div>
+        <div className="bg-white border border-slate-100 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col justify-center">
+          <div className="text-2xl sm:text-3xl font-bold text-[#004A3A] mb-0.5 sm:mb-1">{totalShifts}</div>
+          <div className="text-slate-500 text-[10px] sm:text-xs font-semibold uppercase tracking-widest">Total Shifts</div>
         </div>
-        <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm">
-          <div className="text-3xl font-bold text-[#004A3A] mb-1">{storeList.length}</div>
-          <div className="text-slate-500 text-xs font-semibold uppercase tracking-widest">Stores Worked</div>
+        <div className="bg-white border border-slate-100 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col justify-center">
+          <div className="text-2xl sm:text-3xl font-bold text-[#004A3A] mb-0.5 sm:mb-1">{storeList.length}</div>
+          <div className="text-slate-500 text-[10px] sm:text-xs font-semibold uppercase tracking-widest">Stores Worked</div>
         </div>
       </div>
 
@@ -311,7 +311,7 @@ export default function StaffHistoryTab() {
                 {isStoreDropdownOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setIsStoreDropdownOpen(false)}></div>
-                    <div className="absolute left-0 right-0 top-full mt-1 z-50 bg-white border border-slate-100 rounded-xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] py-1.5 max-h-60 overflow-y-auto animate-in fade-in zoom-in-95 duration-200">
+                    <div className="absolute left-0 right-0 top-full mt-1 z-50 bg-white border border-slate-100 rounded-xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] py-1.5 max-h-60 overflow-y-auto db-scroll animate-in fade-in zoom-in-95 duration-200">
                       <button
                         onClick={() => { setStoreFilter('all'); setIsStoreDropdownOpen(false); }}
                         className={`w-full text-left px-4 py-2 text-xs font-semibold transition-colors flex items-center gap-2 cursor-pointer ${storeFilter === 'all' ? 'bg-emerald-50 text-[#00694C]' : 'text-slate-600 hover:bg-slate-50'}`}

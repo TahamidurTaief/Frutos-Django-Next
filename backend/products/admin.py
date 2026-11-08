@@ -107,7 +107,7 @@ class ProductResource(resources.ModelResource):
             'id', 'name', 'slug', 'shop_name', 'brand_name', 
             'category_name', 'subcategory_name',
             'price', 'discount_price', 'wholesale_price', 'minimum_purchase',
-            'affiliate_commission_rate', 'stock', 'is_active',
+            'stock', 'is_active',
             'weight', 'length', 'width', 'height',
             'colors_list', 'sizes_list', 'created_at', 'updated_at'
         )
@@ -341,7 +341,6 @@ class ProductAdmin(ImportExportModelAdmin):
             'fields': (
                 ('price', 'discount_price'),
                 ('wholesale_price', 'minimum_purchase'),
-                'affiliate_commission_rate',
                 'stock',
                 'is_active'
             ),
@@ -565,3 +564,8 @@ class OfferAdmin(admin.ModelAdmin):
             'fields': ('start_date', 'end_date')
         }),
     )
+
+@admin.register(DisplayUnit)
+class DisplayUnitAdmin(admin.ModelAdmin):
+    list_display = ('name', 'abbreviation', 'created_at')
+    search_fields = ('name', 'abbreviation')

@@ -435,14 +435,38 @@ export default function ProductDetailClient({ product: initialProduct, related }
   const [added, setAdded] = useState(false)
   const [showStockError, setShowStockError] = useState(false)
   const { items, addItem, setSidebarOpen } = useCart()
-  const [activeImg, setActiveImg] = useState(0)
-  const minQty = (product.wholesalePrice && product.minWholesaleQty) ? Math.max(1, parseInt(product.minWholesaleQty, 10) || 1) : 1;
-  const [qty, setQty] = useState(minQty)
+  const rawMinQty = (product.wholesalePrice && product.minWholesaleQty) ? Math.max(1, parseInt(product.minWholesaleQty, 10) || 1) : 1;
+  
+  const isUnlimited = Boolean(
+    product.is_unlimited_stock ||
+    product.isUnlimitedStock ||
+    product.is_unlimited_wholesale_stock ||
+    product.is_unlimited_restaurant_stock
+  );
+
+  const getWholesaleOrRetailStock = (prod) => {
+    if (prod.is_unlimited_stock || prod.isUnlimitedStock) return Infinity;
+    if (prod.wholesalePrice || prod.wholesale_price) {
+      if (prod.is_unlimited_wholesale_stock || prod.is_unlimited_restaurant_stock) return Infinity;
+      if (prod.wholesale_stock !== undefined && prod.wholesale_stock !== null) return Math.max(0, Number(prod.wholesale_stock));
+      if (prod.restaurant_stock !== undefined && prod.restaurant_stock !== null) return Math.max(0, Number(prod.restaurant_stock));
+    }
+    if (prod.stock !== undefined && prod.stock !== null) return Math.max(0, Number(prod.stock));
+    return Infinity;
+  };
+  const maxStock = isUnlimited ? Infinity : getWholesaleOrRetailStock(product);
+  const effectiveInStock = isUnlimited || Boolean(product.inStock);
+
+  const minAllowedQty = (maxStock > 0 && maxStock < Infinity) ? Math.max(1, Math.min(rawMinQty, maxStock)) : 1;
+  const initialQty = (maxStock > 0 && maxStock < Infinity) ? Math.min(rawMinQty, maxStock) : (rawMinQty || 1);
+
+  const [qty, setQty] = useState(initialQty)
 
   useEffect(() => {
-    setQty(prev => Math.max(prev, minQty))
-  }, [minQty])
+    setQty(initialQty)
+  }, [initialQty])
   const [fulfillment, setFulfillment] = useState('delivery')
+  const [activeImg, setActiveImg] = useState(0)
   const galleryRef = useRef(null)
 
   const savePercent = product.oldPrice
@@ -454,11 +478,11 @@ export default function ProductDetailClient({ product: initialProduct, related }
       // ...
     }
 
-    if (product.stock !== undefined && product.stock !== null) {
+    if (maxStock < Infinity) {
       const existingItem = items.find(i => i.id === product.id && (i.item_type || 'product') === (product.item_type || 'product'))
       const currentCartQty = existingItem ? existingItem.qty : 0
 
-      if (currentCartQty + qty > product.stock) {
+      if (currentCartQty + qty > maxStock) {
         setShowStockError(true)
         setTimeout(() => setShowStockError(false), 3500)
         return
@@ -521,7 +545,7 @@ export default function ProductDetailClient({ product: initialProduct, related }
               Insufficient Stock
             </p>
             <p style={{ fontSize: '12.5px', color: 'rgba(255,255,255,0.65)', margin: 0, lineHeight: 1.55 }}>
-              Sorry, we only have <strong style={{ color: 'white' }}>{product.stock} {product.unit || 'units'}</strong> in stock.
+              Sorry, we only have <strong style={{ color: 'white' }}>{maxStock} {product.unit || 'units'}</strong> in stock.
             </p>
           </div>
           <button
@@ -662,15 +686,15 @@ export default function ProductDetailClient({ product: initialProduct, related }
             </p>
             <div className="flex items-center justify-between bg-[#F2FDEA] border border-[#BCCAC1]/40
                             rounded-xl px-2 py-1.5 w-full">
-              <button onClick={() => setQty((q) => Math.max(minQty, q - 1))}
-                disabled={qty <= minQty}
-                className={`p-2 rounded-lg transition-colors ${qty <= minQty ? 'text-[#BCCAC1] cursor-not-allowed' : 'cursor-pointer hover:bg-[#ddf0d0] text-[#00694C]'}`}>
+              <button onClick={() => setQty((q) => Math.max(minAllowedQty, q - 1))}
+                disabled={qty <= minAllowedQty}
+                className={`p-2 rounded-lg transition-colors ${qty <= minAllowedQty ? 'text-[#BCCAC1] cursor-not-allowed' : 'cursor-pointer hover:bg-[#ddf0d0] text-[#00694C]'}`}>
                 <Minus size={18} />
               </button>
               <span className="font-bold text-lg text-[#151E13]">{qty}</span>
-              <button onClick={() => setQty((q) => (product.stock ? Math.min(product.stock, q + 1) : q + 1))}
-                disabled={product.stock && qty >= product.stock}
-                className={`p-2 rounded-lg transition-colors ${product.stock && qty >= product.stock ? 'text-[#BCCAC1] cursor-not-allowed' : 'cursor-pointer hover:bg-[#ddf0d0] text-[#00694C]'}`}>
+              <button onClick={() => setQty((q) => (maxStock < Infinity ? Math.min(maxStock, q + 1) : q + 1))}
+                disabled={maxStock < Infinity && qty >= maxStock}
+                className={`p-2 rounded-lg transition-colors ${maxStock < Infinity && qty >= maxStock ? 'text-[#BCCAC1] cursor-not-allowed' : 'cursor-pointer hover:bg-[#ddf0d0] text-[#00694C]'}`}>
                 <Plus size={18} />
               </button>
             </div>
@@ -845,15 +869,15 @@ export default function ProductDetailClient({ product: initialProduct, related }
                     </label>
                     <div className="flex items-center justify-between bg-white border
                                     border-[#BCCAC1]/40 rounded-xl px-2 py-1">
-                      <button onClick={() => setQty((q) => Math.max(minQty, q - 1))}
-                        disabled={qty <= minQty}
-                        className={`p-2 rounded-lg transition-colors ${qty <= minQty ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer hover:bg-[#E7F1DF] text-[#00694C]'}`}>
+                      <button onClick={() => setQty((q) => Math.max(minAllowedQty, q - 1))}
+                        disabled={qty <= minAllowedQty}
+                        className={`p-2 rounded-lg transition-colors ${qty <= minAllowedQty ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer hover:bg-[#E7F1DF] text-[#00694C]'}`}>
                         <Minus size={16} />
                       </button>
-                      <span className="font-bold text-lg text-[#151E13]">{qty}</span>
-                      <button onClick={() => setQty((q) => (product.stock ? Math.min(product.stock, q + 1) : q + 1))}
-                        disabled={product.stock && qty >= product.stock}
-                        className={`p-2 rounded-lg transition-colors ${product.stock && qty >= product.stock ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer hover:bg-[#E7F1DF] text-[#00694C]'}`}>
+                      <span className="font-bold text-[#151E13] text-lg">{qty}</span>
+                      <button onClick={() => setQty((q) => (maxStock < Infinity ? Math.min(maxStock, q + 1) : q + 1))}
+                        disabled={maxStock < Infinity && qty >= maxStock}
+                        className={`p-2 rounded-lg transition-colors ${maxStock < Infinity && qty >= maxStock ? 'text-gray-400 cursor-not-allowed' : 'cursor-pointer hover:bg-[#E7F1DF] text-[#00694C]'}`}>
                         <Plus size={16} />
                       </button>
                     </div>
@@ -904,7 +928,7 @@ export default function ProductDetailClient({ product: initialProduct, related }
                 </div>
               </div>
 
-              {product.inStock ? (
+              {effectiveInStock ? (
                 <button onClick={handleAddToCart}
                   className="w-full cursor-pointer flex items-center justify-center gap-3
                              rounded-xl py-3 transition-all duration-200 shadow-sm"
@@ -975,14 +999,14 @@ export default function ProductDetailClient({ product: initialProduct, related }
               €{(displayPrice * qty).toFixed(2)}
             </span>
           </div>
-          <button onClick={handleAddToCart} disabled={!product.inStock}
+          <button onClick={handleAddToCart} disabled={!effectiveInStock}
             className={`flex-1 h-[48px] flex items-center justify-center gap-2.5 rounded-full
-                       transition-all active:scale-[0.98] overflow-hidden relative group ${!product.inStock ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}`}
-            style={product.inStock ? {
+                       transition-all active:scale-[0.98] overflow-hidden relative group ${!effectiveInStock ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''}`}
+            style={effectiveInStock ? {
               background: added ? '#085041' : 'linear-gradient(135deg, #00694C 0%, #008560 100%)',
               color: 'white', boxShadow: '0 4px 14px rgba(0,105,76,0.25)'
             } : {}}>
-            {product.inStock ? (
+            {effectiveInStock ? (
               <>
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                 <div className="relative flex items-center gap-2.5">

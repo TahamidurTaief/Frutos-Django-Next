@@ -3,22 +3,15 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import { MessageCircle, MessageSquare, X, SendHorizontal, Search, Users, Phone, Video, Store, Loader2, Info, ChevronDown, Check, ArrowLeft } from 'lucide-react';
+import { toast } from '@/app/dashboard/_components/Toaster';
 import { API_BASE_URL } from '@/app/dashboard/_lib/api';
+
+import { isTokenExpired, refreshAccessToken } from '@/app/dashboard/_lib/api';
 
 const API_BASE = `${API_BASE_URL}/api`;
 const WS_BASE = API_BASE_URL.replace('http://', 'ws://').replace('https://', 'wss://');
 
-const WhatsappIcon = ({ size = 24 }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="currentColor"
-  >
-    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-  </svg>
-);
+
 
 export default function LiveChatWidget() {
   const pathname = usePathname();
@@ -62,7 +55,25 @@ export default function LiveChatWidget() {
     }
   }, [pathname]);
 
-  const getAccess = useCallback(() => accessToken, [accessToken]);
+  const getAccess = useCallback(async () => {
+    if (typeof window === 'undefined') return null;
+    let token = null;
+    if (pathname.startsWith('/dashboard')) {
+      token = localStorage.getItem('admin_access_token');
+    } else if (pathname.startsWith('/staff')) {
+      token = localStorage.getItem('staff_access_token');
+    }
+    
+    if (token && isTokenExpired(token)) {
+      try {
+        token = await refreshAccessToken();
+      } catch (error) {
+        return null;
+      }
+    }
+    return token;
+  }, [pathname]);
+  
   const [isOpen, setIsOpen] = useState(false);
   const [contacts, setContacts] = useState([]);
   const [activeChat, setActiveChat] = useState(null); // Contact object
@@ -79,6 +90,10 @@ export default function LiveChatWidget() {
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
   const modalRef = useRef(null);
+  const reconnectTimerRef = useRef(null);
+  const pendingMessagesRef = useRef([]);
+  const connectWSRef = useRef(null);
+  const isMountedRef = useRef(true);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -92,18 +107,46 @@ export default function LiveChatWidget() {
     };
   }, [isOpen]);
 
-  // Initialize Audio safely
+  // Preload real notification sound once (WAV file in /public/)
+  const notifAudioRef = useRef(null);
+  useEffect(() => {
+    notifAudioRef.current = new Audio('/notification.wav');
+    notifAudioRef.current.preload = 'auto';
+    notifAudioRef.current.volume = 0.8;
+    return () => { notifAudioRef.current = null; };
+  }, []);
+
   const playSound = useCallback(() => {
     try {
-      const audio = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAD//w==');
-      audio.play().catch(e => console.log('Audio play prevented', e));
-    } catch (e) {
-      console.log('Audio error', e);
-    }
+      if (notifAudioRef.current) {
+        notifAudioRef.current.currentTime = 0;
+        notifAudioRef.current.play().catch(() => {
+          // Fallback: AudioContext synth (if Audio element blocked)
+          try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const resume = ctx.state === 'suspended' ? ctx.resume() : Promise.resolve();
+            resume.then(() => {
+              const t = ctx.currentTime;
+              const addTone = (freq, start, amp, decay) => {
+                const osc = ctx.createOscillator(); const g = ctx.createGain();
+                osc.type = 'sine'; osc.frequency.setValueAtTime(freq, start);
+                g.gain.setValueAtTime(0.001, start);
+                g.gain.linearRampToValueAtTime(amp, start + 0.004);
+                g.gain.exponentialRampToValueAtTime(0.001, start + decay);
+                osc.connect(g); g.connect(ctx.destination);
+                osc.start(start); osc.stop(start + decay + 0.05);
+              };
+              addTone(880,    t,        0.6, 0.22);
+              addTone(1108.7, t + 0.13, 0.5, 0.28);
+            });
+          } catch { /* silent */ }
+        });
+      }
+    } catch { /* silent */ }
   }, []);
 
   const fetchContacts = useCallback(async () => {
-    const access = getAccess();
+    const access = await getAccess();
     if (!access) return;
     try {
       const res = await fetch(`${API_BASE}/livechat/contacts/`, {
@@ -116,12 +159,12 @@ export default function LiveChatWidget() {
         setTotalUnread(unread);
       }
     } catch (err) {
-      console.error('Failed to fetch contacts', err);
+      console.debug('Failed to fetch contacts (API offline/loading):', err);
     }
   }, [getAccess]);
 
   const fetchHistory = useCallback(async (userId) => {
-    const access = getAccess();
+    const access = await getAccess();
     if (!access) return;
     try {
       const res = await fetch(`${API_BASE}/livechat/history/${userId}/`, {
@@ -134,9 +177,14 @@ export default function LiveChatWidget() {
         fetchContacts();
       }
     } catch (err) {
-      console.error('Failed to fetch history', err);
+      console.debug('Failed to fetch history (API offline/loading):', err);
     }
   }, [getAccess, fetchContacts]);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => { isMountedRef.current = false; };
+  }, []);
 
   useEffect(() => {
     // Only ADMIN or STAFF can use this
@@ -146,23 +194,29 @@ export default function LiveChatWidget() {
 
     fetchContacts();
 
-    let reconnectTimer;
-
-    const connectWebSocket = () => {
-      const access = getAccess();
+    const connectWebSocket = async () => {
+      if (!isMountedRef.current) return;
+      const access = await getAccess();
       if (!access) return;
 
       if (wsRef.current && (wsRef.current.readyState === WebSocket.OPEN || wsRef.current.readyState === WebSocket.CONNECTING)) {
         return;
       }
 
-      wsRef.current = new WebSocket(`${WS_BASE}/ws/livechat/?token=${access}`);
+      const wsUrl = `${WS_BASE}/ws/livechat/?token=${access}`;
+      wsRef.current = new WebSocket(wsUrl);
 
       wsRef.current.onopen = () => {
-        console.log('LiveChat WebSocket Connected');
-        if (reconnectTimer) {
-          clearTimeout(reconnectTimer);
-          reconnectTimer = null;
+        if (reconnectTimerRef.current) {
+          clearTimeout(reconnectTimerRef.current);
+          reconnectTimerRef.current = null;
+        }
+        // Flush any pending messages
+        while (pendingMessagesRef.current.length > 0) {
+          const payload = pendingMessagesRef.current.shift();
+          if (wsRef.current.readyState === WebSocket.OPEN) {
+            wsRef.current.send(JSON.stringify(payload));
+          }
         }
       };
 
@@ -177,24 +231,28 @@ export default function LiveChatWidget() {
             return;
           }
 
-          setActiveChat(prevActive => {
-            if (prevActive && String(prevActive.id) === String(msg.sender_id)) {
-              setMessages(prev => {
-                if (prev.some(m => m.id === msg.id)) return prev;
-                return [...prev, msg];
-              });
-              if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-                wsRef.current.send(JSON.stringify({
-                  action: 'mark_read',
-                  sender_id: msg.sender_id
-                }));
+          setIsOpen(prevIsOpen => {
+            setActiveChat(prevActive => {
+              // Only suppress sound when widget IS open AND this exact chat is active
+              const chatIsVisible = prevIsOpen && prevActive && String(prevActive.id) === String(msg.sender_id);
+              if (chatIsVisible) {
+                setMessages(prev => {
+                  if (prev.some(m => m.id === msg.id)) return prev;
+                  return [...prev, msg];
+                });
+                if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+                  wsRef.current.send(JSON.stringify({
+                    action: 'mark_read',
+                    sender_id: msg.sender_id
+                  }));
+                }
+              } else {
+                playSound();
+                fetchContacts();
               }
               return prevActive;
-            } else {
-              playSound();
-              fetchContacts();
-              return prevActive;
-            }
+            });
+            return prevIsOpen;
           });
 
         } else if (data.action === 'typing') {
@@ -210,27 +268,26 @@ export default function LiveChatWidget() {
       };
 
       wsRef.current.onclose = () => {
-        console.log('LiveChat WebSocket Disconnected. Reconnecting in 3 seconds...');
-        if (!reconnectTimer) {
-          reconnectTimer = setTimeout(() => {
-            reconnectTimer = null;
+        if (!isMountedRef.current) return;
+        if (!reconnectTimerRef.current) {
+          reconnectTimerRef.current = setTimeout(() => {
+            reconnectTimerRef.current = null;
             connectWebSocket();
           }, 3000);
         }
       };
 
       wsRef.current.onerror = () => {
-        // Suppress noisy error logs (especially during React Strict Mode unmounts)
-        if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-          wsRef.current.close();
-        }
+        // Handled by onclose — do NOT use console.error (triggers Next.js overlay)
       };
     };
 
+    // Store connect function in ref so handleSendMessage can call it
+    connectWSRef.current = connectWebSocket;
     connectWebSocket();
 
     return () => {
-      if (reconnectTimer) clearTimeout(reconnectTimer);
+      if (reconnectTimerRef.current) clearTimeout(reconnectTimerRef.current);
       if (wsRef.current) {
         wsRef.current.onclose = null; // prevent reconnect on unmount
         wsRef.current.close();
@@ -253,12 +310,13 @@ export default function LiveChatWidget() {
     if (!inputValue.trim() || !activeChat) return;
 
     const text = inputValue.trim();
+    const receiverId = activeChat.id;
 
-    // Optimistic update
+    // Optimistic update — show immediately in UI
     const tempMsg = {
       id: Date.now(),
       sender_id: user.id,
-      receiver_id: activeChat.id,
+      receiver_id: receiverId,
       text: text,
       created_at: new Date().toISOString(),
       is_read: false
@@ -266,18 +324,23 @@ export default function LiveChatWidget() {
     setMessages(prev => [...prev, tempMsg]);
     setInputValue('');
 
-    wsRef.current.send(JSON.stringify({
-      action: 'send_message',
-      receiver_id: activeChat.id,
-      text: text
-    }));
+    const payload = { action: 'send_message', receiver_id: receiverId, text: text };
+    const typingPayload = { action: 'typing', receiver_id: receiverId, is_typing: false };
 
-    // Stop typing
-    wsRef.current.send(JSON.stringify({
-      action: 'typing',
-      receiver_id: activeChat.id,
-      is_typing: false
-    }));
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      // Connected — send immediately
+      wsRef.current.send(JSON.stringify(payload));
+      wsRef.current.send(JSON.stringify(typingPayload));
+    } else {
+      // Not connected — queue message and reconnect immediately
+      pendingMessagesRef.current.push(payload);
+      // Trigger immediate reconnect (bypass the 3s delay)
+      if (reconnectTimerRef.current) {
+        clearTimeout(reconnectTimerRef.current);
+        reconnectTimerRef.current = null;
+      }
+      if (connectWSRef.current) connectWSRef.current();
+    }
   };
 
   const handleTyping = (e) => {
@@ -328,9 +391,9 @@ export default function LiveChatWidget() {
       <div className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[9999] transition-all duration-300 ${isOpen ? 'opacity-0 scale-50 pointer-events-none' : 'opacity-100 scale-100'}`}>
         <button
           onClick={() => setIsOpen(true)}
-          className="relative flex items-center justify-center w-[50px] h-[50px] sm:w-[54px] sm:h-[54px] bg-[#25D366] text-white rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+          className="relative flex items-center justify-center w-[50px] h-[50px] sm:w-[54px] sm:h-[54px] bg-emerald-600 text-white rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
         >
-          <WhatsappIcon size={30} />
+          <MessageCircle size={30} />
           {totalUnread > 0 && (
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] sm:text-xs font-bold w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center rounded-full border-2 border-white animate-bounce">
               {totalUnread}
@@ -349,6 +412,12 @@ export default function LiveChatWidget() {
         <div className="flex flex-col h-full bg-white text-gray-900">
           <div className="pt-4 pb-2 px-4 flex justify-between items-center">
             <h3 className="font-bold text-2xl">Chats</h3>
+            <button 
+              onClick={() => setIsOpen(false)}
+              className="p-2 -mr-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+            >
+              <X size={24} />
+            </button>
           </div>
 
           <div className="px-4 pb-2">

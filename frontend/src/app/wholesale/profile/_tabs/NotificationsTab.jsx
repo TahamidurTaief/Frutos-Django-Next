@@ -69,7 +69,7 @@ export default function NotificationsTab({ notifications, unreadCount, onMarkAll
           <p style={{ fontSize: 13.5, margin: 0 }}>No notifications yet.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
           {notifications.map(n => {
             const isExpanded = expanded === n.id
             const iconColor = NOTIF_ICON_COLORS[n.type] || NOTIF_ICON_COLORS.default
